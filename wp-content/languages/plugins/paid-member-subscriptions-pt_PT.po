@@ -1,0 +1,6645 @@
+# Translation of Stable (latest release) in Portuguese (Portugal)
+# This file is distributed under the same license as the Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-01-25 15:14:15+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/1.1.0-alpha\n"
+"Project-Id-Version: Stable (latest release)\n"
+
+#: includes/admin/class-admin-payments-list-table.php:371
+msgid "Discount code"
+msgstr ""
+
+#: includes/functions-content-filtering.php:132
+msgid "Upgrade %1$s to %2$s"
+msgstr ""
+
+#: includes/admin/class-admin-payments-list-table.php:288
+msgid "Are you sure you want to delete this Payment?"
+msgstr ""
+
+#: includes/admin/class-admin-payments.php:51
+msgid "Payment successfully deleted."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:84
+msgid "PayPal Pro and PayPal Express"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:86
+msgid "Accept one time or recurring payments through PayPal Pro (credit card) and/or Express Checkout."
+msgstr ""
+
+#: includes/functions-core.php:948
+msgid "PayPal uses Instant Payment Notification (IPN) which %1$shas been updated for increased security%2$s and now requires you to install an SSL certificate and enable HTTPS on your site in order to function properly. %3$sDismiss%4$s"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:37
+msgid "Add-Ons Bundle"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:38
+msgid "Get all existing & future add-ons for just 139$ ( save 70% OFF regular price )"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:39
+msgid "View Bundle"
+msgstr ""
+
+#. #-#-#-#-#  tmp-paid-member-subscriptions.pot (Paid Member Subscriptions
+#. 1.1.6)  #-#-#-#-#
+#. Plugin URI of the plugin/theme
+#. #-#-#-#-#  tmp-paid-member-subscriptions.pot (Paid Member Subscriptions
+#. 1.1.6)  #-#-#-#-#
+#. Author URI of the plugin/theme
+msgid "http://www.cozmoslabs.com/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Accept payments, create subscription plans and restrict content on your membership website."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Cozmoslabs, Mihai Iova, Madalin Ungureanu, Adrian Spiac, Cristian Antohe"
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-recover-password-form.php:13
+msgid "Please enter your username or email address."
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-recover-password-form.php:14
+msgid "You will receive a link to create a new password via email."
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-recover-password-form.php:24
+msgid "Username or Email"
+msgstr "Utilizador ou email"
+
+#: includes/views/shortcodes/view-shortcode-register-form.php:89
+msgid "Password *"
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-register-form.php:97
+msgid "Repeat Password *"
+msgstr ""
+
+#: index.php:210
+msgid "You must be logged in to view this content."
+msgstr ""
+
+#: index.php:213
+msgid "This content is restricted for your membership level."
+msgstr ""
+
+#. #-#-#-#-#  tmp-paid-member-subscriptions.pot (Paid Member Subscriptions
+#. 1.1.6)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: index.php:566
+msgid "Paid Member Subscriptions"
+msgstr ""
+
+#: index.php:619
+msgid "View Documentation"
+msgstr "Ver documentação"
+
+#: index.php:619
+msgid "Documentation"
+msgstr "Documentação"
+
+#: includes/views/shortcodes/view-shortcode-new-subscription-form.php:36
+msgid "Subscribe"
+msgstr "Assinar"
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:71
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
+#: includes/views/shortcodes/view-shortcode-new-password-form.php:13
+msgid "Please enter your new password."
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-new-password-form.php:35
+#: includes/views/shortcodes/view-shortcode-recover-password-form.php:31
+msgid "Reset Password"
+msgstr "Redefinir Palavra-passe"
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:62
+#: includes/views/shortcodes/view-shortcode-new-password-form.php:27
+msgid "Repeat Password"
+msgstr "Repetir Palavra-passe"
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:46
+#: includes/views/shortcodes/view-shortcode-register-form.php:81
+msgid "Last Name"
+msgstr "Sobrenome"
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:54
+#: includes/views/shortcodes/view-shortcode-new-password-form.php:22
+msgid "Password"
+msgstr "Palavra-chave"
+
+#: includes/functions-subscription-plan.php:387
+msgid "Renew"
+msgstr "Renovar"
+
+#: includes/functions-subscription-plan.php:397
+msgid "Pending subscription"
+msgstr ""
+
+#: includes/functions-subscription-plan.php:427
+msgid "Expires"
+msgstr "Expera"
+
+#: includes/gateways/class-payment-gateway-paypal-standard.php:219
+msgid "The payment could not be completed successfully"
+msgstr ""
+
+#: includes/gateways/functions-payment-gateways.php:21
+msgid "PayPal"
+msgstr "PayPal"
+
+#: includes/gateways/functions-payment-gateways.php:22
+msgid "PayPal Standard"
+msgstr "PayPal Standard"
+
+#: includes/gateways/paypal_standard/paypal_standard.php:13
+msgid "Paypal Standard"
+msgstr ""
+
+#: includes/gateways/paypal_standard/paypal_standard.php:17
+msgid "PayPal E-mail Address"
+msgstr ""
+
+#: includes/gateways/paypal_standard/paypal_standard.php:22
+msgid "Enter your PayPal e-mail address"
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:24
+#: includes/views/shortcodes/view-shortcode-register-form.php:57
+msgid "Username *"
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:30
+#: includes/views/shortcodes/view-shortcode-register-form.php:65
+msgid "E-mail *"
+msgstr ""
+
+#: includes/views/shortcodes/view-shortcode-edit-profile-form.php:38
+#: includes/views/shortcodes/view-shortcode-register-form.php:73
+msgid "First Name"
+msgstr "Primeiro nome"
+
+#: includes/functions-payment.php:119
+msgid "PayPal Standard - One-Time Payment"
+msgstr ""
+
+#: includes/functions-payment.php:201
+msgid "Select a Payment Method"
+msgstr ""
+
+#: includes/functions-subscription-plan.php:366
+msgid "Expired on: "
+msgstr ""
+
+#: includes/functions-subscription-plan.php:381
+msgid "Upgrade"
+msgstr "Aumento de Nível"
+
+#: includes/functions-member.php:109 includes/functions-payment.php:102
+msgid "Pending"
+msgstr "Pendentes"
+
+#: includes/functions-payment.php:103
+msgid "Completed"
+msgstr "Completa"
+
+#: includes/functions-payment.php:104
+msgid "Rejected"
+msgstr "Rejeitado"
+
+#: includes/functions-core.php:737
+msgid "Zambia"
+msgstr "Zambia"
+
+#: includes/functions-core.php:738
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+#: includes/functions-core.php:930
+msgid "To allow users to register via Paid Member Subscriptions, you first must enable user registration. Go to %1$sNetwork Settings%2$s, and under Registration Settings make sure to check “User accounts may be registered”. %3$sDismiss%4$s"
+msgstr ""
+
+#: includes/functions-core.php:934
+msgid "To allow users to register via Paid Member Subscriptions, you first must enable user registration. Go to %1$sSettings -> General%2$s tab, and under Membership make sure to check “Anyone can register”. %3$sDismiss%4$s"
+msgstr ""
+
+#: includes/functions-member.php:107
+msgid "Canceled"
+msgstr ""
+
+#: includes/functions-member.php:108
+msgid "Expired"
+msgstr "Expirado"
+
+#: includes/functions-core.php:733
+msgid "Vietnam"
+msgstr "Vietnam"
+
+#: includes/functions-core.php:734
+msgid "Wallis and Futuna"
+msgstr "Wallis and Futuna"
+
+#: includes/functions-core.php:735
+msgid "Western Sahara"
+msgstr "Western Sahara"
+
+#: includes/functions-core.php:736
+msgid "Yemen"
+msgstr "Yemen"
+
+#: includes/functions-core.php:731
+msgid "Vatican"
+msgstr "Vatican"
+
+#: includes/functions-core.php:732
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#: includes/functions-core.php:727
+msgid "United States Minor Outlying Islands"
+msgstr "United States Minor Outlying Islands"
+
+#: includes/functions-core.php:728
+msgid "Uruguay"
+msgstr "Uruguay"
+
+#: includes/functions-core.php:729
+msgid "Uzbekistan"
+msgstr "Uzbekistan"
+
+#: includes/functions-core.php:730
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#: includes/functions-core.php:723
+msgid "Ukraine"
+msgstr "Ukraine"
+
+#: includes/functions-core.php:724
+msgid "United Arab Emirates"
+msgstr "Emiratos Árabes Unidos"
+
+#: includes/functions-core.php:725
+msgid "United Kingdom"
+msgstr "Reino Unido"
+
+#: includes/functions-core.php:726
+msgid "United States"
+msgstr "Estados Unidos"
+
+#: includes/functions-core.php:719
+msgid "Turks and Caicos Islands"
+msgstr "Turks and Caicos Islands"
+
+#: includes/functions-core.php:720
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#: includes/functions-core.php:721
+msgid "U.S. Virgin Islands"
+msgstr "U.S. Virgin Islands"
+
+#: includes/functions-core.php:722
+msgid "Uganda"
+msgstr "Uganda"
+
+#: includes/functions-core.php:715
+msgid "Trinidad and Tobago"
+msgstr "Trinidad and Tobago"
+
+#: includes/functions-core.php:716
+msgid "Tunisia"
+msgstr "Tunisia"
+
+#: includes/functions-core.php:717
+msgid "Turkey"
+msgstr "Turkey"
+
+#: includes/functions-core.php:718
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+#: includes/functions-core.php:712
+msgid "Togo"
+msgstr "Togo"
+
+#: includes/functions-core.php:713
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#: includes/functions-core.php:714
+msgid "Tonga"
+msgstr "Tonga"
+
+#: includes/functions-core.php:708
+msgid "Taiwan"
+msgstr "Taiwan"
+
+#: includes/functions-core.php:709
+msgid "Tajikistan"
+msgstr "Tajikistan"
+
+#: includes/functions-core.php:710
+msgid "Tanzania"
+msgstr "Tanzania"
+
+#: includes/functions-core.php:711
+msgid "Thailand"
+msgstr "Tai|ândia"
+
+#: includes/functions-core.php:705
+msgid "Sweden"
+msgstr "Sweden"
+
+#: includes/functions-core.php:706
+msgid "Switzerland"
+msgstr "Switzerland"
+
+#: includes/functions-core.php:707
+msgid "Syria"
+msgstr "Syria"
+
+#: includes/functions-core.php:702
+msgid "Suriname"
+msgstr "Suriname"
+
+#: includes/functions-core.php:703
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard and Jan Mayen"
+
+#: includes/functions-core.php:704
+msgid "Swaziland"
+msgstr "Swaziland"
+
+#: includes/functions-core.php:699
+msgid "Spain"
+msgstr "Spain"
+
+#: includes/functions-core.php:700
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#: includes/functions-core.php:701
+msgid "Sudan"
+msgstr "Sudan"
+
+#: includes/functions-core.php:696
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Ilhas Geórgia do Sul e Sandwich do Sul"
+
+#: includes/functions-core.php:697
+msgid "South Korea"
+msgstr "South Korea"
+
+#: includes/functions-core.php:698
+msgid "South Sudan"
+msgstr "Sudão do Sul"
+
+#: includes/functions-core.php:693
+msgid "Solomon Islands"
+msgstr "Solomon Islands"
+
+#: includes/functions-core.php:694
+msgid "Somalia"
+msgstr "Somalia"
+
+#: includes/functions-core.php:695
+msgid "South Africa"
+msgstr "South Africa"
+
+#: includes/functions-core.php:690
+msgid "Sint Maarten"
+msgstr ""
+
+#: includes/functions-core.php:691
+msgid "Slovakia"
+msgstr "Slovakia"
+
+#: includes/functions-core.php:692
+msgid "Slovenia"
+msgstr "Slovenia"
+
+#: includes/functions-core.php:687
+msgid "Seychelles"
+msgstr "Seychelles"
+
+#: includes/functions-core.php:688
+msgid "Sierra Leone"
+msgstr "Sierra Leone"
+
+#: includes/functions-core.php:689
+msgid "Singapore"
+msgstr "Singapore"
+
+#: includes/functions-core.php:683
+msgid "Sao Tome and Principe"
+msgstr "Sao Tome and Principe"
+
+#: includes/functions-core.php:684
+msgid "Saudi Arabia"
+msgstr "Saudi Arabia"
+
+#: includes/functions-core.php:685
+msgid "Senegal"
+msgstr "Senegal"
+
+#: includes/functions-core.php:686
+msgid "Serbia"
+msgstr "Serbia"
+
+#: includes/functions-core.php:682
+msgid "San Marino"
+msgstr "São Marino"
+
+#: includes/functions-core.php:677
+msgid "Saint Lucia"
+msgstr "Saint Lucia"
+
+#: includes/functions-core.php:678
+msgid "Saint Martin"
+msgstr ""
+
+#: includes/functions-core.php:679
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre and Miquelon"
+
+#: includes/functions-core.php:680
+msgid "Saint Vincent and the Grenadines"
+msgstr "Saint Vincent and the Grenadines"
+
+#: includes/functions-core.php:681
+msgid "Samoa"
+msgstr "Samoa"
+
+#: includes/functions-core.php:673
+msgid "Rwanda"
+msgstr "Rwanda"
+
+#: includes/functions-core.php:674
+msgid "Saint Barthelemy"
+msgstr ""
+
+#: includes/functions-core.php:675
+msgid "Saint Helena"
+msgstr "Saint Helena"
+
+#: includes/functions-core.php:676
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts and Nevis"
+
+#: includes/functions-core.php:670
+msgid "Reunion"
+msgstr "Reunion"
+
+#: includes/functions-core.php:671
+msgid "Romania"
+msgstr "Romania"
+
+#: includes/functions-core.php:672
+msgid "Russia"
+msgstr "Russia"
+
+#: includes/functions-core.php:668
+msgid "Qatar"
+msgstr "Catar"
+
+#: includes/functions-core.php:669
+msgid "Republic of the Congo"
+msgstr "Congo-Brazzaville"
+
+#: includes/functions-core.php:664
+msgid "Pitcairn"
+msgstr "Ilhas Pitcairn"
+
+#: includes/functions-core.php:665
+msgid "Poland"
+msgstr "Poland"
+
+#: includes/functions-core.php:666
+msgid "Portugal"
+msgstr "Portugal"
+
+#: includes/functions-core.php:661
+msgid "Paraguay"
+msgstr "Paraguay"
+
+#: includes/functions-core.php:662
+msgid "Peru"
+msgstr "Peru"
+
+#: includes/functions-core.php:663
+msgid "Philippines"
+msgstr "Philippines"
+
+#: includes/functions-core.php:659
+msgid "Panama"
+msgstr "Panama"
+
+#: includes/functions-core.php:660
+msgid "Papua New Guinea"
+msgstr "Papua Nova Guiné"
+
+#: includes/functions-core.php:656
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#: includes/functions-core.php:657
+msgid "Palau"
+msgstr "Palau"
+
+#: includes/functions-core.php:658
+msgid "Palestinian Territory"
+msgstr "Palestinian Territory"
+
+#: includes/functions-core.php:652
+msgid "North Korea"
+msgstr "North Korea"
+
+#: includes/functions-core.php:654
+msgid "Norway"
+msgstr "Norway"
+
+#: includes/functions-core.php:655
+msgid "Oman"
+msgstr "Oman"
+
+#: includes/functions-core.php:649
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#: includes/functions-core.php:650
+msgid "Niue"
+msgstr "Niuê"
+
+#: includes/functions-core.php:651
+msgid "Norfolk Island"
+msgstr "Norfolk Island"
+
+#: includes/functions-core.php:646
+msgid "New Zealand"
+msgstr "New Zealand"
+
+#: includes/functions-core.php:647
+msgid "Nicaragua"
+msgstr "Nicaragua"
+
+#: includes/functions-core.php:648
+msgid "Niger"
+msgstr "Niger"
+
+#: includes/functions-core.php:643
+msgid "Nepal"
+msgstr "Nepal"
+
+#: includes/functions-core.php:644
+msgid "Netherlands"
+msgstr "Netherlands"
+
+#: includes/functions-core.php:645
+msgid "New Caledonia"
+msgstr "New Caledonia"
+
+#: includes/functions-core.php:640
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: includes/functions-core.php:641
+msgid "Namibia"
+msgstr "Namibia"
+
+#: includes/functions-core.php:642
+msgid "Nauru"
+msgstr "Nauru"
+
+#: includes/functions-core.php:637
+msgid "Montserrat"
+msgstr "Monserrate"
+
+#: includes/functions-core.php:638
+msgid "Morocco"
+msgstr "Morocco"
+
+#: includes/functions-core.php:639
+msgid "Mozambique"
+msgstr "Mozambique"
+
+#: includes/functions-core.php:635
+msgid "Mongolia"
+msgstr "Mongolia"
+
+#: includes/functions-core.php:636
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#: includes/functions-core.php:631
+msgid "Mexico"
+msgstr "Mexico"
+
+#: includes/functions-core.php:632
+msgid "Micronesia"
+msgstr "Micronesia"
+
+#: includes/functions-core.php:633
+msgid "Moldova"
+msgstr "Moldova"
+
+#: includes/functions-core.php:634
+msgid "Monaco"
+msgstr "Monaco"
+
+#: includes/functions-core.php:629
+msgid "Mauritius"
+msgstr "Mauritius"
+
+#: includes/functions-core.php:630
+msgid "Mayotte"
+msgstr "Maiote"
+
+#: includes/functions-core.php:627
+msgid "Martinique"
+msgstr "Martinique"
+
+#: includes/functions-core.php:628
+msgid "Mauritania"
+msgstr "Mauritania"
+
+#: includes/functions-core.php:624
+msgid "Mali"
+msgstr "Mali"
+
+#: includes/functions-core.php:625
+msgid "Malta"
+msgstr "Malta"
+
+#: includes/functions-core.php:626
+msgid "Marshall Islands"
+msgstr "Marshall Islands"
+
+#: includes/functions-core.php:622
+msgid "Malaysia"
+msgstr "Malaysia"
+
+#: includes/functions-core.php:623
+msgid "Maldives"
+msgstr "Maldives"
+
+#: includes/functions-core.php:619
+msgid "Macedonia"
+msgstr "Macedónia, República da"
+
+#: includes/functions-core.php:620
+msgid "Madagascar"
+msgstr "Madagascar"
+
+#: includes/functions-core.php:621
+msgid "Malawi"
+msgstr "Malaui"
+
+#: includes/functions-core.php:616
+msgid "Lithuania"
+msgstr "Lithuania"
+
+#: includes/functions-core.php:617
+msgid "Luxembourg"
+msgstr "Luxembourg"
+
+#: includes/functions-core.php:618
+msgid "Macao"
+msgstr "Macau"
+
+#: includes/functions-core.php:613
+msgid "Liberia"
+msgstr "Liberia"
+
+#: includes/functions-core.php:614
+msgid "Libya"
+msgstr "Libya"
+
+#: includes/functions-core.php:615
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#: includes/functions-core.php:609
+msgid "Laos"
+msgstr "Laos, República Popular Democrática do"
+
+#: includes/functions-core.php:610
+msgid "Latvia"
+msgstr "Latvia"
+
+#: includes/functions-core.php:611
+msgid "Lebanon"
+msgstr "Lebanon"
+
+#: includes/functions-core.php:612
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#: includes/functions-core.php:606
+msgid "Kosovo"
+msgstr ""
+
+#: includes/functions-core.php:607
+msgid "Kuwait"
+msgstr "Cuaite"
+
+#: includes/functions-core.php:608
+msgid "Kyrgyzstan"
+msgstr "Quirguizistão"
+
+#: includes/functions-core.php:603
+msgid "Kazakhstan"
+msgstr "Kazakhstan"
+
+#: includes/functions-core.php:604
+msgid "Kenya"
+msgstr "Kenya"
+
+#: includes/functions-core.php:605
+msgid "Kiribati"
+msgstr "Quiribati"
+
+#: includes/functions-core.php:600
+msgid "Japan"
+msgstr "Japan"
+
+#: includes/functions-core.php:601
+msgid "Jersey"
+msgstr "Jersey"
+
+#: includes/functions-core.php:602
+msgid "Jordan"
+msgstr "Jordan"
+
+#: includes/functions-core.php:598
+msgid "Ivory Coast"
+msgstr "Ivory Coast"
+
+#: includes/functions-core.php:599
+msgid "Jamaica"
+msgstr "Jamaica"
+
+#: includes/functions-core.php:595
+msgid "Isle of Man"
+msgstr "Isle of Man"
+
+#: includes/functions-core.php:596
+msgid "Israel"
+msgstr "Israel"
+
+#: includes/functions-core.php:597
+msgid "Italy"
+msgstr "Italy"
+
+#: includes/functions-core.php:592
+msgid "Iran"
+msgstr "Iran"
+
+#: includes/functions-core.php:593
+msgid "Iraq"
+msgstr "Iraq"
+
+#: includes/functions-core.php:594
+msgid "Ireland"
+msgstr "Irlanda"
+
+#: includes/functions-core.php:589
+msgid "Iceland"
+msgstr "Iceland"
+
+#: includes/functions-core.php:590
+msgid "India"
+msgstr "India"
+
+#: includes/functions-core.php:591
+msgid "Indonesia"
+msgstr "Indonesia"
+
+#: includes/functions-core.php:587
+msgid "Hong Kong"
+msgstr "Hong Kong - Região Administrativa Especial da China"
+
+#: includes/functions-core.php:588
+msgid "Hungary"
+msgstr "Hungary"
+
+#: includes/functions-core.php:584
+msgid "Haiti"
+msgstr "Haiti"
+
+#: includes/functions-core.php:585
+msgid "Heard Island and McDonald Islands"
+msgstr "Ilha Heard e Ilhas McDonald"
+
+#: includes/functions-core.php:586
+msgid "Honduras"
+msgstr "Honduras"
+
+#: includes/functions-core.php:581
+msgid "Guinea"
+msgstr "Guinea"
+
+#: includes/functions-core.php:582
+msgid "Guinea-Bissau"
+msgstr "Guinea-Bissau"
+
+#: includes/functions-core.php:583
+msgid "Guyana"
+msgstr "Guyana"
+
+#: includes/functions-core.php:579
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: includes/functions-core.php:580
+msgid "Guernsey"
+msgstr "Guernesey"
+
+#: includes/functions-core.php:577
+msgid "Guadeloupe"
+msgstr "Guadeloupe"
+
+#: includes/functions-core.php:574
+msgid "Greece"
+msgstr "Greece"
+
+#: includes/functions-core.php:575
+msgid "Greenland"
+msgstr "Greenland"
+
+#: includes/functions-core.php:576
+msgid "Grenada"
+msgstr "Granada"
+
+#: includes/functions-core.php:571
+msgid "Germany"
+msgstr "Germany"
+
+#: includes/functions-core.php:572
+msgid "Ghana"
+msgstr "Ghana"
+
+#: includes/functions-core.php:573
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: includes/functions-core.php:567
+msgid "French Southern Territories"
+msgstr "Territórios Austrais Franceses"
+
+#: includes/functions-core.php:568
+msgid "Gabon"
+msgstr "Gabon"
+
+#: includes/functions-core.php:569
+msgid "Gambia"
+msgstr "Gambia"
+
+#: includes/functions-core.php:570
+msgid "Georgia"
+msgstr "Georgia"
+
+#: includes/functions-core.php:563
+msgid "Finland"
+msgstr "Finlandia"
+
+#: includes/functions-core.php:564
+msgid "France"
+msgstr "France"
+
+#: includes/functions-core.php:565
+msgid "French Guiana"
+msgstr "French Guiana"
+
+#: includes/functions-core.php:566
+msgid "French Polynesia"
+msgstr "French Polynesia"
+
+#: includes/functions-core.php:561
+msgid "Faroe Islands"
+msgstr "Faroe Islands"
+
+#: includes/functions-core.php:562
+msgid "Fiji"
+msgstr "Fiji"
+
+#: includes/functions-core.php:558
+msgid "Estonia"
+msgstr "Estonia"
+
+#: includes/functions-core.php:559
+msgid "Ethiopia"
+msgstr "Ethiopia"
+
+#: includes/functions-core.php:560
+msgid "Falkland Islands"
+msgstr "Falkland Islands"
+
+#: includes/functions-core.php:555
+msgid "El Salvador"
+msgstr "Salvador"
+
+#: includes/functions-core.php:556
+msgid "Equatorial Guinea"
+msgstr "Equatorial Guinea"
+
+#: includes/functions-core.php:557
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#: includes/functions-core.php:552
+msgid "East Timor"
+msgstr "Timor Leste"
+
+#: includes/functions-core.php:553
+msgid "Ecuador"
+msgstr "Ecuador"
+
+#: includes/functions-core.php:554
+msgid "Egypt"
+msgstr "Egipto"
+
+#: includes/functions-core.php:550
+msgid "Dominica"
+msgstr "Domínica"
+
+#: includes/functions-core.php:551
+msgid "Dominican Republic"
+msgstr "Dominican Republic"
+
+#: includes/functions-core.php:547
+msgid "Democratic Republic of the Congo"
+msgstr "República Democrática do Congo"
+
+#: includes/functions-core.php:548
+msgid "Denmark"
+msgstr "Denmark"
+
+#: includes/functions-core.php:549
+msgid "Djibouti"
+msgstr "Djibouti"
+
+#: includes/functions-core.php:544
+msgid "Curacao"
+msgstr "Curaçao"
+
+#: includes/functions-core.php:545
+msgid "Cyprus"
+msgstr "Cyprus"
+
+#: includes/functions-core.php:546
+msgid "Czech Republic"
+msgstr "Czech Republic"
+
+#: includes/functions-core.php:542
+msgid "Croatia"
+msgstr "Croatia"
+
+#: includes/functions-core.php:543
+msgid "Cuba"
+msgstr "Cuba"
+
+#: includes/functions-core.php:538
+msgid "Colombia"
+msgstr "Colombia"
+
+#: includes/functions-core.php:539
+msgid "Comoros"
+msgstr "Comoros"
+
+#: includes/functions-core.php:540
+msgid "Cook Islands"
+msgstr "Cook Islands"
+
+#: includes/functions-core.php:541
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#: includes/functions-core.php:535
+msgid "China"
+msgstr "China"
+
+#: includes/functions-core.php:536
+msgid "Christmas Island"
+msgstr "Christmas Island"
+
+#: includes/functions-core.php:537
+msgid "Cocos Islands"
+msgstr "Cocos Islands"
+
+#: includes/functions-core.php:531
+msgid "Cayman Islands"
+msgstr "Cayman Islands"
+
+#: includes/functions-core.php:532
+msgid "Central African Republic"
+msgstr "Central African Republic"
+
+#: includes/functions-core.php:533
+msgid "Chad"
+msgstr "Chad"
+
+#: includes/functions-core.php:534
+msgid "Chile"
+msgstr "Chile"
+
+#: includes/functions-core.php:529
+msgid "Canada"
+msgstr "Canada"
+
+#: includes/functions-core.php:530
+msgid "Cape Verde"
+msgstr "Cape Verde"
+
+#: includes/functions-core.php:525
+msgid "Burkina Faso"
+msgstr "Burkina-Faso"
+
+#: includes/functions-core.php:526
+msgid "Burundi"
+msgstr "Burundi"
+
+#: includes/functions-core.php:527
+msgid "Cambodia"
+msgstr "Cambodia"
+
+#: includes/functions-core.php:528
+msgid "Cameroon"
+msgstr "República dos Camarões"
+
+#: includes/functions-core.php:523
+msgid "Brunei"
+msgstr "Brunei"
+
+#: includes/functions-core.php:524
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+#: includes/functions-core.php:519
+msgid "Bouvet Island"
+msgstr "Bouvet Island"
+
+#: includes/functions-core.php:520
+msgid "Brazil"
+msgstr "Brazil"
+
+#: includes/functions-core.php:521
+msgid "British Indian Ocean Territory"
+msgstr "British Indian Ocean Territory"
+
+#: includes/functions-core.php:522
+msgid "British Virgin Islands"
+msgstr "British Virgin Islands"
+
+#: includes/functions-core.php:515
+msgid "Bolivia"
+msgstr "Bolivia"
+
+#: includes/functions-core.php:516
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr "Bonaire, Saint Eustatius e Saba"
+
+#: includes/functions-core.php:517
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia and Herzegovina"
+
+#: includes/functions-core.php:518
+msgid "Botswana"
+msgstr "Botswana"
+
+#: includes/functions-core.php:513
+msgid "Bermuda"
+msgstr "Bermudas"
+
+#: includes/functions-core.php:514
+msgid "Bhutan"
+msgstr "Bhutan"
+
+#: includes/functions-core.php:510
+msgid "Belgium"
+msgstr "Belgium"
+
+#: includes/functions-core.php:511
+msgid "Belize"
+msgstr "Belize"
+
+#: includes/functions-core.php:512
+msgid "Benin"
+msgstr "Benin"
+
+#: includes/functions-core.php:508
+msgid "Barbados"
+msgstr "Barbados"
+
+#: includes/functions-core.php:509
+msgid "Belarus"
+msgstr "Belarus"
+
+#: includes/functions-core.php:506
+msgid "Bahrain"
+msgstr "Bahrein"
+
+#: includes/functions-core.php:507
+msgid "Bangladesh"
+msgstr "Bangladeche"
+
+#: includes/functions-core.php:503
+msgid "Austria"
+msgstr "Austria"
+
+#: includes/functions-core.php:504
+msgid "Azerbaijan"
+msgstr "Azerbeijão"
+
+#: includes/functions-core.php:505
+msgid "Bahamas"
+msgstr "Baamas"
+
+#: includes/functions-core.php:502
+msgid "Australia"
+msgstr "Australia"
+
+#: includes/functions-core.php:500
+msgid "Armenia"
+msgstr "Armenia"
+
+#: includes/functions-core.php:501
+msgid "Aruba"
+msgstr "Aruba"
+
+#: includes/functions-core.php:498
+msgid "Antigua and Barbuda"
+msgstr "Antigua and Barbuda"
+
+#: includes/functions-core.php:499
+msgid "Argentina"
+msgstr "Argentina"
+
+#: includes/functions-core.php:495
+msgid "Angola"
+msgstr "Angola"
+
+#: includes/functions-core.php:496
+msgid "Anguilla"
+msgstr "Anguila"
+
+#: includes/functions-core.php:497
+msgid "Antarctica"
+msgstr "Antarctica"
+
+#: includes/functions-core.php:492
+msgid "Algeria"
+msgstr "Algeria"
+
+#: includes/functions-core.php:494
+msgid "Andorra"
+msgstr "Andorra"
+
+#: includes/functions-core.php:292
+msgid "Turkish Lira"
+msgstr "Turkish Lira"
+
+#: includes/functions-core.php:489
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+#: includes/functions-core.php:490
+msgid "Aland Islands"
+msgstr "Aland Islands"
+
+#: includes/functions-core.php:491
+msgid "Albania"
+msgstr "Albania"
+
+#: includes/functions-core.php:286
+msgid "Russian Ruble"
+msgstr "Rublo Russo"
+
+#: includes/functions-core.php:287
+msgid "Singapore Dollar"
+msgstr "Singapore Dollar"
+
+#: includes/functions-core.php:288
+msgid "Swedish Krona"
+msgstr "Coroa Sueca"
+
+#: includes/functions-core.php:289
+msgid "Swiss Franc"
+msgstr "Franco Suíço"
+
+#: includes/functions-core.php:290
+msgid "Taiwan New Dollar"
+msgstr ""
+
+#: includes/functions-core.php:291
+msgid "Thai Baht"
+msgstr "Baht Tailandês"
+
+#: includes/functions-core.php:281
+msgid "Mexican Peso"
+msgstr "Peso Mexicano"
+
+#: includes/functions-core.php:282
+msgid "Norwegian Krone"
+msgstr "Coroa Norueguesa"
+
+#: includes/functions-core.php:283
+msgid "New Zealand Dollar"
+msgstr "Dólar Neozelandês "
+
+#: includes/functions-core.php:284
+msgid "Philippine Peso"
+msgstr ""
+
+#: includes/functions-core.php:285
+msgid "Polish Zloty"
+msgstr "Zloty Polaco"
+
+#: includes/functions-core.php:276
+msgid "Hong Kong Dollar"
+msgstr "Dólar Hong Kong "
+
+#: includes/functions-core.php:277
+msgid "Hungarian Forint"
+msgstr "Florim Húngaro"
+
+#: includes/functions-core.php:278
+msgid "Israeli New Sheqel"
+msgstr ""
+
+#: includes/functions-core.php:279
+msgid "Japanese Yen"
+msgstr "Yen Japonês"
+
+#: includes/functions-core.php:280
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: includes/functions-core.php:188 includes/functions-core.php:191
+msgid "Thank you for your payment. The subscription may take a while to get activated."
+msgstr ""
+
+#: includes/functions-core.php:268
+msgid "US Dollar"
+msgstr ""
+
+#: includes/functions-core.php:269
+msgid "Euro"
+msgstr ""
+
+#: includes/functions-core.php:270
+msgid "Pound Sterling"
+msgstr ""
+
+#: includes/functions-core.php:271
+msgid "Canadian Dollar"
+msgstr ""
+
+#: includes/functions-core.php:272
+msgid "Australian Dollar"
+msgstr ""
+
+#: includes/functions-core.php:273
+msgid "Brazilian Real"
+msgstr "Real Brasileiro"
+
+#: includes/functions-core.php:274
+msgid "Czech Koruna"
+msgstr "Coroa da República Checa"
+
+#: includes/functions-core.php:275
+msgid "Danish Krone"
+msgstr "Coroa Dinamarquesa"
+
+#: includes/functions-content-filtering.php:220
+msgid "Renew %s subscription. The subscription will be active until %s"
+msgstr ""
+
+#: includes/functions-content-filtering.php:237
+msgid "Renew Subscription"
+msgstr ""
+
+#: includes/functions-content-filtering.php:278
+msgid "Are you sure you want to cancel your %1$s subscription? This action will remove the subscription."
+msgstr ""
+
+#: includes/functions-content-filtering.php:287
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: includes/functions-content-filtering.php:344
+msgid "Your %s subscription is still pending. Do you wish to retry the payment?"
+msgstr ""
+
+#: includes/functions-content-filtering.php:362
+#: includes/functions-subscription-plan.php:400
+msgid "Retry payment"
+msgstr ""
+
+#: includes/functions-core.php:168
+msgid "Congratulations, you have successfully upgraded your subscription."
+msgstr ""
+
+#: includes/functions-core.php:171
+msgid "Congratulations, you have successfully renewed your subscription."
+msgstr ""
+
+#: includes/functions-core.php:174 includes/functions-core.php:177
+msgid "Congratulations, you have successfully subscribed to our website."
+msgstr ""
+
+#: includes/functions-core.php:182
+msgid "Thank you for your payment. The upgrade may take a while to be processed."
+msgstr ""
+
+#: includes/functions-core.php:185
+msgid "Thank you for your payment. The renew may take a while to be processed."
+msgstr ""
+
+#: includes/class-shortcodes.php:359
+msgid "Please check your email for the confirmation link."
+msgstr ""
+
+#: includes/class-shortcodes.php:367
+msgid "You are already logged in."
+msgstr "Já iniciou a sua sessão."
+
+#: includes/class-shortcodes.php:376
+msgid "Your password was successfully changed!"
+msgstr ""
+
+#: includes/class-shortcodes.php:381
+msgid "You will soon be redirected automatically."
+msgstr ""
+
+#: includes/class-shortcodes.php:394
+msgid "The confirmation link has expired. Invalid key."
+msgstr ""
+
+#: includes/class-shortcodes.php:417
+msgid "You do not have permission to view this content"
+msgstr ""
+
+#: includes/functions-content-filtering.php:9
+msgid "You do not have access to this content. You need to create an account."
+msgstr ""
+
+#: includes/functions-content-filtering.php:13
+msgid "You do not have access to this content. You need the proper subscription."
+msgstr ""
+
+#: includes/functions-content-filtering.php:134
+msgid "Upgrade %s to:"
+msgstr ""
+
+#: includes/functions-content-filtering.php:152
+msgid "Upgrade Subscription"
+msgstr ""
+
+#: includes/functions-content-filtering.php:153
+#: includes/functions-content-filtering.php:238
+#: includes/functions-content-filtering.php:288
+#: includes/functions-content-filtering.php:363
+msgid "Go back"
+msgstr "Regressar"
+
+#: includes/class-shortcodes.php:315
+msgid "You are currently logged in as %1$s. %2$s"
+msgstr ""
+
+#: includes/class-shortcodes.php:340
+msgid "Lost your password?"
+msgstr "Perdeu a senha?"
+
+#: includes/class-shortcodes.php:313
+msgid "Log out"
+msgstr "Encerrar sessão"
+
+#: includes/class-form-handler.php:750
+msgid "Both fields are empty."
+msgstr ""
+
+#: includes/class-form-handler.php:864
+msgid "Congratulations, you have successfully created an account."
+msgstr ""
+
+#: includes/class-form-handler.php:915
+msgid "Please enter a username or email address."
+msgstr ""
+
+#: includes/class-form-handler.php:924
+msgid "The entered username doesn't exist. Please try again."
+msgstr ""
+
+#: includes/class-form-handler.php:932
+msgid "The entered email wasn't found in our database. Please try again."
+msgstr ""
+
+#: includes/class-form-handler.php:950
+msgid "Someone requested that the password be reset for the following account: <b>%1$s</b><br/><br/>If this was a mistake, just ignore this email and nothing will happen.<br/>To reset your password, visit the following link: %2$s"
+msgstr ""
+
+#: includes/class-form-handler.php:954
+msgid "Password Reset from \"%1$s\""
+msgstr ""
+
+#: includes/class-form-handler.php:964
+msgid "There was an error while trying to send the activation link."
+msgstr ""
+
+#: includes/class-form-handler.php:994
+msgid "The entered passwords don't match! Please try again."
+msgstr ""
+
+#: includes/class-form-handler.php:1077 includes/class-form-handler.php:1080
+msgid "Some of the characters entered were not valid."
+msgstr ""
+
+#: includes/class-form-handler.php:1114
+msgid "Profile updated successfully"
+msgstr ""
+
+#: includes/class-form-handler.php:1116
+msgid "Something went wrong. We could not update your profile."
+msgstr ""
+
+#: includes/class-shortcodes.php:68
+msgid "Congratulations, your account has been successfully created."
+msgstr ""
+
+#: includes/class-shortcodes.php:93 includes/class-shortcodes.php:109
+msgid "Only an administrator can add new users."
+msgstr ""
+
+#: includes/class-shortcodes.php:101
+msgid "You already have an account."
+msgstr ""
+
+#: includes/class-shortcodes.php:170
+msgid "Only registered users can see this information."
+msgstr ""
+
+#: includes/class-shortcodes.php:209
+msgid "You must be logged in to view this information. %1$sLog in%2$s"
+msgstr ""
+
+#: includes/class-shortcodes.php:212 includes/class-shortcodes.php:256
+msgid "You must be logged in to view this information."
+msgstr ""
+
+#: includes/class-shortcodes.php:225
+msgid "You do not have any subscriptions attached to your account."
+msgstr ""
+
+#: includes/class-shortcodes.php:313
+msgid "Log out of this account"
+msgstr "Sair desta conta."
+
+#: includes/class-form-handler.php:279
+msgid "You are not eligible to subscribe to: %s"
+msgstr ""
+
+#: includes/class-form-handler.php:414
+msgid "You are already a member."
+msgstr ""
+
+#: includes/class-form-handler.php:470
+msgid "Your subscription has been successfully upgraded."
+msgstr ""
+
+#: includes/class-form-handler.php:514
+msgid "Your subscription has been successfully renewed."
+msgstr ""
+
+#: includes/class-form-handler.php:563
+msgid "Your subscription has been successfully removed."
+msgstr ""
+
+#: includes/class-form-handler.php:570
+msgid "Something went wrong. We could not cancel your subscription."
+msgstr ""
+
+#: includes/class-form-handler.php:750
+msgid "ERROR"
+msgstr "Erro"
+
+#: includes/class-form-handler.php:59
+msgid "This username is already taken. Please choose another one."
+msgstr ""
+
+#: includes/class-form-handler.php:70 includes/class-form-handler.php:77
+#: includes/class-form-handler.php:1035 includes/class-form-handler.php:1042
+msgid "Please enter an e-mail address."
+msgstr ""
+
+#: includes/class-form-handler.php:81 includes/class-form-handler.php:1046
+msgid "The e-mail address doesn't seem to be valid."
+msgstr ""
+
+#: includes/class-form-handler.php:87 includes/class-form-handler.php:1052
+msgid "This e-mail is already registered. Please choose another one."
+msgstr ""
+
+#: includes/class-form-handler.php:100
+msgid "Please enter a password."
+msgstr ""
+
+#: includes/class-form-handler.php:103
+msgid "Please repeat the password."
+msgstr ""
+
+#: includes/class-form-handler.php:111 includes/class-form-handler.php:1085
+msgid "The passwords did not match."
+msgstr ""
+
+#: includes/class-form-handler.php:216
+msgid "Please select a subscription plan."
+msgstr ""
+
+#: includes/class-form-handler.php:224
+msgid "The selected subscription plan does not exist or is inactive."
+msgstr ""
+
+#: includes/class-form-handler.php:246 includes/class-form-handler.php:265
+msgid "Something went wrong."
+msgstr "Algo correu mal."
+
+#: includes/class-emails.php:109
+msgid "Register Email"
+msgstr ""
+
+#: includes/class-emails.php:110
+msgid "Activate Subscription Email"
+msgstr ""
+
+#: includes/class-emails.php:111
+msgid "Cancel Subscription Email"
+msgstr ""
+
+#: includes/class-emails.php:112
+msgid "Expired Subscription Email"
+msgstr ""
+
+#: includes/class-emails.php:122
+msgid "You have a new account"
+msgstr ""
+
+#: includes/class-emails.php:123
+msgid "Your Subscription is now active"
+msgstr ""
+
+#: includes/class-emails.php:124
+msgid "Your Subscription has been canceled"
+msgstr ""
+
+#: includes/class-emails.php:125
+msgid "Your Subscription has expired"
+msgstr ""
+
+#: includes/class-emails.php:135
+msgid "Congratulations {{display_name}}! You have successfully created an account!"
+msgstr ""
+
+#: includes/class-emails.php:136
+msgid "Congratulations {{display_name}}! The \"{{subscription_name}}\" plan has been successfully activated."
+msgstr ""
+
+#: includes/class-emails.php:137
+msgid "Hello {{display_name}}, The \"{{subscription_name}}\" plan has been canceled."
+msgstr ""
+
+#: includes/class-emails.php:138
+msgid "Hello {{display_name}},The \"{{subscription_name}}\" plan has expired."
+msgstr ""
+
+#: includes/class-form-handler.php:46 includes/class-form-handler.php:53
+msgid "Please enter a username."
+msgstr "Por favor escolha um nome de utilizador."
+
+#: includes/class-custom-post-types.php:80
+msgid "Search %s"
+msgstr "Procurar %s"
+
+#: includes/class-custom-post-types.php:81
+msgid "Parent %s:"
+msgstr "%s superior:"
+
+#: includes/class-custom-post-types.php:82
+msgid "No %s found"
+msgstr "Não %s encontrado"
+
+#: includes/class-custom-post-types.php:83
+msgid "No %s found in Trash"
+msgstr "Nenhum %s encontrado no lixo"
+
+#: includes/class-custom-post-types.php:79
+msgid "%s"
+msgstr "%s"
+
+#: includes/class-custom-post-types.php:76
+msgid "New %s"
+msgstr "Nova %s"
+
+#: includes/class-custom-post-types.php:77
+msgid "Edit %s"
+msgstr "Editar %s"
+
+#: includes/class-custom-post-types.php:78
+msgid "View %s"
+msgstr "Ver %s"
+
+#: includes/class-custom-post-types.php:70
+msgctxt "post type general name"
+msgid "%s"
+msgstr ""
+
+#: includes/class-custom-post-types.php:71
+msgctxt "post type singular name"
+msgid "%s"
+msgstr ""
+
+#: includes/class-custom-post-types.php:72
+msgctxt "admin menu"
+msgid "%s"
+msgstr ""
+
+#: includes/class-custom-post-types.php:73
+msgctxt "add new on admin bar"
+msgid "%s"
+msgstr ""
+
+#: includes/class-custom-post-types.php:74
+msgctxt "paid-member-subscriptions"
+msgid "Add New"
+msgstr ""
+
+#: includes/class-custom-post-types.php:75
+msgid "Add New %s"
+msgstr "Adicionar nova %s"
+
+#: includes/admin/views/view-page-settings.php:211
+msgid "You can customize this email with Profile Builder Email Customizer %1$shere%2$s"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:237
+msgid "Save Settings"
+msgstr "Guardar Configurações"
+
+#: includes/admin/views/view-page-settings.php:207
+#: includes/admin/views/view-page-settings.php:223
+msgid "Content"
+msgstr "Conteúdo"
+
+#: includes/admin/views/view-page-settings.php:94
+msgid "By checking this option you will be able to use Paid Member Subscriptions with test accounts from your payment processors."
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:104
+msgid "Active Payment Gateways"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:117
+msgid "Default Payment Gateway"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:138
+msgid "Payment Gateways"
+msgstr "Gateways de pagamento"
+
+#: includes/admin/views/view-page-settings.php:156
+msgid "Messages for logged-out users"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:159
+msgid "Messages for logged-in non-member users"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:175
+msgid "Available Tags"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:182
+msgid "General Email Options"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:184
+msgid "From Name"
+msgstr "Nome Remetente"
+
+#: includes/admin/views/view-page-settings.php:188
+msgid "From Email"
+msgstr "Email Remetente"
+
+#: includes/admin/views/view-page-settings.php:202
+#: includes/admin/views/view-page-settings.php:218
+msgid "Subject"
+msgstr "Assunto"
+
+#: includes/admin/views/view-page-members-list-table.php:13
+msgid "Bulk Add New"
+msgstr ""
+
+#: includes/admin/views/view-page-members-list-table.php:22
+msgid "Search Members"
+msgstr ""
+
+#: includes/admin/views/view-page-payments-list-table.php:18
+msgid "Search Payments"
+msgstr "Pesquisar Pagamentos"
+
+#: includes/admin/views/view-page-settings.php:41
+msgid "Load CSS"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:43
+msgid "Use Paid Member Subscriptions's own CSS in the front-end."
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:47
+msgid "Register Success Page"
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:59
+msgid "Select the page where you wish to redirect your newly registered members."
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:78
+msgid "Currency"
+msgstr "Moeda"
+
+#: includes/admin/views/view-page-settings.php:88
+msgid "Select your currency. Please note that some payment gateways can have currency restrictions."
+msgstr ""
+
+#: includes/admin/views/view-page-settings.php:92
+msgid "Test Mode"
+msgstr "Modo de Teste"
+
+#: includes/admin/views/view-page-basic-info.php:101
+msgid "Friction-less discount code creation for running promotions, making price reductions or simply rewarding your users."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:104
+msgid "Multiple Subscriptions / User"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:106
+msgid "Setup multiple subscription level blocks and allow members to sign up for more than one subscription plan (one per block)."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:109
+msgid "Navigation Menu Filtering"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:111
+msgid "Dynamically display menu items based on logged-in status as well as selected subscription plans."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:118
+msgid "<i>Paid Member Subscriptions comes with an %1$s extensive documentation%2$s to assist you.</i>"
+msgstr ""
+
+#: includes/admin/views/view-page-members-add-new-bulk.php:10
+msgid "Bulk Add Subscription Plans to Users"
+msgstr ""
+
+#: includes/admin/views/view-page-members-add-new.php:10
+msgid "Add Member Information to a User"
+msgstr ""
+
+#: includes/admin/views/view-page-members-add-new.php:31
+msgid "Select the username you wish to associate a subscription plan with. You can create a new user <a href=\"%s\">here</a>."
+msgstr ""
+
+#: includes/admin/views/view-page-members-add-new.php:51
+msgid "Add Member"
+msgstr "Adicionar membro"
+
+#: includes/admin/views/view-page-members-edit.php:10
+msgid "Edit Member"
+msgstr "Editar utilizador"
+
+#: includes/admin/views/view-page-members-list-table.php:12
+msgid "Add New"
+msgstr "Adicionar"
+
+#: includes/admin/views/view-page-basic-info.php:28
+msgid "Output subscription plans form anywhere and allow users to sign up for new subscriptions using %s shortcode."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:31
+msgid "Login"
+msgstr "Iníciar sessão"
+
+#: includes/admin/views/view-page-basic-info.php:32
+msgid "Allow members to login using %s shortcode."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:35
+msgid "Recover Password"
+msgstr "Repor senha"
+
+#: includes/admin/views/view-page-basic-info.php:36
+msgid "Add a recover password form for your members using %s shortcode."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:42
+msgid "Membership Modules"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:43
+msgid "Powerful sections that help you manage your members."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:51
+msgid "Create hierarchical subscription plans allowing your members to upgrade/downgrade from an existing subscription. Shortcode based, offering many options to customize your subscriptions listing."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:55
+msgid "Overview of all your members and their subscription plans. Easily add/remove members or edit their subscription details. "
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:62
+msgid "Keep track of all member payments, payment statuses or purchased subscription plans."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:66
+msgid "Set the payment gateway used to accept payments, select messages seen by users when accessing a restricted content page or customize default member emails. Everything is just a few clicks away. "
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:78
+msgid "Featured Add-ons"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:79
+msgid "Get more functionality by using dedicated Add-ons and tailor Paid Member Subscriptions to your project needs."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:80
+#: includes/admin/views/view-page-basic-info.php:115
+msgid "Browse all Add-ons"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:89
+msgid "Recurring Payments - PayPal Standard"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:91
+msgid "Accept recurring payments from your members through PayPal Standard."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:94
+msgid "Global Content Restriction"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:96
+msgid "Easy way to add global content restriction rules to subscription plans, based on post type, taxonomy and terms."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:99
+msgid "Discount Codes"
+msgstr "Códigos Promocionais"
+
+#: includes/admin/views/view-page-basic-info.php:16
+msgid "Add basic registration forms where members can sign-up for a subscription plan using the %s shortcode."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:19
+msgid "Account"
+msgstr "Conta"
+
+#: includes/admin/views/view-page-basic-info.php:20
+msgid "Allow members to edit their account information and manage their subscription plans using the %s shortcode."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:23
+msgid "Restrict Content"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:24
+msgid "Restrict content using the %s shortcode or directly from individual posts and pages."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:27
+msgid "Subscriptions"
+msgstr "Assinaturas"
+
+#: includes/admin/views/view-page-addons.php:176
+msgid "Not compatible with your version of Paid Member Subscriptions."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:177
+msgid "Minimum required Paid Member Subscriptions version:"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:182
+msgid "Could not install add-on. Retry or <a href=\"%s\" target=\"_blank\">install manually</a>."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:9
+msgid "<strong>Paid Member Subscriptions </strong> <small>v.</small>%s"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:10
+msgid "Accept payments, create subscription plans and restrict content on your website."
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:12
+msgid "Membership Made Easy"
+msgstr ""
+
+#: includes/admin/views/view-page-basic-info.php:15
+#: includes/class-shortcodes.php:335
+#: includes/views/shortcodes/view-shortcode-register-form.php:124
+msgid "Register"
+msgstr "Registar nova conta"
+
+#: includes/admin/views/view-page-addons.php:158
+msgid "Compatible with your version of Paid Member Subscriptions."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:167
+msgid "Upgrade Paid Member Subscriptions"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:168
+msgid "Not compatible with Paid Member Subscriptions"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:175
+msgid "Update"
+msgstr "Atualizar"
+
+#: includes/admin/views/view-page-addons.php:149
+msgid "Download Now"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:152
+msgid "Install Now"
+msgstr "Instalar"
+
+#: includes/admin/views/view-page-addons.php:149
+#: includes/admin/views/view-page-addons.php:152
+msgid "Buy Now"
+msgstr "Compre Agora"
+
+#: includes/admin/views/view-page-addons.php:27
+msgid "Add-On has been deactivated."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:50
+msgid "Something went wrong, we could not connect to the server. Please try again later."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:104
+msgid "Serial Number"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:104
+msgid "Save"
+msgstr "Guardar"
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:11
+msgid "Write description"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:12
+msgid "A description for this subscription plan. This will be displayed on the register form."
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:19
+msgid "Duration"
+msgstr "Duração"
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:24
+msgid "Day(s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:25
+msgid "Week(s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:26
+msgid "Month(s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:27
+msgid "Year(s)"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:29
+msgid "Set the subscription duration. Leave 0 for unlimited."
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:40
+msgid "Amount you want to charge people who join this plan. Leave 0 if you want this plan to be free."
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:54
+msgid "Only active subscription plans will be displayed to the user."
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:61
+msgid "User role"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:67
+msgid "... Create new user role from this Subscription Plan"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:77
+msgid "Select which user role to associate with this subscription plan."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:16
+msgid "Downloading and installing..."
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:17
+msgid "Installation complete"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:19
+msgid "Add-On is Active"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:20
+msgid "Add-On has been activated"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:21
+msgid "Retry Install"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:23
+#: includes/admin/views/view-page-addons.php:140
+msgid "Add-On is <strong>active</strong>"
+msgstr ""
+
+#: includes/admin/views/view-page-addons.php:24
+#: includes/admin/views/view-page-addons.php:138
+msgid "Add-On is <strong>inactive</strong>"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:714
+msgid "Subscription Plan draft updated."
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:729
+msgid "%s Subscription Plan updated."
+msgid_plural "%s Subscription Plans updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:730
+msgid "%s Subscription Plan not updated, somebody is editing it."
+msgid_plural "%s Subscription Plans not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:731
+msgid "%s Subscription Plan permanently deleted."
+msgid_plural "%s Subscription Plans permanently deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:732
+msgid "%s Subscription Plan moved to the Trash."
+msgid_plural "%s Subscription Plans moved to the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:733
+msgid "%s Subscription Plan restored from the Trash."
+msgid_plural "%s Subscription Plans restored from the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:782
+msgid "%d subscription plan has been successfully activated"
+msgid_plural "%d subscription plans have been successfully activated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:785
+msgid "%d subscription plan has been successfully deactivated"
+msgid_plural "%d subscription plans have been successfully deactivated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:811
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:19
+#: includes/admin/views/view-page-basic-info.php:50
+msgid "Subscription Plans"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-meta-box-single-content-restriction.php:55
+msgid "Content Restriction"
+msgstr ""
+
+#: includes/admin/meta-boxes/class-meta-box-subscription-plan-details.php:148
+msgid "Subscription Plan Details"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:8
+msgid "Display To"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:11
+msgid "Everyone"
+msgstr "Todo mundo"
+
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:15
+msgid "Logged In Users "
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:34
+msgid "Members subscribed to these Subscription plan(s) will be able to view this page."
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:36
+msgid "You do not have any active Subscription Plans yet. Please create them <a href=\"%s\">here</a>"
+msgstr ""
+
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:9
+msgid "Description"
+msgstr "Descrição"
+
+#: includes/admin/class-admin-subscription-plans.php:707
+msgid "Custom field deleted."
+msgstr "Campo apagado"
+
+#: includes/admin/class-admin-subscription-plans.php:710
+#: includes/admin/class-admin-subscription-plans.php:711
+msgid "Subscription Plan saved."
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:712
+msgid "Subscription Plan submitted."
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:713
+msgid "M j, Y @ G:i"
+msgstr "j M, Y @ G:i"
+
+#: includes/admin/class-admin-subscription-plans.php:501
+msgid "Delete Plan"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:539
+msgid "Enter Subscription Plan name here"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:705
+#: includes/admin/class-admin-subscription-plans.php:708
+msgid "Subscription Plan updated."
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:706
+msgid "Custom field updated."
+msgstr "Campo atualizado"
+
+#: includes/admin/class-admin-subscription-plans.php:327
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:52
+msgid "Inactive"
+msgstr "Inactiva"
+
+#: includes/admin/class-admin-subscription-plans.php:337
+#: includes/functions-subscription-plan.php:312
+msgid "%s Day"
+msgid_plural "%s Days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:340
+#: includes/functions-subscription-plan.php:315
+msgid "%s Week"
+msgid_plural "%s Weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:343
+#: includes/functions-subscription-plan.php:318
+msgid "%s Month"
+msgid_plural "%s Months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:346
+#: includes/functions-subscription-plan.php:321
+msgid "%s Year"
+msgid_plural "%s Years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/class-admin-subscription-plans.php:353
+#: includes/functions-subscription-plan.php:295
+msgid "Free"
+msgstr "Gratuito"
+
+#: includes/admin/class-admin-subscription-plans.php:308
+msgid "Move Subscription Plan Up"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:313
+msgid "Move Subscription Plan Down"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:325
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:51
+#: includes/functions-member.php:106
+msgid "Active"
+msgstr "Ação"
+
+#: includes/admin/class-admin-subscription-plans.php:267
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:36
+msgid "Price"
+msgstr "Preço"
+
+#: includes/admin/class-admin-subscription-plans.php:229
+#: includes/admin/class-admin-subscription-plans.php:524
+msgid "Add Upgrade"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:237
+#: includes/admin/class-admin-subscription-plans.php:525
+msgid "Add Downgrade"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:245
+#: includes/admin/class-admin-subscription-plans.php:501
+msgid "Are you sure you want to delete this Subscription Plan?"
+msgstr ""
+
+#: includes/admin/class-admin-payments-list-table.php:288
+#: includes/admin/class-admin-subscription-plans.php:245
+msgid "Delete"
+msgstr "Remover"
+
+#: includes/admin/class-admin-subscription-plans.php:221
+#: includes/admin/class-admin-subscription-plans.php:394
+#: includes/admin/views/view-page-addons.php:14
+#: includes/admin/views/view-page-addons.php:129
+msgid "Activate"
+msgstr "Ativar"
+
+#: includes/admin/class-admin-subscription-plans.php:219
+#: includes/admin/class-admin-subscription-plans.php:395
+#: includes/admin/views/view-page-addons.php:26
+#: includes/admin/views/view-page-addons.php:133
+msgid "Deactivate"
+msgstr "Desativar"
+
+#: includes/admin/class-admin-subscription-plans.php:164
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] "Ativo <span class=\"count\">(%s)</span>"
+msgstr[1] "Ativos <span class=\"count\">(%s)</span>"
+
+#: includes/admin/class-admin-subscription-plans.php:167
+msgctxt "Inactive status for subscription plan"
+msgid "Inactive"
+msgstr ""
+
+#: includes/admin/class-admin-subscription-plans.php:172
+msgid "Inactive <span class=\"count\">(%s)</span>"
+msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] "Inativo <span class=\"count\">(%s)</span>"
+msgstr[1] "Inativos <span class=\"count\">(%s)</span>"
+
+#: includes/admin/class-admin-subscription-plans.php:159
+msgctxt "Active status for subscription plan"
+msgid "Active"
+msgstr ""
+
+#: includes/admin/class-admin-settings.php:68
+msgid "E-Mails"
+msgstr ""
+
+#: includes/admin/class-admin-settings.php:77
+#: includes/admin/views/view-page-basic-info.php:65
+msgid "Settings"
+msgstr "Settings"
+
+#: includes/admin/class-admin-settings.php:67
+msgid "Messages"
+msgstr "Mail Mensagens"
+
+#: includes/admin/class-admin-settings.php:65
+#: includes/admin/views/view-page-settings.php:75
+msgid "General"
+msgstr "Global"
+
+#: includes/admin/class-admin-payments-list-table.php:167
+msgid "User no longer exists"
+msgstr ""
+
+#: includes/admin/class-admin-payments-list-table.php:295
+msgid "IP Address"
+msgstr "Endereço de IP"
+
+#: includes/admin/class-admin-payments-list-table.php:390
+msgid "No payments found"
+msgstr ""
+
+#: includes/admin/class-admin-payments.php:87
+#: includes/admin/class-admin-settings.php:66
+#: includes/admin/views/view-page-basic-info.php:61
+msgid "Payments"
+msgstr "Pagamentos"
+
+#: includes/admin/class-admin-settings.php:52
+msgid "Settings saved."
+msgstr "Configurações gravadas."
+
+#: includes/admin/class-admin-payments-list-table.php:65
+msgid "Transaction ID"
+msgstr "ID da Transação"
+
+#: includes/admin/class-admin-payments-list-table.php:61
+#: includes/functions-subscription-plan.php:427
+msgid "Subscription"
+msgstr "Subscrição"
+
+#: includes/admin/class-admin-payments-list-table.php:62
+msgid "Amount"
+msgstr "Quantia"
+
+#: includes/admin/class-admin-payments-list-table.php:63
+msgid "Date / Time"
+msgstr ""
+
+#: includes/admin/class-admin-payments-list-table.php:64
+msgid "Type"
+msgstr "Tipo"
+
+#: includes/admin/class-admin-payments-list-table.php:60
+msgid "User"
+msgstr "Utilizador"
+
+#: includes/admin/class-admin-members-list-table.php:62
+msgid "Subscribed to"
+msgstr ""
+
+#: includes/admin/class-admin-members-list-table.php:322
+msgid "Start date"
+msgstr "Data de Íncio"
+
+#: includes/admin/class-admin-members-list-table.php:343
+msgid "No members found"
+msgstr ""
+
+#: includes/admin/class-admin-members.php:121
+msgid "%d members successfully added."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:203
+msgid "Please select a user."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:209
+#: includes/admin/class-admin-members.php:303
+#: includes/admin/class-admin-members.php:310
+msgid "It seems this user does not exist."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:217
+msgid "Please add at least one Subscription Plan."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:251
+msgid "Please fill in all the required fields."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:261
+msgid "This user is already a member."
+msgstr ""
+
+#: includes/admin/class-admin-members.php:480
+#: includes/admin/views/view-page-basic-info.php:54
+msgid "Members"
+msgstr "Membros"
+
+#: includes/admin/class-admin-payments-list-table.php:59
+#: includes/admin/class-admin-subscription-plans.php:269
+msgid "ID"
+msgstr "ID"
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:315
+msgid "Edit User"
+msgstr "Editar Usuário"
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:343
+#: includes/admin/class-admin-members-list-table.php:316
+msgid "Subscription Plan Not Found - ID: %s"
+msgstr ""
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:370
+msgid "No users found"
+msgstr ""
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:63
+msgid "Role"
+msgstr "Papel"
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:128
+msgid "Select Subscription Plan..."
+msgstr ""
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:137
+msgid "Assign"
+msgstr ""
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:185
+msgid "Select %s"
+msgstr "Seleccionar %s"
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:62
+#: includes/admin/class-admin-members-list-table.php:61
+msgid "E-mail"
+msgstr "E-mail"
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:60
+#: includes/admin/class-admin-members-list-table.php:59
+msgid "User ID"
+msgstr ""
+
+#: includes/admin/class-admin-members-add-new-bulk-list-table.php:61
+#: includes/admin/class-admin-members-list-table.php:60
+#: includes/admin/views/view-page-members-add-new.php:17
+#: includes/admin/views/view-page-members-edit.php:19
+msgid "Username"
+msgstr "Utilizador"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:421
+msgid "Are you sure you want to remove this Subscription Plan?"
+msgstr ""
+
+#: includes/admin/class-admin-member-subscription-list-table.php:421
+msgid "Remove"
+msgstr "Eliminar"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:418
+#: includes/functions-subscription-plan.php:390
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:318
+msgid "Not Found - ID: %s"
+msgstr ""
+
+#: includes/admin/class-admin-member-subscription-list-table.php:325
+#: includes/admin/views/view-page-members-add-new.php:20
+msgid "Select..."
+msgstr "Seleccione"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:416
+#: includes/admin/class-admin-members-list-table.php:288
+msgid "Edit"
+msgstr "Edição"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:55
+#: includes/admin/class-admin-members-list-table.php:323
+msgid "Expiration date"
+msgstr "Data Limite"
+
+#: includes/admin/class-admin-member-subscription-list-table.php:56
+#: includes/admin/class-admin-members-list-table.php:324
+#: includes/admin/class-admin-payments-list-table.php:66
+#: includes/admin/class-admin-subscription-plans.php:268
+#: includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:48
+msgid "Status"
+msgstr "Estatísticas"
+
+#: includes/admin/class-admin-basic-info.php:40
+msgid "Basic Information"
+msgstr ""
+
+#: includes/admin/class-admin-member-subscription-list-table.php:53
+#: includes/admin/class-admin-subscription-plans.php:811
+msgid "Subscription Plan"
+msgstr ""
+
+#: includes/admin/class-admin-member-subscription-list-table.php:54
+msgid "Start Date"
+msgstr "Data inicial"
+
+#: i18n/ZA.php:13
+msgid "Limpopo"
+msgstr "Limpopo"
+
+#: i18n/ZA.php:14
+msgid "Mpumalanga"
+msgstr "Mpumalanga"
+
+#: i18n/ZA.php:15
+msgid "Northern Cape"
+msgstr "Northern Cape"
+
+#: i18n/ZA.php:16
+msgid "North West"
+msgstr "North West"
+
+#: i18n/ZA.php:17
+msgid "Western Cape"
+msgstr "Western Cape"
+
+#: includes/admin/class-admin-addons.php:230
+msgid "Add-ons"
+msgstr "Módulos adicionais"
+
+#: i18n/US.php:68
+msgid "US Virgin Islands"
+msgstr "US Virgin Islands"
+
+#: i18n/ZA.php:9
+msgid "Eastern Cape"
+msgstr "Eastern Cape"
+
+#: i18n/ZA.php:10
+msgid "Free State"
+msgstr "Free State"
+
+#: i18n/ZA.php:11
+msgid "Gauteng"
+msgstr "Gauteng"
+
+#: i18n/ZA.php:12
+msgid "KwaZulu-Natal"
+msgstr "KwaZulu-Natal"
+
+#: i18n/US.php:66 includes/functions-core.php:667
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#: i18n/US.php:67
+msgid "US Minor Outlying Islands"
+msgstr "Ilhas Menores Distantes dos Estados Unidos"
+
+#: i18n/US.php:64 includes/functions-core.php:578
+msgid "Guam"
+msgstr "Guam"
+
+#: i18n/US.php:65 includes/functions-core.php:653
+msgid "Northern Mariana Islands"
+msgstr "Northern Mariana Islands"
+
+#: i18n/US.php:59
+msgid "Wyoming"
+msgstr "Wyoming"
+
+#: i18n/US.php:60
+msgid "Armed Forces (AA)"
+msgstr "Forças Armadas (AA)"
+
+#: i18n/US.php:61
+msgid "Armed Forces (AE)"
+msgstr "Forças Armadas (AE)"
+
+#: i18n/US.php:62
+msgid "Armed Forces (AP)"
+msgstr "Forças Armadas (AP)"
+
+#: i18n/US.php:63 includes/functions-core.php:493
+msgid "American Samoa"
+msgstr "American Samoa"
+
+#: i18n/US.php:54
+msgid "Vermont"
+msgstr "Vermont"
+
+#: i18n/US.php:55
+msgid "Virginia"
+msgstr "Virginia"
+
+#: i18n/US.php:56
+msgid "Washington"
+msgstr "Washington"
+
+#: i18n/US.php:57
+msgid "West Virginia"
+msgstr "West Virginia"
+
+#: i18n/US.php:58
+msgid "Wisconsin"
+msgstr "Wisconsin"
+
+#: i18n/US.php:49
+msgid "South Carolina"
+msgstr "South Carolina"
+
+#: i18n/US.php:50
+msgid "South Dakota"
+msgstr "South Dakota"
+
+#: i18n/US.php:51
+msgid "Tennessee"
+msgstr "Tennessee"
+
+#: i18n/US.php:52
+msgid "Texas"
+msgstr "Texas"
+
+#: i18n/US.php:53
+msgid "Utah"
+msgstr "Utah"
+
+#: i18n/US.php:44
+msgid "Ohio"
+msgstr "Ohio"
+
+#: i18n/US.php:45
+msgid "Oklahoma"
+msgstr "Oklahoma"
+
+#: i18n/US.php:46
+msgid "Oregon"
+msgstr "Oregon"
+
+#: i18n/US.php:47
+msgid "Pennsylvania"
+msgstr "Pennsylvania"
+
+#: i18n/US.php:48
+msgid "Rhode Island"
+msgstr "Rhode Island"
+
+#: i18n/US.php:42
+msgid "North Carolina"
+msgstr "Carolina do Norte"
+
+#: i18n/US.php:43
+msgid "North Dakota"
+msgstr "North Dakota"
+
+#: i18n/US.php:39
+msgid "New Jersey"
+msgstr "New Jersey"
+
+#: i18n/US.php:40
+msgid "New Mexico"
+msgstr "New Mexico"
+
+#: i18n/US.php:41
+msgid "New York"
+msgstr "New York"
+
+#: i18n/US.php:33
+msgid "Mississippi"
+msgstr "Mississippi"
+
+#: i18n/US.php:34
+msgid "Missouri"
+msgstr "Missouri"
+
+#: i18n/US.php:36
+msgid "Nebraska"
+msgstr "Nebraska"
+
+#: i18n/US.php:37
+msgid "Nevada"
+msgstr "Nevada"
+
+#: i18n/US.php:38
+msgid "New Hampshire"
+msgstr "New Hampshire"
+
+#: i18n/US.php:28
+msgid "Maine"
+msgstr "Maine"
+
+#: i18n/US.php:29
+msgid "Maryland"
+msgstr "Maryland"
+
+#: i18n/US.php:30
+msgid "Massachusetts"
+msgstr "Massachusetts"
+
+#: i18n/US.php:31
+msgid "Michigan"
+msgstr "Michigan"
+
+#: i18n/US.php:32
+msgid "Minnesota"
+msgstr "Minnesota"
+
+#: i18n/US.php:25
+msgid "Kansas"
+msgstr "Kansas"
+
+#: i18n/US.php:26
+msgid "Kentucky"
+msgstr "Kentucky"
+
+#: i18n/US.php:27
+msgid "Louisiana"
+msgstr "Louisiana"
+
+#: i18n/US.php:24
+msgid "Iowa"
+msgstr "Iowa"
+
+#: i18n/US.php:19
+msgctxt "US state of Georgia"
+msgid "Georgia"
+msgstr "Geórgia"
+
+#: i18n/US.php:20
+msgid "Hawaii"
+msgstr "Hawaii"
+
+#: i18n/US.php:21
+msgid "Idaho"
+msgstr "Idaho"
+
+#: i18n/US.php:22
+msgid "Illinois"
+msgstr "Illinois"
+
+#: i18n/US.php:23
+msgid "Indiana"
+msgstr "Indiana"
+
+#: i18n/US.php:14
+msgid "Colorado"
+msgstr "Colorado"
+
+#: i18n/US.php:15
+msgid "Connecticut"
+msgstr "Connecticut"
+
+#: i18n/US.php:16
+msgid "Delaware"
+msgstr "Delaware"
+
+#: i18n/US.php:17
+msgid "District Of Columbia"
+msgstr "Distrito de Columbia"
+
+#: i18n/US.php:18
+msgid "Florida"
+msgstr "Florida"
+
+#: i18n/US.php:9
+msgid "Alabama"
+msgstr "Alabama"
+
+#: i18n/US.php:10
+msgid "Alaska"
+msgstr "Alaska"
+
+#: i18n/US.php:11
+msgid "Arizona"
+msgstr "Arizona"
+
+#: i18n/US.php:12
+msgid "Arkansas"
+msgstr "Arkansas"
+
+#: i18n/US.php:13
+msgid "California"
+msgstr "California"
+
+#: i18n/TR.php:84
+msgid "I&#287;d&#305;r"
+msgstr "I&#287;d&#305;r"
+
+#: i18n/TR.php:85
+msgid "Yalova"
+msgstr "Yalova"
+
+#: i18n/TR.php:86
+msgid "Karab&#252;k"
+msgstr "Karab&#252;k"
+
+#: i18n/TR.php:87
+msgid "Kilis"
+msgstr "Kilis"
+
+#: i18n/TR.php:88
+msgid "Osmaniye"
+msgstr "Osmaniye"
+
+#: i18n/TR.php:89
+msgid "D&#252;zce"
+msgstr "D&#252;zce"
+
+#: i18n/TR.php:79
+msgid "K&#305;r&#305;kkale"
+msgstr "K&#305;r&#305;kkale"
+
+#: i18n/TR.php:80
+msgid "Batman"
+msgstr "Batman"
+
+#: i18n/TR.php:81
+msgid "&#350;&#305;rnak"
+msgstr "&#350;&#305;rnak"
+
+#: i18n/TR.php:82
+msgid "Bart&#305;n"
+msgstr "Bart&#305;n"
+
+#: i18n/TR.php:83
+msgid "Ardahan"
+msgstr "Ardahan"
+
+#: i18n/TR.php:73
+msgid "Van"
+msgstr "Van"
+
+#: i18n/TR.php:74
+msgid "Yozgat"
+msgstr "Yozgat"
+
+#: i18n/TR.php:75
+msgid "Zonguldak"
+msgstr "Zonguldak"
+
+#: i18n/TR.php:76
+msgid "Aksaray"
+msgstr "Aksaray"
+
+#: i18n/TR.php:77
+msgid "Bayburt"
+msgstr "Bayburt"
+
+#: i18n/TR.php:78
+msgid "Karaman"
+msgstr "Karaman"
+
+#: i18n/TR.php:68
+msgid "Tokat"
+msgstr "Tokat"
+
+#: i18n/TR.php:69
+msgid "Trabzon"
+msgstr "Trabzon"
+
+#: i18n/TR.php:70
+msgid "Tunceli"
+msgstr "Tunceli"
+
+#: i18n/TR.php:71
+msgid "&#350;anl&#305;urfa"
+msgstr "&#350;anl&#305;urfa"
+
+#: i18n/TR.php:72
+msgid "U&#351;ak"
+msgstr "U&#351;ak"
+
+#: i18n/TR.php:62
+msgid "Sakarya"
+msgstr "Sakarya"
+
+#: i18n/TR.php:63
+msgid "Samsun"
+msgstr "Samsun"
+
+#: i18n/TR.php:64
+msgid "Siirt"
+msgstr "Siirt"
+
+#: i18n/TR.php:65
+msgid "Sinop"
+msgstr "Sinop"
+
+#: i18n/TR.php:66
+msgid "Sivas"
+msgstr "Sivas"
+
+#: i18n/TR.php:67
+msgid "Tekirda&#287;"
+msgstr "Tekirda&#287;"
+
+#: i18n/TR.php:56
+msgid "Mu&#287;la"
+msgstr "Mu&#287;la"
+
+#: i18n/TR.php:57
+msgid "Mu&#351;"
+msgstr "Mu&#351;"
+
+#: i18n/TR.php:58
+msgid "Nev&#351;ehir"
+msgstr "Nev&#351;ehir"
+
+#: i18n/TR.php:59
+msgid "Ni&#287;de"
+msgstr "Ni&#287;de"
+
+#: i18n/TR.php:60
+msgid "Ordu"
+msgstr "Ordu"
+
+#: i18n/TR.php:61
+msgid "Rize"
+msgstr "Rize"
+
+#: i18n/TR.php:51
+msgid "K&#252;tahya"
+msgstr "K&#252;tahya"
+
+#: i18n/TR.php:52
+msgid "Malatya"
+msgstr "Malatya"
+
+#: i18n/TR.php:53
+msgid "Manisa"
+msgstr "Manisa"
+
+#: i18n/TR.php:54
+msgid "Kahramanmara&#351;"
+msgstr "Kahramanmara&#351;"
+
+#: i18n/TR.php:55
+msgid "Mardin"
+msgstr "Mardin"
+
+#: i18n/TR.php:46
+msgid "Kayseri"
+msgstr "Kayseri"
+
+#: i18n/TR.php:47
+msgid "K&#305;rklareli"
+msgstr "K&#305;rklareli"
+
+#: i18n/TR.php:48
+msgid "K&#305;r&#351;ehir"
+msgstr "K&#305;r&#351;ehir"
+
+#: i18n/TR.php:49
+msgid "Kocaeli"
+msgstr "Kocaeli"
+
+#: i18n/TR.php:50
+msgid "Konya"
+msgstr "Konya"
+
+#: i18n/TR.php:40
+msgid "Isparta"
+msgstr "Isparta"
+
+#: i18n/TR.php:41
+msgid "&#304;&#231;el"
+msgstr "&#304;&#231;el"
+
+#: i18n/TR.php:42
+msgid "&#304;stanbul"
+msgstr "&#304;stanbul"
+
+#: i18n/TR.php:43
+msgid "&#304;zmir"
+msgstr "&#304;zmir"
+
+#: i18n/TR.php:44
+msgid "Kars"
+msgstr "Kars"
+
+#: i18n/TR.php:45
+msgid "Kastamonu"
+msgstr "Kastamonu"
+
+#: i18n/TR.php:35
+msgid "Gaziantep"
+msgstr "Gaziantep"
+
+#: i18n/TR.php:36
+msgid "Giresun"
+msgstr "Giresun"
+
+#: i18n/TR.php:37
+msgid "G&#252;m&#252;&#351;hane"
+msgstr "G&#252;m&#252;&#351;hane"
+
+#: i18n/TR.php:38
+msgid "Hakkari"
+msgstr "Hakkari"
+
+#: i18n/TR.php:39
+msgid "Hatay"
+msgstr "Hatay"
+
+#: i18n/TR.php:29
+msgid "Diyarbak&#305;r"
+msgstr "Diyarbak&#305;r"
+
+#: i18n/TR.php:30
+msgid "Edirne"
+msgstr "Edirne"
+
+#: i18n/TR.php:31
+msgid "Elaz&#305;&#287;"
+msgstr "Elaz&#305;&#287;"
+
+#: i18n/TR.php:32
+msgid "Erzincan"
+msgstr "Erzincan"
+
+#: i18n/TR.php:33
+msgid "Erzurum"
+msgstr "Erzurum"
+
+#: i18n/TR.php:34
+msgid "Eski&#351;ehir"
+msgstr "Eski&#351;ehir"
+
+#: i18n/TR.php:23
+msgid "Burdur"
+msgstr "Burdur"
+
+#: i18n/TR.php:24
+msgid "Bursa"
+msgstr "Bursa"
+
+#: i18n/TR.php:25
+msgid "&#199;anakkale"
+msgstr "&#199;anakkale"
+
+#: i18n/TR.php:26
+msgid "&#199;ank&#305;r&#305;"
+msgstr "&#199;ank&#305;r&#305;"
+
+#: i18n/TR.php:27
+msgid "&#199;orum"
+msgstr "&#199;orum"
+
+#: i18n/TR.php:28
+msgid "Denizli"
+msgstr "Denizli"
+
+#: i18n/TR.php:17
+msgid "Ayd&#305;n"
+msgstr "Ayd&#305;n"
+
+#: i18n/TR.php:18
+msgid "Bal&#305;kesir"
+msgstr "Bal&#305;kesir"
+
+#: i18n/TR.php:19
+msgid "Bilecik"
+msgstr "Bilecik"
+
+#: i18n/TR.php:20
+msgid "Bing&#246;l"
+msgstr "Bing&#246;l"
+
+#: i18n/TR.php:21
+msgid "Bitlis"
+msgstr "Bitlis"
+
+#: i18n/TR.php:22
+msgid "Bolu"
+msgstr "Bolu"
+
+#: i18n/TR.php:11
+msgid "Afyon"
+msgstr "Afyon"
+
+#: i18n/TR.php:12
+msgid "A&#287;r&#305;"
+msgstr "A&#287;r&#305;"
+
+#: i18n/TR.php:13
+msgid "Amasya"
+msgstr "Amasya"
+
+#: i18n/TR.php:14
+msgid "Ankara"
+msgstr "Ankara"
+
+#: i18n/TR.php:15
+msgid "Antalya"
+msgstr "Antalya"
+
+#: i18n/TR.php:16
+msgid "Artvin"
+msgstr "Artvin"
+
+#: i18n/TH.php:83
+msgid "Uttaradit (&#3629;&#3640;&#3605;&#3619;&#3604;&#3636;&#3605;&#3606;&#3660;)"
+msgstr "Uttaradit (&#3629;&#3640;&#3605;&#3619;&#3604;&#3636;&#3605;&#3606;&#3660;)"
+
+#: i18n/TH.php:84
+msgid "Yala (&#3618;&#3632;&#3621;&#3634;)"
+msgstr "Yala (&#3618;&#3632;&#3621;&#3634;)"
+
+#: i18n/TH.php:85
+msgid "Yasothon (&#3618;&#3650;&#3626;&#3608;&#3619;)"
+msgstr "Yasothon (&#3618;&#3650;&#3626;&#3608;&#3619;)"
+
+#: i18n/TR.php:9
+msgid "Adana"
+msgstr "Adana"
+
+#: i18n/TR.php:10
+msgid "Ad&#305;yaman"
+msgstr "Ad&#305;yaman"
+
+#: i18n/TH.php:77
+msgid "Tak (&#3605;&#3634;&#3585;)"
+msgstr "Tak (&#3605;&#3634;&#3585;)"
+
+#: i18n/TH.php:78
+msgid "Trang (&#3605;&#3619;&#3633;&#3591;)"
+msgstr "Trang (&#3605;&#3619;&#3633;&#3591;)"
+
+#: i18n/TH.php:79
+msgid "Trat (&#3605;&#3619;&#3634;&#3604;)"
+msgstr "Trat (&#3605;&#3619;&#3634;&#3604;)"
+
+#: i18n/TH.php:80
+msgid "Ubon Ratchathani (&#3629;&#3640;&#3610;&#3621;&#3619;&#3634;&#3594;&#3608;&#3634;&#3609;&#3637;)"
+msgstr "Ubon Ratchathani (&#3629;&#3640;&#3610;&#3621;&#3619;&#3634;&#3594;&#3608;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:81
+msgid "Udon Thani (&#3629;&#3640;&#3604;&#3619;&#3608;&#3634;&#3609;&#3637;)"
+msgstr "Udon Thani (&#3629;&#3640;&#3604;&#3619;&#3608;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:82
+msgid "Uthai Thani (&#3629;&#3640;&#3607;&#3633;&#3618;&#3608;&#3634;&#3609;&#3637;)"
+msgstr "Uthai Thani (&#3629;&#3640;&#3607;&#3633;&#3618;&#3608;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:72
+msgid "Songkhla (&#3626;&#3591;&#3586;&#3621;&#3634;)"
+msgstr "Songkhla (&#3626;&#3591;&#3586;&#3621;&#3634;)"
+
+#: i18n/TH.php:73
+msgid "Sukhothai (&#3626;&#3640;&#3650;&#3586;&#3607;&#3633;&#3618;)"
+msgstr "Sukhothai (&#3626;&#3640;&#3650;&#3586;&#3607;&#3633;&#3618;)"
+
+#: i18n/TH.php:74
+msgid "Suphan Buri (&#3626;&#3640;&#3614;&#3619;&#3619;&#3603;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Suphan Buri (&#3626;&#3640;&#3614;&#3619;&#3619;&#3603;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:75
+msgid "Surat Thani (&#3626;&#3640;&#3619;&#3634;&#3625;&#3598;&#3619;&#3660;&#3608;&#3634;&#3609;&#3637;)"
+msgstr "Surat Thani (&#3626;&#3640;&#3619;&#3634;&#3625;&#3598;&#3619;&#3660;&#3608;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:76
+msgid "Surin (&#3626;&#3640;&#3619;&#3636;&#3609;&#3607;&#3619;&#3660;)"
+msgstr "Surin (&#3626;&#3640;&#3619;&#3636;&#3609;&#3607;&#3619;&#3660;)"
+
+#: i18n/TH.php:66
+msgid "Samut Sakhon (&#3626;&#3617;&#3640;&#3607;&#3619;&#3626;&#3634;&#3588;&#3619;)"
+msgstr "Samut Sakhon (&#3626;&#3617;&#3640;&#3607;&#3619;&#3626;&#3634;&#3588;&#3619;)"
+
+#: i18n/TH.php:67
+msgid "Samut Songkhram (&#3626;&#3617;&#3640;&#3607;&#3619;&#3626;&#3591;&#3588;&#3619;&#3634;&#3617;)"
+msgstr "Samut Songkhram (&#3626;&#3617;&#3640;&#3607;&#3619;&#3626;&#3591;&#3588;&#3619;&#3634;&#3617;)"
+
+#: i18n/TH.php:68
+msgid "Saraburi (&#3626;&#3619;&#3632;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Saraburi (&#3626;&#3619;&#3632;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:69
+msgid "Satun (&#3626;&#3605;&#3641;&#3621;)"
+msgstr "Satun (&#3626;&#3605;&#3641;&#3621;)"
+
+#: i18n/TH.php:70
+msgid "Sing Buri (&#3626;&#3636;&#3591;&#3627;&#3660;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Sing Buri (&#3626;&#3636;&#3591;&#3627;&#3660;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:71
+msgid "Sisaket (&#3624;&#3619;&#3637;&#3626;&#3632;&#3648;&#3585;&#3625;)"
+msgstr "Sisaket (&#3624;&#3619;&#3637;&#3626;&#3632;&#3648;&#3585;&#3625;)"
+
+#: i18n/TH.php:60
+msgid "Ratchaburi (&#3619;&#3634;&#3594;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Ratchaburi (&#3619;&#3634;&#3594;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:61
+msgid "Rayong (&#3619;&#3632;&#3618;&#3629;&#3591;)"
+msgstr "Rayong (&#3619;&#3632;&#3618;&#3629;&#3591;)"
+
+#: i18n/TH.php:62
+msgid "Roi Et (&#3619;&#3657;&#3629;&#3618;&#3648;&#3629;&#3655;&#3604;)"
+msgstr "Roi Et (&#3619;&#3657;&#3629;&#3618;&#3648;&#3629;&#3655;&#3604;)"
+
+#: i18n/TH.php:63
+msgid "Sa Kaeo (&#3626;&#3619;&#3632;&#3649;&#3585;&#3657;&#3623;)"
+msgstr "Sa Kaeo (&#3626;&#3619;&#3632;&#3649;&#3585;&#3657;&#3623;)"
+
+#: i18n/TH.php:64
+msgid "Sakon Nakhon (&#3626;&#3585;&#3621;&#3609;&#3588;&#3619;)"
+msgstr "Sakon Nakhon (&#3626;&#3585;&#3621;&#3609;&#3588;&#3619;)"
+
+#: i18n/TH.php:65
+msgid "Samut Prakan (&#3626;&#3617;&#3640;&#3607;&#3619;&#3611;&#3619;&#3634;&#3585;&#3634;&#3619;)"
+msgstr "Samut Prakan (&#3626;&#3617;&#3640;&#3607;&#3619;&#3611;&#3619;&#3634;&#3585;&#3634;&#3619;)"
+
+#: i18n/TH.php:55
+msgid "Phrae (&#3649;&#3614;&#3619;&#3656;)"
+msgstr "Phrae (&#3649;&#3614;&#3619;&#3656;)"
+
+#: i18n/TH.php:56
+msgid "Phuket (&#3616;&#3641;&#3648;&#3585;&#3655;&#3605;)"
+msgstr "Phuket (&#3616;&#3641;&#3648;&#3585;&#3655;&#3605;)"
+
+#: i18n/TH.php:57
+msgid "Prachin Buri (&#3611;&#3619;&#3634;&#3592;&#3637;&#3609;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Prachin Buri (&#3611;&#3619;&#3634;&#3592;&#3637;&#3609;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:58
+msgid "Prachuap Khiri Khan (&#3611;&#3619;&#3632;&#3592;&#3623;&#3610;&#3588;&#3637;&#3619;&#3637;&#3586;&#3633;&#3609;&#3608;&#3660;)"
+msgstr "Prachuap Khiri Khan (&#3611;&#3619;&#3632;&#3592;&#3623;&#3610;&#3588;&#3637;&#3619;&#3637;&#3586;&#3633;&#3609;&#3608;&#3660;)"
+
+#: i18n/TH.php:59
+msgid "Ranong (&#3619;&#3632;&#3609;&#3629;&#3591;)"
+msgstr "Ranong (&#3619;&#3632;&#3609;&#3629;&#3591;)"
+
+#: i18n/TH.php:49
+msgid "Phatthalung (&#3614;&#3633;&#3607;&#3621;&#3640;&#3591;)"
+msgstr "Phatthalung (&#3614;&#3633;&#3607;&#3621;&#3640;&#3591;)"
+
+#: i18n/TH.php:50
+msgid "Phayao (&#3614;&#3632;&#3648;&#3618;&#3634;)"
+msgstr "Phayao (&#3614;&#3632;&#3648;&#3618;&#3634;)"
+
+#: i18n/TH.php:51
+msgid "Phetchabun (&#3648;&#3614;&#3594;&#3619;&#3610;&#3641;&#3619;&#3603;&#3660;)"
+msgstr "Phetchabun (&#3648;&#3614;&#3594;&#3619;&#3610;&#3641;&#3619;&#3603;&#3660;)"
+
+#: i18n/TH.php:52
+msgid "Phetchaburi (&#3648;&#3614;&#3594;&#3619;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Phetchaburi (&#3648;&#3614;&#3594;&#3619;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:53
+msgid "Phichit (&#3614;&#3636;&#3592;&#3636;&#3605;&#3619;)"
+msgstr "Phichit (&#3614;&#3636;&#3592;&#3636;&#3605;&#3619;)"
+
+#: i18n/TH.php:54
+msgid "Phitsanulok (&#3614;&#3636;&#3625;&#3603;&#3640;&#3650;&#3621;&#3585;)"
+msgstr "Phitsanulok (&#3614;&#3636;&#3625;&#3603;&#3640;&#3650;&#3621;&#3585;)"
+
+#: i18n/TH.php:43
+msgid "Nong Bua Lam Phu (&#3627;&#3609;&#3629;&#3591;&#3610;&#3633;&#3623;&#3621;&#3635;&#3616;&#3641;)"
+msgstr "Nong Bua Lam Phu (&#3627;&#3609;&#3629;&#3591;&#3610;&#3633;&#3623;&#3621;&#3635;&#3616;&#3641;)"
+
+#: i18n/TH.php:44
+msgid "Nong Khai (&#3627;&#3609;&#3629;&#3591;&#3588;&#3634;&#3618;)"
+msgstr "Nong Khai (&#3627;&#3609;&#3629;&#3591;&#3588;&#3634;&#3618;)"
+
+#: i18n/TH.php:45
+msgid "Nonthaburi (&#3609;&#3609;&#3607;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Nonthaburi (&#3609;&#3609;&#3607;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:46
+msgid "Pathum Thani (&#3611;&#3607;&#3640;&#3617;&#3608;&#3634;&#3609;&#3637;)"
+msgstr "Pathum Thani (&#3611;&#3607;&#3640;&#3617;&#3608;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:47
+msgid "Pattani (&#3611;&#3633;&#3605;&#3605;&#3634;&#3609;&#3637;)"
+msgstr "Pattani (&#3611;&#3633;&#3605;&#3605;&#3634;&#3609;&#3637;)"
+
+#: i18n/TH.php:48
+msgid "Phang Nga (&#3614;&#3633;&#3591;&#3591;&#3634;)"
+msgstr "Phang Nga (&#3614;&#3633;&#3591;&#3591;&#3634;)"
+
+#: i18n/TH.php:38
+msgid "Nakhon Ratchasima (&#3609;&#3588;&#3619;&#3619;&#3634;&#3594;&#3626;&#3637;&#3617;&#3634;)"
+msgstr "Nakhon Ratchasima (&#3609;&#3588;&#3619;&#3619;&#3634;&#3594;&#3626;&#3637;&#3617;&#3634;)"
+
+#: i18n/TH.php:39
+msgid "Nakhon Sawan (&#3609;&#3588;&#3619;&#3626;&#3623;&#3619;&#3619;&#3588;&#3660;)"
+msgstr "Nakhon Sawan (&#3609;&#3588;&#3619;&#3626;&#3623;&#3619;&#3619;&#3588;&#3660;)"
+
+#: i18n/TH.php:40
+msgid "Nakhon Si Thammarat (&#3609;&#3588;&#3619;&#3624;&#3619;&#3637;&#3608;&#3619;&#3619;&#3617;&#3619;&#3634;&#3594;)"
+msgstr "Nakhon Si Thammarat (&#3609;&#3588;&#3619;&#3624;&#3619;&#3637;&#3608;&#3619;&#3619;&#3617;&#3619;&#3634;&#3594;)"
+
+#: i18n/TH.php:41
+msgid "Nan (&#3609;&#3656;&#3634;&#3609;)"
+msgstr "Nan (&#3609;&#3656;&#3634;&#3609;)"
+
+#: i18n/TH.php:42
+msgid "Narathiwat (&#3609;&#3619;&#3634;&#3608;&#3636;&#3623;&#3634;&#3626;)"
+msgstr "Narathiwat (&#3609;&#3619;&#3634;&#3608;&#3636;&#3623;&#3634;&#3626;)"
+
+#: i18n/TH.php:32
+msgid "Mae Hong Son (&#3649;&#3617;&#3656;&#3630;&#3656;&#3629;&#3591;&#3626;&#3629;&#3609;)"
+msgstr "Mae Hong Son (&#3649;&#3617;&#3656;&#3630;&#3656;&#3629;&#3591;&#3626;&#3629;&#3609;)"
+
+#: i18n/TH.php:33
+msgid "Maha Sarakham (&#3617;&#3627;&#3634;&#3626;&#3634;&#3619;&#3588;&#3634;&#3617;)"
+msgstr "Maha Sarakham (&#3617;&#3627;&#3634;&#3626;&#3634;&#3619;&#3588;&#3634;&#3617;)"
+
+#: i18n/TH.php:34
+msgid "Mukdahan (&#3617;&#3640;&#3585;&#3604;&#3634;&#3627;&#3634;&#3619;)"
+msgstr "Mukdahan (&#3617;&#3640;&#3585;&#3604;&#3634;&#3627;&#3634;&#3619;)"
+
+#: i18n/TH.php:35
+msgid "Nakhon Nayok (&#3609;&#3588;&#3619;&#3609;&#3634;&#3618;&#3585;)"
+msgstr "Nakhon Nayok (&#3609;&#3588;&#3619;&#3609;&#3634;&#3618;&#3585;)"
+
+#: i18n/TH.php:36
+msgid "Nakhon Pathom (&#3609;&#3588;&#3619;&#3611;&#3600;&#3617;)"
+msgstr "Nakhon Pathom (&#3609;&#3588;&#3619;&#3611;&#3600;&#3617;)"
+
+#: i18n/TH.php:37
+msgid "Nakhon Phanom (&#3609;&#3588;&#3619;&#3614;&#3609;&#3617;)"
+msgstr "Nakhon Phanom (&#3609;&#3588;&#3619;&#3614;&#3609;&#3617;)"
+
+#: i18n/TH.php:26
+msgid "Khon Kaen (&#3586;&#3629;&#3609;&#3649;&#3585;&#3656;&#3609;)"
+msgstr "Khon Kaen (&#3586;&#3629;&#3609;&#3649;&#3585;&#3656;&#3609;)"
+
+#: i18n/TH.php:27
+msgid "Krabi (&#3585;&#3619;&#3632;&#3610;&#3637;&#3656;)"
+msgstr "Krabi (&#3585;&#3619;&#3632;&#3610;&#3637;&#3656;)"
+
+#: i18n/TH.php:28
+msgid "Lampang (&#3621;&#3635;&#3611;&#3634;&#3591;)"
+msgstr "Lampang (&#3621;&#3635;&#3611;&#3634;&#3591;)"
+
+#: i18n/TH.php:29
+msgid "Lamphun (&#3621;&#3635;&#3614;&#3641;&#3609;)"
+msgstr "Lamphun (&#3621;&#3635;&#3614;&#3641;&#3609;)"
+
+#: i18n/TH.php:30
+msgid "Loei (&#3648;&#3621;&#3618;)"
+msgstr "Loei (&#3648;&#3621;&#3618;)"
+
+#: i18n/TH.php:31
+msgid "Lopburi (&#3621;&#3614;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Lopburi (&#3621;&#3614;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:21
+msgid "Chonburi (&#3594;&#3621;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Chonburi (&#3594;&#3621;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:22
+msgid "Chumphon (&#3594;&#3640;&#3617;&#3614;&#3619;)"
+msgstr "Chumphon (&#3594;&#3640;&#3617;&#3614;&#3619;)"
+
+#: i18n/TH.php:23
+msgid "Kalasin (&#3585;&#3634;&#3628;&#3626;&#3636;&#3609;&#3608;&#3640;&#3660;)"
+msgstr "Kalasin (&#3585;&#3634;&#3628;&#3626;&#3636;&#3609;&#3608;&#3640;&#3660;)"
+
+#: i18n/TH.php:24
+msgid "Kamphaeng Phet (&#3585;&#3635;&#3649;&#3614;&#3591;&#3648;&#3614;&#3594;&#3619;)"
+msgstr "Kamphaeng Phet (&#3585;&#3635;&#3649;&#3614;&#3591;&#3648;&#3614;&#3594;&#3619;)"
+
+#: i18n/TH.php:25
+msgid "Kanchanaburi (&#3585;&#3634;&#3597;&#3592;&#3609;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Kanchanaburi (&#3585;&#3634;&#3597;&#3592;&#3609;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:16
+msgid "Chai Nat (&#3594;&#3633;&#3618;&#3609;&#3634;&#3607;)"
+msgstr "Chai Nat (&#3594;&#3633;&#3618;&#3609;&#3634;&#3607;)"
+
+#: i18n/TH.php:17
+msgid "Chaiyaphum (&#3594;&#3633;&#3618;&#3616;&#3641;&#3617;&#3636;)"
+msgstr "Chaiyaphum (&#3594;&#3633;&#3618;&#3616;&#3641;&#3617;&#3636;)"
+
+#: i18n/TH.php:18
+msgid "Chanthaburi (&#3592;&#3633;&#3609;&#3607;&#3610;&#3640;&#3619;&#3637;)"
+msgstr "Chanthaburi (&#3592;&#3633;&#3609;&#3607;&#3610;&#3640;&#3619;&#3637;)"
+
+#: i18n/TH.php:19
+msgid "Chiang Mai (&#3648;&#3594;&#3637;&#3618;&#3591;&#3651;&#3627;&#3617;&#3656;)"
+msgstr "Chiang Mai (&#3648;&#3594;&#3637;&#3618;&#3591;&#3651;&#3627;&#3617;&#3656;)"
+
+#: i18n/TH.php:20
+msgid "Chiang Rai (&#3648;&#3594;&#3637;&#3618;&#3591;&#3619;&#3634;&#3618;)"
+msgstr "Chiang Rai (&#3648;&#3594;&#3637;&#3618;&#3591;&#3619;&#3634;&#3618;)"
+
+#: i18n/TH.php:11
+msgid "Ayutthaya (&#3614;&#3619;&#3632;&#3609;&#3588;&#3619;&#3624;&#3619;&#3637;&#3629;&#3618;&#3640;&#3608;&#3618;&#3634;)"
+msgstr "Ayutthaya (&#3614;&#3619;&#3632;&#3609;&#3588;&#3619;&#3624;&#3619;&#3637;&#3629;&#3618;&#3640;&#3608;&#3618;&#3634;)"
+
+#: i18n/TH.php:12
+msgid "Bangkok (&#3585;&#3619;&#3640;&#3591;&#3648;&#3607;&#3614;&#3617;&#3627;&#3634;&#3609;&#3588;&#3619;)"
+msgstr "Bangkok (&#3585;&#3619;&#3640;&#3591;&#3648;&#3607;&#3614;&#3617;&#3627;&#3634;&#3609;&#3588;&#3619;)"
+
+#: i18n/TH.php:13
+msgid "Bueng Kan (&#3610;&#3638;&#3591;&#3585;&#3634;&#3628;)"
+msgstr "Bueng Kan (&#3610;&#3638;&#3591;&#3585;&#3634;&#3628;)"
+
+#: i18n/TH.php:14
+msgid "Buri Ram (&#3610;&#3640;&#3619;&#3637;&#3619;&#3633;&#3617;&#3618;&#3660;)"
+msgstr "Buri Ram (&#3610;&#3640;&#3619;&#3637;&#3619;&#3633;&#3617;&#3618;&#3660;)"
+
+#: i18n/TH.php:15
+msgid "Chachoengsao (&#3593;&#3632;&#3648;&#3594;&#3636;&#3591;&#3648;&#3607;&#3619;&#3634;)"
+msgstr "Chachoengsao (&#3593;&#3632;&#3648;&#3594;&#3636;&#3591;&#3648;&#3607;&#3619;&#3634;)"
+
+#: i18n/PH.php:85
+msgid "Tawi-Tawi"
+msgstr "Tawi-Tawi"
+
+#: i18n/PH.php:86
+msgid "Zambales"
+msgstr "Zambales"
+
+#: i18n/PH.php:87
+msgid "Zamboanga del Norte"
+msgstr "Zamboanga do Norte"
+
+#: i18n/PH.php:88
+msgid "Zamboanga del Sur"
+msgstr "Zamboanga do Sul"
+
+#: i18n/PH.php:89
+msgid "Zamboanga Sibugay"
+msgstr "Zamboanga Sibugay"
+
+#: i18n/PH.php:90
+msgid "Metro Manila"
+msgstr "Metro Manila"
+
+#: i18n/TH.php:9
+msgid "Amnat Charoen (&#3629;&#3635;&#3609;&#3634;&#3592;&#3648;&#3592;&#3619;&#3636;&#3597;)"
+msgstr "Amnat Charoen (&#3629;&#3635;&#3609;&#3634;&#3592;&#3648;&#3592;&#3619;&#3636;&#3597;)"
+
+#: i18n/TH.php:10
+msgid "Ang Thong (&#3629;&#3656;&#3634;&#3591;&#3607;&#3629;&#3591;)"
+msgstr "Ang Thong (&#3629;&#3656;&#3634;&#3591;&#3607;&#3629;&#3591;)"
+
+#: i18n/PH.php:78
+msgid "South Cotabato"
+msgstr "Cotabato do Sul"
+
+#: i18n/PH.php:79
+msgid "Southern Leyte"
+msgstr "Leyte Sul"
+
+#: i18n/PH.php:80
+msgid "Sultan Kudarat"
+msgstr "Sultan Kudarat"
+
+#: i18n/PH.php:81
+msgid "Sulu"
+msgstr "Sulu"
+
+#: i18n/PH.php:82
+msgid "Surigao del Norte"
+msgstr "Surigao do Norte"
+
+#: i18n/PH.php:83
+msgid "Surigao del Sur"
+msgstr "Surigao do Sul"
+
+#: i18n/PH.php:84
+msgid "Tarlac"
+msgstr "Tarlac"
+
+#: i18n/PH.php:72
+msgid "Rizal"
+msgstr "Rizal"
+
+#: i18n/PH.php:73
+msgid "Romblon"
+msgstr "Romblon"
+
+#: i18n/PH.php:74
+msgid "Samar"
+msgstr "Samar"
+
+#: i18n/PH.php:75
+msgid "Sarangani"
+msgstr "Sarangani"
+
+#: i18n/PH.php:76
+msgid "Siquijor"
+msgstr "Siquijor"
+
+#: i18n/PH.php:77
+msgid "Sorsogon"
+msgstr "Sorsogon"
+
+#: i18n/PH.php:65
+msgid "Occidental Mindoro"
+msgstr "Mindoro Ocidental"
+
+#: i18n/PH.php:66
+msgid "Oriental Mindoro"
+msgstr "Mindoro Oriental"
+
+#: i18n/PH.php:67
+msgid "Palawan"
+msgstr "Palawan"
+
+#: i18n/PH.php:68
+msgid "Pampanga"
+msgstr "Pampanga"
+
+#: i18n/PH.php:69
+msgid "Pangasinan"
+msgstr "Pangasinan"
+
+#: i18n/PH.php:70
+msgid "Quezon"
+msgstr "Quezon"
+
+#: i18n/PH.php:71
+msgid "Quirino"
+msgstr "Quirino"
+
+#: i18n/PH.php:57
+msgid "Misamis Occidental"
+msgstr "Misamis Ocidental"
+
+#: i18n/PH.php:58
+msgid "Misamis Oriental"
+msgstr "Misamis Oriental"
+
+#: i18n/PH.php:59
+msgid "Mountain Province"
+msgstr "Mountain Province"
+
+#: i18n/PH.php:60
+msgid "Negros Occidental"
+msgstr "Negros Occidental"
+
+#: i18n/PH.php:61
+msgid "Negros Oriental"
+msgstr "Negros Oriental"
+
+#: i18n/PH.php:62
+msgid "Northern Samar"
+msgstr "Northern Samar"
+
+#: i18n/PH.php:63
+msgid "Nueva Ecija"
+msgstr "Nueva Ecija"
+
+#: i18n/PH.php:64
+msgid "Nueva Vizcaya"
+msgstr "Nueva Vizcaya"
+
+#: i18n/PH.php:50
+msgid "Laguna"
+msgstr "Laguna"
+
+#: i18n/PH.php:51
+msgid "Lanao del Norte"
+msgstr "Lanao do Norte"
+
+#: i18n/PH.php:52
+msgid "Lanao del Sur"
+msgstr "Lanao do Sur"
+
+#: i18n/PH.php:53
+msgid "Leyte"
+msgstr "Leyte"
+
+#: i18n/PH.php:54
+msgid "Maguindanao"
+msgstr "Maguindanao"
+
+#: i18n/PH.php:55
+msgid "Marinduque"
+msgstr "Marinduque"
+
+#: i18n/PH.php:56
+msgid "Masbate"
+msgstr "Masbate"
+
+#: i18n/PH.php:43
+msgid "Ifugao"
+msgstr "Ifugao"
+
+#: i18n/PH.php:44
+msgid "Ilocos Norte"
+msgstr "Ilocos Norte"
+
+#: i18n/PH.php:45
+msgid "Ilocos Sur"
+msgstr "Ilocos Sul"
+
+#: i18n/PH.php:46
+msgid "Iloilo"
+msgstr "Iloilo"
+
+#: i18n/PH.php:47
+msgid "Isabela"
+msgstr "Isabela"
+
+#: i18n/PH.php:48
+msgid "Kalinga"
+msgstr "Kalinga"
+
+#: i18n/PH.php:49
+msgid "La Union"
+msgstr "La Union"
+
+#: i18n/PH.php:36
+msgid "Davao del Norte"
+msgstr "Davao del Norte"
+
+#: i18n/PH.php:37
+msgid "Davao del Sur"
+msgstr "Davao del Sur"
+
+#: i18n/PH.php:38
+msgid "Davao Occidental"
+msgstr "Davao Ocidental"
+
+#: i18n/PH.php:39
+msgid "Davao Oriental"
+msgstr "Davao Oriental"
+
+#: i18n/PH.php:40
+msgid "Dinagat Islands"
+msgstr "Ilhas Dinagat"
+
+#: i18n/PH.php:41
+msgid "Eastern Samar"
+msgstr "Samar Oriental"
+
+#: i18n/PH.php:42
+msgid "Guimaras"
+msgstr "Guimaras"
+
+#: i18n/PH.php:29
+msgid "Camiguin"
+msgstr "Camiguin"
+
+#: i18n/PH.php:30
+msgid "Capiz"
+msgstr "Capiz"
+
+#: i18n/PH.php:31
+msgid "Catanduanes"
+msgstr "Catanduanes"
+
+#: i18n/PH.php:32
+msgid "Cavite"
+msgstr "Cavite"
+
+#: i18n/PH.php:33
+msgid "Cebu"
+msgstr "Cebu"
+
+#: i18n/PH.php:34
+msgid "Compostela Valley"
+msgstr "Compustela Valley"
+
+#: i18n/PH.php:35
+msgid "Cotabato"
+msgstr "Cotabato"
+
+#: i18n/PH.php:21
+msgid "Benguet"
+msgstr "Benguet"
+
+#: i18n/PH.php:22
+msgid "Biliran"
+msgstr "Biliran"
+
+#: i18n/PH.php:23
+msgid "Bohol"
+msgstr "Bohol"
+
+#: i18n/PH.php:24
+msgid "Bukidnon"
+msgstr "Bukidnon"
+
+#: i18n/PH.php:25
+msgid "Bulacan"
+msgstr "Bulacan"
+
+#: i18n/PH.php:26
+msgid "Cagayan"
+msgstr "Cagayan"
+
+#: i18n/PH.php:27
+msgid "Camarines Norte"
+msgstr "Camarines Norte"
+
+#: i18n/PH.php:28
+msgid "Camarines Sur"
+msgstr "Camarines Sul"
+
+#: i18n/PH.php:14
+msgid "Antique"
+msgstr "Antique"
+
+#: i18n/PH.php:15
+msgid "Apayao"
+msgstr "Apayao"
+
+#: i18n/PH.php:16
+msgid "Aurora"
+msgstr "Aurora"
+
+#: i18n/PH.php:17
+msgid "Basilan"
+msgstr "Basilian"
+
+#: i18n/PH.php:18
+msgid "Bataan"
+msgstr "Bataan"
+
+#: i18n/PH.php:19
+msgid "Batanes"
+msgstr "Batanes"
+
+#: i18n/PH.php:20
+msgid "Batangas"
+msgstr "Batangas"
+
+#: i18n/PE.php:33
+msgid "Tumbes"
+msgstr "Tumbes"
+
+#: i18n/PE.php:34
+msgid "Ucayali"
+msgstr "Ucayali"
+
+#: i18n/PH.php:9
+msgid "Abra"
+msgstr "Abra"
+
+#: i18n/PH.php:10
+msgid "Agusan del Norte"
+msgstr "Agusan del Norte"
+
+#: i18n/PH.php:11
+msgid "Agusan del Sur"
+msgstr "Agusan del Sur"
+
+#: i18n/PH.php:12
+msgid "Aklan"
+msgstr "Aklan"
+
+#: i18n/PH.php:13
+msgid "Albay"
+msgstr "Albay"
+
+#: i18n/PE.php:28
+msgid "Pasco"
+msgstr "Pasco"
+
+#: i18n/PE.php:29
+msgid "Piura"
+msgstr "Piura"
+
+#: i18n/PE.php:30
+msgid "Puno"
+msgstr "Puno"
+
+#: i18n/PE.php:31
+msgid "San Mart&iacute;n"
+msgstr "San Mart&iacute;n"
+
+#: i18n/PE.php:32
+msgid "Tacna"
+msgstr "Tacna"
+
+#: i18n/PE.php:24
+msgid "Lima"
+msgstr "Lima"
+
+#: i18n/PE.php:25
+msgid "Loreto"
+msgstr "Loreto"
+
+#: i18n/PE.php:26
+msgid "Madre de Dios"
+msgstr "Madre de Dios"
+
+#: i18n/PE.php:27
+msgid "Moquegua"
+msgstr "Moquegua"
+
+#: i18n/PE.php:18
+msgid "Huancavelica"
+msgstr "Huancavelica"
+
+#: i18n/PE.php:19
+msgid "Hu&aacute;nuco"
+msgstr "Hu&aacute;nuco"
+
+#: i18n/PE.php:20
+msgid "Ica"
+msgstr "Ica"
+
+#: i18n/PE.php:21
+msgid "Jun&iacute;n"
+msgstr "Jun&iacute;n"
+
+#: i18n/PE.php:22
+msgid "La Libertad"
+msgstr "La Libertad"
+
+#: i18n/PE.php:23
+msgid "Lambayeque"
+msgstr "Lambayeque"
+
+#: i18n/PE.php:12
+msgid "Ancash"
+msgstr "Ancash"
+
+#: i18n/PE.php:13
+msgid "Apur&iacute;mac"
+msgstr "Apur&iacute;mac"
+
+#: i18n/PE.php:14
+msgid "Arequipa"
+msgstr "Arequipa"
+
+#: i18n/PE.php:15
+msgid "Ayacucho"
+msgstr "Ayacucho"
+
+#: i18n/PE.php:16
+msgid "Cajamarca"
+msgstr "Cajamarca"
+
+#: i18n/PE.php:17
+msgid "Cusco"
+msgstr "Cusco"
+
+#: i18n/NZ.php:21
+msgid "West Coast"
+msgstr "Costa Oeste dos Estados Unidos"
+
+#: i18n/NZ.php:22
+msgid "Canterbury"
+msgstr "Canterbury"
+
+#: i18n/NZ.php:23
+msgid "Otago"
+msgstr "Otago"
+
+#: i18n/NZ.php:24
+msgid "Southland"
+msgstr "Southland"
+
+#: i18n/PE.php:9
+msgid "El Callao"
+msgstr "El Callao"
+
+#: i18n/PE.php:10
+msgid "Municipalidad Metropolitana de Lima"
+msgstr "Municipalidad Metropolitana de Lima"
+
+#: i18n/NZ.php:16
+msgid "Manawatu-Wanganui"
+msgstr "Manawatu-Wanganui"
+
+#: i18n/NZ.php:17
+msgid "Wellington"
+msgstr "Wellington"
+
+#: i18n/NZ.php:18
+msgid "Nelson"
+msgstr "Nelson"
+
+#: i18n/NZ.php:19
+msgid "Marlborough"
+msgstr "Marlborough"
+
+#: i18n/NZ.php:20
+msgid "Tasman"
+msgstr "Tasman"
+
+#: i18n/NZ.php:11
+msgid "Waikato"
+msgstr "Waikato"
+
+#: i18n/NZ.php:12
+msgid "Bay of Plenty"
+msgstr "Bay of Plenty"
+
+#: i18n/NZ.php:13
+msgid "Taranaki"
+msgstr "Taranaki"
+
+#: i18n/NZ.php:14
+msgid "Gisborne"
+msgstr "Gisborne"
+
+#: i18n/NZ.php:15
+msgid "Hawke&rsquo;s Bay"
+msgstr "Hawke&rsquo;s Bay"
+
+#: i18n/NP.php:111
+msgid "Kanchanpur"
+msgstr "Kanchanpur"
+
+#: i18n/NZ.php:9
+msgid "Northland"
+msgstr "Northland"
+
+#: i18n/NZ.php:10
+msgid "Auckland"
+msgstr "Auckland"
+
+#: i18n/NP.php:103
+msgid "Bajura"
+msgstr "Bajura"
+
+#: i18n/NP.php:104
+msgid "Doti"
+msgstr "Doti"
+
+#: i18n/NP.php:105
+msgid "Kailali"
+msgstr "Kailali"
+
+#: i18n/NP.php:108
+msgid "Baitadi"
+msgstr "Baitadi"
+
+#: i18n/NP.php:109
+msgid "Dadeldhura"
+msgstr "Dadeldhura"
+
+#: i18n/NP.php:110
+msgid "Darchula"
+msgstr "Darchula"
+
+#: i18n/NP.php:94
+msgid "Dolpa"
+msgstr "Dolpa"
+
+#: i18n/NP.php:95
+msgid "Humla"
+msgstr "Humla"
+
+#: i18n/NP.php:96
+msgid "Jumla"
+msgstr "Jumla"
+
+#: i18n/NP.php:97
+msgid "Kalikot"
+msgstr "Kalikot"
+
+#: i18n/NP.php:98
+msgid "Mugu"
+msgstr "Mugu"
+
+#: i18n/NP.php:101
+msgid "Achham"
+msgstr "Achham"
+
+#: i18n/NP.php:102
+msgid "Bajhang"
+msgstr "Bajhang"
+
+#: i18n/NP.php:84
+msgid "Salyan"
+msgstr "Salyan"
+
+#: i18n/NP.php:87
+msgid "Banke"
+msgstr "Banke"
+
+#: i18n/NP.php:88
+msgid "Bardiya"
+msgstr "Bardiya"
+
+#: i18n/NP.php:89
+msgid "Dailekh"
+msgstr "Dailekh"
+
+#: i18n/NP.php:90
+msgid "Jajarkot"
+msgstr "Jajarkot"
+
+#: i18n/NP.php:91
+msgid "Surkhet"
+msgstr "Surkhet"
+
+#: i18n/NP.php:76
+msgid "Palpa"
+msgstr "Palpa"
+
+#: i18n/NP.php:77
+msgid "Rupandehi"
+msgstr "Rupandehi"
+
+#: i18n/NP.php:80
+msgid "Dang"
+msgstr "Dang"
+
+#: i18n/NP.php:81
+msgid "Pyuthan"
+msgstr "Pyuthan"
+
+#: i18n/NP.php:82
+msgid "Rolpa"
+msgstr "Rolpa"
+
+#: i18n/NP.php:83
+msgid "Rukum"
+msgstr "Rukum"
+
+#: i18n/NP.php:68
+msgid "Mustang"
+msgstr "Mustang"
+
+#: i18n/NP.php:69
+msgid "Myagdi"
+msgstr "Myagdi"
+
+#: i18n/NP.php:72
+msgid "Agrghakanchi"
+msgstr "Agrghakanchi"
+
+#: i18n/NP.php:73
+msgid "Gulmi"
+msgstr "Gulmi"
+
+#: i18n/NP.php:74
+msgid "Kapilbastu"
+msgstr "Kapilbastu"
+
+#: i18n/NP.php:75
+msgid "Nawalparasi"
+msgstr "Nawalparasi"
+
+#: i18n/NP.php:59
+msgid "Kaski"
+msgstr "Kaski"
+
+#: i18n/NP.php:60
+msgid "Lamjung"
+msgstr "Lamjung"
+
+#: i18n/NP.php:61
+msgid "Manang"
+msgstr "Manang"
+
+#: i18n/NP.php:62
+msgid "Syangja"
+msgstr "Syangja"
+
+#: i18n/NP.php:63
+msgid "Tanahun"
+msgstr "Tanahun"
+
+#: i18n/NP.php:66
+msgid "Baglung"
+msgstr "Baglung"
+
+#: i18n/NP.php:67
+msgid "Parbat"
+msgstr "Parbat"
+
+#: i18n/NP.php:48
+msgid "Sindhupalchowk"
+msgstr "Sindhupalchowk"
+
+#: i18n/NP.php:51
+msgid "Bara"
+msgstr "Bara"
+
+#: i18n/NP.php:52
+msgid "Chitwan"
+msgstr "Chitwan"
+
+#: i18n/NP.php:53
+msgid "Makwanpur"
+msgstr "Makwanpur"
+
+#: i18n/NP.php:54
+msgid "Parsa"
+msgstr "Parsa"
+
+#: i18n/NP.php:55
+msgid "Rautahat"
+msgstr "Rautahat"
+
+#: i18n/NP.php:58
+msgid "Gorkha"
+msgstr "Gorkha"
+
+#: i18n/NP.php:41
+msgid "Bhaktapur"
+msgstr "Bhaktapur"
+
+#: i18n/NP.php:42
+msgid "Dhading"
+msgstr "Dhading"
+
+#: i18n/NP.php:43
+msgid "Kathmandu"
+msgstr "Kathmandu"
+
+#: i18n/NP.php:44
+msgid "Kavrepalanchowk"
+msgstr "Kavrepalanchowk"
+
+#: i18n/NP.php:45
+msgid "Lalitpur"
+msgstr "Lalitpur"
+
+#: i18n/NP.php:46
+msgid "Nuwakot"
+msgstr "Nuwakot"
+
+#: i18n/NP.php:47
+msgid "Rasuwa"
+msgstr "Rasuwa"
+
+#: i18n/NP.php:33
+msgid "Dhanusa"
+msgstr "Dhanusa"
+
+#: i18n/NP.php:34
+msgid "Dolakha"
+msgstr "Dolakha"
+
+#: i18n/NP.php:35
+msgid "Mohottari"
+msgstr "Mohottari"
+
+#: i18n/NP.php:36
+msgid "Ramechha"
+msgstr "Ramechha"
+
+#: i18n/NP.php:37
+msgid "Sarlahi"
+msgstr "Sarlahi"
+
+#: i18n/NP.php:38
+msgid "Sindhuli"
+msgstr "Sindhuli"
+
+#: i18n/NP.php:25
+msgid "Khotang"
+msgstr "Khotang"
+
+#: i18n/NP.php:26
+msgid "Okhaldhunga"
+msgstr "Okhaldhunga"
+
+#: i18n/NP.php:27
+msgid "Saptari"
+msgstr "Saptari"
+
+#: i18n/NP.php:28
+msgid "Siraha"
+msgstr "Siraha"
+
+#: i18n/NP.php:29
+msgid "Solukhumbu"
+msgstr "Solukhumbu"
+
+#: i18n/NP.php:30
+msgid "Udayapur"
+msgstr "Udayapur"
+
+#: i18n/NP.php:17
+msgid "Bhojpur"
+msgstr "Bhojpur"
+
+#: i18n/NP.php:18
+msgid "Dhankuta"
+msgstr "Dhankuta"
+
+#: i18n/NP.php:19
+msgid "Morang"
+msgstr "Morang"
+
+#: i18n/NP.php:20
+msgid "Sunsari"
+msgstr "Sunsari"
+
+#: i18n/NP.php:21
+msgid "Sankhuwa"
+msgstr "Sankhuwa"
+
+#: i18n/NP.php:22
+msgid "Terhathum"
+msgstr "Terhathum"
+
+#: i18n/MY.php:23
+msgid "W.P. Labuan"
+msgstr "W.P. Labuan"
+
+#: i18n/MY.php:24
+msgid "W.P. Putrajaya"
+msgstr "W.P. Putrajaya"
+
+#: i18n/NP.php:11
+msgid "Illam"
+msgstr "Illam"
+
+#: i18n/NP.php:12
+msgid "Jhapa"
+msgstr "Jhapa"
+
+#: i18n/NP.php:13
+msgid "Panchthar"
+msgstr "Panchthar"
+
+#: i18n/NP.php:14
+msgid "Taplejung"
+msgstr "Taplejung"
+
+#: i18n/MY.php:18
+msgid "Sabah"
+msgstr "Sabah"
+
+#: i18n/MY.php:19
+msgid "Sarawak"
+msgstr "Sarawak"
+
+#: i18n/MY.php:20
+msgid "Selangor"
+msgstr "Selangor"
+
+#: i18n/MY.php:21
+msgid "Terengganu"
+msgstr "Terengganu"
+
+#: i18n/MY.php:22
+msgid "W.P. Kuala Lumpur"
+msgstr "W.P. Kuala Lumpur"
+
+#: i18n/MY.php:13
+msgid "Negeri Sembilan"
+msgstr "Negeri Sembilan"
+
+#: i18n/MY.php:14
+msgid "Pahang"
+msgstr "Pahang"
+
+#: i18n/MY.php:15
+msgid "Perak"
+msgstr "Perak"
+
+#: i18n/MY.php:16
+msgid "Perlis"
+msgstr "Perlis"
+
+#: i18n/MY.php:17
+msgid "Pulau Pinang"
+msgstr "Pulau Pinang"
+
+#: i18n/MX.php:39
+msgid "Yucatán"
+msgstr "Yucatán"
+
+#: i18n/MX.php:40
+msgid "Zacatecas"
+msgstr "Zacatecas"
+
+#: i18n/MY.php:9
+msgid "Johor"
+msgstr "Johor"
+
+#: i18n/MY.php:10
+msgid "Kedah"
+msgstr "Kedah"
+
+#: i18n/MY.php:11
+msgid "Kelantan"
+msgstr "Kelantan"
+
+#: i18n/MY.php:12
+msgid "Melaka"
+msgstr "Melaka"
+
+#: i18n/MX.php:34
+msgid "Sonora"
+msgstr "Sonora"
+
+#: i18n/MX.php:35
+msgid "Tabasco"
+msgstr "Tabasco"
+
+#: i18n/MX.php:36
+msgid "Tamaulipas"
+msgstr "Tamaulipas"
+
+#: i18n/MX.php:37
+msgid "Tlaxcala"
+msgstr "Tlaxcala"
+
+#: i18n/MX.php:38
+msgid "Veracruz"
+msgstr "Veracruz"
+
+#: i18n/MX.php:28
+msgid "Oaxaca"
+msgstr "Oaxaca"
+
+#: i18n/MX.php:29
+msgid "Puebla"
+msgstr "Puebla"
+
+#: i18n/MX.php:30
+msgid "Querétaro"
+msgstr "Querétaro"
+
+#: i18n/MX.php:31
+msgid "Quintana Roo"
+msgstr "Quintana Roo"
+
+#: i18n/MX.php:32
+msgid "San Luis Potosí"
+msgstr "San Luis Potosí"
+
+#: i18n/MX.php:33
+msgid "Sinaloa"
+msgstr "Sinaloa"
+
+#: i18n/MX.php:22
+msgid "Guerrero"
+msgstr "Guerrero"
+
+#: i18n/MX.php:23
+msgid "Hidalgo"
+msgstr "Hidalgo"
+
+#: i18n/MX.php:24
+msgid "Edo. de México"
+msgstr "Edo. de México"
+
+#: i18n/MX.php:25
+msgid "Michoacán"
+msgstr "Michoacán"
+
+#: i18n/MX.php:26
+msgid "Morelos"
+msgstr "Morelos"
+
+#: i18n/MX.php:27
+msgid "Nayarit"
+msgstr "Nayarit"
+
+#: i18n/MX.php:18
+msgid "Coahuila"
+msgstr "Coahuila"
+
+#: i18n/MX.php:19
+msgid "Colima"
+msgstr "Colima"
+
+#: i18n/MX.php:20
+msgid "Durango"
+msgstr "Durango"
+
+#: i18n/MX.php:21
+msgid "Guanajuato"
+msgstr "Guanajuato"
+
+#: i18n/MX.php:13
+msgid "Baja California"
+msgstr "Baixa Califórnia"
+
+#: i18n/MX.php:14
+msgid "Baja California Sur"
+msgstr "Baja California Sur"
+
+#: i18n/MX.php:15
+msgid "Campeche"
+msgstr "Campeche"
+
+#: i18n/MX.php:16
+msgid "Chiapas"
+msgstr "Chiapas"
+
+#: i18n/MX.php:17
+msgid "Chihuahua"
+msgstr "Chihuahua"
+
+#: i18n/JP.php:54
+msgid "Kagoshima"
+msgstr "Kagoshima"
+
+#: i18n/JP.php:55
+msgid "Okinawa"
+msgstr "Okinawa"
+
+#: i18n/MX.php:10
+msgid "Jalisco"
+msgstr "Jalisco"
+
+#: i18n/MX.php:11
+msgid "Nuevo León"
+msgstr "Nuevo León"
+
+#: i18n/MX.php:12
+msgid "Aguascalientes"
+msgstr "Aguascalientes"
+
+#: i18n/JP.php:49
+msgid "Saga"
+msgstr "Saga"
+
+#: i18n/JP.php:50
+msgid "Nagasaki"
+msgstr "Nagasaki"
+
+#: i18n/JP.php:51
+msgid "Kumamoto"
+msgstr "Kumamoto"
+
+#: i18n/JP.php:52
+msgid "Oita"
+msgstr "Oita"
+
+#: i18n/JP.php:53
+msgid "Miyazaki"
+msgstr "Miyazaki"
+
+#: i18n/JP.php:44
+msgid "Tokushima"
+msgstr "Tokushima"
+
+#: i18n/JP.php:45
+msgid "Kagawa"
+msgstr "Kagawa"
+
+#: i18n/JP.php:46
+msgid "Ehime"
+msgstr "Ehime"
+
+#: i18n/JP.php:47
+msgid "Kochi"
+msgstr "Kochi"
+
+#: i18n/JP.php:48
+msgid "Fukuoka"
+msgstr "Fukuoka"
+
+#: i18n/JP.php:39
+msgid "Tottori"
+msgstr "Tottori"
+
+#: i18n/JP.php:40
+msgid "Shimane"
+msgstr "Shimane"
+
+#: i18n/JP.php:41
+msgid "Okayama"
+msgstr "Okayama"
+
+#: i18n/JP.php:42
+msgid "Hiroshima"
+msgstr "Hiroshima"
+
+#: i18n/JP.php:43
+msgid "Yamaguchi"
+msgstr "Yamaguchi"
+
+#: i18n/JP.php:35
+msgid "Osaka"
+msgstr "Osaka"
+
+#: i18n/JP.php:36
+msgid "Hyogo"
+msgstr "Hyogo"
+
+#: i18n/JP.php:37
+msgid "Nara"
+msgstr "Nara"
+
+#: i18n/JP.php:38
+msgid "Wakayama"
+msgstr "Wakayama"
+
+#: i18n/JP.php:30
+msgid "Shizuoka"
+msgstr "Shizuoka"
+
+#: i18n/JP.php:31
+msgid "Aichi"
+msgstr "Aichi"
+
+#: i18n/JP.php:32
+msgid "Mie"
+msgstr "Mie"
+
+#: i18n/JP.php:33
+msgid "Shiga"
+msgstr "Shiga"
+
+#: i18n/JP.php:34
+msgid "Kyoto"
+msgstr "Kyoto"
+
+#: i18n/JP.php:26
+msgid "Fukui"
+msgstr "Fukui"
+
+#: i18n/JP.php:27
+msgid "Yamanashi"
+msgstr "Yamanashi"
+
+#: i18n/JP.php:28
+msgid "Nagano"
+msgstr "Nagano"
+
+#: i18n/JP.php:29
+msgid "Gifu"
+msgstr "Gifu"
+
+#: i18n/JP.php:22
+msgid "Kanagawa"
+msgstr "Kanagawa"
+
+#: i18n/JP.php:23
+msgid "Niigata"
+msgstr "Niigata"
+
+#: i18n/JP.php:24
+msgid "Toyama"
+msgstr "Toyama"
+
+#: i18n/JP.php:25
+msgid "Ishikawa"
+msgstr "Ishikawa"
+
+#: i18n/JP.php:18
+msgid "Gunma"
+msgstr "Gunma"
+
+#: i18n/JP.php:19
+msgid "Saitama"
+msgstr "Saitama"
+
+#: i18n/JP.php:20
+msgid "Chiba"
+msgstr "Chiba"
+
+#: i18n/JP.php:21
+msgid "Tokyo"
+msgstr "Tokyo"
+
+#: i18n/JP.php:13
+msgid "Akita"
+msgstr "Akita"
+
+#: i18n/JP.php:14
+msgid "Yamagata"
+msgstr "Yamagata"
+
+#: i18n/JP.php:15
+msgid "Fukushima"
+msgstr "Fukushima"
+
+#: i18n/JP.php:16
+msgid "Ibaraki"
+msgstr "Ibaraki"
+
+#: i18n/JP.php:17
+msgid "Tochigi"
+msgstr "Tochigi"
+
+#: i18n/JP.php:11
+msgid "Iwate"
+msgstr "Iwate"
+
+#: i18n/JP.php:12
+msgid "Miyagi"
+msgstr "Miyagi"
+
+#: i18n/IT.php:116
+msgid "Vibo Valentia"
+msgstr "Vibo Valentia"
+
+#: i18n/IT.php:117
+msgid "Vicenza"
+msgstr "Vicenza"
+
+#: i18n/IT.php:118
+msgid "Viterbo"
+msgstr "Viterbo"
+
+#: i18n/JP.php:9
+msgid "Hokkaido"
+msgstr "Hokkaido"
+
+#: i18n/JP.php:10
+msgid "Aomori"
+msgstr "Aomori"
+
+#: i18n/IT.php:111
+msgid "Varese"
+msgstr "Varese"
+
+#: i18n/IT.php:112
+msgid "Venezia"
+msgstr "Veneza"
+
+#: i18n/IT.php:113
+msgid "Verbano-Cusio-Ossola"
+msgstr "Verbano-Cusio-Ossola"
+
+#: i18n/IT.php:114
+msgid "Vercelli"
+msgstr "Vercelli"
+
+#: i18n/IT.php:115
+msgid "Verona"
+msgstr "Verona"
+
+#: i18n/IT.php:106
+msgid "Trapani"
+msgstr "Trapani"
+
+#: i18n/IT.php:107
+msgid "Trento"
+msgstr "Trento"
+
+#: i18n/IT.php:108
+msgid "Treviso"
+msgstr "Treviso"
+
+#: i18n/IT.php:109
+msgid "Trieste"
+msgstr "Trieste"
+
+#: i18n/IT.php:110
+msgid "Udine"
+msgstr "Udine"
+
+#: i18n/IT.php:101
+msgid "Taranto"
+msgstr "Taranto"
+
+#: i18n/IT.php:102
+msgid "Teramo"
+msgstr "Téramo"
+
+#: i18n/IT.php:103
+msgid "Terni"
+msgstr "Terni"
+
+#: i18n/IT.php:104
+msgid "Torino"
+msgstr "Turim"
+
+#: i18n/IT.php:105
+msgid "Ogliastra"
+msgstr "Ogliastra"
+
+#: i18n/IT.php:96
+msgid "Sassari"
+msgstr "Sassari"
+
+#: i18n/IT.php:97
+msgid "Savona"
+msgstr "Savona"
+
+#: i18n/IT.php:98
+msgid "Siena"
+msgstr "Siena"
+
+#: i18n/IT.php:99
+msgid "Siracusa"
+msgstr "Siracusa"
+
+#: i18n/IT.php:100
+msgid "Sondrio"
+msgstr "Sondrio"
+
+#: i18n/IT.php:91
+msgid "Rimini"
+msgstr "Rimini"
+
+#: i18n/IT.php:92
+msgid "Roma"
+msgstr "Roma"
+
+#: i18n/IT.php:93
+msgid "Rovigo"
+msgstr "Rovigo"
+
+#: i18n/IT.php:94
+msgid "Salerno"
+msgstr "Salerno"
+
+#: i18n/IT.php:95
+msgid "Medio Campidano"
+msgstr "Medio Campidano"
+
+#: i18n/IT.php:87
+msgid "Ravenna"
+msgstr "Ravena"
+
+#: i18n/IT.php:88
+msgid "Reggio Calabria"
+msgstr "Reggio Calabria"
+
+#: i18n/IT.php:89
+msgid "Reggio Emilia"
+msgstr "Reggio Emilia"
+
+#: i18n/IT.php:90
+msgid "Rieti"
+msgstr "Rieti"
+
+#: i18n/IT.php:81
+msgid "Pisa"
+msgstr "Pisa"
+
+#: i18n/IT.php:82
+msgid "Pistoia"
+msgstr "Pistoia"
+
+#: i18n/IT.php:83
+msgid "Pordenone"
+msgstr "Pordenone"
+
+#: i18n/IT.php:84
+msgid "Potenza"
+msgstr "Potenza"
+
+#: i18n/IT.php:85
+msgid "Prato"
+msgstr "Prato"
+
+#: i18n/IT.php:86
+msgid "Ragusa"
+msgstr "Ragusa"
+
+#: i18n/IT.php:76
+msgid "Pavia"
+msgstr "Pavia"
+
+#: i18n/IT.php:77
+msgid "Perugia"
+msgstr "Perúgia"
+
+#: i18n/IT.php:78
+msgid "Pesaro e Urbino"
+msgstr "Pesaro e Urbino"
+
+#: i18n/IT.php:79
+msgid "Pescara"
+msgstr "Pescara"
+
+#: i18n/IT.php:80
+msgid "Piacenza"
+msgstr "Piacenza"
+
+#: i18n/IT.php:72
+msgid "Oristano"
+msgstr "Oristano"
+
+#: i18n/IT.php:73
+msgid "Padova"
+msgstr "Pádova"
+
+#: i18n/IT.php:74
+msgid "Palermo"
+msgstr "Palermo"
+
+#: i18n/IT.php:75
+msgid "Parma"
+msgstr "Parma"
+
+#: i18n/IT.php:66
+msgid "Modena"
+msgstr "Modena"
+
+#: i18n/IT.php:67
+msgid "Monza e della Brianza"
+msgstr "Monza e Brianza"
+
+#: i18n/IT.php:68
+msgid "Napoli"
+msgstr "Nápoles"
+
+#: i18n/IT.php:69
+msgid "Novara"
+msgstr "Novara"
+
+#: i18n/IT.php:70
+msgid "Nuoro"
+msgstr "Nuoro"
+
+#: i18n/IT.php:71
+msgid "Olbia-Tempio"
+msgstr "Olbia-Tempio"
+
+#: i18n/IT.php:62
+msgid "Massa-Carrara"
+msgstr "Massa-Carrara"
+
+#: i18n/IT.php:63
+msgid "Matera"
+msgstr "Matera"
+
+#: i18n/IT.php:64
+msgid "Messina"
+msgstr "Messina"
+
+#: i18n/IT.php:65
+msgid "Milano"
+msgstr "Milão"
+
+#: i18n/IT.php:58
+msgid "Lodi"
+msgstr "Lodi"
+
+#: i18n/IT.php:59
+msgid "Lucca"
+msgstr "Lucca"
+
+#: i18n/IT.php:60
+msgid "Macerata"
+msgstr "Macerata"
+
+#: i18n/IT.php:61
+msgid "Mantova"
+msgstr "Mantova"
+
+#: i18n/IT.php:53
+msgid "L&apos;Aquila"
+msgstr "L&apos;Aquila"
+
+#: i18n/IT.php:54
+msgid "Latina"
+msgstr "Latina"
+
+#: i18n/IT.php:55
+msgid "Lecce"
+msgstr "Lecce"
+
+#: i18n/IT.php:56
+msgid "Lecco"
+msgstr "Lecco"
+
+#: i18n/IT.php:57
+msgid "Livorno"
+msgstr "Livorno"
+
+#: i18n/IT.php:48
+msgid "Gorizia"
+msgstr "Gorizia"
+
+#: i18n/IT.php:49
+msgid "Grosseto"
+msgstr "Grosseto"
+
+#: i18n/IT.php:50
+msgid "Imperia"
+msgstr "Imperia"
+
+#: i18n/IT.php:51
+msgid "Isernia"
+msgstr "Isernia"
+
+#: i18n/IT.php:52
+msgid "La Spezia"
+msgstr "La Spezia"
+
+#: i18n/IT.php:44
+msgid "Foggia"
+msgstr "Foggia"
+
+#: i18n/IT.php:45
+msgid "Forlì-Cesena"
+msgstr "Forlì-Cesena"
+
+#: i18n/IT.php:46
+msgid "Frosinone"
+msgstr "Frosinone"
+
+#: i18n/IT.php:47
+msgid "Genova"
+msgstr "Genova"
+
+#: i18n/IT.php:40
+msgid "Enna"
+msgstr "Enna"
+
+#: i18n/IT.php:41
+msgid "Fermo"
+msgstr "Fermo"
+
+#: i18n/IT.php:42
+msgid "Ferrara"
+msgstr "Ferrara"
+
+#: i18n/IT.php:43
+msgid "Firenze"
+msgstr "Firenze"
+
+#: i18n/IT.php:35
+msgid "Como"
+msgstr "Como"
+
+#: i18n/IT.php:36
+msgid "Cosenza"
+msgstr "Cosenza"
+
+#: i18n/IT.php:37
+msgid "Cremona"
+msgstr "Cremona"
+
+#: i18n/IT.php:38
+msgid "Crotone"
+msgstr "Crotone"
+
+#: i18n/IT.php:39
+msgid "Cuneo"
+msgstr "Cuneo"
+
+#: i18n/IT.php:31
+msgid "Caserta"
+msgstr "Caserta"
+
+#: i18n/IT.php:32
+msgid "Catania"
+msgstr "Catania"
+
+#: i18n/IT.php:33
+msgid "Catanzaro"
+msgstr "Catanzaro"
+
+#: i18n/IT.php:34
+msgid "Chieti"
+msgstr "Chieti"
+
+#: i18n/IT.php:26
+msgid "Brindisi"
+msgstr "Brindisi"
+
+#: i18n/IT.php:27
+msgid "Cagliari"
+msgstr "Cagliari"
+
+#: i18n/IT.php:28
+msgid "Caltanissetta"
+msgstr "Caltanissetta"
+
+#: i18n/IT.php:29
+msgid "Campobasso"
+msgstr "Campobasso"
+
+#: i18n/IT.php:30
+msgid "Carbonia-Iglesias"
+msgstr "Carbonia-Iglesias"
+
+#: i18n/IT.php:21
+msgid "Bergamo"
+msgstr "Bergamo"
+
+#: i18n/IT.php:22
+msgid "Biella"
+msgstr "Biella"
+
+#: i18n/IT.php:23
+msgid "Bologna"
+msgstr "Bolonha"
+
+#: i18n/IT.php:24
+msgid "Bolzano"
+msgstr "Bolzano"
+
+#: i18n/IT.php:25
+msgid "Brescia"
+msgstr "Bréscia"
+
+#: i18n/IT.php:17
+msgid "Bari"
+msgstr "Bari"
+
+#: i18n/IT.php:18
+msgid "Barletta-Andria-Trani"
+msgstr "Barletta-Andria-Trani"
+
+#: i18n/IT.php:19
+msgid "Belluno"
+msgstr "Belluno"
+
+#: i18n/IT.php:20
+msgid "Benevento"
+msgstr "Benevento"
+
+#: i18n/IT.php:12
+msgid "Aosta"
+msgstr "Aosta"
+
+#: i18n/IT.php:13
+msgid "Arezzo"
+msgstr "Arezzo"
+
+#: i18n/IT.php:14
+msgid "Ascoli Piceno"
+msgstr "Ascoli Piceno"
+
+#: i18n/IT.php:15
+msgid "Asti"
+msgstr "Asti"
+
+#: i18n/IT.php:16
+msgid "Avellino"
+msgstr "Avellino"
+
+#: i18n/IR.php:39
+msgid "Sistan and Baluchestan (سیستان و بلوچستان)"
+msgstr "Sistão-Baluchistão (سیستان و بلوچستان)"
+
+#: i18n/IT.php:9
+msgid "Agrigento"
+msgstr "Agrigento"
+
+#: i18n/IT.php:10
+msgid "Alessandria"
+msgstr "Alessandria"
+
+#: i18n/IT.php:11
+msgid "Ancona"
+msgstr "Ancona"
+
+#: i18n/IR.php:35
+msgid "Gilan (گیلان)"
+msgstr "Gilan (گیلان)"
+
+#: i18n/IR.php:36
+msgid "Mazandaran (مازندران)"
+msgstr "Mazandaran (مازندران)"
+
+#: i18n/IR.php:37
+msgid "Markazi (مرکزی)"
+msgstr "Markazi (مرکزی)"
+
+#: i18n/IR.php:38
+msgid "Hormozgan (هرمزگان)"
+msgstr "Hormozgan (هرمزگان)"
+
+#: i18n/IR.php:30
+msgid "Fars (فارس)"
+msgstr "Fars (فارس)"
+
+#: i18n/IR.php:31
+msgid "Qom (قم)"
+msgstr "Qom (قم)"
+
+#: i18n/IR.php:32
+msgid "Kurdistan / کردستان)"
+msgstr "Curdistão / کردستان)"
+
+#: i18n/IR.php:33
+msgid "Kohgiluyeh and BoyerAhmad (کهگیلوییه و بویراحمد)"
+msgstr "Kohkiluyeh e Buyer Ahmad (کهگیلوییه و بویراحمد)"
+
+#: i18n/IR.php:34
+msgid "Golestan (گلستان)"
+msgstr "Golestan (گلستان)"
+
+#: i18n/IR.php:26
+msgid "South Khorasan (خراسان جنوبی)"
+msgstr "Coração do Sul (خراسان جنوبی)"
+
+#: i18n/IR.php:27
+msgid "Razavi Khorasan (خراسان رضوی)"
+msgstr "Coração Razavi (خراسان رضوی)"
+
+#: i18n/IR.php:28
+msgid "North Khorasan (خراسان جنوبی)"
+msgstr "Coração do Norte (خراسان جنوبی)"
+
+#: i18n/IR.php:29
+msgid "Semnan (سمنان)"
+msgstr "Semnan (سمنان)"
+
+#: i18n/IR.php:20
+msgid "Zanjan (زنجان)"
+msgstr "Zanjan (زنجان)"
+
+#: i18n/IR.php:21
+msgid "Luristan (لرستان)"
+msgstr "Lorestão (لرستان)"
+
+#: i18n/IR.php:22
+msgid "Alborz (البرز)"
+msgstr "Alborz (البرز)"
+
+#: i18n/IR.php:23
+msgid "East Azarbaijan (آذربایجان شرقی)"
+msgstr "Azerbaijão Oriental (آذربایجان شرقی)"
+
+#: i18n/IR.php:24
+msgid "West Azarbaijan (آذربایجان غربی)"
+msgstr "Azerbaijão Ocidental (آذربایجان غربی)"
+
+#: i18n/IR.php:25
+msgid "Chaharmahal and Bakhtiari (چهارمحال و بختیاری)"
+msgstr "Chahar Mahaal e Bakhtiari (چهارمحال و بختیاری)"
+
+#: i18n/IR.php:15
+msgid "Yazd (یزد)"
+msgstr "Yazd (یزد)"
+
+#: i18n/IR.php:16
+msgid "Kermanshah (کرمانشاه)"
+msgstr "Kermanshah (کرمانشاه)"
+
+#: i18n/IR.php:17
+msgid "Kerman (کرمان)"
+msgstr "Carmânia (کرمان)"
+
+#: i18n/IR.php:18
+msgid "Hamadan (همدان)"
+msgstr "Hamadã (همدان)"
+
+#: i18n/IR.php:19
+msgid "Ghazvin (قزوین)"
+msgstr "Qazvin (قزوین)"
+
+#: i18n/IR.php:10
+msgid "Tehran  (تهران)"
+msgstr "Teerão  (تهران)"
+
+#: i18n/IR.php:11
+msgid "Ilaam (ایلام)"
+msgstr "Ilam (ایلام)"
+
+#: i18n/IR.php:12
+msgid "Bushehr (بوشهر)"
+msgstr "Bushehr (بوشهر)"
+
+#: i18n/IR.php:13
+msgid "Ardabil (اردبیل)"
+msgstr "Ardabil (اردبیل)"
+
+#: i18n/IR.php:14
+msgid "Isfahan (اصفهان)"
+msgstr "Ispaão (اصفهان)"
+
+#: i18n/IN.php:41
+msgid "Daman and Diu"
+msgstr "Daman and Diu"
+
+#: i18n/IN.php:42
+msgid "Delhi"
+msgstr "Delhi"
+
+#: i18n/IN.php:43
+msgid "Lakshadeep"
+msgstr "Lakshadeep"
+
+#: i18n/IN.php:44
+msgid "Pondicherry (Puducherry)"
+msgstr "Pondicherry (Puducherry)"
+
+#: i18n/IR.php:9
+msgid "Khuzestan  (خوزستان)"
+msgstr "Khuzistão  (خوزستان)"
+
+#: i18n/IN.php:36
+msgid "Uttar Pradesh"
+msgstr "Uttar Pradesh"
+
+#: i18n/IN.php:37
+msgid "West Bengal"
+msgstr "West Bengal"
+
+#: i18n/IN.php:38
+msgid "Andaman and Nicobar Islands"
+msgstr "Andaman and Nicobar Islands"
+
+#: i18n/IN.php:39
+msgid "Chandigarh"
+msgstr "Chandigarh"
+
+#: i18n/IN.php:40
+msgid "Dadar and Nagar Haveli"
+msgstr "Dadar and Nagar Haveli"
+
+#: i18n/IN.php:30
+msgid "Rajasthan"
+msgstr "Rajasthan"
+
+#: i18n/IN.php:31
+msgid "Sikkim"
+msgstr "Sikkim"
+
+#: i18n/IN.php:32
+msgid "Tamil Nadu"
+msgstr "Tamil Nadu"
+
+#: i18n/IN.php:33
+msgid "Telangana"
+msgstr "Telangana"
+
+#: i18n/IN.php:34
+msgid "Tripura"
+msgstr "Tripura"
+
+#: i18n/IN.php:35
+msgid "Uttarakhand"
+msgstr "Uttarakhand"
+
+#: i18n/IN.php:27
+msgid "Nagaland"
+msgstr "Nagaland"
+
+#: i18n/IN.php:28
+msgid "Orissa"
+msgstr "Orissa"
+
+#: i18n/IN.php:29
+msgid "Punjab"
+msgstr "Punjab"
+
+#: i18n/IN.php:22
+msgid "Madhya Pradesh"
+msgstr "Madhya Pradesh"
+
+#: i18n/IN.php:23
+msgid "Maharashtra"
+msgstr "Maharashtra"
+
+#: i18n/IN.php:24
+msgid "Manipur"
+msgstr "Manipur"
+
+#: i18n/IN.php:25
+msgid "Meghalaya"
+msgstr "Meghalaya"
+
+#: i18n/IN.php:26
+msgid "Mizoram"
+msgstr "Mizoram"
+
+#: i18n/IN.php:17
+msgid "Himachal Pradesh"
+msgstr "Himachal Pradesh"
+
+#: i18n/IN.php:18
+msgid "Jammu and Kashmir"
+msgstr "Jammu and Kashmir"
+
+#: i18n/IN.php:19
+msgid "Jharkhand"
+msgstr "Jharkhand"
+
+#: i18n/IN.php:20
+msgid "Karnataka"
+msgstr "Karnataka"
+
+#: i18n/IN.php:21
+msgid "Kerala"
+msgstr "Kerala"
+
+#: i18n/IN.php:11
+msgid "Assam"
+msgstr "Assam"
+
+#: i18n/IN.php:12
+msgid "Bihar"
+msgstr "Bihar"
+
+#: i18n/IN.php:13
+msgid "Chhattisgarh"
+msgstr "Chhattisgarh"
+
+#: i18n/IN.php:14
+msgid "Goa"
+msgstr "Goa"
+
+#: i18n/IN.php:15
+msgid "Gujarat"
+msgstr "Gujarat"
+
+#: i18n/IN.php:16
+msgid "Haryana"
+msgstr "Haryana"
+
+#: i18n/ID.php:40
+msgid "Maluku Utara"
+msgstr "Maluku Utara"
+
+#: i18n/ID.php:41
+msgid "Papua"
+msgstr "Papua"
+
+#: i18n/ID.php:42
+msgid "Papua Barat"
+msgstr "Papua Barat"
+
+#: i18n/IN.php:9
+msgid "Andhra Pradesh"
+msgstr "Andra Padrexe"
+
+#: i18n/IN.php:10
+msgid "Arunachal Pradesh"
+msgstr "Arunachal Pradesh"
+
+#: i18n/ID.php:35
+msgid "Sulawesi Tenggara"
+msgstr "Sulawesi Tenggara"
+
+#: i18n/ID.php:36
+msgid "Sulawesi Barat"
+msgstr "Sulawesi Barat"
+
+#: i18n/ID.php:37
+msgid "Sulawesi Selatan"
+msgstr "Sulawesi Selatan"
+
+#: i18n/ID.php:38
+msgid "Gorontalo"
+msgstr "Gorontalo"
+
+#: i18n/ID.php:39
+msgid "Maluku"
+msgstr "Maluku"
+
+#: i18n/ID.php:29
+msgid "Kalimantan Tengah"
+msgstr "Kalimantan Tengah"
+
+#: i18n/ID.php:30
+msgid "Kalimantan Timur"
+msgstr "Kalimantan Timur"
+
+#: i18n/ID.php:31
+msgid "Kalimantan Selatan"
+msgstr "Kalimantan Selatan"
+
+#: i18n/ID.php:32
+msgid "Kalimantan Utara"
+msgstr "Kalimantan Utara"
+
+#: i18n/ID.php:33
+msgid "Sulawesi Utara"
+msgstr "Sulawesi Utara"
+
+#: i18n/ID.php:34
+msgid "Sulawesi Tengah"
+msgstr "Sulawesi Tengah"
+
+#: i18n/ID.php:24
+msgid "Daerah Istimewa Yogyakarta"
+msgstr "Daerah Istimewa Yogyakarta"
+
+#: i18n/ID.php:25
+msgid "Bali"
+msgstr "Bali"
+
+#: i18n/ID.php:26
+msgid "Nusa Tenggara Barat"
+msgstr "Nusa Tenggara Barat"
+
+#: i18n/ID.php:27
+msgid "Nusa Tenggara Timur"
+msgstr "Nusa Tenggara Timur"
+
+#: i18n/ID.php:28
+msgid "Kalimantan Barat"
+msgstr "Kalimantan Barat"
+
+#: i18n/ID.php:19
+msgid "DKI Jakarta"
+msgstr "DKI Jakarta"
+
+#: i18n/ID.php:20
+msgid "Jawa Barat"
+msgstr "Jawa Barat"
+
+#: i18n/ID.php:21
+msgid "Banten"
+msgstr "Banten"
+
+#: i18n/ID.php:22
+msgid "Jawa Tengah"
+msgstr "Jawa Tengah"
+
+#: i18n/ID.php:23
+msgid "Jawa Timur"
+msgstr "Jawa Timur"
+
+#: i18n/ID.php:13
+msgid "Kepulauan Riau"
+msgstr "Kepulauan Riau"
+
+#: i18n/ID.php:14
+msgid "Jambi"
+msgstr "Jambi"
+
+#: i18n/ID.php:15
+msgid "Sumatera Selatan"
+msgstr "Sumatera Selatan"
+
+#: i18n/ID.php:16
+msgid "Bangka Belitung"
+msgstr "Bangka Belitung"
+
+#: i18n/ID.php:17
+msgid "Bengkulu"
+msgstr "Bengkulu"
+
+#: i18n/ID.php:18
+msgid "Lampung"
+msgstr "Lampung"
+
+#: i18n/HU.php:28
+msgid "Zala"
+msgstr "Zala"
+
+#: i18n/ID.php:9
+msgid "Daerah Istimewa Aceh"
+msgstr "Daerah Istimewa Aceh"
+
+#: i18n/ID.php:10
+msgid "Sumatera Utara"
+msgstr "Sumatera Utara"
+
+#: i18n/ID.php:11
+msgid "Sumatera Barat"
+msgstr "Sumatera Barat"
+
+#: i18n/ID.php:12
+msgid "Riau"
+msgstr "Riau"
+
+#: i18n/HU.php:23
+msgid "Somogy"
+msgstr "Somogy"
+
+#: i18n/HU.php:24
+msgid "Szabolcs-Szatmár-Bereg"
+msgstr "Szabolcs-Szatmár-Bereg"
+
+#: i18n/HU.php:25
+msgid "Tolna"
+msgstr "Tolna"
+
+#: i18n/HU.php:26
+msgid "Vas"
+msgstr "Vas"
+
+#: i18n/HU.php:27
+msgid "Veszprém"
+msgstr "Veszprém"
+
+#: i18n/HU.php:17
+msgid "Hajdú-Bihar"
+msgstr "Hajdú-Bihar"
+
+#: i18n/HU.php:18
+msgid "Heves"
+msgstr "Heves"
+
+#: i18n/HU.php:19
+msgid "Jász-Nagykun-Szolnok"
+msgstr "Jász-Nagykun-Szolnok"
+
+#: i18n/HU.php:20
+msgid "Komárom-Esztergom"
+msgstr "Komárom-Esztergom"
+
+#: i18n/HU.php:21
+msgid "Nógrád"
+msgstr "Nógrád"
+
+#: i18n/HU.php:22
+msgid "Pest"
+msgstr "Pest"
+
+#: i18n/HU.php:14
+msgid "Csongrád"
+msgstr "Csongrád"
+
+#: i18n/HU.php:15
+msgid "Fejér"
+msgstr "Fejér"
+
+#: i18n/HU.php:16
+msgid "Győr-Moson-Sopron"
+msgstr "Győr-Moson-Sopron"
+
+#: i18n/HK.php:11
+msgid "New Territories"
+msgstr "Novos Territórios"
+
+#: i18n/HU.php:9
+msgid "Bács-Kiskun"
+msgstr "Bács-Kiskun"
+
+#: i18n/HU.php:10
+msgid "Békés"
+msgstr "Békés"
+
+#: i18n/HU.php:11
+msgid "Baranya"
+msgstr "Baranya"
+
+#: i18n/HU.php:12
+msgid "Borsod-Abaúj-Zemplén"
+msgstr "Borsod-Abaúj-Zemplén"
+
+#: i18n/HU.php:13
+msgid "Budapest"
+msgstr "Budapest"
+
+#: i18n/GR.php:18
+msgid "Πελοπόννησος"
+msgstr "Πελοπόννησος"
+
+#: i18n/GR.php:19
+msgid "Βόρειο Αιγαίο"
+msgstr "Βόρειο Αιγαίο"
+
+#: i18n/GR.php:20
+msgid "Νότιο Αιγαίο"
+msgstr "Νότιο Αιγαίο"
+
+#: i18n/GR.php:21
+msgid "Κρήτη"
+msgstr "Κρήτη"
+
+#: i18n/HK.php:9
+msgid "Hong Kong Island"
+msgstr "Ilha de Hong Kong"
+
+#: i18n/HK.php:10
+msgid "Kowloon"
+msgstr "Kowloon"
+
+#: i18n/GR.php:11
+msgid "Κεντρική Μακεδονία"
+msgstr "Κεντρική Μακεδονία"
+
+#: i18n/GR.php:12
+msgid "Δυτική Μακεδονία"
+msgstr "Δυτική Μακεδονία"
+
+#: i18n/GR.php:13
+msgid "Ήπειρος"
+msgstr "Ήπειρος"
+
+#: i18n/GR.php:14
+msgid "Θεσσαλία"
+msgstr "Θεσσαλία"
+
+#: i18n/GR.php:15
+msgid "Ιόνιοι Νήσοι"
+msgstr "Ιόνιοι Νήσοι"
+
+#: i18n/GR.php:16
+msgid "Δυτική Ελλάδα"
+msgstr "Δυτική Ελλάδα"
+
+#: i18n/GR.php:17
+msgid "Στερεά Ελλάδα"
+msgstr "Στερεά Ελλάδα"
+
+#: i18n/ES.php:58
+msgid "Bizkaia"
+msgstr "Biscaia"
+
+#: i18n/ES.php:59
+msgid "Zamora"
+msgstr "Zamora"
+
+#: i18n/ES.php:60
+msgid "Zaragoza"
+msgstr "Zaragoza"
+
+#: i18n/GR.php:9
+msgid "Αττική"
+msgstr "Αττική"
+
+#: i18n/GR.php:10
+msgid "Ανατολική Μακεδονία και Θράκη"
+msgstr "Ανατολική Μακεδονία και Θράκη"
+
+#: i18n/ES.php:52
+msgid "Soria"
+msgstr "Soria"
+
+#: i18n/ES.php:53
+msgid "Tarragona"
+msgstr "Tarragona"
+
+#: i18n/ES.php:54
+msgid "Teruel"
+msgstr "Teruel"
+
+#: i18n/ES.php:55
+msgid "Toledo"
+msgstr "Toledo"
+
+#: i18n/ES.php:56
+msgid "Valencia"
+msgstr "Valencia"
+
+#: i18n/ES.php:57
+msgid "Valladolid"
+msgstr "Valladolid"
+
+#: i18n/ES.php:47
+msgid "Pontevedra"
+msgstr "Pontevedra"
+
+#: i18n/ES.php:48
+msgid "Salamanca"
+msgstr "Salamanca"
+
+#: i18n/ES.php:49
+msgid "Santa Cruz de Tenerife"
+msgstr "Santa Cruz de Tenerife"
+
+#: i18n/ES.php:50
+msgid "Segovia"
+msgstr "Segovia"
+
+#: i18n/ES.php:51
+msgid "Sevilla"
+msgstr "Sevilla"
+
+#: i18n/ES.php:42
+msgid "Melilla"
+msgstr "Melilla"
+
+#: i18n/ES.php:43
+msgid "Murcia"
+msgstr "Murcia"
+
+#: i18n/ES.php:44
+msgid "Navarra"
+msgstr "Navarra"
+
+#: i18n/ES.php:45
+msgid "Ourense"
+msgstr "Ourense"
+
+#: i18n/ES.php:46
+msgid "Palencia"
+msgstr "Palencia"
+
+#: i18n/ES.php:39
+msgid "Lugo"
+msgstr "Lugo"
+
+#: i18n/ES.php:40
+msgid "Madrid"
+msgstr "Madrid"
+
+#: i18n/ES.php:41
+msgid "M&aacute;laga"
+msgstr "M&aacute;laga"
+
+#: i18n/ES.php:32
+msgid "Huelva"
+msgstr "Huelva"
+
+#: i18n/ES.php:33
+msgid "Huesca"
+msgstr "Huesca"
+
+#: i18n/ES.php:34
+msgid "Ja&eacute;n"
+msgstr "Ja&eacute;n"
+
+#: i18n/ES.php:36
+msgid "Las Palmas"
+msgstr "Las Palmas"
+
+#: i18n/ES.php:37
+msgid "Le&oacute;n"
+msgstr "Le&oacute;n"
+
+#: i18n/ES.php:38
+msgid "Lleida"
+msgstr "Lleida"
+
+#: i18n/ES.php:27
+msgid "Cuenca"
+msgstr "Cuenca"
+
+#: i18n/ES.php:28
+msgid "Girona"
+msgstr "Girona"
+
+#: i18n/ES.php:29
+msgid "Granada"
+msgstr "Granada"
+
+#: i18n/ES.php:30
+msgid "Guadalajara"
+msgstr "Guadalajara"
+
+#: i18n/ES.php:31
+msgid "Gipuzkoa"
+msgstr "Gipuzkoa"
+
+#: i18n/ES.php:23
+msgid "Castell&oacute;n"
+msgstr "Castell&oacute;n"
+
+#: i18n/ES.php:24
+msgid "Ceuta"
+msgstr "Ceuta"
+
+#: i18n/ES.php:25
+msgid "Ciudad Real"
+msgstr "Ciudad Real"
+
+#: i18n/ES.php:18
+msgid "Barcelona"
+msgstr "Barcelona"
+
+#: i18n/ES.php:19
+msgid "Burgos"
+msgstr "Burgos"
+
+#: i18n/ES.php:20
+msgid "C&aacute;ceres"
+msgstr "C&aacute;ceres"
+
+#: i18n/ES.php:21
+msgid "C&aacute;diz"
+msgstr "C&aacute;diz"
+
+#: i18n/ES.php:22
+msgid "Cantabria"
+msgstr "Cantabria"
+
+#: i18n/ES.php:13
+msgid "Almer&iacute;a"
+msgstr "Almer&iacute;a"
+
+#: i18n/ES.php:14
+msgid "Asturias"
+msgstr "Asturias"
+
+#: i18n/ES.php:15
+msgid "&Aacute;vila"
+msgstr "&Aacute;vila"
+
+#: i18n/ES.php:16
+msgid "Badajoz"
+msgstr "Badajoz"
+
+#: i18n/ES.php:17
+msgid "Baleares"
+msgstr "Baleares"
+
+#: i18n/CN.php:40
+msgid "Xinjiang / &#26032;&#30086;"
+msgstr "Xinjiang / &#26032;&#30086;"
+
+#: i18n/ES.php:9
+msgid "A Coru&ntilde;a"
+msgstr "A Coru&ntilde;a"
+
+#: i18n/ES.php:10
+msgid "Araba/&Aacute;lava"
+msgstr "Araba/&Aacute;lava"
+
+#: i18n/ES.php:11
+msgid "Albacete"
+msgstr "Albacete"
+
+#: i18n/ES.php:12
+msgid "Alicante"
+msgstr "Alicante"
+
+#: i18n/CN.php:35
+msgid "Gansu / &#29976;&#32899;"
+msgstr "Gansu / &#29976;&#32899;"
+
+#: i18n/CN.php:36
+msgid "Qinghai / &#38738;&#28023;"
+msgstr "Qinghai / &#38738;&#28023;"
+
+#: i18n/CN.php:37
+msgid "Ningxia Hui / &#23425;&#22799;"
+msgstr "Ningxia Hui / &#23425;&#22799;"
+
+#: i18n/CN.php:38
+msgid "Macau / &#28595;&#38376;"
+msgstr "Macau / &#28595;&#38376;"
+
+#: i18n/CN.php:39
+msgid "Tibet / &#35199;&#34255;"
+msgstr "Tibet / &#35199;&#34255;"
+
+#: i18n/CN.php:30
+msgid "Hainan / &#28023;&#21335;"
+msgstr "Hainan / &#28023;&#21335;"
+
+#: i18n/CN.php:31
+msgid "Chongqing / &#37325;&#24198;"
+msgstr "Chongqing / &#37325;&#24198;"
+
+#: i18n/CN.php:32
+msgid "Sichuan / &#22235;&#24029;"
+msgstr "Sichuan / &#22235;&#24029;"
+
+#: i18n/CN.php:33
+msgid "Guizhou / &#36149;&#24030;"
+msgstr "Guizhou / &#36149;&#24030;"
+
+#: i18n/CN.php:34
+msgid "Shaanxi / &#38485;&#35199;"
+msgstr "Shaanxi / &#38485;&#35199;"
+
+#: i18n/CN.php:24
+msgid "Shandong / &#23665;&#19996;"
+msgstr "Shandong / &#23665;&#19996;"
+
+#: i18n/CN.php:25
+msgid "Henan / &#27827;&#21335;"
+msgstr "Henan / &#27827;&#21335;"
+
+#: i18n/CN.php:26
+msgid "Hubei / &#28246;&#21271;"
+msgstr "Hubei / &#28246;&#21271;"
+
+#: i18n/CN.php:27
+msgid "Hunan / &#28246;&#21335;"
+msgstr "Hunan / &#28246;&#21335;"
+
+#: i18n/CN.php:28
+msgid "Guangdong / &#24191;&#19996;"
+msgstr "Guangdong / &#24191;&#19996;"
+
+#: i18n/CN.php:29
+msgid "Guangxi Zhuang / &#24191;&#35199;&#22766;&#26063;"
+msgstr "Guangxi Zhuang / &#24191;&#35199;&#22766;&#26063;"
+
+#: i18n/CN.php:19
+msgid "Jiangsu / &#27743;&#33487;"
+msgstr "Jiangsu / &#27743;&#33487;"
+
+#: i18n/CN.php:20
+msgid "Zhejiang / &#27993;&#27743;"
+msgstr "Zhejiang / &#27993;&#27743;"
+
+#: i18n/CN.php:21
+msgid "Anhui / &#23433;&#24509;"
+msgstr "Anhui / &#23433;&#24509;"
+
+#: i18n/CN.php:22
+msgid "Fujian / &#31119;&#24314;"
+msgstr "Fujian / &#31119;&#24314;"
+
+#: i18n/CN.php:23
+msgid "Jiangxi / &#27743;&#35199;"
+msgstr "Jiangxi / &#27743;&#35199;"
+
+#: i18n/CN.php:17
+msgid "Heilongjiang / &#40657;&#40857;&#27743;"
+msgstr "Heilongjiang / &#40657;&#40857;&#27743;"
+
+#: i18n/CN.php:18
+msgid "Shanghai / &#19978;&#28023;"
+msgstr "Shanghai / &#19978;&#28023;"
+
+#: i18n/CN.php:11
+msgid "Tianjin / &#22825;&#27941;"
+msgstr "Tianjin / &#22825;&#27941;"
+
+#: i18n/CN.php:12
+msgid "Hebei / &#27827;&#21271;"
+msgstr "Hebei / &#27827;&#21271;"
+
+#: i18n/CN.php:13
+msgid "Shanxi / &#23665;&#35199;"
+msgstr "Shanxi / &#23665;&#35199;"
+
+#: i18n/CN.php:14
+msgid "Inner Mongolia / &#20839;&#33945;&#21476;"
+msgstr "Inner Mongolia / &#20839;&#33945;&#21476;"
+
+#: i18n/CN.php:15
+msgid "Liaoning / &#36797;&#23425;"
+msgstr "Liaoning / &#36797;&#23425;"
+
+#: i18n/CN.php:16
+msgid "Jilin / &#21513;&#26519;"
+msgstr "Jilin / &#21513;&#26519;"
+
+#: i18n/CA.php:19
+msgid "Quebec"
+msgstr "Quebec"
+
+#: i18n/CA.php:20
+msgid "Saskatchewan"
+msgstr "Saskatchewan"
+
+#: i18n/CA.php:21
+msgid "Yukon Territory"
+msgstr "Yukon"
+
+#: i18n/CN.php:9
+msgid "Yunnan / &#20113;&#21335;"
+msgstr "Yunnan / &#20113;&#21335;"
+
+#: i18n/CN.php:10
+msgid "Beijing / &#21271;&#20140;"
+msgstr "Beijing / &#21271;&#20140;"
+
+#: i18n/CA.php:16
+msgid "Nunavut"
+msgstr "Nunavut"
+
+#: i18n/CA.php:17
+msgid "Ontario"
+msgstr "Ontário"
+
+#: i18n/CA.php:18
+msgid "Prince Edward Island"
+msgstr "Ilha do Príncipe Eduardo"
+
+#: i18n/CA.php:11
+msgid "Manitoba"
+msgstr "Manitoba"
+
+#: i18n/CA.php:12
+msgid "New Brunswick"
+msgstr "Nova Brunswick"
+
+#: i18n/CA.php:13
+msgid "Newfoundland and Labrador"
+msgstr "Terra Nova e Lavrador"
+
+#: i18n/CA.php:14
+msgid "Northwest Territories"
+msgstr "Territórios do Noroeste"
+
+#: i18n/CA.php:15
+msgid "Nova Scotia"
+msgstr "Nova Escócia"
+
+#: i18n/BR.php:33
+msgid "S&atilde;o Paulo"
+msgstr "S&atilde;o Paulo"
+
+#: i18n/BR.php:34
+msgid "Sergipe"
+msgstr "Sergipe"
+
+#: i18n/BR.php:35
+msgid "Tocantins"
+msgstr "Tocantins"
+
+#: i18n/CA.php:9
+msgid "Alberta"
+msgstr "Alberta"
+
+#: i18n/CA.php:10
+msgid "British Columbia"
+msgstr "Colúmbia Britânica"
+
+#: i18n/BR.php:29
+msgid "Rio Grande do Sul"
+msgstr "Rio Grande do Sul"
+
+#: i18n/BR.php:30
+msgid "Rond&ocirc;nia"
+msgstr "Rondônia"
+
+#: i18n/BR.php:31
+msgid "Roraima"
+msgstr "Roraima"
+
+#: i18n/BR.php:32
+msgid "Santa Catarina"
+msgstr "Santa Catarina"
+
+#: i18n/BR.php:24
+msgid "Paran&aacute;"
+msgstr "Paraná"
+
+#: i18n/BR.php:25
+msgid "Pernambuco"
+msgstr "Pernambuco"
+
+#: i18n/BR.php:26
+msgid "Piau&iacute;"
+msgstr "Piauí"
+
+#: i18n/BR.php:27
+msgid "Rio de Janeiro"
+msgstr "Rio de Janeiro"
+
+#: i18n/BR.php:28
+msgid "Rio Grande do Norte"
+msgstr "Rio Grande do Norte"
+
+#: i18n/BR.php:21
+msgid "Minas Gerais"
+msgstr "Minas Gerais"
+
+#: i18n/BR.php:22
+msgid "Par&aacute;"
+msgstr "Pará"
+
+#: i18n/BR.php:23
+msgid "Para&iacute;ba"
+msgstr "Para&iacute;ba"
+
+#: i18n/BR.php:15 i18n/MX.php:9
+msgid "Distrito Federal"
+msgstr "Distrito Federal"
+
+#: i18n/BR.php:16
+msgid "Esp&iacute;rito Santo"
+msgstr "Esp&iacute;rito Santo"
+
+#: i18n/BR.php:17
+msgid "Goi&aacute;s"
+msgstr "Goiás"
+
+#: i18n/BR.php:18
+msgid "Maranh&atilde;o"
+msgstr "Maranhão"
+
+#: i18n/BR.php:19
+msgid "Mato Grosso"
+msgstr "Mato Grosso"
+
+#: i18n/BR.php:20
+msgid "Mato Grosso do Sul"
+msgstr "Mato Grosso do Sul"
+
+#: i18n/BR.php:12 i18n/PE.php:11
+msgid "Amazonas"
+msgstr "Amazonas"
+
+#: i18n/BR.php:13
+msgid "Bahia"
+msgstr "Bahia"
+
+#: i18n/BR.php:14
+msgid "Cear&aacute;"
+msgstr "Ceará"
+
+#: i18n/BG.php:36
+msgid "Yambol"
+msgstr "Yambol"
+
+#: i18n/BR.php:9
+msgid "Acre"
+msgstr "Acre"
+
+#: i18n/BR.php:10
+msgid "Alagoas"
+msgstr "Alagoas"
+
+#: i18n/BR.php:11
+msgid "Amap&aacute;"
+msgstr "Amapá"
+
+#: i18n/BG.php:30
+msgid "Stara Zagora"
+msgstr "Stara Zagora"
+
+#: i18n/BG.php:31
+msgid "Targovishte"
+msgstr "Targovishte"
+
+#: i18n/BG.php:32
+msgid "Varna"
+msgstr "Varna"
+
+#: i18n/BG.php:33
+msgid "Veliko Tarnovo"
+msgstr "Veliko Tarnovo"
+
+#: i18n/BG.php:34
+msgid "Vidin"
+msgstr "Vidin"
+
+#: i18n/BG.php:35
+msgid "Vratsa"
+msgstr "Vratsa"
+
+#: i18n/BG.php:28
+msgid "Sofia"
+msgstr "Sofia"
+
+#: i18n/BG.php:29
+msgid "Sofia-Grad"
+msgstr "Sofia-Grad"
+
+#: i18n/BG.php:22
+msgid "Razgrad"
+msgstr "Razgrad"
+
+#: i18n/BG.php:23
+msgid "Ruse"
+msgstr "Ruse"
+
+#: i18n/BG.php:24
+msgid "Shumen"
+msgstr "Shumen"
+
+#: i18n/BG.php:25
+msgid "Silistra"
+msgstr "Silistra"
+
+#: i18n/BG.php:26
+msgid "Sliven"
+msgstr "Sliven"
+
+#: i18n/BG.php:27
+msgid "Smolyan"
+msgstr "Smolyan"
+
+#: i18n/BG.php:17 i18n/US.php:35
+msgid "Montana"
+msgstr "Montana"
+
+#: i18n/BG.php:18
+msgid "Pazardzhik"
+msgstr "Pazardzhik"
+
+#: i18n/BG.php:19
+msgid "Pernik"
+msgstr "Pernik"
+
+#: i18n/BG.php:20
+msgid "Pleven"
+msgstr "Pleven"
+
+#: i18n/BG.php:21
+msgid "Plovdiv"
+msgstr "Plovdiv"
+
+#: i18n/BG.php:12
+msgid "Gabrovo"
+msgstr "Gabrovo"
+
+#: i18n/BG.php:13
+msgid "Haskovo"
+msgstr "Haskovo"
+
+#: i18n/BG.php:14
+msgid "Kardzhali"
+msgstr "Kardzhali"
+
+#: i18n/BG.php:15
+msgid "Kyustendil"
+msgstr "Kyustendil"
+
+#: i18n/BG.php:16
+msgid "Lovech"
+msgstr "Lovech"
+
+#: i18n/BD.php:69
+msgid "Sunamganj"
+msgstr "Sunamganj"
+
+#: i18n/BD.php:70
+msgid "Sylhet"
+msgstr "Sylhet"
+
+#: i18n/BD.php:71
+msgid "Tangail"
+msgstr "Tangail"
+
+#: i18n/BD.php:72
+msgid "Thakurgaon"
+msgstr "Thakurgaon"
+
+#: i18n/BG.php:9
+msgid "Blagoevgrad"
+msgstr "Blagoevgrad"
+
+#: i18n/BG.php:10
+msgid "Burgas"
+msgstr "Burgas"
+
+#: i18n/BG.php:11
+msgid "Dobrich"
+msgstr "Dobrich"
+
+#: i18n/BD.php:64
+msgid "Rangpur"
+msgstr "Rangpur"
+
+#: i18n/BD.php:65
+msgid "Satkhira"
+msgstr "Satkhira"
+
+#: i18n/BD.php:66
+msgid "Shariatpur"
+msgstr "Shariatpur"
+
+#: i18n/BD.php:67
+msgid "Sherpur"
+msgstr "Sherpur"
+
+#: i18n/BD.php:68
+msgid "Sirajganj"
+msgstr "Sirajganj"
+
+#: i18n/BD.php:58
+msgid "Panchagarh"
+msgstr "Panchagarh"
+
+#: i18n/BD.php:59
+msgid "Patuakhali"
+msgstr "Patuakhali"
+
+#: i18n/BD.php:60
+msgid "Pirojpur"
+msgstr "Pirojpur"
+
+#: i18n/BD.php:61
+msgid "Rajbari"
+msgstr "Rajbari"
+
+#: i18n/BD.php:62
+msgid "Rajshahi"
+msgstr "Rajshahi"
+
+#: i18n/BD.php:63
+msgid "Rangamati"
+msgstr "Rangamati"
+
+#: i18n/BD.php:52
+msgid "Natore"
+msgstr "Natore"
+
+#: i18n/BD.php:53
+msgid "Nawabganj"
+msgstr "Nawabganj"
+
+#: i18n/BD.php:54
+msgid "Netrakona"
+msgstr "Netrakona"
+
+#: i18n/BD.php:55
+msgid "Nilphamari"
+msgstr "Nilphamari"
+
+#: i18n/BD.php:56
+msgid "Noakhali"
+msgstr "Noakhali"
+
+#: i18n/BD.php:57
+msgid "Pabna"
+msgstr "Pabna"
+
+#: i18n/BD.php:47
+msgid "Mymensingh"
+msgstr "Mymensingh"
+
+#: i18n/BD.php:48
+msgid "Naogaon"
+msgstr "Naogaon"
+
+#: i18n/BD.php:49
+msgid "Narail"
+msgstr "Narail"
+
+#: i18n/BD.php:50
+msgid "Narayanganj"
+msgstr "Narayanganj"
+
+#: i18n/BD.php:51
+msgid "Narsingdi"
+msgstr "Narsingdi"
+
+#: i18n/BD.php:42
+msgid "Magura"
+msgstr "Magura"
+
+#: i18n/BD.php:43
+msgid "Manikganj "
+msgstr "Manikganj "
+
+#: i18n/BD.php:44
+msgid "Meherpur"
+msgstr "Meherpur"
+
+#: i18n/BD.php:45
+msgid "Moulvibazar"
+msgstr "Moulvibazar"
+
+#: i18n/BD.php:46
+msgid "Munshiganj"
+msgstr "Munshiganj"
+
+#: i18n/BD.php:36
+msgid "Kishoreganj"
+msgstr "Kishoreganj"
+
+#: i18n/BD.php:37
+msgid "Kurigram"
+msgstr "Kurigram"
+
+#: i18n/BD.php:38
+msgid "Kushtia"
+msgstr "Kushtia"
+
+#: i18n/BD.php:39
+msgid "Lakshmipur"
+msgstr "Lakshmipur"
+
+#: i18n/BD.php:40
+msgid "Lalmonirhat"
+msgstr "Lalmonirhat"
+
+#: i18n/BD.php:41
+msgid "Madaripur"
+msgstr "Madaripur"
+
+#: i18n/BD.php:30
+msgid "Jessore"
+msgstr "Jessore"
+
+#: i18n/BD.php:31
+msgid "Jhalokati"
+msgstr "Jhalokati"
+
+#: i18n/BD.php:32
+msgid "Jhenaidah"
+msgstr "Jhenaidah"
+
+#: i18n/BD.php:33
+msgid "Joypurhat"
+msgstr "Joypurhat"
+
+#: i18n/BD.php:34
+msgid "Khagrachhari"
+msgstr "Khagrachhari"
+
+#: i18n/BD.php:35
+msgid "Khulna"
+msgstr "Khulna"
+
+#: i18n/BD.php:24
+msgid "Feni"
+msgstr "Feni"
+
+#: i18n/BD.php:25
+msgid "Gaibandha"
+msgstr "Gaibandha"
+
+#: i18n/BD.php:26
+msgid "Gazipur"
+msgstr "Gazipur"
+
+#: i18n/BD.php:27
+msgid "Gopalganj"
+msgstr "Gopalganj"
+
+#: i18n/BD.php:28
+msgid "Habiganj"
+msgstr "Habiganj"
+
+#: i18n/BD.php:29
+msgid "Jamalpur"
+msgstr "Jamalpur"
+
+#: i18n/BD.php:21
+msgid "Dhaka"
+msgstr "Dhaka"
+
+#: i18n/BD.php:22
+msgid "Dinajpur"
+msgstr "Dinajpur"
+
+#: i18n/BD.php:23
+msgid "Faridpur "
+msgstr "Faridpur "
+
+#: i18n/BD.php:15
+msgid "Brahmanbaria"
+msgstr "Brahmanbaria"
+
+#: i18n/BD.php:16
+msgid "Chandpur"
+msgstr "Chandpur"
+
+#: i18n/BD.php:17
+msgid "Chittagong"
+msgstr "Chittagong"
+
+#: i18n/BD.php:18
+msgid "Chuadanga"
+msgstr "Chuadanga"
+
+#: i18n/BD.php:19
+msgid "Comilla"
+msgstr "Comilla"
+
+#: i18n/BD.php:20
+msgid "Cox's Bazar"
+msgstr "Cox's Bazar"
+
+#: i18n/BD.php:10
+msgid "Bandarban"
+msgstr "Bandarban"
+
+#: i18n/BD.php:11
+msgid "Barguna"
+msgstr "Barguna"
+
+#: i18n/BD.php:12
+msgid "Barisal"
+msgstr "Barisal"
+
+#: i18n/BD.php:13
+msgid "Bhola"
+msgstr "Bhola"
+
+#: i18n/BD.php:14
+msgid "Bogra"
+msgstr "Bogra"
+
+#: i18n/AU.php:15
+msgid "Victoria"
+msgstr "Victoria"
+
+#: i18n/AU.php:16
+msgid "Western Australia"
+msgstr "Austrália Ocidental"
+
+#: i18n/BD.php:9
+msgid "Bagerhat"
+msgstr "Bagerhat"
+
+#: i18n/AU.php:12
+msgid "Queensland"
+msgstr "Queensland"
+
+#: i18n/AU.php:13
+msgid "South Australia"
+msgstr "Austrália Meridional"
+
+#: i18n/AU.php:14
+msgid "Tasmania"
+msgstr "Tasmânia"
+
+#: i18n/AR.php:29
+msgid "Santa Fe"
+msgstr "Santa Fe"
+
+#: i18n/AR.php:30
+msgid "Santiago del Estero"
+msgstr "Santiago del Estero"
+
+#: i18n/AR.php:31
+msgid "Tierra del Fuego"
+msgstr "Tierra del Fuego"
+
+#: i18n/AR.php:32
+msgid "Tucum&aacute;n"
+msgstr "Tucum&aacute;n"
+
+#: i18n/AU.php:9
+msgid "Australian Capital Territory"
+msgstr "Território da Capital Australiana"
+
+#: i18n/AU.php:10
+msgid "New South Wales"
+msgstr "Nova Gales do Sul"
+
+#: i18n/AU.php:11
+msgid "Northern Territory"
+msgstr "Território do Norte"
+
+#: i18n/AR.php:26
+msgid "San Juan"
+msgstr "San Juan"
+
+#: i18n/AR.php:27
+msgid "San Luis"
+msgstr "San Luis"
+
+#: i18n/AR.php:28
+msgid "Santa Cruz"
+msgstr "Santa Cruz"
+
+#: i18n/AR.php:21
+msgid "Mendoza"
+msgstr "Mendoza"
+
+#: i18n/AR.php:22
+msgid "Misiones"
+msgstr "Misiones"
+
+#: i18n/AR.php:23
+msgid "Neuqu&eacute;n"
+msgstr "Neuqu&eacute;n"
+
+#: i18n/AR.php:24
+msgid "R&iacute;o Negro"
+msgstr "R&iacute;o Negro"
+
+#: i18n/AR.php:25
+msgid "Salta"
+msgstr "Salta"
+
+#: i18n/AR.php:18
+msgid "Jujuy"
+msgstr "Jujuy"
+
+#: i18n/AR.php:19
+msgid "La Pampa"
+msgstr "La Pampa"
+
+#: i18n/AR.php:20 i18n/ES.php:35
+msgid "La Rioja"
+msgstr "La Rioja"
+
+#: i18n/AR.php:12
+msgid "Chaco"
+msgstr "Chaco"
+
+#: i18n/AR.php:13
+msgid "Chubut"
+msgstr "Chubut"
+
+#: i18n/AR.php:14 i18n/ES.php:26
+msgid "C&oacute;rdoba"
+msgstr "C&oacute;rdoba"
+
+#: i18n/AR.php:15
+msgid "Corrientes"
+msgstr "Corrientes"
+
+#: i18n/AR.php:16
+msgid "Entre R&iacute;os"
+msgstr "Entre R&iacute;os"
+
+#: i18n/AR.php:17
+msgid "Formosa"
+msgstr "Formosa"
+
+#: i18n/AR.php:10
+msgid "Buenos Aires"
+msgstr "Buenos Aires"
+
+#: i18n/AR.php:11
+msgid "Catamarca"
+msgstr "Catamarca"
+
+#: extend/admin/manage-fields.php:21
+#: includes/admin/views/view-page-settings.php:50
+msgid "Choose..."
+msgstr ""
+
+#: extend/admin/manage-fields.php:26 extend/admin/manage-fields.php:28
+msgid "Subscription Plans on Register Form"
+msgstr ""
+
+#: extend/admin/manage-fields.php:26
+msgid "It looks like there are no active subscriptions. %1$sCreate one here%2$s."
+msgstr ""
+
+#: extend/admin/manage-fields.php:28
+msgid "Select which Subscription Plans to show to the user on the register forms ( drag and drop to re-order )"
+msgstr ""
+
+#: extend/admin/manage-fields.php:29
+msgid "Subscription Plans Order"
+msgstr ""
+
+#: extend/admin/manage-fields.php:29
+msgid "Save the subscription plan order from the subscription plans checkboxes"
+msgstr ""
+
+#: extend/admin/manage-fields.php:32
+msgid "Selected Subscription Plan"
+msgstr ""
+
+#: extend/admin/manage-fields.php:32
+msgid "Select which plan will be by default selected when the front-end form loads."
+msgstr ""
+
+#: extend/admin/manage-fields.php:98
+msgid "For the moment the \"Subscription Plans\" field is not compatible with Email Confirmation or Admin Approval if they are set to yes"
+msgstr ""
+
+#: extend/functions-pb-redirect.php:99
+msgid "You will soon be redirected to complete the payment. %1$s"
+msgstr ""
+
+#: extend/functions.php:39
+msgid "Subscription Name"
+msgstr ""
+
+#: extend/functions.php:40
+msgid "Subscription Status"
+msgstr ""
+
+#: extend/functions.php:41
+msgid "Subscription Start Date"
+msgstr ""
+
+#: extend/functions.php:42
+msgid "Subscription Expiration Date"
+msgstr ""
+
+#: i18n/AR.php:9
+msgid "Ciudad Aut&oacute;noma de Buenos Aires"
+msgstr "Cidade Autónoma de Buenos Aires"

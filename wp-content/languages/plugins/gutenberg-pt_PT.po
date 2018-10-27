@@ -1,0 +1,203 @@
+# Translation of Plugins - Gutenberg - Stable (latest release) in Portuguese (Portugal)
+# This file is distributed under the same license as the Plugins - Gutenberg - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2018-03-05 01:12:24+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/2.4.0-alpha\n"
+"Language: pt\n"
+"Project-Id-Version: Plugins - Gutenberg - Stable (latest release)\n"
+
+#. Description of the plugin/theme
+msgid "Printing since 1440. This is the development plugin for the new block editor in core."
+msgstr "A publicar desde 1440. Este é o plugin do desenvolvimento do novo editor de blocos do core."
+
+#: lib/compat.php:226
+msgid "Post Type capabilities for the user."
+msgstr "Capacidades de tipos de conteúdo do utilizador."
+
+#: lib/client-assets.php:881
+msgid "Add title"
+msgstr "Adicionar título"
+
+#: lib/client-assets.php:862
+msgid "Adding theme support using the `gutenberg` array is deprecated. See https://wordpress.org/gutenberg/handbook/extensibility/theme-support/ for details."
+msgstr "Adicionar suporte ao tema através do array `gutenberg` está obsoleto. Veja https://wordpress.org/gutenberg/handbook/extensibility/theme-support/ para mais detalhes."
+
+#: lib/class-wp-rest-blocks-controller.php:104
+msgid "The block's title."
+msgstr "O título do bloco."
+
+#: lib/class-wp-rest-blocks-controller.php:99
+msgid "Unique identifier for the block."
+msgstr "Identificador único do bloco."
+
+#: gutenberg.php:103
+msgid "Gutenberg development mode requires files to be built. Run <code>npm install</code> to install dependencies, <code>npm run build</code> to build the files or <code>npm run dev</code> to build the files and watch for changes. Read the <a href=\"https://github.com/WordPress/gutenberg/blob/master/CONTRIBUTING.md\">contributing</a> file for more information."
+msgstr "O modo de desenvolvimento do Gutenberg requer a criação de ficheiros. Execute <code>npm install</code> para instalar dependências, <code>npm run build</code> para criar os ficheiros, ou <code>npm run dev</code> para criar os ficheiros e acompanhar alterações. Leia o ficheiro <a href=\"https://github.com/WordPress/gutenberg/blob/master/CONTRIBUTING.md\">contributing</a> para mais informações."
+
+#. Author of the plugin/theme
+msgid "Gutenberg Team"
+msgstr "Gutenberg Team"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/WordPress/gutenberg"
+msgstr "https://github.com/WordPress/gutenberg"
+
+#. Plugin Name of the plugin/theme
+msgid "Gutenberg"
+msgstr "Gutenberg"
+
+#: lib/register.php:189
+msgid "Author"
+msgstr "Autor"
+
+#: lib/register.php:185
+msgid "Slug"
+msgstr "Slug"
+
+#: lib/register.php:180
+msgid "Comments"
+msgstr "Comentários"
+
+#: lib/register.php:167
+msgid "Discussion"
+msgstr "Discussão"
+
+#: lib/register.php:151
+msgid "Custom Fields"
+msgstr "Campos personalizados"
+
+#: lib/register.php:147
+msgid "Send Trackbacks"
+msgstr "Enviar trackbacks"
+
+#: lib/register.php:143
+msgid "Excerpt"
+msgstr "Excerto"
+
+#: lib/register.php:113
+msgctxt "post format"
+msgid "Format"
+msgstr "Formato"
+
+#: lib/register.php:109
+msgid "Publish"
+msgstr "Publicar"
+
+#: lib/register.php:106
+msgid "Metadata"
+msgstr "Metadados"
+
+#: lib/register.php:102
+msgid "Save"
+msgstr "Guardar"
+
+#: lib/register.php:95
+msgid "Revisions"
+msgstr "Revisões"
+
+#. translators: %s is the name of the plugin that generated this meta box.
+#: lib/meta-box-partial-page.php:274
+msgid "Gutenberg incompatible meta box, from the \"%s\" plugin."
+msgstr "Metabox incompatível com o Gutenberg, do plugin \"%s\"."
+
+#: lib/client-assets.php:636
+msgid "Unauthorized post type."
+msgstr "Tipo de conteúdo não autorizado."
+
+#: lib/client-assets.php:632
+msgid "Unrecognized post type."
+msgstr "Tipo de conteúdo não reconhecido."
+
+#: lib/client-assets.php:627
+msgid "Post not found."
+msgstr "Conteúdo não encontrado."
+
+#: lib/client-assets.php:122
+msgid "F j, Y g:i a"
+msgstr "j F, Y G:i"
+
+#: lib/client-assets.php:121
+msgid "F j, Y"
+msgstr "j \\d\\e F, Y"
+
+#: lib/client-assets.php:120
+msgid "g:i a"
+msgstr "G:i"
+
+#. translators: %s: duration
+#: lib/client-assets.php:116
+msgid "%s ago"
+msgstr "Há %s"
+
+#. translators: %s: duration
+#: lib/client-assets.php:114
+msgid "%s from now"
+msgstr "Daqui a %s"
+
+#: lib/class-wp-rest-blocks-controller.php:109
+msgid "The block's HTML content."
+msgstr "O conteúdo HTML do bloco."
+
+#. translators: 1: block name
+#: lib/class-wp-block-type-registry.php:111
+msgid "Block type \"%s\" is not registered."
+msgstr "O tipo de bloco \"%s\" não está registado."
+
+#. translators: 1: block name
+#: lib/class-wp-block-type-registry.php:80
+msgid "Block type \"%s\" is already registered."
+msgstr "O tipo de bloco \"%s\" já está registado."
+
+#: lib/class-wp-block-type-registry.php:73
+msgid "Block type names must contain a namespace prefix. Example: my-plugin/my-custom-block-type"
+msgstr "Os nomes dos tipos de bloco têm de ter um prefixo <em>namespace</em>. Por exemplo: o-meu-plugin/o-meu-bloco-personalizado"
+
+#: lib/class-wp-block-type-registry.php:66
+msgid "Block type names must not contain uppercase characters."
+msgstr "Os nomes dos tipos de bloco não devem conter caracteres em maiúsculas."
+
+#: lib/class-wp-block-type-registry.php:60
+msgid "Block type names must be strings."
+msgstr "Os nomes dos tipos de blocos têm de ser strings."
+
+#: gutenberg.php:492
+msgid "Toggle editor selection menu"
+msgstr "Mostrar/esconder menu de selecção de editor"
+
+#: gutenberg.php:375 gutenberg.php:494
+msgid "Classic Editor"
+msgstr "Editor clássico"
+
+#. translators: %s: post title
+#: gutenberg.php:372
+msgid "Edit &#8220;%s&#8221; in the classic editor"
+msgstr "Editar &#8220;%s&#8221; no editor clássico"
+
+#: gutenberg.php:90
+msgid "Gutenberg requires WordPress 4.9 or later to function properly. Please upgrade WordPress before activating Gutenberg."
+msgstr "O Gutenberg requer o WordPress 4.9 ou superior para funcionar correctamente. Por favor actualize o WordPress antes de activar o Gutenberg."
+
+#: gutenberg.php:75
+msgid "Documentation"
+msgstr "Documentação"
+
+#: gutenberg.php:69
+msgid "Feedback"
+msgstr "Feedback"
+
+#: gutenberg.php:61 gutenberg.php:62
+msgid "Demo"
+msgstr "Demonstração"
+
+#: blocks/library/latest-posts/index.php:31
+msgid "(Untitled)"
+msgstr "(Sem título)"
+
+#: blocks/library/categories/index.php:35
+msgid "Select Category"
+msgstr "Seleccionar categoria"

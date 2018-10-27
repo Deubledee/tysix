@@ -1,0 +1,4711 @@
+# Copyright (C) 2018 Paid Member Subscriptions
+# This file is distributed under the same license as the Paid Member Subscriptions package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Paid Member Subscriptions\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../paid-member-subscriptions/index.php:218
+msgid "You must be logged in to view this content."
+msgstr ""
+
+#: ../paid-member-subscriptions/index.php:221
+msgid "This content is restricted for your membership level."
+msgstr ""
+
+#: ../paid-member-subscriptions/index.php:717, ../paid-member-subscriptions/index.php:717
+msgid "Paid Member Subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/index.php:738, ../paid-member-subscriptions/includes/admin/class-admin-uninstall.php:79, ../paid-member-subscriptions/includes/admin/class-admin-uninstall.php:79, ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:44, ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:60
+msgid "Uninstall"
+msgstr ""
+
+#: ../paid-member-subscriptions/index.php:788
+msgid "View Documentation"
+msgstr ""
+
+#: ../paid-member-subscriptions/index.php:788
+msgid "Documentation"
+msgstr ""
+
+#: ../pms-add-on-bbpress/index.php:102
+msgid "bbPress needs to be installed and activated for Paid Member Subscriptions - bbPress Add-on to work as expected!"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:81
+msgctxt "Active status for discount code"
+msgid "Active"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:86, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:111, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:83, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:190
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:89
+msgctxt "Inactive status for discount code"
+msgid "Inactive"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:94, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:119, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:92, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:198
+msgid "Inactive <span class=\"count\">(%s)</span>"
+msgid_plural "Inactive <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:97
+msgctxt "Expired status for discount code"
+msgid "Expired"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:102
+msgid "Expired <span class=\"count\">(%s)</span>"
+msgid_plural "Expired <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:115
+msgid "Code"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:116, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:41, ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:51, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:92, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-payment-history.php:33, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:81, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:63
+msgid "Amount"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:117
+msgid "Uses"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:118, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:100, ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:69, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:99, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:229, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:52
+msgid "Start Date"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:119, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:111, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:140, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:136, ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:40, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:238, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:58
+msgid "Expiration Date"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:120, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:205, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:122, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:109, ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:53, ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:71, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:392, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:96, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:301, ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:28, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:127, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:247, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:201, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:43, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:14, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-payment-history.php:35, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:121, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:82, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:64
+msgid "Status"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:169, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:165, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:258, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:245, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:463, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:67, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:140, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:189, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:305
+msgid "Deactivate"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:171, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:167, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:260, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:247, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:462, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:63, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:136, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:177, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:301
+msgid "Activate"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:178, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:174, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:267, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:302, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:334, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:271
+msgid "Delete"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:224
+msgid "No start date"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:230
+msgid "No expiration date"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:239, ../paid-member-subscriptions/includes/deprecated-functions.php:22, ../paid-member-subscriptions/includes/functions-member-subscriptions.php:223, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:258, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:125, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:211, ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:138, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:357, ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:31, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:130, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:52, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:124, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:44, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:122, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:125
+msgid "Active"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:241, ../paid-member-subscriptions/includes/deprecated-functions.php:24, ../paid-member-subscriptions/includes/functions-member-subscriptions.php:225, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:53
+msgid "Expired"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:243, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:260, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:126, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:213, ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:139, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:359, ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:32, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:131, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:125, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:44, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:123, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:126
+msgid "Inactive"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:274
+msgid "Delete Discount"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:288
+msgid "Enter Discount Code name here"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:305, ../pms-add-on-discount-codes/class-admin-discount-codes.php:308
+msgid "Discount Code updated."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:306, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:277, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:333, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:937
+msgid "Custom field updated."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:307, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:278, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:334, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:938
+msgid "Custom field deleted."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:309, ../pms-add-on-discount-codes/class-admin-discount-codes.php:313, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:280, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:284, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:336, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:340, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:940, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:944
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:310, ../pms-add-on-discount-codes/class-admin-discount-codes.php:311
+msgid "Discount Code saved."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:312
+msgid "Discount Code submitted."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:314
+msgid "Discount Code draft updated."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:334
+msgid "%s Discount Code updated."
+msgid_plural "%s Discount Codes updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:335
+msgid "%s Discount Code not updated, somebody is editing it."
+msgid_plural "%s Discount Codes not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:336
+msgid "%s Discount Code permanently deleted."
+msgid_plural "%s Discount Codes permanently deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:337
+msgid "%s Discount Code moved to the Trash."
+msgid_plural "%s Discount Codes moved to the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:338
+msgid "%s Discount Code restored from the Trash."
+msgid_plural "%s Discount Codes restored from the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:362, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:135
+msgid "Discount Code"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-admin-discount-codes.php:362, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:133
+msgid "Discount Codes"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:128
+msgid "The promotion code you entered already exists. Please choose a different code."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:149
+msgid "Amount needs to be a positive number."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:169
+msgid "Maximum uses needs to be a positive integer."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:182
+msgid "Please enter a valid discount start date in the format of yyyy-mm-dd."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:194
+msgid "The discount code has already expired. Please enter a different expiration date."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:199
+msgid "Please enter a valid discount expiration date in the format of yyyy-mm-dd."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/class-metabox-discount-codes-details.php:265
+msgid "Discount Code Details"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:156
+msgid "Discount Code: "
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:157
+msgid "Enter discount"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:158
+msgid "Apply"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:168
+msgid "Applying discount code. Please wait..."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:240
+msgid "Discount successfully applied! "
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:299, ../paid-member-subscriptions/includes/functions-subscription-plan.php:460
+msgid "day"
+msgid_plural "%s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:302, ../paid-member-subscriptions/includes/functions-subscription-plan.php:463
+msgid "week"
+msgid_plural "%s weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:305, ../paid-member-subscriptions/includes/functions-subscription-plan.php:466
+msgid "month"
+msgid_plural "%s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:308, ../paid-member-subscriptions/includes/functions-subscription-plan.php:469
+msgid "year"
+msgid_plural "%s years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:319
+msgid "%s day"
+msgid_plural "%s days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:322
+msgid "%s week"
+msgid_plural "%s weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:325
+msgid "%s month"
+msgid_plural "%s months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:328
+msgid "%s year"
+msgid_plural "%s years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-discount-codes/index.php:337
+msgid " after %s "
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:346
+msgid " %s is %s"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:350
+msgid " is %s"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:359
+msgid " every %s."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:365
+msgid ", then %s %s every %s."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:371
+msgid "Amount to be charged "
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:515
+msgid "Please select a subscription plan and try again."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:519
+msgid "The discount is not valid for this subscription plan."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:524
+msgid "The discount code you entered is not active yet."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:529
+msgid "The discount code you entered has expired."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:534
+msgid "The discount code maximum uses have been reached."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/index.php:554
+msgid "The discount code you entered is invalid."
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:214, ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:73
+msgid "Post Type"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:216, ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:264, ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:100, ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:113, ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:146, ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:12, ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:23, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:179, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:312, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:100, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:67, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:102
+msgid "Choose..."
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:221
+msgid "Choose a post type."
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:240
+msgid "Add Taxonomy"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:243
+msgid "Remove this rule"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:247
+msgid "Add Rule"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:262
+msgid "Taxonomy"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:269
+msgid "Remove"
+msgstr ""
+
+#: ../pms-add-on-global-content-restriction/class-meta-box-subscription-plan-content-restriction.php:460, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:128
+msgid "Global Content Restriction"
+msgstr ""
+
+#: ../pms-add-on-navigation-menu-filtering/class-nav-menu-filtering.php:60
+msgid "Display To"
+msgstr ""
+
+#: ../pms-add-on-navigation-menu-filtering/class-nav-menu-filtering.php:64, ../paid-member-subscriptions/extend/woocommerce/views/view-content-restriction-product-purchase-options.php:20, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:54
+msgid "Logged In Users"
+msgstr ""
+
+#: ../pms-add-on-navigation-menu-filtering/class-nav-menu-filtering.php:69
+msgid "Logged Out Users"
+msgstr ""
+
+#: ../pms-add-on-navigation-menu-filtering/class-nav-menu-filtering.php:75
+msgid "Everyone"
+msgstr ""
+
+#: ../pms-add-on-navigation-menu-filtering/class-nav-menu-filtering.php:85
+msgid "Limit logged in users to Subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:105
+msgctxt "post type general name"
+msgid "%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:106
+msgctxt "post type singular name"
+msgid "%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:107
+msgctxt "admin menu"
+msgid "%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:108
+msgctxt "add new on admin bar"
+msgid "%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:109
+msgctxt "paid-member-subscriptions"
+msgid "Add New"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:110
+msgid "Add New %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:111
+msgid "New %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:112
+msgid "Edit %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:113
+msgid "View %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:114
+msgid "%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:115
+msgid "Search %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:116
+msgid "Parent %s:"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:117
+msgid "No %s found"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-custom-post-types.php:118
+msgid "No %s found in Trash"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:281
+msgid "Register Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:282
+msgid "Activate Subscription Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:283
+msgid "Cancel Subscription Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:284
+msgid "Expired Subscription Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:306
+msgid "You have a new account"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:307
+msgid "Your Subscription is now active"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:308
+msgid "Your Subscription has been canceled"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:309
+msgid "Your Subscription has expired"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:318
+msgid "A New User has registered to your website"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:319
+msgid "A Member Subscription is now active"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:320
+msgid "A Member Subscription has been canceled"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:321
+msgid "A Member Subscription has expired"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:345
+msgid "Congratulations {{display_name}}! You have successfully created an account!"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:346
+msgid "Congratulations {{display_name}}! The \"{{subscription_name}}\" plan has been successfully activated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:347
+msgid "Hello {{display_name}}, The \"{{subscription_name}}\" plan has been canceled."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:348
+msgid "Hello {{display_name}},The \"{{subscription_name}}\" plan has expired."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:357
+msgid "{{display_name}} has just created an account!"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:358
+msgid "The \"{{subscription_name}}\" plan has been successfully activated for user {{display_name}}."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:359
+msgid "The \"{{subscription_name}}\" plan has been canceled for user {{display_name}}."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-emails.php:360
+msgid "The \"{{subscription_name}}\" plan has expired for user {{display_name}}."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:50, ../paid-member-subscriptions/includes/class-form-handler.php:57
+msgid "Please enter a username."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:63
+msgid "This username is already taken. Please choose another one."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:75, ../paid-member-subscriptions/includes/class-form-handler.php:82, ../paid-member-subscriptions/includes/class-form-handler.php:1183, ../paid-member-subscriptions/includes/class-form-handler.php:1190
+msgid "Please enter an e-mail address."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:86, ../paid-member-subscriptions/includes/class-form-handler.php:1194, ../pms-add-on-invoices/includes/functions-form-extra-fields.php:306
+msgid "The e-mail address doesn't seem to be valid."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:92, ../paid-member-subscriptions/includes/class-form-handler.php:1200
+msgid "This e-mail is already registered. Please choose another one."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:106
+msgid "Please enter a password."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:109
+msgid "Please repeat the password."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:117, ../paid-member-subscriptions/includes/class-form-handler.php:1233
+msgid "The passwords did not match."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:211, ../paid-member-subscriptions/includes/class-form-handler.php:230
+msgid "The selected subscription plan does not exist or is inactive."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:221, ../paid-member-subscriptions/includes/admin/class-admin-members.php:280, ../paid-member-subscriptions/includes/admin/class-admin-payments.php:286
+msgid "Please select a subscription plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:265, ../pms-add-on-stripe/includes/functions-filters.php:95
+msgid "Something went wrong."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:279
+msgid "You are not eligible to subscribe to: %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:321
+msgid "There was no subscription plan selected."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:342, ../paid-member-subscriptions/includes/class-form-handler.php:356
+msgid "There is no payment gateway available to complete the checkout process."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:374
+msgid "Something went wrong. The selected payment gateway does not support free trials."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:386
+msgid "Something went wrong. The selected payment gateway does not support sign-up fees."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:396
+msgid "Something went wrong. The selected payment gateway does not support recurring payments."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:436
+msgid "You are already a member."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:594
+msgid "Your subscription has been successfully canceled."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:609
+msgid "Something went wrong. We could not cancel your subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:681
+msgid "Your subscription has been successfully removed."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:688
+msgid "Something went wrong. We could not remove your subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:765, ../pms-add-on-recaptcha/includes/functions-field-validate.php:119, ../pms-add-on-recaptcha/includes/functions-field-validate.php:146
+msgid "ERROR"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:765
+msgid "Both fields are empty."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:949
+msgid "Congratulations, you have successfully created an account."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1060
+msgid "Please enter a username or email address."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1069
+msgid "The entered username doesn't exist. Please try again."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1077
+msgid "The entered email wasn't found in our database. Please try again."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1097
+msgid "Someone requested that the password be reset for the following account: <b>%1$s</b><br/><br/>If this was a mistake, just ignore this email and nothing will happen.<br/>To reset your password, visit the following link: %2$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1101
+msgid "Password Reset from \"%s\""
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1111
+msgid "There was an error while trying to send the activation link."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1142
+msgid "The entered passwords don't match! Please try again."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1225, ../paid-member-subscriptions/includes/class-form-handler.php:1228
+msgid "Some of the characters entered were not valid."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1269
+msgid "Profile updated successfully"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-form-handler.php:1272
+msgid "Something went wrong. We could not update your profile."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:72
+msgid "Congratulations, your account has been successfully created."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:97, ../paid-member-subscriptions/includes/class-shortcodes.php:119
+msgid "Only an administrator can add new users."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:109, ../paid-member-subscriptions/includes/class-shortcodes.php:356
+msgid "Log out of this account"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:109, ../paid-member-subscriptions/includes/class-shortcodes.php:356
+msgid "Log out"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:111, ../paid-member-subscriptions/includes/class-shortcodes.php:358, ../paid-member-subscriptions/includes/class-shortcodes.php:471
+msgid "You are currently logged in as %s."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:182, ../pms-add-on-multiple-subscriptions-per-user/includes/class-shortcodes.php:78
+msgid "Only registered users can see this information."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:226, ../paid-member-subscriptions/includes/class-shortcodes.php:229, ../paid-member-subscriptions/includes/class-shortcodes.php:289
+msgid "You must be logged in to view this information."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:226
+msgid "Log in"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:242
+msgid "You do not have any subscriptions attached to your account."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:443, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:23, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:130
+msgid "Register"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:448
+msgid "Lost your password?"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:472
+msgid "Log out."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:509
+msgid "Please check your email for the confirmation link."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:518
+msgid "You are already logged in."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:527
+msgid "Your password was successfully changed!"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:532
+msgid "You will soon be redirected automatically."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/class-shortcodes.php:545
+msgid "The confirmation link has expired. Invalid key."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/deprecated-functions.php:23, ../paid-member-subscriptions/includes/functions-member-subscriptions.php:224
+msgid "Canceled"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/deprecated-functions.php:25, ../paid-member-subscriptions/includes/functions-member-subscriptions.php:226, ../paid-member-subscriptions/includes/functions-payment.php:349, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:54, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:91
+msgid "Pending"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:287
+msgid "Something went wrong while trying to process the payment. Your account has been created, so please log in and retry the payment."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:289
+msgid "Something went wrong while trying to process the payment. Please try again."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:340
+msgid "Upgrade %1$s to %2$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:342
+msgid "Upgrade %s to:"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:360
+msgid "Upgrade Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:361, ../paid-member-subscriptions/includes/functions-content-filtering.php:446, ../paid-member-subscriptions/includes/functions-content-filtering.php:499, ../paid-member-subscriptions/includes/functions-content-filtering.php:549, ../paid-member-subscriptions/includes/functions-content-filtering.php:623
+msgid "Go back"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:428, ../pms-add-on-member-subscription-fixed-period/includes/functions.php:127
+msgid "Renew %s subscription. The subscription will be active until %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:445
+msgid "Renew Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:489
+msgid "Are you sure you want to cancel your %s subscription? No further payments will be made for this subscription and it will expire."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:498
+msgid "Confirm"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:539
+msgid "Are you sure you want to abandon your %s subscription? This subscription will be removed completely from your account."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:548
+msgid "Abandon Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:604
+msgid "Your %s subscription is still pending. Do you wish to retry the payment?"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-filtering.php:622, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:105
+msgid "Retry payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-restriction.php:73
+msgid "You do not have access to this content. You need to create an account."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-content-restriction.php:75
+msgid "You do not have access to this content. You need the proper subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:146
+msgid "Congratulations, you have successfully upgraded your subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:149
+msgid "Congratulations, you have successfully renewed your subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:152, ../paid-member-subscriptions/includes/functions-core.php:155
+msgid "Congratulations, you have successfully subscribed to our website."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:160
+msgid "Thank you for your payment. The upgrade may take a while to be processed."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:163
+msgid "Thank you for your payment. The renew may take a while to be processed."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:166, ../paid-member-subscriptions/includes/functions-core.php:169
+msgid "Thank you for your payment. The subscription may take a while to get activated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:211
+msgid "Processing. Please wait..."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:286
+msgid "US Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:287
+msgid "Euro"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:288
+msgid "Pound Sterling"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:289
+msgid "Canadian Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:290
+msgid "Australian Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:291
+msgid "Brazilian Real"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:292
+msgid "Czech Koruna"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:293
+msgid "Danish Krone"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:294
+msgid "Hong Kong Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:295
+msgid "Hungarian Forint"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:296
+msgid "Israeli New Sheqel"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:297
+msgid "Japanese Yen"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:298
+msgid "Malaysian Ringgit"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:299
+msgid "Mexican Peso"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:300
+msgid "Norwegian Krone"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:301
+msgid "New Zealand Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:302
+msgid "Philippine Peso"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:303
+msgid "Polish Zloty"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:304
+msgid "Russian Ruble"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:305
+msgid "Singapore Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:306
+msgid "Swedish Krona"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:307
+msgid "Swiss Franc"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:308
+msgid "Taiwan New Dollar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:309
+msgid "Thai Baht"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:310
+msgid "Turkish Lira"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:510
+msgid "Afghanistan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:511
+msgid "Aland Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:512
+msgid "Albania"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:513
+msgid "Algeria"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:514
+msgid "American Samoa"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:515
+msgid "Andorra"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:516
+msgid "Angola"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:517
+msgid "Anguilla"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:518
+msgid "Antarctica"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:519
+msgid "Antigua and Barbuda"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:520
+msgid "Argentina"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:521
+msgid "Armenia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:522
+msgid "Aruba"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:523
+msgid "Australia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:524
+msgid "Austria"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:525
+msgid "Azerbaijan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:526
+msgid "Bahamas"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:527
+msgid "Bahrain"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:528
+msgid "Bangladesh"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:529
+msgid "Barbados"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:530
+msgid "Belarus"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:531
+msgid "Belgium"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:532
+msgid "Belize"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:533
+msgid "Benin"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:534
+msgid "Bermuda"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:535
+msgid "Bhutan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:536
+msgid "Bolivia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:537
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:538
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:539
+msgid "Botswana"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:540
+msgid "Bouvet Island"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:541
+msgid "Brazil"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:542
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:543
+msgid "British Virgin Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:544
+msgid "Brunei"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:545
+msgid "Bulgaria"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:546
+msgid "Burkina Faso"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:547
+msgid "Burundi"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:548
+msgid "Cambodia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:549
+msgid "Cameroon"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:550
+msgid "Canada"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:551
+msgid "Cape Verde"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:552
+msgid "Cayman Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:553
+msgid "Central African Republic"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:554
+msgid "Chad"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:555
+msgid "Chile"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:556
+msgid "China"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:557
+msgid "Christmas Island"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:558
+msgid "Cocos Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:559
+msgid "Colombia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:560
+msgid "Comoros"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:561
+msgid "Cook Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:562
+msgid "Costa Rica"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:563
+msgid "Croatia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:564
+msgid "Cuba"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:565
+msgid "Curacao"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:566
+msgid "Cyprus"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:567
+msgid "Czech Republic"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:568
+msgid "Democratic Republic of the Congo"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:569
+msgid "Denmark"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:570
+msgid "Djibouti"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:571
+msgid "Dominica"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:572
+msgid "Dominican Republic"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:573
+msgid "East Timor"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:574
+msgid "Ecuador"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:575
+msgid "Egypt"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:576
+msgid "El Salvador"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:577
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:578
+msgid "Eritrea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:579
+msgid "Estonia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:580
+msgid "Ethiopia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:581
+msgid "Falkland Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:582
+msgid "Faroe Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:583
+msgid "Fiji"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:584
+msgid "Finland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:585
+msgid "France"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:586
+msgid "French Guiana"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:587
+msgid "French Polynesia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:588
+msgid "French Southern Territories"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:589
+msgid "Gabon"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:590
+msgid "Gambia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:591
+msgid "Georgia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:592
+msgid "Germany"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:593
+msgid "Ghana"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:594
+msgid "Gibraltar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:595
+msgid "Greece"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:596
+msgid "Greenland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:597
+msgid "Grenada"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:598
+msgid "Guadeloupe"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:599
+msgid "Guam"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:600
+msgid "Guatemala"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:601
+msgid "Guernsey"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:602
+msgid "Guinea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:603
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:604
+msgid "Guyana"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:605
+msgid "Haiti"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:606
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:607
+msgid "Honduras"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:608
+msgid "Hong Kong"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:609
+msgid "Hungary"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:610
+msgid "Iceland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:611
+msgid "India"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:612
+msgid "Indonesia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:613
+msgid "Iran"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:614
+msgid "Iraq"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:615
+msgid "Ireland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:616
+msgid "Isle of Man"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:617
+msgid "Israel"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:618
+msgid "Italy"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:619
+msgid "Ivory Coast"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:620
+msgid "Jamaica"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:621
+msgid "Japan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:622
+msgid "Jersey"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:623
+msgid "Jordan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:624
+msgid "Kazakhstan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:625
+msgid "Kenya"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:626
+msgid "Kiribati"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:627
+msgid "Kosovo"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:628
+msgid "Kuwait"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:629
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:630
+msgid "Laos"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:631
+msgid "Latvia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:632
+msgid "Lebanon"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:633
+msgid "Lesotho"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:634
+msgid "Liberia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:635
+msgid "Libya"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:636
+msgid "Liechtenstein"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:637
+msgid "Lithuania"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:638
+msgid "Luxembourg"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:639
+msgid "Macao"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:640
+msgid "Macedonia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:641
+msgid "Madagascar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:642
+msgid "Malawi"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:643
+msgid "Malaysia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:644
+msgid "Maldives"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:645
+msgid "Mali"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:646
+msgid "Malta"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:647
+msgid "Marshall Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:648
+msgid "Martinique"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:649
+msgid "Mauritania"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:650
+msgid "Mauritius"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:651
+msgid "Mayotte"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:652
+msgid "Mexico"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:653
+msgid "Micronesia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:654
+msgid "Moldova"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:655
+msgid "Monaco"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:656
+msgid "Mongolia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:657
+msgid "Montenegro"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:658
+msgid "Montserrat"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:659
+msgid "Morocco"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:660
+msgid "Mozambique"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:661
+msgid "Myanmar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:662
+msgid "Namibia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:663
+msgid "Nauru"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:664
+msgid "Nepal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:665
+msgid "Netherlands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:666
+msgid "New Caledonia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:667
+msgid "New Zealand"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:668
+msgid "Nicaragua"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:669
+msgid "Niger"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:670
+msgid "Nigeria"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:671
+msgid "Niue"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:672
+msgid "Norfolk Island"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:673
+msgid "North Korea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:674
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:675
+msgid "Norway"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:676
+msgid "Oman"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:677
+msgid "Pakistan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:678
+msgid "Palau"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:679
+msgid "Palestinian Territory"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:680
+msgid "Panama"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:681
+msgid "Papua New Guinea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:682
+msgid "Paraguay"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:683
+msgid "Peru"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:684
+msgid "Philippines"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:685
+msgid "Pitcairn"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:686
+msgid "Poland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:687
+msgid "Portugal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:688
+msgid "Puerto Rico"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:689
+msgid "Qatar"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:690
+msgid "Republic of the Congo"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:691
+msgid "Reunion"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:692
+msgid "Romania"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:693
+msgid "Russia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:694
+msgid "Rwanda"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:695
+msgid "Saint Barthelemy"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:696
+msgid "Saint Helena"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:697
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:698
+msgid "Saint Lucia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:699
+msgid "Saint Martin"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:700
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:701
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:702
+msgid "Samoa"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:703
+msgid "San Marino"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:704
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:705
+msgid "Saudi Arabia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:706
+msgid "Senegal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:707
+msgid "Serbia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:708
+msgid "Seychelles"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:709
+msgid "Sierra Leone"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:710
+msgid "Singapore"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:711
+msgid "Sint Maarten"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:712
+msgid "Slovakia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:713
+msgid "Slovenia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:714
+msgid "Solomon Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:715
+msgid "Somalia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:716
+msgid "South Africa"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:717
+msgid "South Georgia and the South Sandwich Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:718
+msgid "South Korea"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:719
+msgid "South Sudan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:720
+msgid "Spain"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:721
+msgid "Sri Lanka"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:722
+msgid "Sudan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:723
+msgid "Suriname"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:724
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:725
+msgid "Swaziland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:726
+msgid "Sweden"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:727
+msgid "Switzerland"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:728
+msgid "Syria"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:729
+msgid "Taiwan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:730
+msgid "Tajikistan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:731
+msgid "Tanzania"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:732
+msgid "Thailand"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:733
+msgid "Togo"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:734
+msgid "Tokelau"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:735
+msgid "Tonga"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:736
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:737
+msgid "Tunisia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:738
+msgid "Turkey"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:739
+msgid "Turkmenistan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:740
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:741
+msgid "Tuvalu"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:742
+msgid "U.S. Virgin Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:743
+msgid "Uganda"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:744
+msgid "Ukraine"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:745
+msgid "United Arab Emirates"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:746
+msgid "United Kingdom"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:747
+msgid "United States"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:748
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:749
+msgid "Uruguay"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:750
+msgid "Uzbekistan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:751
+msgid "Vanuatu"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:752
+msgid "Vatican"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:753
+msgid "Venezuela"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:754
+msgid "Vietnam"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:755
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:756
+msgid "Western Sahara"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:757
+msgid "Yemen"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:758
+msgid "Zambia"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:759
+msgid "Zimbabwe"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:904
+msgid "To allow users to register via Paid Member Subscriptions, you first must enable user registration. Go to %1$sNetwork Settings%2$s, and under Registration Settings make sure to check “User accounts may be registered”. %3$sDismiss%4$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:908
+msgid "To allow users to register via Paid Member Subscriptions, you first must enable user registration. Go to %1$sSettings -> General%2$s tab, and under Membership make sure to check “Anyone can register”. %3$sDismiss%4$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:921
+msgid "PayPal uses Instant Payment Notification (IPN) which %1$shas been updated for increased security%2$s and now requires you to install an SSL certificate and enable HTTPS on your site in order to function properly. %3$sDismiss%4$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:934
+msgid "Your website doesn't seem to have SSL enabled. Some functionality will not work without a valid SSL certificate. Please enable SSL and ensure your server has a valid SSL certificate."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-core.php:945
+msgid " %1$sDismiss%2$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:350, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:90
+msgid "Completed"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:351, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:92
+msgid "Refunded"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:376, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:162
+msgid "Manual Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:377
+msgid "PayPal Standard - One-Time Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:378
+msgid "Subscription Initial Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:379, ../pms-add-on-stripe/includes/functions-filters.php:35
+msgid "Subscription Recurring Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:380
+msgid "Subscription Renewal Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-payment.php:381
+msgid "Subscription Upgrade Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-plugin-notifications.php:113
+msgid "The <strong>Pay What You Want</strong> add-on lets you accept <strong>donations</strong> or let subscribers pay what they want by offering a variable pricing option when they purchase a membership plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-plugin-notifications.php:114
+msgid "Check it out!"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-plugin-notifications.php:115
+msgid "Dismiss this notice."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:395, ../pms-add-on-email-reminders/includes/class-metabox-available-tags.php:119, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:385, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:51, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:124
+msgid "Free"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:409, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:369, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:414
+msgid "%s Day"
+msgid_plural "%s Days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:412, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:372, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:417
+msgid "%s Week"
+msgid_plural "%s Weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:415, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:375, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:420
+msgid "%s Month"
+msgid_plural "%s Months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:418, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:378, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:423
+msgid "%s Year"
+msgid_plural "%s Years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:477
+msgid " with a %1$s %2$s free trial"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:516
+msgid " and a %1$s sign-up fee"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/functions-subscription-plan.php:578, ../pms-add-on-paypal-express-pro/includes/functions.php:377, ../pms-add-on-paypal-standard-recurring-payments/includes/functions-front-end.php:40
+msgid "Automatically renew subscription"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/functions-content-restriction.php:238
+msgid "You do not have access to this content."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:106
+msgctxt "Active status for content dripping set."
+msgid "Active"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:114
+msgctxt "Inactive status for content dripping set."
+msgid "Inactive"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:203, ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:68, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:1042, ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:9, ../pms-add-on-invoices/includes/templates/default.php:200, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:173, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:37
+msgid "Subscription Plan"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:204
+msgid "Contents Table Shortcode"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:276, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:279
+msgid "Content Drip Set updated."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:281, ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:282
+msgid "Content Drip Set saved."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:283
+msgid "Content Drip Set submitted."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:285
+msgid "Content Drip Set draft updated."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:336
+msgid "Content Drip Set"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-admin-content-dripping.php:336
+msgid "Content Drip Sets"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-details.php:81
+msgid "Content Drip Set Details"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:48, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:148, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:40, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:313, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:33, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:82
+msgid "Day(s)"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:48, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:151, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:41, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:314, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:34, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:83
+msgid "Week(s)"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:48, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:154, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:42, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:315, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:35, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:84
+msgid "Month(s)"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:72
+msgid "Delay"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:74, ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:28, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:94, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:156, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:80, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:62
+msgid "Type"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:75, ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:271, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:382, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:402, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:447, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:467
+msgid "Content"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:114
+msgid "By Post"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:114
+msgid "List of Posts"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:119
+msgid "By Taxonomy"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/class-meta-box-content-dripping-rules.php:155, ../paid-member-subscriptions/includes/admin/views/view-page-members-list-table.php:16, ../paid-member-subscriptions/includes/admin/views/view-page-payments-list-table.php:15
+msgid "Add New"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:18
+msgid "Promotion Code / Voucher"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:22
+msgid "Enter the code for the discount. For example: 50percent"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:31, ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:144, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:41, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:110, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:113
+msgid "Percent"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:32, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:41
+msgid "Fixed amount"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:34
+msgid "The type of discount to apply for the purchase."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:45
+msgid "Enter the discount amount."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:51, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:89
+msgid "Subscription(s)"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:74
+msgid "Select the subscription(s) to which the discount should be applied."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:78, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:115
+msgid "You do not have any active Subscription Plans yet. Please create them <a href=\"%s\">here</a>."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:89
+msgid "Maximum Uses"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:93
+msgid "Maximum number of times this discount can be used. Enter 0 for unlimited."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:104
+msgid "Select the start date for the discount (yyyy-mm-dd). Leave blank for no start date."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:115
+msgid "Select the expiration date for the discount (yyyy-mm-dd). Leave blank for no expiration."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:128
+msgid "Select discount code status."
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:138
+msgid "Recurring Payments"
+msgstr ""
+
+#: ../pms-add-on-discount-codes/views/view-meta-box-discount-codes.php:142
+msgid "Apply discount to all future recurring payments (not just the first one)."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:78
+msgctxt "Active status"
+msgid "Active"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:87
+msgctxt "Inactive status"
+msgid "Inactive"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:106
+msgid "Send To"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:107, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:34
+msgid "Trigger Event"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:108, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:35, ../paid-member-subscriptions/includes/admin/views/view-page-members-edit.php:30
+msgid "Subscriptions"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:131, ../paid-member-subscriptions/includes/admin/class-admin-members.php:499, ../paid-member-subscriptions/includes/admin/class-admin-members.php:499, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:13, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:62
+msgid "Members"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:133, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:14
+msgid "Administrators"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:145, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:39
+msgid "Hour(s)"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:161, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:46
+msgid "after Member Signs Up (subscription active)"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:164, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:47
+msgid "after Member Abandons Signup (subscription pending)"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:167, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:48
+msgid "before Subscription Expires"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:170, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:49
+msgid "after Subscription Expires"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:173, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:50
+msgid "before Subscription Renews Automatically"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:176, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:51
+msgid "since Last Login"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:191, ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:102, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:39
+msgid "All Subscriptions"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:316
+msgid "Enter Email Reminder name here"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:332, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:335
+msgid "Email Reminder updated."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:337, ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:338
+msgid "Email Reminder saved."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:339
+msgid "Email Reminder submitted."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:341
+msgid "Email Reminder draft updated."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:361
+msgid "%s Email Reminder updated."
+msgid_plural "%s Email Reminders updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:362
+msgid "%s Email Reminder not updated, somebody is editing it."
+msgid_plural "%s Email Reminders not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:363
+msgid "%s Email Reminder permanently deleted."
+msgid_plural "%s Email Reminders permanently deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:364
+msgid "%s Email Reminder moved to the Trash."
+msgid_plural "%s Email Reminders moved to the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:365
+msgid "%s Email Reminder restored from the Trash."
+msgid_plural "%s Email Reminders restored from the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:392
+msgid "Email Reminder"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-admin-email-reminders.php:392, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:138
+msgid "Email Reminders"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-available-tags.php:141
+msgid "unlimited"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-available-tags.php:185, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:327
+msgid "Available Tags"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-email-reminders-details.php:91
+msgid "Please fill in the Subject for the Email Reminder"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-email-reminders-details.php:100
+msgid "Please fill in the Content for the Email Reminder"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-email-reminders-details.php:110
+msgid "Please select at least one Subscription plan"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/class-metabox-email-reminders-details.php:171
+msgid "Email Reminder Details"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-admin.php:21, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:195
+msgid "Invoices"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-admin.php:58
+msgid "Company Details are required in order to create invoices."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-admin.php:75, ../pms-add-on-invoices/includes/functions-invoices.php:183, ../pms-add-on-invoices/includes/functions-invoices.php:362, ../pms-add-on-invoices/includes/templates/default.php:130, ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:41
+msgid "Invoice"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-admin.php:84
+msgid "The {{number}} tag is required under Format."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:57, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:154, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:150, ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:74
+msgid "Billing Details"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:67, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:164, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:160
+msgid "Billing First Name"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:79, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:176, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:172
+msgid "Billing Last Name"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:91
+msgid "Billing Email"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:103
+msgid "Billing Company"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:104
+msgid "If entered, this will appear on the invoice, replacing the First and Last Name."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:114, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:188, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:184
+msgid "Billing Address"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:126, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:200, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:196
+msgid "Billing City"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:138, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:212, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:208
+msgid "Billing Zip / Postal Code"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:148, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:223, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:219
+msgid "Billing Country"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:161, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:236, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:232
+msgid "Billing State / Province"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-form-extra-fields.php:294
+msgid "This field is required."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/functions-invoices.php:387, ../pms-add-on-invoices/includes/functions-invoices.php:420
+msgid "Download Invoice"
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/functions.php:102
+msgid " until %s"
+msgstr ""
+
+#: ../pms-add-on-multiple-subscriptions-per-user/includes/functions.php:76
+msgid "Add New Subscription"
+msgstr ""
+
+#: includes/functions-admin.php:19, includes/functions-admin.php:26
+msgid "Pay What You Want"
+msgstr ""
+
+#: includes/functions-admin.php:30
+msgid "Enable Pay What You Want Pricing?"
+msgstr ""
+
+#: includes/functions-admin.php:32
+msgid "Enabling this will allow users to set their own price when purchasing this subscription. This will override the subscription price set above, which will be used as the recommended price."
+msgstr ""
+
+#: includes/functions-admin.php:36
+msgid "Minimum price:"
+msgstr ""
+
+#: includes/functions-admin.php:40
+msgid "Enter the minimum price allowed for this subscription plan. Leaving it empty will set the minimum price equal to the subscription price."
+msgstr ""
+
+#: includes/functions-admin.php:42
+msgid "Maximum price:"
+msgstr ""
+
+#: includes/functions-admin.php:46
+msgid "Enter the maximum price allowed for this subscription plan. Leaving it empty will imply no maximum price is set."
+msgstr ""
+
+#: includes/functions-admin.php:48
+msgid "Label:"
+msgstr ""
+
+#: includes/functions-admin.php:52
+msgid "Text that will be displayed on the front-end, after the subscription plan name and before the price input."
+msgstr ""
+
+#: includes/functions.php:68
+msgid "Please enter a price for the selected subscription plan."
+msgstr ""
+
+#: includes/functions.php:74
+msgid "Please enter a numeric price, greater than zero."
+msgstr ""
+
+#: includes/functions.php:90
+msgid "Please enter a price between %1$s and %2$s."
+msgstr ""
+
+#: includes/functions.php:97
+msgid "Please enter a price greater than or equal to %s."
+msgstr ""
+
+#: includes/functions.php:106
+msgid "Please enter a price less than or equal to %s."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/extend/functions-pb-redirect.php:115, ../pms-add-on-stripe/extend/functions-pb-redirect.php:46
+msgid "You will soon be redirected automatically. If you see this page for more than 5 seconds, please click <a href=\"%1$s\">here</a>"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/extend/functions-pb-redirect.php:203, ../paid-member-subscriptions/extend/profile-builder/functions-pb-redirect.php:133
+msgid "You will soon be redirected to complete the payment."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/extend/functions-pb-redirect.php:285
+msgid "You will soon be redirected to PayPal..."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-express-legacy.php:123, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-express-legacy.php:155
+msgid "Something went wrong when connecting to PayPal"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-express-legacy.php:134
+msgid "Something went wrong when connecting to PayPal."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-express-legacy.php:136
+msgid "PayPal could not generate the needed token. %1$s %2$s"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-express-legacy.php:826, ../pms-add-on-paypal-standard-recurring-payments/includes/functions-paypal.php:550
+msgid "No request response received."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:111, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:107, ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:23
+msgid "Credit Card Information"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:120, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:116
+msgid "Card Number"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:131, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:127
+msgid "Card CVV"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:350, ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:494, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:146, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:152, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:198, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:426, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:432, ../paid-member-subscriptions/extend/profile-builder/front-end/subscription-plans-field.php:122
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:362
+msgid "PayPal subscription creation failed. Please try again."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:363
+msgid "Error message:"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:364
+msgid "Error code:"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:594, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:527
+msgid "Please enter a Billing First Name."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:595, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:528
+msgid "Please enter a Billing Last Name."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:596, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:529
+msgid "Please enter a Billing Address."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:597, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:530
+msgid "Please enter a Billing City."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:598, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:531
+msgid "Please enter a Billing State."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:599, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:532
+msgid "Please enter a Billing Country."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:600, ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:533
+msgid "Please enter a Billing ZIP code."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:601
+msgid "Please enter a valid card number."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:602
+msgid "Please enter a valid card verification value."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/class-payment-gateway-paypal-pro.php:603
+msgid "Please enter a valid card expiration date."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:34, ../pms-add-on-stripe/includes/functions-filters.php:18
+msgid "Credit / Debit Card"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:67
+msgid "PayPal Recurring Initial Payment"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:68
+msgid "PayPal Express - Checkout Payment"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:69
+msgid "PayPal Recurring Payment"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:70
+msgid "PayPal Pro - Direct Payment"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:224
+msgid "Your PayPal API settings are missing. In order to make payments you will need to add your API credentials %1$s here %2$s."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/functions.php:225, ../pms-add-on-stripe/includes/functions-actions.php:25
+msgid "This message is visible only by Administrators."
+msgstr ""
+
+#: ../pms-add-on-paypal-standard-recurring-payments/includes/functions-paypal.php:38
+msgid "PayPal Standard - Subscription Payment"
+msgstr ""
+
+#: ../pms-add-on-paypal-standard-recurring-payments/includes/functions-paypal.php:512
+msgid "PayPal API credentials are missing or are incomplete"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/functions-field-validate.php:24
+msgid "Please complete the reCaptcha."
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/functions-field-validate.php:59
+msgid "Could not validate the reCaptcha. Please complete it again."
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/functions-field-validate.php:169
+msgid "Click the BACK button on your browser, and try again."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:91, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:271, ../pms-add-on-stripe/includes/class-payment-gateway-stripe.php:367
+msgid "Stripe API key is not valid."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/class-payment-gateway-stripe-legacy.php:534
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/functions-actions.php:24
+msgid "Your Stripe API settings are missing. In order to make payments you will need to add your API credentials %1$s here %2$s."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/functions-filters.php:34
+msgid "Card - One Time"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/bbpress/functions.php:16, ../paid-member-subscriptions/includes/admin/class-admin-settings.php:106, ../paid-member-subscriptions/includes/admin/meta-boxes/class-meta-box-single-content-restriction.php:110, ../pms-add-on-bbpress/includes/admin/meta-boxes/functions-meta-box-content-restriction.php:28
+msgid "Content Restriction"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/bbpress/functions.php:31
+msgid "Create member only forums with just a few clicks."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/bbpress/functions.php:33
+msgid "Allow only members to have access to forums and topics with Paid Member Subscriptions's bbPress Add-On."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/bbpress/functions.php:35, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:321
+msgid "Learn More"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions-email-confirmation.php:109, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-new-subscription-form.php:40
+msgid "Subscribe"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions-pb-redirect.php:201
+msgid "You will soon be redirected to complete the payment..."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions.php:101
+msgid "Subscription Name"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions.php:102
+msgid "Subscription Status"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions.php:103
+msgid "Subscription Start Date"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/functions.php:104
+msgid "Subscription Expiration Date"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/functions-content-restriction.php:46, ../paid-member-subscriptions/extend/woocommerce/functions-content-restriction.php:67
+msgid "Messages for restricted product purchase"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/functions-content-restriction.php:63
+msgid "WooCommerce Restriction Messages"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/functions-content-restriction.php:88
+msgid "You need the proper subscription plan to be able to purchase this product."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:18, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:86
+msgid "WooCommerce Integration"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:140, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:74
+msgid "There are no discounts yet. Click below to add one."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:141, ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:13, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:85
+msgid "Products"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:142, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:86
+msgid "Product Categories"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:143, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:91
+msgid "Select... or leave blank to apply to all"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:145, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:111, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:114
+msgid "Fixed"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:147, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:127, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:130
+msgid "Remove this discount"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/woocommerce-integration.php:148
+msgid "Are you sure you want to remove this discount?"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-addons.php:171, ../paid-member-subscriptions/includes/admin/class-admin-addons.php:171
+msgid "Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-basic-info.php:44, ../paid-member-subscriptions/includes/admin/class-admin-basic-info.php:44
+msgid "Basic Information"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:58
+msgid "Export location or file not writable"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:77
+msgid "No data found for export parameters"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:81
+msgid "Batch Processing Complete"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:114
+msgid "Nonce verification failed"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:114, ../paid-member-subscriptions/includes/admin/export/class-batch-export.php:132, ../paid-member-subscriptions/includes/admin/export/class-export.php:172
+msgid "Error"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-export.php:140, ../paid-member-subscriptions/includes/admin/class-admin-export.php:140
+msgid "Export Data"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:50, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:91, ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:29, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:93, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:13
+msgid "Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:52, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:147
+msgid "Date"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:54, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:80
+msgid "Actions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:172, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:66, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:82
+msgid "View Details"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-payments-list-table.php:183, ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:457, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-payment-history.php:61
+msgid "No payments found"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:70, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:391
+msgid "Expiration date"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:72, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:395
+msgid "Auto-renewing"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:236
+msgid "Not Found - ID: %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:270, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:391, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:59, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:43
+msgid "Unlimited"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:306, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:395, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:56
+msgid "Yes"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:306, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:395, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:55
+msgid "No"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-member-subscription-list-table.php:325
+msgid "Edit"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:81, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:90
+msgid "User ID"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:82, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:91, ../paid-member-subscriptions/includes/admin/views/view-page-members-edit.php:23, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:62
+msgid "Username"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:83, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:92
+msgid "E-mail"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:84
+msgid "Role"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:149
+msgid "Select Subscription Plan..."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:158
+msgid "Assign"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:336
+msgid "Edit User"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:364, ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:384
+msgid "Subscription Plan Not Found - ID: %s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-add-new-bulk-list-table.php:391
+msgid "No users found"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:93
+msgid "Subscribed to"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:187
+msgid "Filter by Subscription Plan..."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:197, ../paid-member-subscriptions/includes/admin/views/view-page-reports.php:31
+msgid "Filter"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:354, ../paid-member-subscriptions/includes/admin/views/view-page-members-edit.php:14
+msgid "Edit Member"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:390
+msgid "Start date"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members-list-table.php:414
+msgid "No members found"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:87
+msgid "Something went wrong. Could not process your request."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:88
+msgid "Member Subscription added successfully."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:89
+msgid "Member Subscription updated successfully."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:90
+msgid "Member Subscription deleted successfully."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:238
+msgid "%d members successfully added."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:262, ../paid-member-subscriptions/includes/admin/class-admin-payments.php:272
+msgid "Please select a user."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:272, ../paid-member-subscriptions/includes/admin/class-admin-payments.php:281
+msgid "It seems this user does not exist."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:286
+msgid "Please add a start date for the subscription."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:295
+msgid "The expiration date needs to be greater than the start date."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:298
+msgid "The expiration date needs to be greater than the trial end date."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-members.php:331, ../paid-member-subscriptions/includes/admin/class-admin-members.php:340, ../paid-member-subscriptions/includes/admin/class-admin-members.php:344
+msgid "Something went wrong. Could not complete your request."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:89, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:302, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-payment-history.php:32
+msgid "ID"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:90
+msgid "User"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:93, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-payment-history.php:34
+msgid "Date / Time"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:95, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:185
+msgid "Transaction ID"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:235
+msgid "User no longer exists"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:331
+msgid "Edit Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:334
+msgid "Are you sure you want to delete this Payment?"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments-list-table.php:418
+msgid "Discount code"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:73
+msgid "Payment successfully added. The subscription was also added or updated for the selected user."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:111
+msgid "Payment successfully deleted."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:163
+msgid "Payment successfully updated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:291
+msgid "Please enter a date for the payment."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:310
+msgid "This user already has a subscription (%s) from the same group with the one you selected. Select it or remove it to be able to complete this payment."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-payments.php:383, ../paid-member-subscriptions/includes/admin/class-admin-payments.php:383, ../paid-member-subscriptions/includes/admin/class-admin-settings.php:105, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:69
+msgid "Payments"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-reports.php:212
+msgid "Current month"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-reports.php:240
+msgid "Summary"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-reports.php:241
+msgid "Total earnings for the selected period: "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-reports.php:242
+msgid "Total number of payments for the selected period: "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-reports.php:293, ../paid-member-subscriptions/includes/admin/class-admin-reports.php:293, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:16, ../paid-member-subscriptions/includes/admin/views/view-page-reports.php:16
+msgid "Reports"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-settings.php:91
+msgid "Settings saved."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-settings.php:104, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:92, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:204
+msgid "General"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-settings.php:107
+msgid "E-Mails"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-settings.php:116, ../paid-member-subscriptions/includes/admin/class-admin-settings.php:116, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:73, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:105
+msgid "Settings"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:185
+msgctxt "Active status for subscription plan"
+msgid "Active"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:193
+msgctxt "Inactive status for subscription plan"
+msgid "Inactive"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:255, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:592
+msgid "Add Upgrade"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:263, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:593
+msgid "Add Downgrade"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:271, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:569
+msgid "Are you sure you want to delete this Subscription Plan?"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:291, ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:30, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:47
+msgid "Price"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:294
+msgid "Sign Up Fee"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:298, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:77
+msgid "Free Trial"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:569
+msgid "Delete Plan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:622
+msgid "a downgrade"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:622
+msgid "an upgrade"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:624
+msgid "This will be %s for the %s subscription plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:682
+msgid "Enter Subscription Plan name here"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:936, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:939
+msgid "Subscription Plan updated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:941, ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:942
+msgid "Subscription Plan saved."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:943
+msgid "Subscription Plan submitted."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:945
+msgid "Subscription Plan draft updated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:960
+msgid "%s Subscription Plan updated."
+msgid_plural "%s Subscription Plans updated."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:961
+msgid "%s Subscription Plan not updated, somebody is editing it."
+msgid_plural "%s Subscription Plans not updated, somebody is editing them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:962
+msgid "%s Subscription Plan permanently deleted."
+msgid_plural "%s Subscription Plans permanently deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:963
+msgid "%s Subscription Plan moved to the Trash."
+msgid_plural "%s Subscription Plans moved to the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:964
+msgid "%s Subscription Plan restored from the Trash."
+msgid_plural "%s Subscription Plans restored from the Trash."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:1013
+msgid "%d subscription plan has been successfully activated"
+msgid_plural "%d subscription plans have been successfully activated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:1016
+msgid "%d subscription plan has been successfully deactivated"
+msgid_plural "%d subscription plans have been successfully deactivated"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../paid-member-subscriptions/includes/admin/class-admin-subscription-plans.php:1042, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:58
+msgid "Subscription Plans"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:20, ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:21
+msgid "Manual/Offline"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:26, ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:16
+msgid "PayPal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:27
+msgid "PayPal Standard"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:334
+msgid "No payment methods are available to complete the checkout process."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:355
+msgid "Select a Payment Method"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/functions-payment-gateways.php:378
+msgid "No payment methods are available for the selected subscription plan."
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/functions-admin-pages.php:18
+msgid "bbPress Restriction Messages"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/functions-admin-pages.php:23
+msgid "Forum Messages for logged-out users"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/functions-admin-pages.php:31
+msgid "Forum Messages for logged-in non-member users"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/functions-admin-pages.php:39
+msgid "Topic Messages for logged-out users"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/functions-admin-pages.php:47
+msgid "Topic Messages for logged-in non-member users"
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:22
+msgid "Select the subscription plan for which this content dripping set should apply."
+msgstr ""
+
+#: ../pms-add-on-content-dripping/includes/views/view-meta-box-content-dripping-details.php:34
+msgid "Select content dripping set status."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:10
+msgid "Send Reminder To"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:16
+msgid "Select who will receive the emails sent by this reminder."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:23, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:340, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:425
+msgid "Administrator Emails"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:27
+msgid "Enter a list of administrator emails, separated by comma, that you want to receive this email reminder."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:54
+msgid "Enter the trigger event for the email reminder. For example: 10 Days before Subscription Expires."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:61
+msgid "Email Subject"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:65
+msgid "Enter the email reminder subject. You can use the %1$savailable tags%2$s. "
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:72
+msgid "Email Content"
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:80
+msgid "Enter the email reminder content. You can use the %1$savailable tags%2$s. "
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:82
+msgid "You can set the From Name and From Email in under %1$sGeneral Email Options%2$s. "
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:111
+msgid "Select the subscription(s) to which this email reminder should be sent."
+msgstr ""
+
+#: ../pms-add-on-email-reminders/includes/views/view-meta-box-email-reminders.php:133
+msgid "Select the email reminder status."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:108
+msgid "E-mail: "
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:138
+msgid "Invoice number: %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:141
+msgid "Payment ID: %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:144
+msgid "Payment date: %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:147
+msgid "Payment status: %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:151
+msgid "Payment gateway: %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:165
+msgid "Provided by:"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:169
+msgid "Provided to:"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:206, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:124
+msgid "Amount (%s)"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/templates/default.php:244
+msgid "Total (%s): %s"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:16
+msgid "Invoice Details"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:19
+msgid "Company Details"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:21
+msgid "Enter your company details as you would like them to appear on the invoice. ( Company Name, Address, Country, etc.) <br/> <strong>Note: Company details are required to create invoices.</strong>"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:25
+msgid "Invoice Notes"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:26
+msgid "Thank you for your business!"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:27
+msgid "These notes will appear at the bottom of each invoice."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:36
+msgid "Invoice Settings"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:37
+msgid "For invoice title and format you can use the following tags: <code>{{number}}</code>, <code>{{MM}}</code>, <code>{{YYYY}}</code>"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:40
+msgid "Invoice Title"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:42
+msgid "Depending on your country fiscal regulations you can change it to things like: Tax Invoice etc."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:46
+msgid "Format"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:48
+msgid "<strong>Note</strong>: {{number}} is required."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:52
+msgid "Reset Invoice Counter"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:53
+msgid "Check this if you want to reset the invoice counter."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:56
+msgid "Next Invoice Number"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:58
+msgid "Enter the next invoice number. Default value is 1 and increments every time an invoice is issued. Existing invoices will not be changed."
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:61
+msgid "Reset Yearly"
+msgstr ""
+
+#: ../pms-add-on-invoices/includes/views/view-settings-tab-invoices.php:62
+msgid "Automatically reset invoice numbers on new year's day. Resets invoice number to 1."
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:26
+msgid "Subscription Type"
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:29
+msgid "Regular"
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:30
+msgid "Fixed Period"
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:32
+msgid "Please select the duration type for this subscription plan."
+msgstr ""
+
+#: ../pms-add-on-member-subscription-fixed-period/includes/admin/functions-admin-pages.php:44
+msgid "The date at which member subscriptions associated with this subscription plan should expire."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:31
+msgid "Reference Transactions"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:32
+msgid "Check if your PayPal account has Reference Transactions enabled. %1$sLearn how to enable reference transactions.%2$s"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:52, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:22
+msgid "API Username"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:56, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:26
+msgid "API Password"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:60, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:30
+msgid "API Signature"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:64, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:34
+msgid "Test API Username"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:68, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:38
+msgid "Test API Password"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:72, ../pms-add-on-paypal-standard-recurring-payments/includes/admin/functions-admin-pages.php:42
+msgid "Test API Signature"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:122
+msgid "PayPal Billing Agreement ID"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/admin/functions-admin-pages.php:145
+msgid "The provided PayPal Billing Agreement ID is not valid."
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:25
+msgid "Payment confirmation"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:31
+msgid "Recurring"
+msgstr ""
+
+#: ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:45
+msgid "For first %d %s"
+msgid_plural "For first %d %ss"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:46
+msgid "Once every %d %s"
+msgid_plural "Once every %d %ss"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../pms-add-on-paypal-express-pro/includes/views/view-paypal-express-confirmation-form.php:62
+msgid "Confirm payment"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:13
+msgid "reCaptcha"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:36
+msgid "Site Key"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:38
+msgid "The site key from %1$sGoogle%2$s"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:43
+msgid "Secret Key"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:45
+msgid "The secret key from %1$sGoogle%2$s"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:50
+msgid "Display on"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:51
+msgid "Register Form"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:52
+msgid "Login Form"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:53
+msgid "Recover Password Form"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:54
+msgid "Default WordPress Register Form"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:55
+msgid "Default WordPress Login Form"
+msgstr ""
+
+#: ../pms-add-on-recaptcha/includes/admin/functions-admin-pages.php:56
+msgid "Default WordPress Recover Password Form"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:21
+msgid "Test Publishable Key"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:24
+msgid "Test Secret Key"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:27
+msgid "Live Publishable Key"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:30
+msgid "Live Secret Key"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:36, ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:180
+msgid "Stripe"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:89
+msgid "Stripe Customer ID"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:97
+msgid "Stripe Card ID"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:120
+msgid "The provided Stripe Customer ID is not valid."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/admin/functions-admin-pages.php:128
+msgid "The provided Stripe Card ID is not valid."
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:28
+msgid "Card Number *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:37
+msgid "Card CVV *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:46
+msgid "Expiration Date *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:88
+msgid "Billing First Name *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:97
+msgid "Billing Last Name *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:106
+msgid "Billing Address *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:115
+msgid "Billing City *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:124
+msgid "Billing Zip / Postal Code *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:133
+msgid "Billing Country *"
+msgstr ""
+
+#: ../pms-add-on-stripe/includes/views/view-billing-cc-form.php:154
+msgid "Billing State / Province *"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:28, ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:30
+msgid "Subscription Plans on Register Form"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:28
+msgid "It looks like there are no active subscriptions. <a href=\"%s\">Create one here</a>."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:30
+msgid "Select which Subscription Plans to show to the user on the register forms ( drag and drop to re-order )"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:31
+msgid "Subscription Plans Order"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:31
+msgid "Save the subscription plan order from the subscription plans checkboxes"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:34
+msgid "Selected Subscription Plan"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/admin/manage-fields.php:34
+msgid "Select which plan will be by default selected when the front-end form loads."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/profile-builder/front-end/subscription-plans-field.php:58
+msgid "You will be able to complete the payment after you have confirmed your e-mail address."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/class-pms-woo-subscription-discounts.php:604
+msgid "Member discount!"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-content-restriction-product-purchase-options.php:6
+msgid "Purchase Options"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-content-restriction-product-purchase-options.php:10
+msgid "Who can purchase?"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-content-restriction-product-purchase-options.php:33
+msgid "Select who can purchase this product."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:16
+msgid "Allow cumulative discounts"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:18
+msgid "By checking this option we will cumulate all discounts that apply to a specific product. <strong> By default we're applying only the highest discount. </strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:22
+msgid "Exclude products on sale "
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:24
+msgid "Do not apply any member discounts to products that are currently on sale."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:33
+msgid "Product Messages"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:36
+msgid "Product Discounted - Membership Required"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:37
+msgid "Want a discount? Become a member, sign up for a subscription plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/views/view-settings-tab-woocommerce-integration.php:38
+msgid "Message displayed to non-members if the product has a membership discount. Displays below add to cart buttons. Leave blank to disable."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/export/class-batch-export.php:132, ../paid-member-subscriptions/includes/admin/export/class-export.php:172
+msgid "You do not have permission to export data."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/class-meta-box-admin-dashboard-payments.php:32
+msgid "Paid Member Subscriptions Payments Summary"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/class-meta-box-subscription-plan-details.php:195
+msgid "Subscription Plan Details"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:19
+msgid "Recommended Plugins"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:53
+msgid "Translate your Paid Member Subscriptions checkout with a WordPress translation plugin that anyone can use. It offers a simpler way to translate WordPress sites, with full support for WooCommerce and site builders."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:72, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:145
+msgid "Plugin is <strong>inactive</strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:74, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:147
+msgid "Plugin is <strong>active</strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:80, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:153
+msgid "Install Now"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:83, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:156
+msgid "Compatible with Paid Member Subscriptions."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:88, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:161
+msgid "Could not install plugin. Retry or <a href=\"%s\" target=\"_blank\">install manually</a>."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:126
+msgid "Capture more user information on the register form with the help of Profile Builder's custom user profile fields."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:179
+msgid "Downloading and installing..."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:180
+msgid "Installation complete"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:182
+msgid "Add-On is Active"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:183
+msgid "Add-On has been activated"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:184
+msgid "Retry Install"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:186, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:312
+msgid "Add-On is <strong>active</strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:187, ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:310
+msgid "Add-On is <strong>inactive</strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:190
+msgid "Add-On has been deactivated."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:213
+msgid "Something went wrong, we could not connect to the server. Please try again later."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:246
+msgid "New!"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:265
+msgid "Available in: "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:265
+msgid "version"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:278
+msgid "Serial Number"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:278
+msgid "Check"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:322
+msgid "Compatible with your version of Paid Member Subscriptions."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:329
+msgid "Upgrade Paid Member Subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:330
+msgid "Not compatible with Paid Member Subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:337
+msgid "Update"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:338
+msgid "Not compatible with your version of Paid Member Subscriptions."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:339
+msgid "Minimum required Paid Member Subscriptions version:"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-addons.php:344
+msgid "Could not install add-on. Retry or <a href=\"%s\" target=\"_blank\">install manually</a>."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:14
+msgid "Version"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:17
+msgid "<strong>Paid Member Subscriptions</strong>"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:18
+msgid "Accept payments, create subscription plans and restrict content on your website."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:20
+msgid "Membership Made Easy"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:24
+msgid "Add basic registration forms where members can sign-up for a subscription plan using the %s shortcode."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:27
+msgid "Account"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:28
+msgid "Allow members to edit their account information and manage their subscription plans using the %s shortcode."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:32
+msgid "Restrict content using the %s shortcode or directly from individual posts and pages."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:36
+msgid "Output subscription plans form anywhere and allow users to sign up for new subscriptions using %s shortcode."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:39
+msgid "Login"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:40
+msgid "Allow members to login using %s shortcode."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:43
+msgid "Recover Password"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:44
+msgid "Add a recover password form for your members using %s shortcode."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:50
+msgid "Membership Modules"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:51
+msgid "Powerful sections that help you manage your members."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:59
+msgid "Create hierarchical subscription plans allowing your members to upgrade from an existing subscription. Shortcode based, offering many options to customize your subscriptions listing."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:63
+msgid "Overview of all your members and their subscription plans. Easily add/remove members or edit their subscription details. "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:70
+msgid "Keep track of all member payments, payment statuses or purchased subscription plans."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:74
+msgid "Set the payment gateway used to accept payments, select messages seen by users when accessing a restricted content page or customize default member emails. Everything is just a few clicks away. "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:87
+msgid "Integrates beautifully with WooCommerce, for extended functionality."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:94
+msgid "Restrict Product Viewing & Purchasing"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:95
+msgid "Control who can see or purchase a WooCommerce product based on logged in status and subscription plan. Easily create products available to members only."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:98
+msgid "Offer Membership Discounts"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:99
+msgid "Offer product discounts to members based on their active subscription. Set discounts globally per subscription plan, or individually per product."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:106
+msgid "Make use of the extra flexibility by setting custom restriction messages per product, excluding products on sale from membership discounts, allowing cumulative discounts & more. "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:118
+msgid "Featured Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:119
+msgid "Get more functionality by using dedicated Add-ons and tailor Paid Member Subscriptions to your project needs."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:123
+msgid "Basic Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:124
+msgid "These addons extend your WordPress Membership Plugin and are available with the <a href=\"%s\">Hobbyist and PRO</a> versions."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:130
+msgid "Easy way to add global content restriction rules to subscription plans, based on post type, taxonomy and terms."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:135
+msgid "Friction-less discount code creation for running promotions, making price reductions or simply rewarding your users."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:140
+msgid "Create multiple automated email reminders that are sent to members before or after certain events take place (subscription expires, subscription activated etc.)"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:143
+msgid "Navigation Menu Filtering"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:145
+msgid "Dynamically display menu items based on logged-in status as well as selected subscription plans."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:148
+msgid "bbPress"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:150
+msgid "Integrate Paid Member Subscriptions with the popular forums plugin, bbPress."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:153
+msgid "Fixed Period Membership"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:155
+msgid "The Fixed Period Membership Add-On allows your Subscriptions to end at a specific date."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:159
+msgid "Get Basic Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:165
+msgid "Pro Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:166
+msgid "These addons extend your WordPress Membership Plugin and are available with the <a href=\"%s\">PRO version</a> only."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:170
+msgid "Recurring Payments - PayPal Standard"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:172
+msgid "Accept recurring payments from your members through PayPal Standard."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:175
+msgid "PayPal Pro and PayPal Express"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:177
+msgid "Accept one time or recurring payments through PayPal Pro (credit card) and/or Express Checkout."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:182
+msgid "Accept credit card payments, both one-time and recurring, directly on your website via Stripe."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:185
+msgid "Content Dripping"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:187
+msgid "Create schedules for your content, making posts or categories available for your members only after a certain time has passed since they signed up for a subscription plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:190
+msgid "Multiple Subscriptions / User"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:192
+msgid "Setup multiple subscription level blocks and allow members to sign up for more than one subscription plan (one per block)."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:197
+msgid "This add-on allows you and your members to download PDF invoices for each payment that has been completed."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:201
+msgid "Get Pro Add-ons"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-basic-info.php:220
+msgid "Paid Member Subscriptions comes with an <a href=\"%s\">extensive documentation</a> to assist you."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:17, ../paid-member-subscriptions/includes/admin/views/view-page-reports.php:17
+msgid "Export"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:28
+msgid "Members Export"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:30
+msgid "Download a CSV with your user subscriptions (an user with multiple subscriptions will have a record for each individual one)."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:44
+msgid "Choose the Subscription to export members from"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:51
+msgid "All Members"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:56
+msgid "Choose the current subscription status"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:61, ../paid-member-subscriptions/includes/admin/views/view-page-export.php:110
+msgid "Generate CSV"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:80
+msgid "Payments Export"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:82
+msgid "Download a CSV with your payments."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:89
+msgid "All Payments"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:94
+msgid "Choose the payment status"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:103
+msgid "End Date"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-export.php:107
+msgid "Leave dates empty for an export of all payments."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-bulk.php:14
+msgid "Bulk Add Subscription Plans to Users"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:53
+msgid "Edit Member Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:55
+msgid "Add Member Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:77
+msgid "Update Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:79, ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:97
+msgid "Add Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:92
+msgid "Delete Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:97
+msgid "Save Subscription"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:117
+msgid "Member"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:125, ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:68
+msgid "Select..."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:136
+msgid "Select the username you wish to associate a subscription plan with. You can create a new user <a href=\"%s\">here</a>."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:150
+msgid "View all subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:166
+msgid "Subscription Details"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:265
+msgid "Trial End"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:284
+msgid "Subscription Billing Schedule"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:292
+msgid "Payment Gateway Subscription ID"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:296
+msgid "The subscription payment schedule is handled by the payment gateway."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:307
+msgid "Recurring Once Every"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:316, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:36, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:85
+msgid "Year(s)"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:324, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:73
+msgid "Next Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-add-new-edit-subscription.php:348
+msgid "Payment Gateway"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-edit.php:39, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:72
+msgid "Recent Payments"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-members-list-table.php:17
+msgid "Bulk Add New"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:49
+msgid "Payment #%s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:49
+msgid "Add New Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:80
+msgid "Select the username you wish to assign this payment to. You can create a new user <a href=\"%s\">here</a>."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:191
+msgid "The Transaction ID will be provided by the payment gateway when the payment is registered within their system."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:222
+msgid "IP Address"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:239
+msgid "Save Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:239
+msgid "Add Payment"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-payments-add-new-edit.php:245, ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:45, ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:61, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:99
+msgid "Cancel"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-reports.php:27
+msgid "Filters"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:45
+msgid "Load CSS"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:47
+msgid "Use Paid Member Subscriptions's own CSS in the front-end."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:52
+msgid "Automatically Log In"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:59
+msgid "Select \"Yes\" to automatically log in new members after successful registration."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:64
+msgid "Register Success Page"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:76
+msgid "Select the page where you wish to redirect your newly registered members."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:95
+msgid "Currency"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:105
+msgid "Select your currency. Please note that some payment gateways can have currency restrictions."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:109
+msgid "Currency Position"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:112
+msgid "Before"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:113
+msgid "After"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:116
+msgid "Select whether the currency symbol should appear before the price or after the price."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:120
+msgid "Test Mode"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:122
+msgid "By checking this option you will be able to use Paid Member Subscriptions with test accounts from your payment processors."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:132
+msgid "Active Payment Gateways"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:145
+msgid "Default Payment Gateway"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:159, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:99
+msgid "Renewal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:163, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:104
+msgid "Customer opts in for automatic renewal"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:164, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:105
+msgid "Always renew automatically"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:165, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:106
+msgid "Never renew automatically"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:169
+msgid "Select renewal type. You can either allow the customer to opt in or force automatic renewal."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:186
+msgid "Payment Gateways"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:208, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:26
+msgid "Type of Restriction"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:211, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:21
+msgid "Message"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:211, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:21
+msgid "Redirect"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:211, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:257, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:21
+msgid "Template"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:223
+msgid "If you select \"Messages\" the post's content will be protected by being replaced with a custom message."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:224
+msgid "If you select \"Redirect\" the post's content will be protected by redirecting the user to the URL you specify. The redirect happens only when accessing a single post. On archive pages the restriction message will be displayed, instead of the content."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:225
+msgid "If you select \"Template\" the template for the restricted post/page will change to the selected template in the Restriction Template section below."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:229
+msgid "Restriction Redirect"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:232
+msgid "Redirect URL"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:237, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:116
+msgid "Restriction Messages"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:240, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:135
+msgid "Messages for logged-out users"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:245, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:138
+msgid "Messages for logged-in non-member users"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:254
+msgid "Restriction Template"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:259
+msgid "Default"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:278
+msgid "Select which template should load instead of the default one when a post is restricted and the restriction type is set to \"Template\"."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:282
+msgid "Misc"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:286
+msgid "Restricted Posts Preview"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:291
+msgid "None"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:298
+msgid "Show the first %s words of the post's content"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:305
+msgid "Show the content before the \"more\" tag"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:309
+msgid "Show a portion of the restricted post to logged-out users or users that are not subscribed to a plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:339
+msgid "Member Emails"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:352
+msgid "General Email Options"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:355
+msgid "From Name"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:360
+msgid "From Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:377, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:397, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:442, ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:462
+msgid "Subject"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:420
+msgid "Send Administrator Emails"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:421
+msgid "By checking this option the administrator email addresses from the field below wil receive email notifications."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:427
+msgid "Please add a list of email addresses, separated by comma, that you wish to receive emails for member subscription status changes."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-settings.php:484
+msgid "Save Settings"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:12
+msgid "Uninstall Paid Member Subscriptions"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:14
+msgid "We're sad to see you leave, but we understand that sometimes things don't work out as planned."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:15
+msgid "Below you have information about what will be removed from your database. Please be advised that once this information is removed it cannot be recovered."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:23
+msgid "Custom Options"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:24
+msgid "Removes all custom options, used by Paid Member Subscriptions, from the <em>options</em> table of the database."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:29
+msgid "Custom User Roles"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:30
+msgid "Removes all custom user roles created by Paid Member Subscriptions. These user roles will be removed for all users that have them."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:35
+msgid "Custom Database Tables"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:36
+msgid "Removes all information stored in our custom database tables and deletes these tables from your database."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:52
+msgid "Confirm Uninstall"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/views/view-page-uninstall.php:53
+msgid "To confirm the Uninstall process please type the word <strong>REMOVE</strong> in the field below and then click the Uninstall button."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/manual/class-payment-gateway-manual.php:89
+msgid "Thank you for upgrading. The changes will take effect after the payment is received."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/manual/class-payment-gateway-manual.php:93
+msgid "Thank you for renewing. The changes will take effect after the payment is received."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/manual/class-payment-gateway-manual.php:97
+msgid "Thank you for subscribing. The subscription will be activated after the payment is received."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/manual/class-payment-gateway-manual.php:101
+msgid "The subscription will be activated after the payment is received."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/paypal_standard/paypal_standard.php:16
+msgid "Paypal Standard"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/paypal_standard/paypal_standard.php:20
+msgid "PayPal E-mail Address"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/gateways/paypal_standard/paypal_standard.php:25
+msgid "Enter your PayPal e-mail address"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:23
+msgid "This is not a valid subscription. %1$sBack to account%2$s"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:46, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:35
+msgid "Trial"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:65
+msgid "Trial End Date"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:90
+msgid "Upgrade"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:96
+msgid "Renew"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:110
+msgid "Abandon"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account-subscription-details.php:119
+msgid "Go back to account"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:15
+msgid "Expires"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-account.php:57
+msgid "Expired on: "
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:28, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:63
+msgid "Username *"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:34, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:71
+msgid "E-mail *"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:42, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:79
+msgid "First Name"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:50, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:87
+msgid "Last Name"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:58, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-new-password-form.php:28
+msgid "Password"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:66, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-new-password-form.php:33
+msgid "Repeat Password"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-edit-profile-form.php:75
+msgid "Edit Profile"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-new-password-form.php:17
+msgid "Please enter your new password."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-new-password-form.php:45, ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-recover-password-form.php:41
+msgid "Reset Password"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-recover-password-form.php:17
+msgid "Please enter your username or email address."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-recover-password-form.php:18
+msgid "You will receive a link to create a new password via email."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-recover-password-form.php:29
+msgid "Username or Email"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:95
+msgid "Password *"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/views/shortcodes/view-shortcode-register-form.php:103
+msgid "Repeat Password *"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:38
+msgid "Current Month"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:41, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:58
+msgid "Income:"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:46, ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:63
+msgid "Payments:"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:55
+msgid "Today"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:86
+msgid "View All Payments"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-admin-dashboard-payments.php:89
+msgid "No payments found."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:15
+msgid "Display Options"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:30
+msgid "Settings Default"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:44
+msgid "Display For"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:66
+msgid "Checking only \"Logged In Users\" will show this %s to all logged in users, regardless of subscription plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:69
+msgid "Checking any subscription plan will show this %s only to users that are subscribed those particular plans."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:83
+msgid "Restriction Redirect URL"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:91
+msgid "Enable Custom Redirect URL"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:95
+msgid "Check if you wish to add a custom redirect URL for this %s."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:104
+msgid "Custom Redirect URL"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:108
+msgid "Add a URL where you wish to redirect users that do not have access to this %s and try to access it directly."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:122
+msgid "Enable Custom Messages"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-single-content-restriction.php:126
+msgid "Check if you wish to add custom messages for this %s."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:16
+msgid "Description"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:18
+msgid "Write description"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:19
+msgid "A description for this subscription plan. This will be displayed on the register form."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:28
+msgid "Duration"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:38
+msgid "Set the subscription duration. Leave 0 for unlimited."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:51
+msgid "Amount you want to charge people who join this plan. Leave 0 if you want this plan to be free."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:61
+msgid "Sign-up Fee"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:65
+msgid "Amount you want to charge people upfront when subscribing to this plan."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:87
+msgid "The free trial represents the amount of time before charging the first recurring payment. The sign-up fee applies regardless of the free trial."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:103
+msgid "Settings default"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:110
+msgid "Select renewal type. You can either allow the customer to opt in, force automatic renewal or force no renewal."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:127
+msgid "Only active subscription plans will be displayed to the user."
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:136
+msgid "User role"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:142
+msgid "... Create new user role from this Subscription Plan"
+msgstr ""
+
+#: ../paid-member-subscriptions/includes/admin/meta-boxes/views/view-meta-box-subscription-details.php:152
+msgid "Select which user role to associate with this subscription plan."
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/meta-boxes/views/view-content-restriction-topic-restriction-type.php:8
+msgid "Topic Restriction Mode"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/meta-boxes/views/view-content-restriction-topic-restriction-type.php:16
+msgid "Forum Default"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/meta-boxes/views/view-content-restriction-topic-restriction-type.php:23
+msgid "Hide Topic and Replies"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/meta-boxes/views/view-content-restriction-topic-restriction-type.php:28
+msgid "Show Topic, but hide Replies"
+msgstr ""
+
+#: ../pms-add-on-bbpress/includes/admin/meta-boxes/views/view-content-restriction-topic-restriction-type.php:32
+msgid "The option above will work only if the restriction type is Message. Redirects will take effect without regard of this option."
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:60
+msgid "Discounts behaviour"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:62
+msgid "Best price"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:64
+msgid "Exclude this product from all membership discounts"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:67
+msgid "This will calculate the best price for this product, based on all existing member discounts (set both per subscription plan and per product) "
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:68
+msgid "This will ignore the global discounts set per subscription plan that apply to this product"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:69
+msgid "This will exclude this product from any membership discounts that may apply now or in the future"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:79
+msgid "Subscription plan"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:137, ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:140
+msgid "Add New Discount"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-product-membership-discounts.php:176
+msgid "Membership Discounts"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:60
+msgid "Discount for"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:61
+msgid "Name"
+msgstr ""
+
+#: ../paid-member-subscriptions/extend/woocommerce/includes/admin/meta-boxes/class-meta-box-subscription-plan-product-discounts.php:175
+msgid "Product Discounts"
+msgstr ""
