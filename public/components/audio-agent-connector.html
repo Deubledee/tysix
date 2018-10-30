@@ -1,0 +1,384 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="stylesheet" href="audio-input-source.html">
+<dom-module id="audio-agent-connector">
+    <template>
+        <style include="shared-styles-dropdown">
+            :host {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            a {
+                color: black;
+                text-decoration: none;
+            }
+
+            article {
+                display: flex;
+                flex-flow: column;
+                border-radius: var(--app-standart-border-radius);
+                padding: var(--app-standart-border-radius);
+                color: var(--app-color);
+            }
+
+            section div {
+                box-shadow: var( --app-type-gain-box-shadow);
+                font-family: 'NotoColorEmoji';
+                word-break: break-all;
+                font-size: 90%;
+                margin-bottom: var(--app-standart-border-radius);
+                width: 130px;
+                text-shadow: var(--app-type-dropdown-text-shadow);
+                padding-left: 9px;
+                padding-top: 3px;
+                background-color: var(--app-primary-background-color);
+                border-radius: var(--app-standart-border-radius);
+                height: 35px;
+                display: inline-flex;
+            }
+
+            article label[for=connector] {
+                width: 80%;
+                padding-top: 9px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            section {
+                display: flex;
+                flex-flow: row;
+            }
+
+            aside {
+                flex-basis: 71px
+            }
+
+            .show[show] {
+                display: none
+            }
+
+            .show {
+                display: flex;
+                flex-flow: nowrap;
+                padding-top: 2px;
+            }
+
+            paper-listbox.dropdown-content {
+                background-color: var(--paper-grey-50);
+            }
+
+            paper-item[sellected] {
+                background-color: var(--app-type-sellected-background-color)
+            }
+
+            paper-dropdown-menu.custom2 {
+                --paper-input-container-underline: {
+                    display: initial;
+                }
+            }
+
+            nav,
+            paper-icon-button {
+                padding: 7px;
+                display: none
+            }
+
+            nav button {
+                background: #485050;
+                color: white;
+                border-radius: 4px;
+            }
+
+            nav[reverb],
+            paper-icon-button[source],
+            paper-icon-button[agent] {
+                display: block;
+            }
+        </style>
+        <article>
+            <section>
+                <div>
+                    <label for="connector">
+                        [[permanentType]]
+                    </label>
+                    <paper-icon-button on-click="showValues" noink icon="unfold-less" title="close" class="show" show$="[[show]]"></paper-icon-button>
+                    <paper-icon-button on-click="showValues" noink icon="unfold-more" title="open" class="show" show$="[[!show]]"></paper-icon-button>
+                </div>
+                <paper-icon-button source$="[[source]]" icon="input" title="[[type]]"></paper-icon-button>
+                <paper-icon-button agent$="[[agent]]" icon="av:recent-actors" title="[[type]]"></paper-icon-button>
+                <nav reverb$="[[reverb]]">
+                    <button icon="av:recent-actors" title="[[type]]">
+                        <i>
+                            <b>R</b>
+                        </i>
+                    </button>
+                </nav>
+            </section>
+            <aside class="show" show$="[[show]]">
+                <paper-dropdown-menu class="custom custom2" label="[[value]]">
+                    <paper-listbox id="listBox1" slot="dropdown-content" class="dropdown-content" selected="0">
+                        <template is="dom-repeat" items="{{options}}" as="option" mutable-data="true">
+                            <paper-item on-click="connection" id="[[option.id]]" value=[[option.name]]>
+                                [[option.name]]
+                            </paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+            </aside>
+            <aside class="show" show$="[[show]]">
+                <paper-dropdown-menu class="custom custom2" label="[[value2]]">
+                    <paper-listbox id="listBox2" slot="dropdown-content" class="dropdown-content" selected="0">
+                        <template is="dom-repeat" items="{{destinations}}" as="destination" mutable-data="true">
+                            <paper-item on-click="destination" id="[[destination.id]]" value="[[destination.name]]">
+                                [[destination.name]]
+                            </paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+            </aside>
+        </article>
+    </template>
+    <script>
+
+        class audioAgentConnector extends Polymer.Element {
+            static get is() {
+                return 'audio-agent-connector';
+            }
+            constructor() {
+                super();
+            }
+            ready() {
+                super.ready()
+                window.addEventListener('elemem-title', (event) => {
+                    this.ocupied = false
+                    setTimeout(() => {
+                        this.title(event.detail.title)
+                        this._elemTitleChanged()
+                        this._elemDestinationChanged()
+                    }, 100)
+                })
+                window.addEventListener('remove-elem', (event) => {
+                    this._elemTitleChanged()
+                    this._elemDestinationChanged()
+                })
+            }
+            static get properties() {
+                return {
+                    type: {
+                        type: String,
+                        observer: 'typer'
+                    },
+                    permanentType: {
+                        type: String,
+                    },
+                    agentClass: {
+                        type: Object,
+                        notify: true
+                    },
+                    value: {
+                        type: String,
+                        value: 'Connect to',
+                        notify: true,
+                    },
+                    value2: {
+                        type: String,
+                        value: 'Destinations',
+                        notify: true,
+                    },
+                    temp: {
+                        type: Array,
+                        value: function () {
+                            return []
+                        }
+                    },
+                    options: {
+                        type: Array,
+                        value: [{ name: 'Connections' }],
+                        notify: true
+                    },
+                    source: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    agent: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    reverb: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    show: {
+                        type: Boolean,
+                        value: true,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                }
+            }
+            //to set the icons
+            typer(event) {
+                if (event === 'source' || event === 'stream') {
+                    this.source = true
+                    this.agent = false
+                    this.reverb = false
+                } else {
+                    if (event === 'reverb') {
+                        console.log(event)
+                        this.reverb = true
+                        this.source = false
+                        this.agent = false
+                    } else {
+                        this.source = false
+                        this.agent = true
+                        this.reverb = false
+                    }
+                }
+            }
+
+            showValues() {
+                this.show = !this.show
+            }
+
+            _elemDestinationChanged() {
+                setTimeout(() => {
+                    let keys = Object.keys(this.agentClass.streamNode)
+                    let arr = [
+                        { id: 'Destinations', name: 'Destinations' },
+                        { id: 'speakers', name: 'speakers' },
+                    ]
+                    this.destinations = []
+                    if (keys.length > 0) {
+                        for (let node in this.agentClass.streamNode) {
+                            if (node !== this.permanentType)
+                                arr.push({ id: node, name: node })
+                        }
+                    }
+                    this.destinations = arr
+                }, 500)
+            }
+
+            _elemTitleChanged(data) {
+                setTimeout(() => {
+                    // console.log(this.agentClass.contextNode)
+                    let arr = [{ id: 'Connections', name: 'Connections' }]
+                    this.options = []
+                    for (let node in this.agentClass.contextNode) {
+                        if (node !== this.permanentType)
+                            arr.push({ id: node, name: node })
+                    }
+                    this.options = arr
+                }, 500)
+            }
+
+
+            connection(data) {
+                if (data && data.model && data.model.__data.option.name !== 'Connections') {
+                    let dest = this.source === true ? this.agentClass.sourceNode : this.agentClass.contextNode
+                    let bool = data.model.children[1].hasAttribute('sellected') === true ? false : true
+                    this.agentClass.connectAgents((err) => {
+                        if (err) {
+                            throw this.error('connection', err)
+                        } else {
+                            if (bool === true) {
+                                data.model.children[1].setAttribute('sellected', true)
+                            }
+                            if (bool === false) {
+                                data.model.children[1].removeAttribute('sellected', true)
+                            }
+                        }
+                    }, dest[this.permanentType], this.agentClass.contextNode[data.model.__data.option.name], bool)
+
+                    this.changeToOne(this.$.listBox1.__data.items[0])
+                }
+            }
+
+            destination(data) {
+                if (data && data.model && data.model.__data.destination.name !== 'Destinations') {
+                    let dest = this.source === true ? this.agentClass.sourceNode : this.agentClass.contextNode
+                    let destinationType = data.model.__data.destination.name
+                    let destination = destinationType === 'speakers' ? this.agentClass.context.destination :
+                        this.agentClass.streamNode[data.model.__data.destination.name]
+
+                    let bool = data.model.children[1].hasAttribute('sellected') === true ? false : true
+                    this.agentClass.connectAgents((err) => {
+                        if (err) {
+                            throw this.error('destination', err)
+                        } else {
+                            if (bool === true) {
+                                data.model.children[1].setAttribute('sellected', true)
+                                window.dispatchEvent(new CustomEvent('connected', {
+                                    detail:
+                                        { connected: data.model.__data.destination.name, state: true }
+                                }))
+                            }
+                            if (bool === false) {
+                                data.model.children[1].removeAttribute('sellected', true)
+                                window.dispatchEvent(new CustomEvent('connected', {
+                                    detail:
+                                        { connected: data.model.__data.destination.name, state: false }
+                                }))
+                            }
+                        }
+                    }, dest[this.permanentType], destination, bool)
+                    this.changeToOne(this.$.listBox2.__data.items[0])
+                }
+            }
+
+            title(elemTitle) {
+                if (!this.permanentType) {
+                    this.permanentType = elemTitle
+                    var that = this.agentClass.contextNode[this.permanentType] ||
+                        this.agentClass.sourceNode[this.permanentType]
+                    setTimeout(() => {
+                        that.onRemove = () => {
+                            this.removeCall()
+                        }
+                        this.id = this.permanentType
+                    }, 100)
+                }
+            }
+
+            error(msg, err) {
+                console.error(msg, err);
+            }
+
+            changeToOne(data) {
+                setTimeout(() => {
+                    data.click()
+                }, 100)
+            }
+
+            removeCall(data) {
+                if (this.type !== 'source' && this.type !== 'stream') {
+                    if (this.agentClass.contextNode[this.permanentType].connected) {
+                        this.agentClass.connectAgents((err) => {
+                            if (err)
+                                throw this.error('disconnection', err)
+                        }, this.agentClass.contextNode[this.permanentType].connected, this.agentClass.contextNode[this.permanentType], false)
+                    }
+                }
+                if (this.parentElement)
+                    this.parentElement.removeChild(this)
+            }
+        }
+        window.customElements.define(audioAgentConnector.is, audioAgentConnector);
+
+    </script>
+</dom-module>

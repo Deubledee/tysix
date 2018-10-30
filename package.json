@@ -1,0 +1,40 @@
+{
+  "repository": "https://github.com/Deubledee/splash.git",
+  "name": "splash",
+  "license": "MIT",
+  "vesion": "0.0.1",
+  "author": "deubledee",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-google": "^0.7.0",
+    "eslint-plugin-html": "^2.0.0",
+    "express-jwt": "^5.3.0",
+    "express-jwt-authz": "^1.0.0",
+    "http2-push-manifest": "^1.0.1",
+    "jwks-rsa": "^1.2.1",
+    "wct-browser-legacy": "^0.0.1-pre.11"
+  },
+  "scripts": {
+    "start": "node ./bin/www",
+    "startPrpl": "prpl-server --root . --config polymer.json --port 3000",
+    "lint": "npm run lint:javascript && polymer lint",
+    "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
+    "test": "polymer test",
+    "test:integration": "polymer build # test that psk builds without error with the CLI"
+  },
+  "dependencies": {
+    "body-parser": "",
+    "consolidate": "",
+    "cookie-parser": "",
+    "cors": "",
+    "del": "",
+    "express": "",
+    "express-session": "",
+    "morgan": "^1.9.1",
+    "npm": "",
+    "pem": "^1.13.2",
+    "pkg-config": "",
+    "prpl-server": "",
+    "response-time": ""
+  }
+}

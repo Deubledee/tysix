@@ -1,0 +1,14 @@
+{
+  "name": "webcomponentsjs",
+  "homepage": "https://github.com/webcomponents/webcomponentsjs",
+  "version": "2.0.2",
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.2",
+    "commit": "a606eb830b1360af311a83768b7eaa8d5e8b061f"
+  },
+  "_source": "https://github.com/webcomponents/webcomponentsjs.git",
+  "_target": "*",
+  "_originalSource": "webcomponents/webcomponentsjs"
+}
