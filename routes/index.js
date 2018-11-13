@@ -4,12 +4,13 @@ const prpl = require('prpl-server');
 /* GET home page. */
   router.get('/', prpl.makeHandler('.', {
     httpsRedirect: false,
-    entrypoint: 'views/index.html',
-    unregisterMissingServiceWorkers: true,
-   /* builds: [
-      {name: 'build/modern', browserCapabilities: ['es2015', 'push']},
-      {name: 'build/fallback'}
-    ],*/
+    entrypoint: 'index.html',
+    unregisterMissingServiceWorkers: false,
+    builds: [
+      {name: '/', browserCapabilities: ['es2015', 'push']},
+      {name: 'esm-bundled', browserCapabilities: ['modules', 'push']},
+      {name: 'es5-bundled'}
+    ],
   })
 );
 
