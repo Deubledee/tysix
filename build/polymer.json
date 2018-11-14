@@ -1,0 +1,80 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/shop-app.js",
+  "fragments": [],
+  "sources": [
+    "data/**/*",
+    "images/**/*",
+    "index.html",
+    "src/shop-app.js"
+  ],
+  "extraDependencies": [
+    "bower_components/webcomponentsjs/*.js",
+    "manifest.json",
+    "node_modules/@webcomponents/webcomponentsjs/**",
+    "push-manifest.json"
+  ],
+  "builds": [
+    {
+      "name": "esm-bundled",
+      "browserCapabilities": [
+        "es2015",
+        "modules"
+      ],
+      "js": {
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    },
+    {
+      "name": "es6-bundled",
+      "browserCapabilities": [
+        "es2015"
+      ],
+      "js": {
+        "compile": "es2015",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    },
+    {
+      "name": "es5-bundled",
+      "js": {
+        "compile": "es5",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    }
+  ],
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  },
+  "npm": true,
+  "componentDir": "node_modules/",
+  "moduleResolution": "node"
+}

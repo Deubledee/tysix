@@ -1,44 +1,16 @@
-define(["./shop-app.js"],function(_shopApp){"use strict";class ShopListItem extends _shopApp.PolymerElement{static get template(){return _shopApp.html`
-    <style>
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/app-route/app-route.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import './shop-category-data.js';
+import './shop-common-styles.js';
+import './shop-image.js';
+import './shop-list-item.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { microTask } from '@polymer/polymer/lib/utils/async.js';
 
-      :host {
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
-        text-align: center;
-        margin: 0 48px;
-      }
-
-      shop-image {
-        margin: 32px 0 16px;
-      }
-
-      shop-image::before {
-        content: "";
-        display: block;
-        padding-top: 100%;
-      }
-
-      .title {
-        color: var(--app-primary-color);
-        font-weight: bold;
-      }
-
-      .price {
-        color: var(--app-secondary-color);
-      }
-
-      @media (max-width: 767px) {
-        :host {
-          margin: 0 12px;
-        }
-      }
-
-    </style>
-
-    <shop-image src="[[item.image]]" alt="[[item.title]]"></shop-image>
-    <div class="title">[[item.title]]</div>
-    <span class="price">[[_formatPrice(item.price)]]</span>
-`}static get is(){return"shop-list-item"}static get properties(){return{item:Object}}_formatPrice(price){return price?"$"+price.toFixed(2):""}}customElements.define(ShopListItem.is,ShopListItem);class ShopList extends _shopApp.PolymerElement{static get template(){return _shopApp.html`
+class ShopList extends PolymerElement {
+  static get template() {
+    return html`
     <style include="shop-common-styles">
 
       .hero-image {
@@ -142,4 +114,97 @@ define(["./shop-app.js"],function(_shopApp){"use strict";class ShopListItem exte
         on-try-reconnect="_tryReconnect"></shop-network-warning>
 
   </template>
-  `}static get is(){return"shop-list"}static get properties(){return{category:Object,route:Object,routeData:Object,visible:{type:Boolean,value:!1},offline:{type:Boolean,observer:"_offlineChanged"},failure:Boolean}}static get observers(){return["_categoryChanged(category, visible)"]}connectedCallback(){super.connectedCallback();this.isAttached=!0}disconnectedCallback(){super.disconnectedCallback();this.isAttached=!1}_getListItems(items){return items||[{},{},{},{},{},{},{},{},{},{}]}_getItemHref(item){return item.name?["/detail",this.category.name,item.name].join("/"):null}_getPluralizedQuantity(quantity){if(!quantity){return""}let pluralizedQ=1===quantity?"item":"items";return"("+quantity+" "+pluralizedQ+")"}_categoryChanged(category,visible){if(!visible){return}this._changeSectionDebouncer=_shopApp.Debouncer.debounce(this._changeSectionDebouncer,_shopApp.microTask,()=>{if(category){this.dispatchEvent(new CustomEvent("change-section",{bubbles:!0,composed:!0,detail:{category:category.name,title:category.title,image:this.baseURI+category.image}}))}else{this.dispatchEvent(new CustomEvent("show-invalid-url-warning",{bubbles:!0,composed:!0}))}})}_tryReconnect(){this.$.categoryData.refresh()}_offlineChanged(offline){if(!offline&&this.isAttached){this._tryReconnect()}}}customElements.define(ShopList.is,ShopList)});
+  `;
+}
+
+  static get is() { return 'shop-list'; }
+
+  static get properties() { return {
+
+    category: Object,
+
+    route: Object,
+
+    routeData: Object,
+
+    visible: {
+      type: Boolean,
+      value: false
+    },
+
+    offline: {
+      type: Boolean,
+      observer: '_offlineChanged'
+    },
+
+    failure: Boolean
+
+  }}
+
+  static get observers() { return [
+    '_categoryChanged(category, visible)'
+  ]}
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.isAttached = true;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.isAttached = false;
+  }
+
+  _getListItems(items) {
+    // Return placeholder items when the items haven't loaded yet.
+    return items || [{},{},{},{},{},{},{},{},{},{}];
+  }
+
+  _getItemHref(item) {
+    // By returning null when `itemId` is undefined, the href attribute won't be set and
+    // the link will be disabled.
+    return item.name ? ['/detail', this.category.name, item.name].join('/') : null;
+  }
+
+  _getPluralizedQuantity(quantity) {
+    if (!quantity) {
+      return '';
+    }
+    let pluralizedQ = quantity === 1 ? 'item' : 'items';
+    return  '(' + quantity + ' ' + pluralizedQ + ')';
+  }
+
+  _categoryChanged(category, visible) {
+    if (!visible) {
+      return;
+    }
+    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+      microTask, () => {
+        if (category) {
+          // Notify the category and the page's title
+          this.dispatchEvent(new CustomEvent('change-section', {
+            bubbles: true, composed: true, detail: {
+              category: category.name,
+              title: category.title,
+              image: this.baseURI + category.image
+            }}));
+        } else {
+          this.dispatchEvent(new CustomEvent('show-invalid-url-warning', {
+            bubbles: true, composed: true}));
+        }
+      });
+  }
+
+  _tryReconnect() {
+    this.$.categoryData.refresh();
+  }
+
+  _offlineChanged(offline) {
+    if (!offline && this.isAttached) {
+      this._tryReconnect();
+    }
+  }
+
+}
+
+customElements.define(ShopList.is, ShopList);

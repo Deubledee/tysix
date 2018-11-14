@@ -1,4 +1,11 @@
-define(["./shop-app.js"],function(_shopApp){"use strict";class ShopCart extends _shopApp.PolymerElement{static get template(){return _shopApp.html`
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import './shop-button.js';
+import './shop-common-styles.js';
+import './shop-form-styles.js';
+
+class ShopCart extends PolymerElement {
+  static get template() {
+    return html`
     <style include="shop-common-styles shop-button shop-form-styles">
 
       .list {
@@ -49,4 +56,48 @@ define(["./shop-app.js"],function(_shopApp){"use strict";class ShopCart extends 
         </div>
       </div>
     </div>
-    `}static get is(){return"shop-cart"}static get properties(){return{total:Number,cart:Array,visible:{type:Boolean,observer:"_visibleChanged"},_hasItems:{type:Boolean,computed:"_computeHasItem(cart.length)"}}}_formatTotal(total){return isNaN(total)?"":"$"+total.toFixed(2)}_computeHasItem(cartLength){return 0<cartLength}_getPluralizedQuantity(quantity){return quantity+" "+(1===quantity?"item":"items")}_visibleChanged(visible){if(visible){this.dispatchEvent(new CustomEvent("change-section",{bubbles:!0,composed:!0,detail:{title:"Your cart"}}))}}}customElements.define(ShopCart.is,ShopCart)});
+    `;
+  }
+  static get is() { return 'shop-cart'; }
+
+  static get properties() { return {
+
+    total: Number,
+
+    cart: Array,
+
+    visible: {
+      type: Boolean,
+      observer: '_visibleChanged'
+    },
+
+    _hasItems: {
+      type: Boolean,
+      computed: '_computeHasItem(cart.length)'
+    }
+
+  }}
+
+  _formatTotal(total) {
+    return isNaN(total) ? '' : '$' + total.toFixed(2);
+  }
+
+  _computeHasItem(cartLength) {
+    return cartLength > 0;
+  }
+
+  _getPluralizedQuantity(quantity) {
+    return quantity + ' ' + (quantity === 1 ? 'item' : 'items');
+  }
+
+  _visibleChanged(visible) {
+    if (visible) {
+      // Notify the section's title
+      this.dispatchEvent(new CustomEvent('change-section', {
+        bubbles: true, composed: true, detail: { title: 'Your cart' }}));
+    }
+  }
+
+}
+
+customElements.define(ShopCart.is, ShopCart);

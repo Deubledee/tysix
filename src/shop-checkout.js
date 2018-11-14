@@ -1,274 +1,18 @@
-define(["./shop-app.js"],function(_shopApp){"use strict";const $_documentContainer=document.createElement("template");$_documentContainer.innerHTML=`<dom-module id="shop-checkbox">
-  <template>
-    <style>
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/app-route/app-route.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import './shop-button.js';
+import './shop-common-styles.js';
+import './shop-form-styles.js';
+import './shop-input.js';
+import './shop-select.js';
+import './shop-checkbox.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
-      shop-checkbox {
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        position: relative;
-        border: 2px solid var(--app-accent-color);
-        border-radius: 2px;
-      }
-
-      shop-checkbox > input[type=checkbox] {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        opacity: 0;
-      }
-
-      shop-checkbox > shop-md-decorator {
-        pointer-events: none;
-      }
-
-      /* Checked state overlay */
-      shop-checkbox > shop-md-decorator::after {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        right: -5px;
-        bottom: -5px;
-        background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23172C50%22%20d%3D%22M19%203H5c-1.11%200-2%20.9-2%202v14c0%201.1.89%202%202%202h14c1.11%200%202-.9%202-2V5c0-1.1-.89-2-2-2zm-9%2014l-5-5%201.41-1.41L10%2014.17l7.59-7.59L19%208l-9%209z%22%2F%3E%3C%2Fsvg%3E');
-        opacity: 0;
-        transition: opacity 0.1s;
-        will-change: opacity;
-      }
-
-      shop-checkbox > input[type=checkbox]:checked + shop-md-decorator::after {
-        opacity: 1;
-      }
-
-      /* Focused state */
-      shop-checkbox > shop-md-decorator::before {
-        content: '';
-        pointer-events: none;
-        position: absolute;
-        top: -13px;
-        left: -13px;
-        width: 40px;
-        height: 40px;
-        background-color: var(--app-accent-color);
-        border-radius: 50%;
-        opacity: 0.2;
-        -webkit-transform: scale3d(0, 0, 0);
-        transform: scale3d(0, 0, 0);
-        transition: -webkit-transform 0.1s;
-        transition: transform 0.1s;
-        will-change: transform;
-      }
-
-      shop-checkbox > input[type=checkbox]:focus + shop-md-decorator::before {
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-      }
-
-    </style>
-  </template>
-</dom-module>`;document.head.appendChild($_documentContainer.content);const $_documentContainer$1=document.createElement("template");$_documentContainer$1.innerHTML=`<dom-module id="shop-input">
-  <template>
-    <style>
-
-      shop-input {
-        display: inline-block;
-        margin: 20px 0;
-      }
-
-      shop-input > input::-webkit-input-placeholder {
-        color: transparent;
-      }
-
-      shop-input > input::-moz-placeholder {
-        color: transparent;
-      }
-
-      shop-input > input:-ms-input-placeholder {
-        color: transparent;
-      }
-
-      shop-input > input::-ms-input-placeholder {
-        color: transparent;
-      }
-
-      shop-input > input {
-        font-size: 1em;
-        font-weight: 300;
-        color: var(--app-primary-color);
-        border: none;
-        padding: 8px 0;
-        width: 100%;
-        outline: none;
-      }
-
-      shop-input > input:invalid {
-        /* reset the default style in FF */
-        box-shadow: none;
-      }
-
-      shop-input > shop-md-decorator {
-        display: block;
-        height: 1px;
-        width: 100%;
-        margin: auto;
-        border-top: 1px solid #ccc;
-        position: relative;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
-      }
-
-      shop-input shop-underline {
-        display: block;
-        height: 2px;
-        width: 100%;
-        margin: auto;
-        background-color: var(--app-accent-color);
-        position: absolute;
-        top: -1px;
-        left: 0;
-        -webkit-transform: scale3d(0, 1, 1);
-        transform: scale3d(0, 1, 1);
-        transition: -webkit-transform 0.2s ease-in;
-        transition: transform 0.2s ease-in;
-      }
-
-      /* input label */
-      shop-input > shop-md-decorator > label {
-        display: block;
-        pointer-events: none;
-        opacity: 0.5;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        -webkit-transform-origin: 0 0;
-        transform-origin: 0 0;
-        transition-property: opacity, -webkit-transform;
-        transition-property: opacity, transform;
-        transition-duration: 0.15s;
-        transition-timing-function: ease-out;
-        will-change: transform;
-        -webkit-transform: translate3d(0px, -1.9em, 0px);
-        transform: translate3d(0px, -1.9em, 0px);
-      }
-
-      /* Error message */
-      shop-input > shop-md-decorator::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        font-size: 0.65em;
-        color: #dd2c00;
-        content: attr(error-message);
-        display: none;
-        white-space: nowrap;
-      }
-
-      shop-input > input:focus + shop-md-decorator > shop-underline {
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-        transition: -webkit-transform 0.2s ease-out;
-        transition: transform 0.2s ease-out;
-      }
-
-      /* Label: valid state */
-      shop-input > input:focus + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-      }
-
-      shop-input > input:optional:not(:placeholder-shown) + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-      }
-
-      _:-ms-lang(x), shop-input > input + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-      }
-
-      shop-input > input:optional:-moz-ui-valid + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-      }
-
-      /* Underline */
-      shop-input > input:not(:focus):not(:placeholder-shown):invalid + shop-md-decorator > shop-underline {
-        background-color: #dd2c00;
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-        transition: -webkit-transform 0.2s ease-out;
-        transition: transform 0.2s ease-out;
-      }
-
-      shop-input > input:not(:focus):-moz-ui-invalid:invalid + shop-md-decorator > shop-underline {
-        background-color: #dd2c00;
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-        transition: -webkit-transform 0.2s ease-out;
-        transition: transform 0.2s ease-out;
-      }
-
-      shop-input > input[aria-invalid='true']:not(:valid) + shop-md-decorator > shop-underline {
-        background-color: #dd2c00;
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-        transition: -webkit-transform 0.2s ease-out;
-        transition: transform 0.2s ease-out;
-      }
-
-      /* Error message */
-      shop-input > input:not(:focus):not(:placeholder-shown):invalid + shop-md-decorator::after {
-        display: block;
-      }
-
-      shop-input > input:not(:focus):-moz-ui-invalid:invalid + shop-md-decorator::after {
-        display: block;
-      }
-
-      shop-input > input[aria-invalid='true']:not(:valid) + shop-md-decorator::after {
-        display: block;
-      }
-
-      /* Error label */
-      shop-input > input:not(:focus):not(:placeholder-shown):invalid + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-        color: #dd2c00;
-      }
-
-      shop-input > input:not(:focus):-moz-ui-invalid:invalid + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-        color: #dd2c00;
-      }
-
-      shop-input > input[aria-invalid='true']:not(:valid) + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-        color: #dd2c00;
-      }
-
-      /* Valid label */
-      shop-input > input:not(:focus):required:valid + shop-md-decorator > label {
-        -webkit-transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        transform: translate3d(0px, -3.4em, 0px) scale(0.8, 0.8);
-        opacity: 1;
-      }
-
-    </style>
-  </template>
-</dom-module>`;document.head.appendChild($_documentContainer$1.content);class ShopCheckout extends _shopApp.PolymerElement{static get template(){return _shopApp.html`
+class ShopCheckout extends PolymerElement {
+  static get template() {
+    return html`
     <style include="shop-common-styles shop-button shop-form-styles shop-input shop-select shop-checkbox">
 
       .main-frame {
@@ -664,4 +408,262 @@ define(["./shop-app.js"],function(_shopApp){"use strict";const $_documentContain
 
     <!-- Show spinner when waiting for the server to repond -->
     <paper-spinner-lite active="[[waiting]]"></paper-spinner-lite>
-    `}static get is(){return"shop-checkout"}static get properties(){return{route:{type:Object,notify:!0},total:Number,state:{type:String,value:"init"},cart:Array,response:Object,hasBillingAddress:{type:Boolean,value:!1},visible:{type:Boolean,observer:"_visibleChanged"},waiting:{type:Boolean,readOnly:!0,reflectToAttribute:!0},_hasItems:{type:Boolean,computed:"_computeHasItem(cart.length)"}}}static get observers(){return["_updateState(routeActive, routeData)"]}_submit(){if(this._validateForm()){this.$.checkoutForm.dispatchEvent(new CustomEvent("iron-form-presubmit",{composed:!0}));this._submitFormDebouncer=_shopApp.Debouncer.debounce(this._submitFormDebouncer,_shopApp.timeOut.after(1e3),()=>{this.$.checkoutForm.dispatchEvent(new CustomEvent("iron-form-response",{composed:!0,detail:{response:{success:1,successMessage:"Demo checkout process complete."}}}))})}}_pushState(state){this._validState=state;this.set("route.path",state)}_updateState(active,routeData){if(active&&routeData){let state=routeData.state;if(this._validState===state){this.state=state;this._validState="";return}}this.state="init"}_reset(){let form=this.$.checkoutForm;this._setWaiting(!1);form.reset&&form.reset();let nativeForm=form._form;if(!nativeForm){return}for(let el,i=0;el=nativeForm.elements[i],i<nativeForm.elements.length;i++){el.removeAttribute("aria-invalid")}}_validateForm(){let form=this.$.checkoutForm,firstInvalid=!1,nativeForm=form._form;for(let el,i=0;el=nativeForm.elements[i],i<nativeForm.elements.length;i++){if(el.checkValidity()){el.removeAttribute("aria-invalid")}else{if(!firstInvalid){if(el.nextElementSibling){this.dispatchEvent(new CustomEvent("announce",{bubbles:!0,composed:!0,detail:el.nextElementSibling.getAttribute("error-message")}))}if(el.scrollIntoViewIfNeeded){el.scrollIntoViewIfNeeded()}else{el.scrollIntoView(!1)}el.focus();firstInvalid=!0}el.setAttribute("aria-invalid","true")}}return!firstInvalid}_willSendRequest(e){let form=e.target,body=form.request&&form.request.body;this._setWaiting(!0);if(!body){return}body.cartItemsId=[];body.cartItemsQuantity=[];this.cart.forEach(cartItem=>{body.cartItemsId.push(cartItem.item.name);body.cartItemsQuantity.push(cartItem.quantity)})}_didReceiveResponse(e){let response=e.detail.response;this.response=response;this._setWaiting(!0);if(response.success){this._pushState("success");this._reset();this.dispatchEvent(new CustomEvent("clear-cart",{bubbles:!0,composed:!0}))}else{this._pushState("error")}}_toggleBillingAddress(e){this.hasBillingAddress=e.target.checked;if(this.hasBillingAddress){this.$.billAddress.focus()}}_computeHasItem(cartLength){return 0<cartLength}_formatPrice(total){return isNaN(total)?"":"$"+total.toFixed(2)}_getEntryTotal(entry){return this._formatPrice(entry.quantity*entry.item.price)}_visibleChanged(visible){if(!visible){return}this._reset();this.dispatchEvent(new CustomEvent("change-section",{bubbles:!0,composed:!0,detail:{title:"Checkout"}}))}}customElements.define(ShopCheckout.is,ShopCheckout)});
+    `;
+  }
+  static get is() { return 'shop-checkout'; }
+
+  static get properties() { return {
+
+    /**
+     * The route for the state. e.g. `success` and `error` are mounted in the
+     * `checkout/` route.
+     */
+    route: {
+      type: Object,
+      notify: true
+    },
+
+    /**
+     * The total price of the contents in the user's cart.
+     */
+    total: Number,
+
+    /**
+     * The state of the form. Valid values are:
+     * `init`, `success` and `error`.
+     */
+    state: {
+      type: String,
+      value: 'init'
+    },
+
+    /**
+     * An array containing the items in the cart.
+     */
+    cart: Array,
+
+    /**
+     * The server's response.
+     */
+    response: Object,
+
+    /**
+     * If true, the user must enter a billing address.
+     */
+    hasBillingAddress: {
+      type: Boolean,
+      value: false
+    },
+
+    /**
+     * If true, shop-checkout is currently visible on the screen.
+     */
+    visible: {
+      type: Boolean,
+      observer: '_visibleChanged'
+    },
+
+    /**
+     * True when waiting for the server to repond.
+     */
+    waiting: {
+      type: Boolean,
+      readOnly: true,
+      reflectToAttribute: true
+    },
+
+    /**
+     * True when waiting for the server to repond.
+     */
+    _hasItems: {
+      type: Boolean,
+      computed: '_computeHasItem(cart.length)'
+    }
+
+  }}
+
+  static get observers() { return [
+    '_updateState(routeActive, routeData)'
+  ]}
+
+  _submit(e) {
+    if (this._validateForm()) {
+      // To send the form data to the server:
+      // 2) Remove the code below.
+      // 3) Uncomment `this.$.checkoutForm.submit()`.
+
+      this.$.checkoutForm.dispatchEvent(new CustomEvent('iron-form-presubmit', {
+        composed: true}));
+
+      this._submitFormDebouncer = Debouncer.debounce(this._submitFormDebouncer,
+        timeOut.after(1000), () => {
+          this.$.checkoutForm.dispatchEvent(new CustomEvent('iron-form-response', {
+            composed: true, detail: {
+              response: {
+                success: 1,
+                successMessage: 'Demo checkout process complete.'
+              }
+            }}));
+        });
+
+      // this.$.checkoutForm.submit();
+    }
+  }
+
+  /**
+   * Sets the valid state and updates the location.
+   */
+  _pushState(state) {
+    this._validState = state;
+    this.set('route.path', state);
+  }
+
+  /**
+   * Checks that the `:state` subroute is correct. That is, the state has been pushed
+   * after receiving response from the server. e.g. Users can only go to `/checkout/success`
+   * if the server responsed with a success message.
+   */
+  _updateState(active, routeData) {
+    if (active && routeData) {
+      let state = routeData.state;
+      if (this._validState === state) {
+        this.state = state;
+        this._validState = '';
+        return;
+      }
+    }
+    this.state = 'init';
+  }
+
+  /**
+   * Sets the initial state.
+   */
+  _reset() {
+    let form = this.$.checkoutForm;
+
+    this._setWaiting(false);
+    form.reset && form.reset();
+
+    let nativeForm = form._form;
+    if (!nativeForm) {
+      return;
+    }
+
+    // Remove the `aria-invalid` attribute from the form inputs.
+    for (let el, i = 0; el = nativeForm.elements[i], i < nativeForm.elements.length; i++) {
+      el.removeAttribute('aria-invalid');
+    }
+  }
+
+  /**
+   * Validates the form's inputs and adds the `aria-invalid` attribute to the inputs
+   * that don't match the pattern specified in the markup.
+   */
+  _validateForm() {
+    let form = this.$.checkoutForm;
+    let firstInvalid = false;
+    let nativeForm = form._form;
+
+    for (let el, i = 0; el = nativeForm.elements[i], i < nativeForm.elements.length; i++) {
+      if (el.checkValidity()) {
+        el.removeAttribute('aria-invalid');
+      } else {
+        if (!firstInvalid) {
+          // announce error message
+          if (el.nextElementSibling) {
+            this.dispatchEvent(new CustomEvent('announce', {bubbles: true, composed: true,
+              detail: el.nextElementSibling.getAttribute('error-message')}));
+          }
+          if (el.scrollIntoViewIfNeeded) {
+            // safari, chrome
+            el.scrollIntoViewIfNeeded();
+          } else {
+            // firefox, edge, ie
+            el.scrollIntoView(false);
+          }
+          el.focus();
+          firstInvalid = true;
+        }
+        el.setAttribute('aria-invalid', 'true');
+      }
+    }
+    return !firstInvalid;
+  }
+
+  /**
+   * Adds the cart data to the payload that will be sent to the server
+   * and updates the UI to reflect the waiting state.
+   */
+  _willSendRequest(e) {
+    let form = e.target;
+    let body = form.request && form.request.body;
+
+    this._setWaiting(true);
+
+    if (!body) {
+      return;
+    }
+    // Populate the request body where `cartItemsId[i]` is the ID and `cartItemsQuantity[i]`
+    // is the quantity for some item `i`.
+    body.cartItemsId = [];
+    body.cartItemsQuantity = [];
+
+    this.cart.forEach((cartItem) => {
+      body.cartItemsId.push(cartItem.item.name);
+      body.cartItemsQuantity.push(cartItem.quantity);
+    });
+  }
+
+  /**
+   * Handles the response from the server by checking the response status
+   * and transitioning to the success or error UI.
+   */
+  _didReceiveResponse(e) {
+    let response = e.detail.response;
+
+    this.response = response;
+    this._setWaiting(true);
+
+    if (response.success) {
+      this._pushState('success');
+      this._reset();
+      this.dispatchEvent(new CustomEvent('clear-cart', {bubbles: true, composed: true}));
+    } else {
+      this._pushState('error');
+    }
+  }
+
+  _toggleBillingAddress(e) {
+    this.hasBillingAddress = e.target.checked;
+
+    if (this.hasBillingAddress) {
+      this.$.billAddress.focus();
+    }
+  }
+
+  _computeHasItem(cartLength) {
+    return cartLength > 0;
+  }
+
+  _formatPrice(total) {
+    return isNaN(total) ? '' : '$' + total.toFixed(2);
+  }
+
+  _getEntryTotal(entry) {
+    return this._formatPrice(entry.quantity * entry.item.price);
+  }
+
+  _visibleChanged(visible) {
+    if (!visible) {
+      return;
+    }
+    // Reset the UI states
+    this._reset();
+    // Notify the page's title
+    this.dispatchEvent(new CustomEvent('change-section', {
+      bubbles: true, composed: true, detail: { title: 'Checkout' }}));
+  }
+
+}
+
+customElements.define(ShopCheckout.is, ShopCheckout);
