@@ -1,7 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
-let categoryList = [
+import '@polymer/iron-ajax/iron-ajax.js';
+/*let categoryList = [
+  {
+    name: 'admin',
+    title: 'cms admin'  },
   {
     name: 'mens_outerwear',
     title: 'Men\'s Outerwear',
@@ -27,11 +31,21 @@ let categoryList = [
     placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAXwABAQEAAAAAAAAAAAAAAAAAAAMFAQEBAAAAAAAAAAAAAAAAAAABAhAAAQIDCQAAAAAAAAAAAAAAEQABITETYZECEjJCAzMVEQACAwAAAAAAAAAAAAAAAAAAATFBgf/aAAwDAQACEQMRAD8AzeADAZiFc5J7BC9Scek3VrtooilSNaf/2Q=='
   }
 ];
-
+*/
 class ShopCategoryData extends PolymerElement {
 
   static get is() { return 'shop-category-data'; }
-
+  static get template() {
+    return html`
+    <iron-ajax
+        auto
+        url="../data/categories.json"
+        handle-as="json"
+        on-response="handleResponse"
+        last-response="{{categories}}"
+        debounce-duration="300">
+    </iron-ajax>
+    `}
   static get properties() { return {
 
     categoryName: String,
@@ -40,9 +54,10 @@ class ShopCategoryData extends PolymerElement {
 
     categories: {
       type: Array,
-      value: categoryList,
+      //value: categoryList,
       readOnly: true,
-      notify: true
+      notify: true,
+      observer: 'log'
     },
 
     category: {

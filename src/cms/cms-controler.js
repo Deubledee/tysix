@@ -1,11 +1,15 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-route/app-location.js';
-import '@polymer/app-route/app-route.js';
+import '@polymer/iron-ajax/iron-ajax.js';
+
+
 class cmsControler extends PolymerElement {
   static get template() {
     return html`
     <style include="shop-common-styles shop-button shop-form-styles">
-      
+      div[main-frame]{
+
+        
+      }
       @media (max-width: 767px) {
 
         .subtotal {
@@ -15,50 +19,28 @@ class cmsControler extends PolymerElement {
       }
 
     </style>
-    <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-    <div class="main-frame">
+    <iron-ajax
+        auto
+        url="../../data/categories.json"
+        handle-as="json"
+        on-response="handleResponse"
+        debounce-duration="300">
+    </iron-ajax>
+    <div main-frame>
+
     </div>
     `;
   }
   static get is() { return 'cms-controler'; }
 
-  static get properties() { return {
-
-    total: Number,
-
-    cart: Array,
-
-    visible: {
-      type: Boolean,
-      observer: '_visibleChanged'
-    },
-
-    _hasItems: {
-      type: Boolean,
-      computed: '_computeHasItem(cart.length)'
-    }
+  static get properties() { 
+    return {
 
   }}
 
-  _formatTotal(total) {
-    return isNaN(total) ? '' : '$' + total.toFixed(2);
-  }
+  handleResponse(res){
 
-  _computeHasItem(cartLength) {
-    return cartLength > 0;
-  }
-
-  _getPluralizedQuantity(quantity) {
-    return quantity + ' ' + (quantity === 1 ? 'item' : 'items');
-  }
-
-  _visibleChanged(visible) {
-    if (visible) {
-      // Notify the section's title
-      this.dispatchEvent(new CustomEvent('change-section', {
-        bubbles: true, composed: true, detail: { title: 'Your cart' }}));
-    }
+    console.log(res)
   }
 
 }
