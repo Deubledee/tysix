@@ -291,6 +291,8 @@ class ShopApp extends PolymerElement {
 
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
       <!-- home view -->
+      <cms-controler name="admin" categories="[[categories]]"></cms-controler>
+
       <shop-home name="home" categories="[[categories]]"></shop-home>
       <!-- list view of items in a category -->
       <shop-list name="list" route="[[subroute]]" offline="[[offline]]"></shop-list>
@@ -395,6 +397,9 @@ class ShopApp extends PolymerElement {
           break;
         case 'checkout':
           import('./shop-checkout.js').then(cb);
+          break;
+          case 'admin':
+          import('./cms/cms-controler.js').then(cb);
           break;
         default:
           this._pageLoaded(Boolean(oldPage));
