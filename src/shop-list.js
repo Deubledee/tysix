@@ -174,10 +174,13 @@ class ShopList extends PolymerElement {
     return  '(' + quantity + ' ' + pluralizedQ + ')';
   }
 
-  _categoryChanged(category, visible) {
+  _categoryChanged(catego, visible) {
+    //console.log(this.routeData)
+    let category = this.routeData.category
     if (!visible) {
       return;
     }
+    //console.log(category)
     this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
       microTask, () => {
         if (category) {
@@ -185,6 +188,7 @@ class ShopList extends PolymerElement {
           this.dispatchEvent(new CustomEvent('change-section', {
             bubbles: true, composed: true, detail: {
               category: category.name,
+              page: category.page,
               title: category.title,
               image: this.baseURI + category.image
             }}));

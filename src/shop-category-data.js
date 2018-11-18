@@ -2,92 +2,84 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import '@polymer/iron-ajax/iron-ajax.js';
-/*let categoryList = [
-  {
-    name: 'admin',
-    title: 'cms admin'  },
-  {
-    name: 'mens_outerwear',
-    title: 'Men\'s Outerwear',
-    image: 'images/mens_outerwear.jpg',
-    placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAXAABAQEAAAAAAAAAAAAAAAAAAAIEAQEAAAAAAAAAAAAAAAAAAAACEAAAAwYHAQAAAAAAAAAAAAAAERMBAhIyYhQhkaEDIwUVNREBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A3dkr5e8tfpwuneJITOzIcmQpit037Bw4mnCVNOpAAQv/2Q=='
-  },
-  {
-    name: 'ladies_outerwear',
-    title: 'Ladies Outerwear',
-    image: 'images/ladies_outerwear.jpg',
-    placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAWQABAQAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAIDEAABAwMFAQAAAAAAAAAAAAARAAEygRIDIlITMwUVEQEBAAAAAAAAAAAAAAAAAAAAQf/aAAwDAQACEQMRAD8Avqn5meQ0kwk1UyclmLtNj7L4PQoioFf/2Q=='
-  },
-  {
-    name: 'mens_tshirts',
-    title: 'Men\'s T-Shirts',
-    image: 'images/mens_tshirts.jpg',
-    placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAWwABAQEAAAAAAAAAAAAAAAAAAAMEAQEAAAAAAAAAAAAAAAAAAAAAEAABAwEJAAAAAAAAAAAAAAARAAESEyFhodEygjMUBREAAwAAAAAAAAAAAAAAAAAAAEFC/9oADAMBAAIRAxEAPwDb7kupZU1MTGnvOCgxpvzEXTyRElCmf//Z'
-  },
-  {
-    name: 'ladies_tshirts',
-    title: 'Ladies T-Shirts',
-    image: 'images/ladies_tshirts.jpg',
-    placeholder: 'data:image/jpeg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAAAeAAD/7gAOQWRvYmUAZMAAAAAB/9sAhAAQCwsLDAsQDAwQFw8NDxcbFBAQFBsfFxcXFxcfHhcaGhoaFx4eIyUnJSMeLy8zMy8vQEBAQEBAQEBAQEBAQEBAAREPDxETERUSEhUUERQRFBoUFhYUGiYaGhwaGiYwIx4eHh4jMCsuJycnLis1NTAwNTVAQD9AQEBAQEBAQEBAQED/wAARCAADAA4DASIAAhEBAxEB/8QAXwABAQEAAAAAAAAAAAAAAAAAAAMFAQEBAAAAAAAAAAAAAAAAAAABAhAAAQIDCQAAAAAAAAAAAAAAEQABITETYZECEjJCAzMVEQACAwAAAAAAAAAAAAAAAAAAATFBgf/aAAwDAQACEQMRAD8AzeADAZiFc5J7BC9Scek3VrtooilSNaf/2Q=='
-  }
-];
-*/
+
 class ShopCategoryData extends PolymerElement {
 
   static get is() { return 'shop-category-data'; }
-  static get template() {
-    return html`
-    <iron-ajax
-        auto
-        url="../data/categories.json"
-        handle-as="json"
-        on-response="handleResponse"
-        last-response="{{categories}}"
-        debounce-duration="300">
-    </iron-ajax>
-    `}
-  static get properties() { return {
+  static get properties() {
+    return {
 
-    categoryName: String,
+      categoryName: String,
 
-    itemName: String,
+      itemName: String,
 
-    categories: {
-      type: Array,
-      //value: categoryList,
-      readOnly: true,
-      notify: true,
-      observer: 'log'
-    },
+      categories: {
+        type: Array,
+        notify: true,
+        //observer: 'log'
+      },
 
-    category: {
-      type: Object,
-      computed: '_computeCategory(categoryName)',
-      notify: true
-    },
+      category: {
+        type: Object,
+        computed: '_computeCategory(categoryName)',
+        notify: true
+      },
 
-    item: {
-      type: Object,
-      computed: '_computeItem(category.items, itemName)',
-      notify: true
-    },
+      item: {
+        type: Object,
+        computed: '_computeItem(category.items, itemName)',
+        notify: true
+      },
 
-    failure: {
-      type: Boolean,
-      notify: true,
-      readOnly: true
-    }
-
-  }}
-
-  _getCategoryObject(categoryName) {
-    for (let i = 0, c; c = this.categories[i]; ++i) {
-      if (c.name === categoryName) {
-        return c;
+      failure: {
+        type: Boolean,
+        notify: true,
+        readOnly: true
       }
+
+    }
+  }
+  ready() {
+    super.ready();
+    this.fsd()
+  }
+
+  fsd() {
+    let url = 'data/categories.json', json = [], str = ''
+    let xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', onLoad.bind(this))
+    xhr.addEventListener('error', onError);
+    xhr.open('GET', url);
+    xhr.send();
+    function onLoad(e) {
+      json.push(JSON.parse(e.target.responseText))
+      str = json[0]
+      this.categories = str
+      // console.log(str, this.categories)
+    }
+    function onError(e) {
+      console.log(e)
     }
   }
 
+  log(data) {
+    console.log(data)
+
+  }
+  handleResponse(data) {
+    this.log(data)
+  }
+
+  _getCategoryObject(categoryName) {
+    console.log(categoryName, this.categories)
+    if (this.categories !== undefined) {
+      for (let i = 0, c; c = this.categories[i]; ++i) {
+        if (c.name === categoryName) {
+          return c;
+        }
+      }
+    }
+  }
   _computeCategory(categoryName) {
     // Fetch the items of the category. Note that the fetch is asynchronous,
     // which means `category.items` may not be set initially (but that path

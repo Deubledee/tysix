@@ -11,6 +11,7 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import './shop-category-data.js';
 import './shop-home.js';
+import './shop-list.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -242,11 +243,11 @@ class ShopApp extends PolymerElement {
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
-          <a class="back-btn" href="/list/[[categoryName]]" tabindex="-1">
+          <a class="back-btn" href="/[[categoryPage]]/[[categoryName]]" tabindex="-1">
             <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
           </a>
         </div>
-        <div class="logo" main-title=""><a href="/" aria-label="SHOP Home">SHOP</a></div>
+        <div class="logo" main-title=""><a href="/home" aria-label="SHOP Home">SHOP</a></div>
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
             <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>
@@ -263,7 +264,7 @@ class ShopApp extends PolymerElement {
               <dom-repeat items="[[categories]]" as="category" initial-count="4">
                 <template>
                 <shop-tab name="[[category.name]]">
-                  <a href="/list/[[category.name]]">[[category.title]]</a>
+                  <a href="/[[category.page]]/[[category.name]]">[[category.title]]</a>
                 </shop-tab>
                 </template>
               </dom-repeat>
@@ -281,7 +282,7 @@ class ShopApp extends PolymerElement {
         <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
           <dom-repeat items="[[categories]]" as="category" initial-count="4">
             <template>
-              <a name="[[category.name]]" href="/list/[[category.name]]">[[category.title]]</a>
+              <a name="[[category.name]]" href="/[[category.page]]/[[category.name]]">[[category.title]]</a>
             </template>
           </dom-repeat>
         </iron-selector>
@@ -318,77 +319,102 @@ class ShopApp extends PolymerElement {
 
   static get is() { return 'shop-app'; }
 
-  static get properties() { return {
-    page: {
-      type: String,
-      reflectToAttribute: true,
-      observer: '_pageChanged'
-    },
+  static get properties() {
+    return {
+      page: {
+        type: String,
+        reflectToAttribute: true,
+        observer: '_pageChanged'
+      },
+      categoryPage: {
+        type: String,
+        notify: true
+      },
+      categories: {
+        type: Array,
+        notify: true,
+        observer: 'log'
+      },
+      /*categoriesArray: {
+        type: Array,
+        observer: 'getitright'
+      },*/
+      numItems: {
+        type: Number,
+        value: 0
+      },
 
-    numItems: {
-      type: Number,
-      value: 0
-    },
+      _shouldShowTabs: {
+        computed: '_computeShouldShowTabs(page, smallScreen)'
+      },
 
-    _shouldShowTabs: {
-      computed: '_computeShouldShowTabs(page, smallScreen)'
-    },
+      _shouldRenderTabs: {
+        computed: '_computeShouldRenderTabs(_shouldShowTabs, loadComplete)'
+      },
 
-    _shouldRenderTabs: {
-      computed: '_computeShouldRenderTabs(_shouldShowTabs, loadComplete)'
-    },
-
-    _shouldRenderDrawer: {
-      computed: '_computeShouldRenderDrawer(smallScreen, loadComplete)'
+      _shouldRenderDrawer: {
+        computed: '_computeShouldRenderDrawer(smallScreen, loadComplete)'
+      }
     }
-  }}
+  }
 
-  static get observers() { return [
-    '_routePageChanged(routeData.page)'
-  ]}
+  static get observers() {
+    return [
+      '_routePageChanged(routeData.page)'
+    ]
+  }
 
   constructor() {
     super();
     window.performance && performance.mark && performance.mark('shop-app.created');
   }
 
+  log(e) {
+    //  console.log(e,'log' )
+  }
+
+  catPage(page) {
+    return page
+  }
+  /*getitright(e) {
+    this.set('categories', e)
+    console.log(e)
+  }*/
+
   ready() {
     super.ready();
     // Custom elements polyfill safe way to indicate an element has been upgraded.
     this.removeAttribute('unresolved');
     // listen for custom events
-    this.addEventListener('add-cart-item', (e)=>this._onAddCartItem(e));
-    this.addEventListener('set-cart-item', (e)=>this._onSetCartItem(e));
-    this.addEventListener('clear-cart', (e)=>this._onClearCart(e));
-    this.addEventListener('change-section', (e)=>this._onChangeSection(e));
-    this.addEventListener('announce', (e)=>this._onAnnounce(e));
-    this.addEventListener('dom-change', (e)=>this._domChange(e));
-    this.addEventListener('show-invalid-url-warning', (e)=>this._onFallbackSelectionTriggered(e));
+    this.addEventListener('add-cart-item', (e) => this._onAddCartItem(e));
+    this.addEventListener('set-cart-item', (e) => this._onSetCartItem(e));
+    this.addEventListener('clear-cart', (e) => this._onClearCart(e));
+    this.addEventListener('change-section', (e) => this._onChangeSection(e));
+    this.addEventListener('announce', (e) => this._onAnnounce(e));
+    this.addEventListener('dom-change', (e) => this._domChange(e));
+    this.addEventListener('show-invalid-url-warning', (e) => this._onFallbackSelectionTriggered(e));
     // listen for online/offline
     afterNextRender(this, () => {
-      window.addEventListener('online', (e)=>this._notifyNetworkStatus(e));
-      window.addEventListener('offline', (e)=>this._notifyNetworkStatus(e));
+      window.addEventListener('online', (e) => this._notifyNetworkStatus(e));
+      window.addEventListener('offline', (e) => this._notifyNetworkStatus(e));
     });
   }
 
   _routePageChanged(page) {
-    if (this.page === 'list') {
-      this._listScrollTop = window.pageYOffset;
-    }
-
+    this._listScrollTop = window.pageYOffset;
+    //  if (page !== '') {
     this.page = page || 'home';
-
+    // console.log(page, this.subroute)
     // Close the drawer - in case the *route* change came from a link in the drawer.
     this.drawerOpened = false;
+    //}
   }
 
   _pageChanged(page, oldPage) {
+    //  console.log(page, oldPage)
     if (page != null) {
       let cb = this._pageLoaded.bind(this, Boolean(oldPage));
       switch (page) {
-        case 'list':
-          import('./shop-list.js').then(cb);
-          break;
         case 'detail':
           import('./shop-detail.js').then(cb);
           break;
@@ -398,7 +424,7 @@ class ShopApp extends PolymerElement {
         case 'checkout':
           import('./shop-checkout.js').then(cb);
           break;
-          case 'admin':
+        case 'admin':
           import('./cms/cms-controler.js').then(cb);
           break;
         default:
@@ -425,7 +451,7 @@ class ShopApp extends PolymerElement {
         import('./lazy-resources.js').then(() => {
           // Register service worker if supported.
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', {scope: '/'});
+            navigator.serviceWorker.register('service-worker.js', { scope: '/' });
           }
           this._notifyNetworkStatus();
           this.loadComplete = true;
@@ -436,7 +462,7 @@ class ShopApp extends PolymerElement {
 
   _notifyNetworkStatus() {
     let oldOffline = this.offline;
-    this.offline =  !navigator.onLine;
+    this.offline = !navigator.onLine;
     // Show the snackbar if the user is offline when starting a new session
     // or if the network status changed.
     if (this.offline || (!this.offline && oldOffline === true)) {
@@ -445,7 +471,7 @@ class ShopApp extends PolymerElement {
         this.root.appendChild(this._networkSnackbar);
       }
       this._networkSnackbar.innerHTML = this.offline ?
-          'You are offline' : 'You are online';
+        'You are offline' : 'You are online';
       this._networkSnackbar.open();
     }
   }
@@ -472,20 +498,21 @@ class ShopApp extends PolymerElement {
     // Scroll to the top of the page when navigating to a non-list page. For list view,
     // scroll to the last saved position only if the category has not changed.
     let scrollTop = 0;
-    if (this.page === 'list') {
-      if (this.categoryName === detail.category) {
-        scrollTop = this._listScrollTop;
-      } else {
-        // Reset the list view scrollTop if the category changed.
-        this._listScrollTop = 0;
-      }
+    // if (this.page === 'list') {
+    if (this.categoryName === detail.category) {
+      scrollTop = this._listScrollTop;
+    } else {
+      // Reset the list view scrollTop if the category changed.
+      this._listScrollTop = 0;
     }
+    // }
     // Use `Polymer.AppLayout.scroll` with `behavior: 'silent'` to disable header scroll
     // effects during the scroll.
+    console.log(detail)
     scroll({ top: scrollTop, behavior: 'silent' });
-
+    this.categoryPage = detail.page || '';
     this.categoryName = detail.category || '';
-
+    
     // Announce the page's title
     if (detail.title) {
       document.title = detail.title + ' - SHOP';
@@ -554,7 +581,8 @@ class ShopApp extends PolymerElement {
     }
   }
 
-  _onFallbackSelectionTriggered() {
+  _onFallbackSelectionTriggered(e) {
+    console.log(e)
     this.page = '404';
   }
 

@@ -1,6 +1,6 @@
-# SHOP
+# tysix
 
-Shop is a sample e-commerce [Progressive Web App](https://developers.google.com/web/progressive-web-apps/).
+Shop is a sample e-commerce [Progressive Web App CMS](https://developers.google.com/web/progressive-web-apps/).
 
 ![shop screenshot](https://user-images.githubusercontent.com/116360/39545341-c50a9184-4e05-11e8-88e0-0e1f3fa4834b.png)
 
@@ -12,7 +12,7 @@ Shop is a sample e-commerce [Progressive Web App](https://developers.google.com/
 
 ## Setup
 ```bash
-$ git clone https://github.com/Polymer/shop.git
+$ git clone https://github.com/Deubledee/tysix.git
 $ cd shop
 $ npm i
 $ npm start

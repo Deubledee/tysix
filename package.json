@@ -1,8 +1,9 @@
 {
-  "name": "@polymer/shop",
-  "version": "3.0.0",
+  "name": "tysyx",
+  "version": "0.1.0",
   "contributors": [
-    "The Polymer Authors"
+    "The Polymer Authors",
+    "Deubledee"
   ],
   "license": "BSD-3-Clause",
   "repository": "Polymer/shop",
