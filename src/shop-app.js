@@ -305,7 +305,7 @@ class ShopApp extends PolymerElement {
 
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
       <!-- home view -->
-      <cms-controler name="admin" categories="[[categories]]"></cms-controler>
+      <cms-controler route="[[route]]" name="admin" categories="[[categories]]"></cms-controler>
 
       <shop-home name="home" categories="[[categories]]"></shop-home>
       <!-- list view of items in a category -->
@@ -321,8 +321,8 @@ class ShopApp extends PolymerElement {
     </iron-pages>
 
     <footer>
-      <a href="https://www.polymer-project.org/3.0/toolbox/">Made by Polymer</a>
-      <div class="demo-label">Demo Only</div>
+      <a href="https://github.com/Deubledee">Made by Deubledee</a>
+      <div class="demo-label">Development</div>
     </footer>
 
     <!-- a11y announcer -->
