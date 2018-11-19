@@ -1,12 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-ajax/iron-ajax.js';
-import '@polymer/font-roboto/roboto.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/app-layout/demo/sample-content.js';
 import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
+import '@polymer/paper-button/paper-button.js';
 class cmsControler extends PolymerElement {
   static get template() {
     return html`
@@ -38,33 +37,110 @@ class cmsControler extends PolymerElement {
         }
       }
 
+      article {
+        box-sizing: border-box;
+        box-shadow: 4px 4px 4px #909090;
+        margin-bottom: 10px;
+        padding: 12px;
+      } 
+
+      section {
+        display: flex;
+        flex-flow: row;        
+        font-weight: bold;
+        padding: 4px;
+      }
+      section div {
+       
+      }
+      section div[left] {
+        width: 15%;
+        color: #448cff;
+      }
+      section div[right] {
+        width: 60%;
+        color: #616161;
+      }
+      .ulclass {
+        word-break: break-all;
+        padding: 4px;
+        padding-left: 7px;
+      }
+      section paper-button{
+        color: #7a8c94;
+        margin-left: 50px;
+      }
+      nav {
+        color: #8098ad;
+        display: flex;
+        flex-flow: row;
+        box-shadow: 2px 2px 4px #909090;
+        padding: 10px;
+        padding-left: 21px;
+      }    
+      nav paper-icon-button-light {
+        flex-basis: 80px;      
+      }
+      nav h1 {
+        flex-basis: 80px;      
+      }
     </style>
   </custom-style>
-
 </head>
 <body>
-
   <app-drawer-layout>
-
-    <app-drawer slot="drawer"></app-drawer>
-
-    <app-toolbar>
-      <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-    </app-toolbar>
-
-    <sample-content size="100"></sample-content>
-
+    <app-drawer slot="drawer">
+    
+    </app-drawer>
+    <main>
+      <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
+      <div class="ulclass">
+        <nav> 
+            <h1>
+                pages
+            </h1>
+            <paper-icon-button-light>
+              <button title="add">
+                <iron-icon icon="add"></iron-icon>
+              </button>
+            </paper-icon-button-light>
+        </nav>     
+        <dom-repeat items="[[categories]]" as="category" initial-count="4">
+          <template>
+          <article>
+            <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
+              <template>             
+                  <section> 
+                    <div left> [[cats.name]] </div>
+                    <div right> [[cats.par]]  </div>                  
+                    <paper-button>
+                       change
+                    </paper-button>                
+                   </section>                  
+              </template>
+            </dom-repeat>
+          </article>
+          </template>
+        </dom-repeat>
+      </div>
+      </iron-selector>
+    </main>  
   </app-drawer-layout>
 
 </body>
-</html>
+`
   }
   static get is() { return 'cms-controler'; }
 
-  static get properties() { 
+  static get properties() {
     return {
-
-  }}
+      categories: {
+        type: Array,
+        notify: true,
+        observer: 'log'
+      }
+    }
+  }
 
   fsd() {
     let url = 'data/categories.json', json = [], str = ''
@@ -83,7 +159,20 @@ class cmsControler extends PolymerElement {
       console.log(e)
     }
   }
-  handleResponse(res){
+
+  showName(cats, name) {
+    return cats[name]
+  }
+
+  showCats(categories) {
+    let finalString = []
+    for (let par in categories) {
+      finalString.push({ name: par, par: categories[par] });
+    }
+    return finalString
+  }
+
+  handleResponse(res) {
 
     console.log(res)
   }

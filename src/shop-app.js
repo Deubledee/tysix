@@ -3,12 +3,16 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
+import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
 import './shop-category-data.js';
 import './shop-home.js';
 import './shop-list.js';
@@ -240,6 +244,15 @@ class ShopApp extends PolymerElement {
 
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
       <app-toolbar>
+        <div class="cart-btn-container">
+          <a href="/admin" tabindex="-1">
+          <paper-icon-button-light>
+            <button title="add">
+              <iron-icon icon="dashboard"></iron-icon>
+            </button>
+           </paper-icon-button-light>
+          </a>          
+        </div>
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
@@ -251,8 +264,8 @@ class ShopApp extends PolymerElement {
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
             <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>
-          </a>
-          <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>
+                      </a>
+         <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>         
         </div>
       </app-toolbar>
 
@@ -415,7 +428,7 @@ class ShopApp extends PolymerElement {
     if (page != null) {
       let cb = this._pageLoaded.bind(this, Boolean(oldPage));
       switch (page) {
-        case 'detail':
+        case 'list':
           import('./shop-detail.js').then(cb);
           break;
         case 'cart':
