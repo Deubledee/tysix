@@ -50,9 +50,7 @@ class cmsControler extends PolymerElement {
         font-weight: bold;
         padding: 4px;
       }
-      section div {
-       
-      }
+     
       section div[left] {
         width: 15%;
         color: #448cff;
@@ -77,13 +75,11 @@ class cmsControler extends PolymerElement {
         box-shadow: 2px 2px 4px #909090;
         padding: 10px;
         padding-left: 21px;
-      }    
-      nav paper-icon-button-light {
-        flex-basis: 80px;      
-      }
-      nav h1 {
-        flex-basis: 80px;      
-      }
+      }  
+      nav div {
+        flex-basis: 105px;
+      }  
+      
     </style>
   </custom-style>
 </head>
@@ -96,14 +92,18 @@ class cmsControler extends PolymerElement {
       <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
       <div class="ulclass">
         <nav> 
-            <h1>
-                pages
-            </h1>
-            <paper-icon-button-light>
-              <button title="add">
-                <iron-icon icon="add"></iron-icon>
-              </button>
-            </paper-icon-button-light>
+            <div>   
+              <h1>
+                  pages
+              </h1>
+            </div>
+            <div>
+              <paper-icon-button-light>
+                <button title="add">
+                  <iron-icon icon="add"></iron-icon>
+                </button>
+              </paper-icon-button-light>
+            </div>
         </nav>     
         <dom-repeat items="[[categories]]" as="category" initial-count="4">
           <template>
