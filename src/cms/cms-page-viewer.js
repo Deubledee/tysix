@@ -1,13 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-icon-button/paper-icon-button-light.js';
-import '@polymer/app-layout/app-drawer/app-drawer.js';
-import '@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-import '@polymer/paper-button/paper-button.js';
-class cmsControler extends PolymerElement {
+class cmsPageViewer extends PolymerElement {
   static get template() {
     return html`
     <custom-style>
@@ -62,7 +54,7 @@ class cmsControler extends PolymerElement {
         width: 60%;
         color: #616161;
       }
-      .ulclass {
+      main {
         word-break: break-all;
         padding: 4px;
         padding-left: 7px;
@@ -85,14 +77,8 @@ class cmsControler extends PolymerElement {
     </style>
   </custom-style>
 </head>
-<body>
-  <app-drawer-layout>
-    <app-drawer slot="drawer">
-    
-    </app-drawer>
+<body>   
     <main>
-      <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
-      <div class="ulclass">
         <nav> 
             <div>
               <h1>
@@ -100,7 +86,7 @@ class cmsControler extends PolymerElement {
               </h1>
             </div>
             <div>
-              <paper-icon-button-light>
+              <paper-icon-button-light on-click="add">
                 <button title="add">
                   <iron-icon icon="add"></iron-icon>
                 </button>
@@ -124,26 +110,27 @@ class cmsControler extends PolymerElement {
             </article>
           </template>
         </dom-repeat>
-      </div>
-      </iron-selector>
-    </main>  
-  </app-drawer-layout>
+      </main>  
 </body>
 `
   }
-  static get is() { return 'cms-controler'; }
+  static get is() { return 'cms-page-viewer'; }
 
   static get properties() {
     return {
       categories: {
         type: Array,
         notify: true,
-        observer: 'log'
       }
     }
   }
+
+  add(event){
+    console.log(event)
+  }
+
   edit(event){
-    console.log(event.model.children[1].children[1], event.model.__data)
+    console.log(event, event.model.children[1].children[1], event.model.__data)
   }  
 
   showName(cats, name) {
@@ -165,4 +152,4 @@ class cmsControler extends PolymerElement {
 
 }
 
-customElements.define(cmsControler.is, cmsControler);
+customElements.define(cmsPageViewer.is, cmsPageViewer);

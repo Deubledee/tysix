@@ -66,7 +66,7 @@ class cmsControler extends PolymerElement {
           <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-              <a name="view1" href="[[rootPath]]admin/view1">View One</a>
+              <a name="view1" href="[[rootPath]]admin/pages">pages</a>
               <a name="view2" href="[[rootPath]]admin/view2">View Two</a>
               <a name="view3" href="[[rootPath]]admin/view3">View Three</a>
             </iron-selector>
@@ -80,7 +80,7 @@ class cmsControler extends PolymerElement {
               </app-toolbar>
             </app-header>
             <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-              <my-view1 name="view1"></my-view1>
+              <cms-page-viewer name="page" categories="{{categories}}"></cms-page-viewer>
               <my-view2 name="view2"></my-view2>
               <my-view3 name="view3"></my-view3>
               <my-view404 name="view404"></my-view404>
@@ -99,102 +99,15 @@ class cmsControler extends PolymerElement {
         reflectToAttribute: true,
         observer: '_pageChanged'
       },
+      categories: {
+        type: Array,
+        notify: true,
+        observer: 'log'
+      },
       routeData: Object,
       subroute: Object
     };
   }
-
-<<<<<<< HEAD
-      section {
-        display: flex;
-        flex-flow: row;        
-        font-weight: bold;
-        padding: 4px;
-      }
-     
-      section div[left] {
-        width: 15%;
-        color: #448cff;
-      }
-      section div[right] {
-        width: 60%;
-        color: #616161;
-      }
-      .ulclass {
-        word-break: break-all;
-        padding: 4px;
-        padding-left: 7px;
-      }
-      section paper-button{
-        color: #7a8c94;
-        margin-left: 50px;
-      }
-      nav {
-        color: #8098ad;
-        display: flex;
-        flex-flow: row;
-        box-shadow: 2px 2px 4px #909090;
-        padding: 10px;
-        padding-left: 21px;
-      }  
-      nav div {
-        flex-basis: 105px;
-      }  
-      
-    </style>
-  </custom-style>
-</head>
-<body>
-  <app-drawer-layout>
-    <app-drawer slot="drawer">
-    
-    </app-drawer>
-    <main>
-      <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
-      <div class="ulclass">
-        <nav> 
-            <div>   
-              <h1>
-                  pages
-              </h1>
-            </div>
-            <div>
-              <paper-icon-button-light>
-                <button title="add">
-                  <iron-icon icon="add"></iron-icon>
-                </button>
-              </paper-icon-button-light>
-            </div>
-        </nav>     
-        <dom-repeat items="[[categories]]" as="category" initial-count="4">
-          <template>
-          <article>
-            <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
-              <template>             
-                  <section> 
-                    <div left> [[cats.name]] </div>
-                    <div right> [[cats.par]]  </div>                  
-                    <paper-button>
-                       change
-                    </paper-button>                
-                   </section>                  
-              </template>
-            </dom-repeat>
-          </article>
-          </template>
-        </dom-repeat>
-      </div>
-      </iron-selector>
-    </main>  
-  </app-drawer-layout>
-=======
-  static get observers() {
-    return [
-      '_routePageChanged(routeData.item)'
-    ];
-  }
->>>>>>> f1a184ffcf5cc4c69b1baa4ad3cc1ee0dcce3669
-
   _routePageChanged(page) {
      // Show the corresponding page according to the route.
      //
@@ -202,8 +115,8 @@ class cmsControler extends PolymerElement {
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
      console.log(this.routeData, page)
     if (!page) {
-      this.page = 'view1';
-    } else if (['view1', 'view2', 'view3'].indexOf(page) !== -1) {
+      this.page = '';
+    } else if (['page', 'view2', 'view3'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -220,8 +133,8 @@ class cmsControler extends PolymerElement {
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.
     switch (page) {
-      case 'view1':
-        import('./my-view1.js');
+      case 'page':
+        import('./cms-page-viewer.js');
         break;
       case 'view2':
         import('./my-view2.js');

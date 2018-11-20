@@ -345,8 +345,7 @@ class ShopApp extends PolymerElement {
       },
       categories: {
         type: Array,
-        notify: true,
-        observer: 'log'
+        notify: true
       },
       /*categoriesArray: {
         type: Array,
@@ -382,17 +381,9 @@ class ShopApp extends PolymerElement {
     window.performance && performance.mark && performance.mark('shop-app.created');
   }
 
-  log(e) {
-    //  console.log(e,'log' )
-  }
-
   catPage(page) {
     return page
-  }
-  /*getitright(e) {
-    this.set('categories', e)
-    console.log(e)
-  }*/
+  } 
 
   ready() {
     super.ready();
