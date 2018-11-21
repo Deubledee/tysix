@@ -243,7 +243,7 @@ class ShopApp extends PolymerElement {
     <shop-cart-data id="cart" cart="{{cart}}" num-items="{{numItems}}" total="{{total}}"></shop-cart-data>
 
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
-      <app-toolbar>
+      <app-toolbar id="toolbar">
         <div class="cart-btn-container">
           <a href="/admin" tabindex="-1">
           <paper-icon-button-light>
@@ -406,7 +406,12 @@ class ShopApp extends PolymerElement {
 
   _routePageChanged(page) {
     this._listScrollTop = window.pageYOffset;
-    //  if (page !== '') {
+     if (page === 'admin') {
+      this.$.toolbar.style.display = "none"
+    } else {
+      this.$.toolbar.style.display = "var(--layout-horizontal_-_display)"
+    }
+    
     this.page = page || 'home';
     // console.log(page, this.subroute)
     // Close the drawer - in case the *route* change came from a link in the drawer.

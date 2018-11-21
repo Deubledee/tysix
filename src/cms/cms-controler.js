@@ -11,6 +11,7 @@ import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-button/paper-button.js';
 import './my-icons.js';
 
 // Gesture events like tap and track generated from touch will not be
@@ -59,14 +60,14 @@ class cmsControler extends PolymerElement {
           }
 
         </style>
-        <app-route route="{{route}}" pattern="/:admin/:item" data="{{routeData}}" tail="{{subroute}}">
+        <app-route route="{{route}}" pattern="/:admin/:pages" data="{{routeData}}" tail="{{subroute}}">
         </app-route>
         <app-drawer-layout fullbleed="" narrow="{{narrow}}">
           <!-- Drawer content -->
           <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-              <a name="view1" href="[[rootPath]]admin/pages">pages</a>
+              <a name="pages" href="[[rootPath]]admin/pages">Pages</a>
               <a name="view2" href="[[rootPath]]admin/view2">View Two</a>
               <a name="view3" href="[[rootPath]]admin/view3">View Three</a>
             </iron-selector>
@@ -74,20 +75,38 @@ class cmsControler extends PolymerElement {
           <!-- Main content -->
           <app-header-layout has-scrolling-region="">
             <app-header slot="header" condenses="" reveals="" effects="waterfall">
-              <app-toolbar>
-                <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-                <div main-title="">My App</div>
-              </app-toolbar>
+            <app-toolbar>
+            <div class="cart-btn-container">
+              <a href="/admin" tabindex="-1">
+              <paper-icon-button-light>
+                <button title="add">
+                  <iron-icon icon="dashboard"></iron-icon>
+                </button>
+               </paper-icon-button-light>
+              </a>          
+            </div>
+            <div class="left-bar-item">              
+              </paper-icon-button>
+              <a class="back-btn" href="/[[categoryPage]]/[[categoryName]]" tabindex="-1">
+                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+              </a>
+            </div>
+            <div class="cart-btn-container">
+              <a href="/cart" tabindex="-1">
+                <!--paper-icon-button icon="shopping-cart"></paper-icon-button>
+                          </a>
+             <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div-->         
+            </div>
+          </app-toolbar>
             </app-header>
             <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-              <cms-page-viewer name="page" categories="{{categories}}"></cms-page-viewer>
+              <cms-page-viewer name="pages" categories="{{categories}}"></cms-page-viewer>
               <my-view2 name="view2"></my-view2>
               <my-view3 name="view3"></my-view3>
               <my-view404 name="view404"></my-view404>
             </iron-pages>
           </app-header-layout>
-        </app-drawer-layout>
-      `;
+        </app-drawer-layout>`;
     }
   
   static get is() { return 'cms-controler'; }
@@ -101,22 +120,28 @@ class cmsControler extends PolymerElement {
       },
       categories: {
         type: Array,
-        notify: true,
-        observer: 'log'
+        notify: true
       },
       routeData: Object,
       subroute: Object
     };
   }
-  _routePageChanged(page) {
+
+  static get observers() {
+    return [
+      '_routePageChanged(routeData.pages)'
+    ];
+  }
+
+  _routePageChanged(page) {    
+    console.log(this.routeData, page)
      // Show the corresponding page according to the route.
      //
      // If no page was found in the route data, page will be an empty string.
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
-     console.log(this.routeData, page)
     if (!page) {
       this.page = '';
-    } else if (['page', 'view2', 'view3'].indexOf(page) !== -1) {
+    } else if (['pages', 'view2', 'view3'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -126,14 +151,14 @@ class cmsControler extends PolymerElement {
       this.$.drawer.close();
     }
   }
-
   _pageChanged(page) {
     // Import the page component on demand.
     //
     // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
+    // statement, so break it up.    
+    console.log(this.routeData, page)
     switch (page) {
-      case 'page':
+      case 'pages':
         import('./cms-page-viewer.js');
         break;
       case 'view2':

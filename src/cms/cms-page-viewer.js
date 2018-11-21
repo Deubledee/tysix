@@ -1,4 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
+
 class cmsPageViewer extends PolymerElement {
   static get template() {
     return html`
@@ -121,6 +127,7 @@ class cmsPageViewer extends PolymerElement {
       categories: {
         type: Array,
         notify: true,
+        observer: 'add'
       }
     }
   }
