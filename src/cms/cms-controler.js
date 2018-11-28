@@ -58,42 +58,55 @@ class cmsControler extends PolymerElement {
           app-drawer {
             background-color: grey
           }
+          nav { 
+            display: flex;
+            flex-flow: row;
+            flex-basis: 100px;
+          }
 
+          nav div {
+            flex-basis: 100px;
+          }
         </style>
         <app-route route="{{route}}" pattern="/:admin/:pages" data="{{routeData}}" tail="{{subroute}}">
         </app-route>
         <app-drawer-layout fullbleed="" narrow="{{narrow}}">
           <!-- Drawer content -->
           <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-            <app-toolbar>Menu</app-toolbar>
+            <app-toolbar>Dashboard</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-              <a name="pages" href="[[rootPath]]admin/pages">Pages</a>
-              <a name="view2" href="[[rootPath]]admin/view2">View Two</a>
-              <a name="view3" href="[[rootPath]]admin/view3">View Three</a>
+              <nav>
+                <div>
+                 <a name="pages" href="[[rootPath]]admin/pages">Pages</a>
+                </div>                
+                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+              </nav>
+              <nav>              
+                <div>
+                  <a name="view2" href="[[rootPath]]admin/view2">View Two</a>
+                </div>  
+                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>              
+              </nav>
+              <nav>
+               <div>
+                <a name="view3" href="[[rootPath]]admin/view3">View Three</a>
+              </div>               
+              <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button> 
+              </nav>              
             </iron-selector>
           </app-drawer>
           <!-- Main content -->
-          <app-header-layout has-scrolling-region="">
+          <app-header-layout>
             <app-header slot="header" condenses="" reveals="" effects="waterfall">
-            <app-toolbar>
-            <div class="cart-btn-container">
-              <a href="/admin" tabindex="-1">
-              <paper-icon-button-light>
-                <button title="add">
-                  <iron-icon icon="dashboard"></iron-icon>
-                </button>
-               </paper-icon-button-light>
-              </a>          
-            </div>
-            <div class="left-bar-item">              
-              </paper-icon-button>
+            <app-toolbar>            
+            <div class="left-bar-item">
               <a class="back-btn" href="/[[categoryPage]]/[[categoryName]]" tabindex="-1">
                 <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
               </a>
             </div>
             <div class="cart-btn-container">
-              <a href="/cart" tabindex="-1">
-                <!--paper-icon-button icon="shopping-cart"></paper-icon-button>
+              <!--a href="/cart" tabindex="-1">
+                <paper-icon-button icon="shopping-cart"></paper-icon-button>
                           </a>
              <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div-->         
             </div>

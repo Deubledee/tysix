@@ -38,7 +38,7 @@ class cmsPageViewer extends PolymerElement {
 
       article {
         box-sizing: border-box;
-        box-shadow: 4px 4px 4px #909090;
+        /*box-shadow: 4px 4px 4px #909090;*/
         margin-bottom: 10px;
         padding: 12px;
       } 
@@ -48,16 +48,20 @@ class cmsPageViewer extends PolymerElement {
         flex-flow: row;        
         font-weight: bold;
         padding: 4px;
+        height: 50px;
       }
-      section div {
-       
+
+      nav[bottom] {
+        height: 435px;
+        display: none
       }
+
       section div[left] {
-        width: 15%;
+        flex-basis: 164px;
         color: #448cff;
       }
       section div[right] {
-        width: 60%;
+        flex-basis: 60%;
         color: #616161;
       }
       main {
@@ -78,6 +82,9 @@ class cmsPageViewer extends PolymerElement {
         padding-left: 21px;
       }    
       nav div {
+        flex-basis: 120px;      
+      }
+      nav paper-icon-button {
         flex-basis: 120px;      
       }
     </style>
@@ -102,17 +109,27 @@ class cmsPageViewer extends PolymerElement {
         <dom-repeat items="[[categories]]" as="category" initial-count="4">
           <template>
             <article>
-              <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
-                <template>             
-                    <section> 
-                      <div left> [[cats.name]] </div>
-                      <div right> [[cats.par]]  </div>                  
-                      <paper-button on-click="edit">
-                        change
-                      </paper-button>                
-                    </section>                  
-                </template>
-              </dom-repeat>
+              <nav>
+                  <div>
+                    <span>  {{_getPagename(category)}} </span>
+                  </div>
+                  <div on-click="showPage">
+                    <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+                  </div>
+              </nav> 
+              <nav bottom>                  
+                <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
+                  <template>                          
+                      <section>
+                        <div left> [[cats.name]] </div>
+                        <div right> [[cats.par]]  </div>                  
+                        <paper-button on-click="edit">
+                          change
+                        </paper-button>                
+                      </section>                  
+                  </template>
+                </dom-repeat>
+              </nav>
             </article>
           </template>
         </dom-repeat>
@@ -132,6 +149,11 @@ class cmsPageViewer extends PolymerElement {
     }
   }
 
+  _getPagename(cats){
+    console.log(cats)
+    return cats.name
+  }
+
   add(event){
     console.log(event)
   }
@@ -142,6 +164,11 @@ class cmsPageViewer extends PolymerElement {
 
   showName(cats, name) {
     return cats[name]
+  }
+  
+  showPage(event){
+    console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
+    event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "block"
   }
 
   showCats(categories) {
