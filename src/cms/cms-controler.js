@@ -8,9 +8,12 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/paper-button/paper-button.js';
 import './my-icons.js';
 
@@ -147,7 +150,7 @@ class cmsControler extends PolymerElement {
   }
 
   _routePageChanged(page) {    
-    console.log(this.routeData, page)
+   // console.log(this.routeData, page)
      // Show the corresponding page according to the route.
      //
      // If no page was found in the route data, page will be an empty string.
@@ -169,7 +172,7 @@ class cmsControler extends PolymerElement {
     //
     // Note: `polymer build` doesn't like string concatenation in the import
     // statement, so break it up.    
-    console.log(this.routeData, page)
+   // console.log(this.routeData, page)
     switch (page) {
       case 'pages':
         import('./cms-page-viewer.js');

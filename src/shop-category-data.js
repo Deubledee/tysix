@@ -16,7 +16,7 @@ class ShopCategoryData extends PolymerElement {
       categories: {
         type: Array,
         notify: true,
-        //observer: 'log'
+        observer: 'log'
       },
 
       category: {
@@ -66,12 +66,13 @@ class ShopCategoryData extends PolymerElement {
     console.log(data)
 
   }
+  
   handleResponse(data) {
     this.log(data)
   }
 
   _getCategoryObject(categoryName) {
-    console.log(categoryName, this.categories)
+  //  console.log(categoryName, this.categories)
     if (this.categories !== undefined) {
       for (let i = 0, c; c = this.categories[i]; ++i) {
         if (c.name === categoryName) {

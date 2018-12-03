@@ -1,9 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-icons/iron-icons.js';
+import './cms-page-form.js';
 
 class cmsPageViewer extends PolymerElement {
   static get template() {
@@ -52,10 +49,13 @@ class cmsPageViewer extends PolymerElement {
       }
 
       nav[bottom] {
-        height: 435px;
-        display: none
+        display: flow-root;
+        height: 0px;
+        opacity: 0;
+        transition-property: height, opacity;
+        transition-duration: 1.5s, 2s;
       }
-
+      
       section div[left] {
         flex-basis: 164px;
         color: #448cff;
@@ -82,11 +82,13 @@ class cmsPageViewer extends PolymerElement {
         padding-left: 21px;
       }    
       nav div {
-        flex-basis: 120px;      
+        flex-basis: 120px;
+        flex-grow: 1      
       }
       nav paper-icon-button {
         flex-basis: 120px;      
       }
+
     </style>
   </custom-style>
 </head>
@@ -98,11 +100,11 @@ class cmsPageViewer extends PolymerElement {
                   pages
               </h1>
             </div>
-            <div>
-              <paper-icon-button-light on-click="add">
-                <button title="add">
-                  <iron-icon icon="add"></iron-icon>
-                </button>
+            <div add on-click="add">
+              <paper-icon-button-light>
+                <paper-button title="add">
+                <h2>Add</h2>
+                </paper-button>
               </paper-icon-button-light>
             </div>
         </nav>     
@@ -114,8 +116,8 @@ class cmsPageViewer extends PolymerElement {
                     <span>  {{_getPagename(category)}} </span>
                   </div>
                   <div on-click="showPage">
-                    <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-                  </div>
+                  <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+                  </div>                 
               </nav> 
               <nav bottom>                  
                 <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
@@ -133,6 +135,8 @@ class cmsPageViewer extends PolymerElement {
             </article>
           </template>
         </dom-repeat>
+        <cms-page-form closed="[[closed]]" categories="{{categories}}" setter="{{setter}}">
+        </cms-page-form>
       </main>  
 </body>
 `
@@ -141,34 +145,57 @@ class cmsPageViewer extends PolymerElement {
 
   static get properties() {
     return {
+      setter:{
+        type: String,
+        observer: 'set'
+      },
       categories: {
         type: Array,
+        notify: true
+      },
+      closed: {
+        type: Boolean,
         notify: true,
-        observer: 'add'
-      }
+      },
     }
   }
 
-  _getPagename(cats){
-    console.log(cats)
+  _getPagename(cats) {
+   // console.log(cats)
     return cats.name
   }
 
-  add(event){
-    console.log(event)
+  add(event) {
+    this.closed = !this.closed
   }
 
-  edit(event){
-    console.log(event, event.model.children[1].children[1], event.model.__data)
-  }  
+  edit(event) {
+   // console.log(event, event.model.children[1].children[1], event.model.__data)
+  }
+
+  set(data){
+    this.categories = []
+    this.categories = data
+    console.log(data, 'in viwer')
+  }
 
   showName(cats, name) {
     return cats[name]
   }
-  
-  showPage(event){
+
+  showPage(event) {
     console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
-    event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "block"
+    if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "435px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
+    } else {
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "0px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "0"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
+    }
+
   }
 
   showCats(categories) {
@@ -181,7 +208,7 @@ class cmsPageViewer extends PolymerElement {
 
   handleResponse(res) {
 
-    console.log(res)
+  //  console.log(res)
   }
 
 }
