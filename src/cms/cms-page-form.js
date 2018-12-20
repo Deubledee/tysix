@@ -39,22 +39,27 @@ class cmsPageForm extends PolymerElement {
 </head>
 <body>   
      <main closed$="[[closed]]">
-          <cms-input-sellector options="[[types]]" value="{{type}}">          
+          <cms-input-sellector options="[[pageTypes]]" value="{{type}}">          
           </cms-input-sellector>
           <paper-input always-float-label label="Page Name" value="{{pageName}}"></paper-input>
           <paper-input always-float-label label="title" value="{{title}}"></paper-input>
-          <paper-input always-float-label label="iamge" value="{{image}}"></paper-input>
+          <paper-input always-float-label label="image" value="{{image}}"></paper-input>
           <paper-input always-float-label label="placeholder" value="{{placeholder}}"></paper-input>
           <div>
                <cms-input-sellector options="[[layouts]]" value="{{layout}}">          
                </cms-input-sellector>
-               <div>
-               </div>
           <div>
-          <paper-button on-click="setValues">
-               Save
-          </paper-button>
+          <nav>
+               <paper-button on-click="clean">
+                    cancel
+               </paper-button>
+
+               <paper-button on-click="setValues">
+                    Save
+               </paper-button>
+           <nav>
      </main>  
+     <cms-image-viwer closed="{{openViewer}}" images="[[images]]" image="{{photoURL}}"></cms-image-viwer>
 </body>
 `
      }
@@ -67,6 +72,14 @@ class cmsPageForm extends PolymerElement {
                     notify: true,
                     value: false,
                     reflectToAttribute: true,
+               },
+               request: {
+                    type: Array,
+                    notify: true
+               },
+               openViewer: {
+                    type: Boolean,
+                    notify: true
                },
                categories: {
                     type: Array,
@@ -103,7 +116,7 @@ class cmsPageForm extends PolymerElement {
                type: {
                     type: String,
                },
-               types: {
+               pageTypes: {
                     type: Array,
                     value: [
                          { label: 'Page type' },
@@ -115,23 +128,22 @@ class cmsPageForm extends PolymerElement {
           }
      }
 
-     showPage(event) {
-          if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
-               event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "block"
-               event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
-          } else {
-               event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "none"
-               event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
+     createURL(items) {
+          let arr = new Array()
+          let parsed = JSON.parse(items)
+          // console.log(parsed)
+          for (let i = 0; i < parsed.length; i++) {
+               arr.push({ url: 'http://localhost:3000/data/images/' + parsed[i], title: parsed[i] })
           }
-
+          this.images = arr
+          this.openViewer = !this.openViewer
      }
 
-     showCats(categories) {
-          let finalString = []
-          for (let par in categories) {
-               finalString.push({ name: par, par: categories[par] });
-          }
-          return finalString
+     file() {
+          fsd("http://localhost:3000/imagedir", items => {
+               // console.log(items)
+               this.createURL(items)
+          })
      }
 
      setValues() {
@@ -142,18 +154,18 @@ class cmsPageForm extends PolymerElement {
                'image': this.image,
                'placeholder': this.placeholder
           }
-          let temp = this.categories
-          temp.push(obj)
-          this.setter = temp
+          this.clean()
+          this.dispatchEvent(new CustomEvent('category-added', { detail: obj, bubbles: true }));
+     }
+
+     clean() {
           this.closed = !this.closed
           this.pageName = ''
           this.type = ''
           this.title = ''
           this.image = ''
           this.placeholder = ''
-          console.log(this.categories, 'in cms')
      }
-
 }
 
 customElements.define(cmsPageForm.is, cmsPageForm);

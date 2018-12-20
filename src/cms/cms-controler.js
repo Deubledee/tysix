@@ -15,7 +15,7 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/paper-button/paper-button.js';
-import './my-icons.js';
+import '@polymer/iron-icons/editor-icons.js';
 
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -34,15 +34,39 @@ class cmsControler extends PolymerElement {
             --app-secondary-color: black;
             display: block;
           }
+
+          nav { 
+            display: flex;
+            flex-flow: row;
+            color: #fff
+          }
+
+          nav div {
+            flex-basis: 100px;
+          }
+          nav div[dashboard] {
+            flex-basis: 100px;
+            margin-top: 9px;
+            font-size: medium;
+          }
+
+          app-toolbar{
+            color: #fff;
+            height: 41px;
+            background-color: #3f4756;
+          }
           app-drawer-layout:not([narrow]) [drawer-toggle] {
             display: none;
           }
+
           app-header {
             color: #fff;
             background-color: var(--app-primary-color);
+            left: 160px!important;
           }
-          app-header paper-icon-button {
-            --paper-icon-button-ink-color: white;
+          
+          paper-icon-button {
+            color: white;
           }
           .drawer-list {
             margin: 0 20px;
@@ -53,49 +77,63 @@ class cmsControler extends PolymerElement {
             text-decoration: none;
             color: var(--app-secondary-color);
             line-height: 40px;
+            color: #fff;
+            font-weight: bold
           }
           .drawer-list a.iron-selected {
             color: black;
             font-weight: bold;
           }
-          app-drawer {
-            background-color: grey
+          app-drawer.diferent {
+            background-color: grey;
+            width: 160px;
+            --app-drawer-content-container:{
+              background-color: #3f4756;
+            }
           }
-          nav { 
-            display: flex;
-            flex-flow: row;
-            flex-basis: 100px;
+          .content-wrapper{
+            padding-left: 15px
           }
-
-          nav div {
-            flex-basis: 100px;
+          
+          app-header-layout{
+        ￼    left: -44px!mportant;
+        
           }
         </style>
         <app-route route="{{route}}" pattern="/:admin/:pages" data="{{routeData}}" tail="{{subroute}}">
         </app-route>
         <app-drawer-layout fullbleed="" narrow="{{narrow}}">
           <!-- Drawer content -->
-          <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-            <app-toolbar>Dashboard</app-toolbar>
-            <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <app-drawer id="drawer" class="diferent" slot="drawer" swipe-open="[[narrow]]">
+            <app-toolbar>
+            <nav>
+              <paper-icon-button icon="dashboard" aria-label="dashboard"> dashboard</paper-icon-button>
+              <div dashboard>
+                Dashboard
+             </div>
+            </nav>
+            </app-toolbar>
+            <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">     
+            <div class="content-wrapper">       
               <nav>
+                <paper-icon-button icon="icons:content-copy" aria-label="pages"></paper-icon-button>
                 <div>
                  <a name="pages" href="[[rootPath]]admin/pages">Pages</a>
                 </div>                
-                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-              </nav>
-              <nav>              
-                <div>
-                  <a name="view2" href="[[rootPath]]admin/view2">View Two</a>
-                </div>  
-                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>              
               </nav>
               <nav>
-               <div>
-                <a name="view3" href="[[rootPath]]admin/view3">View Three</a>
-              </div>               
-              <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button> 
-              </nav>              
+                <paper-icon-button icon="icons:chrome-reader-mode" aria-label="Articles"></paper-icon-button>
+                <div>
+                 <a name="Articles" href="[[rootPath]]admin/articles">Articles</a>
+                </div>                
+              </nav>
+              <nav>      
+                <paper-icon-button icon="icons:supervisor-account" aria-label="users"></paper-icon-button>    
+                <div>
+                  <a name="users" href="[[rootPath]]admin/users">Users</a>
+                </div>                
+              </nav>    
+            </div>                  
             </iron-selector>
           </app-drawer>
           <!-- Main content -->
@@ -106,25 +144,20 @@ class cmsControler extends PolymerElement {
               <a class="back-btn" href="/[[categoryPage]]/[[categoryName]]" tabindex="-1">
                 <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
               </a>
-            </div>
-            <div class="cart-btn-container">
-              <!--a href="/cart" tabindex="-1">
-                <paper-icon-button icon="shopping-cart"></paper-icon-button>
-                          </a>
-             <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div-->         
-            </div>
+            </div>            
           </app-toolbar>
             </app-header>
             <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
               <cms-page-viewer name="pages" categories="{{categories}}"></cms-page-viewer>
-              <my-view2 name="view2"></my-view2>
+              <cms-user-viewer name="users"></cms-user-viewer>
+              <cms-articles-viewer name="users"></cms-articles-viewer>
               <my-view3 name="view3"></my-view3>
               <my-view404 name="view404"></my-view404>
             </iron-pages>
           </app-header-layout>
         </app-drawer-layout>`;
-    }
-  
+  }
+
   static get is() { return 'cms-controler'; }
 
   static get properties() {
@@ -142,22 +175,21 @@ class cmsControler extends PolymerElement {
       subroute: Object
     };
   }
-
   static get observers() {
     return [
       '_routePageChanged(routeData.pages)'
     ];
   }
 
-  _routePageChanged(page) {    
-   // console.log(this.routeData, page)
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
+  _routePageChanged(page) {
+    // console.log(this.routeData, page)
+    // Show the corresponding page according to the route.
+    //
+    // If no page was found in the route data, page will be an empty string.
+    // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
       this.page = '';
-    } else if (['pages', 'view2', 'view3'].indexOf(page) !== -1) {
+    } else if (['pages', 'users', 'home', 'articles'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'view404';
@@ -168,42 +200,22 @@ class cmsControler extends PolymerElement {
     }
   }
   _pageChanged(page) {
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.    
-   // console.log(this.routeData, page)
     switch (page) {
+      case 'home':
+        import('./cms-home-viewer.js');
+        break;
       case 'pages':
         import('./cms-page-viewer.js');
         break;
-      case 'view2':
-        import('./my-view2.js');
+      case 'users':
+        import('./cms-user-viewer.js');
         break;
-      case 'view3':
-        import('./my-view3.js');
+      case 'articles':
+        import('./cms-articles-viewer.js');
         break;
       case 'view404':
         import('../shop-404-warning.js');
         break;
-    }
-  }
-
-  fsd() {
-    let url = 'data/categories.json', json = [], str = ''
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', onLoad.bind(this))
-    xhr.addEventListener('error', onError);
-    xhr.open('GET', url);
-    xhr.send();
-    function onLoad(e) {
-      json.push(JSON.parse(e.target.responseText))
-      str = json[0]
-      this.categories = str
-      // console.log(str, this.categories)
-    }
-    function onError(e) {
-      console.log(e)
     }
   }
 

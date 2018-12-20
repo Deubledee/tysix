@@ -95,13 +95,10 @@ class cmsInputSellector extends PolymerElement {
           return label
      }
      changeToOne(data) {
-          if (data.model.__data.option.id !== 'agents') {
-               if (data.model.__data.option.notAtive === false) {
+         // if (data.model.__data.option.id !== 'agents') {
+              // if (data.model.__data.option.notAtive === false) {
                     this.value = data.model.__data.option.name
-               } else {
-                    alert('not implemented yet sorry ..!')
-               }
-          }
+              
      }
 }
 customElements.define(cmsInputSellector.is, cmsInputSellector);  

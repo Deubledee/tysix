@@ -146,6 +146,19 @@ class ShopApp extends PolymerElement {
         @apply --layout-center-center;
       }
 
+      .user-badge {            
+        position: absolute;
+        top: 35px;
+        right: -54px;
+        width: 144px;
+        height: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        pointer-events: none;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+      }
+
       .drawer-list {
         margin: 0 20px;
       }
@@ -244,15 +257,19 @@ class ShopApp extends PolymerElement {
 
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
       <app-toolbar id="toolbar">
-        <div class="cart-btn-container">
-          <a href="/admin" tabindex="-1">
-          <paper-icon-button-light>
-            <button title="add">
-              <iron-icon icon="dashboard"></iron-icon>
-            </button>
-           </paper-icon-button-light>
-          </a>          
-        </div>
+        <dom-if if="[[_shouldRenderDasboard]]">
+          <template>
+            <div class="cart-btn-container">
+              <a href="/admin" tabindex="-1">
+              <paper-icon-button-light>
+                <button title="dashboars">
+                  <iron-icon icon="dashboard"></iron-icon>
+                </button>
+              </paper-icon-button-light>
+              </a>          
+            </div>
+          </template>
+        </dom-if>
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
@@ -260,15 +277,25 @@ class ShopApp extends PolymerElement {
             <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
           </a>
         </div>
-        <div class="logo" main-title=""><a href="/home" aria-label="SHOP Home">SHOP</a></div>
+        <div class="logo" main-title="">
+          <a href="/home" aria-label="SHOP Home">
+            SHOP
+          </a>
+        </div>
+        <div class="cart-btn-container">      
+          <paper-icon-button on-click="" icon="perm-identity" aria-label\$=""></paper-icon-button> 
+          <div class="user-badge">[[user.email]]</div>      
+        </div>
+        <div class="cart-btn-container">      
+          <paper-icon-button on-click="reset" icon="refresh" aria-label\$=""></paper-icon-button> 
+               
+        </div>        
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
-            <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>
-                      </a>
+            <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>                      </a>
          <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>         
         </div>
       </app-toolbar>
-
       <!-- Lazy-create the tabs for larger screen sizes. -->
       <div id="tabContainer" sticky\$="[[_shouldShowTabs]]" hidden\$="[[!_shouldShowTabs]]">
         <dom-if if="[[_shouldRenderTabs]]">
@@ -285,7 +312,7 @@ class ShopApp extends PolymerElement {
           </template>
         </dom-if>
       </div>
-    </app-header>
+  </app-header>
 
     <!-- Lazy-create the drawer for small screen sizes. -->
     <dom-if if="[[_shouldRenderDrawer]]">
@@ -351,6 +378,10 @@ class ShopApp extends PolymerElement {
         type: Array,
         observer: 'getitright'
       },*/
+      user: {
+        type: Object,
+        notify: true
+      },
       numItems: {
         type: Number,
         value: 0
@@ -381,9 +412,21 @@ class ShopApp extends PolymerElement {
     window.performance && performance.mark && performance.mark('shop-app.created');
   }
 
+  reset() {
+    let temp = this.categories
+    this.categories = [{}]
+    setTimeout(() => {
+      this.categories = temp
+    }, 500)
+  }
+
+  log(data) {
+    console.log(data)
+  }
+
   catPage(page) {
     return page
-  } 
+  }
 
   ready() {
     super.ready();
@@ -404,14 +447,18 @@ class ShopApp extends PolymerElement {
     });
   }
 
+  _shouldRenderDasboard() {
+    return true
+  }
+
   _routePageChanged(page) {
     this._listScrollTop = window.pageYOffset;
-     if (page === 'admin') {
+    if (page === 'admin') {
       this.$.toolbar.style.display = "none"
     } else {
       this.$.toolbar.style.display = "var(--layout-horizontal_-_display)"
     }
-    
+
     this.page = page || 'home';
     // console.log(page, this.subroute)
     // Close the drawer - in case the *route* change came from a link in the drawer.
@@ -517,11 +564,10 @@ class ShopApp extends PolymerElement {
     // }
     // Use `Polymer.AppLayout.scroll` with `behavior: 'silent'` to disable header scroll
     // effects during the scroll.
-    console.log(detail)
     scroll({ top: scrollTop, behavior: 'silent' });
     this.categoryPage = detail.page || '';
     this.categoryName = detail.category || '';
-    
+
     // Announce the page's title
     if (detail.title) {
       document.title = detail.title + ' - SHOP';

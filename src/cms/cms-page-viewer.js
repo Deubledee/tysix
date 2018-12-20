@@ -18,19 +18,12 @@ class cmsPageViewer extends PolymerElement {
         background-color: #eee;
       }
 
-      app-toolbar {
-        background-color: #4285f4;
-        color: #fff;
-      }
-
-      app-drawer-layout:not([narrow]) [drawer-toggle] {
-        display: none;
-      }
-
-      app-drawer {
-        --app-drawer-content-container: {
-          background-color: #B0BEC5;
-        }
+      main {
+        word-break: break-all;
+        padding: 4px;
+        position: absolute;
+        left: -65px;
+        width: 100%;
       }
 
       article {
@@ -40,12 +33,18 @@ class cmsPageViewer extends PolymerElement {
         padding: 12px;
       } 
 
-      section {
+      nav {
+        color: #8098ad;
         display: flex;
-        flex-flow: row;        
-        font-weight: bold;
-        padding: 4px;
-        height: 50px;
+        flex-flow: row;
+        padding: 10px;
+        padding-left: 21px;
+      } 
+
+      nav[top] {
+        height: 166px;
+        background-color: var(--primary-background-color);
+        box-shadow: 4px 4px 7px #989898;
       }
 
       nav[bottom] {
@@ -54,88 +53,118 @@ class cmsPageViewer extends PolymerElement {
         opacity: 0;
         transition-property: height, opacity;
         transition-duration: 1.5s, 2s;
-      }
-      
-      section div[left] {
-        flex-basis: 164px;
-        color: #448cff;
-      }
-      section div[right] {
-        flex-basis: 60%;
-        color: #616161;
-      }
-      main {
-        word-break: break-all;
-        padding: 4px;
-        padding-left: 7px;
-      }
-      section paper-button{
-        color: #7a8c94;
-        margin-left: 50px;
-      }
-      nav {
-        color: #8098ad;
-        display: flex;
-        flex-flow: row;
-        box-shadow: 2px 2px 4px #909090;
-        padding: 10px;
-        padding-left: 21px;
-      }    
-      nav div {
-        flex-basis: 120px;
-        flex-grow: 1      
-      }
+      }  
       nav paper-icon-button {
         flex-basis: 120px;      
       }
 
+      nav div {
+        flex-basis: 120px;
+        flex-grow: 1      
+      }
+
+      section {
+        display: flex;
+        flex-flow: row;        
+        font-weight: bold;
+        padding: 4px;
+        height: 50px;
+      }
+
+      section div[left] {
+        flex-basis: 164px;
+        color: #448cff;
+      }
+
+      section div[right] {
+        flex-basis: 60%;
+        color: #616161;
+      }
+
+      section paper-button{
+        color: #7a8c94;
+        margin-left: 50px;
+      }
+      
+      section[title] {
+        cursor: pointer;
+        color: #f0f0f0;
+        font-size: 35px;
+        text-align: center;
+        display: block;
+        padding: 1px;
+        height: 58px;
+        width: 140px;
+        border-radius: 10px;
+        background-color: #e1e2d8;
+        text-shadow: 1px 1px 1px var(--primary-text-color);
+      }
+      iron-icon {
+        color: #929696;
+      }
     </style>
   </custom-style>
 </head>
 <body>   
     <main>
-        <nav> 
-            <div>
-              <h1>
-                  pages
-              </h1>
-            </div>
-            <div add on-click="add">
+        <nav top> 
+          <div>
+            <section title>
               <paper-icon-button-light>
-                <paper-button title="add">
-                <h2>Add</h2>
-                </paper-button>
+                <iron-icon icon="content-copy" aria-label="Go back"></iron-icon>
               </paper-icon-button-light>
-            </div>
+                  Pages
+            </section>
+          </div>
+          <div add>
+            <section title on-click="add">
+              <paper-icon-button-light>
+                <iron-icon icon="add-circle-outline" aria-label="Go back"></iron-icon>
+              </paper-icon-button-light>
+              Add
+            </section>
+          </div>
         </nav>     
-        <dom-repeat items="[[categories]]" as="category" initial-count="4">
+        <dom-repeat items="[[categories]]" as="category">
           <template>
             <article>
-              <nav>
+              <nav value="[[index]]">
                   <div>
                     <span>  {{_getPagename(category)}} </span>
                   </div>
-                  <div on-click="showPage">
-                  <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-                  </div>                 
+                  <div>
+                    <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-edit"></paper-icon-button>
+                  </div>  
+                  <div>
+                    <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                  </div>                  
               </nav> 
-              <nav bottom>                  
-                <dom-repeat items="[[showCats(category)]]" as="cats" initial-count="4">
-                  <template>                          
-                      <section>
-                        <div left> [[cats.name]] </div>
-                        <div right> [[cats.par]]  </div>                  
-                        <paper-button on-click="edit">
-                          change
-                        </paper-button>                
-                      </section>                  
-                  </template>
-                </dom-repeat>
+              <nav bottom>       
+                <section>
+                  <div left> Page type </div>
+                  <div right> [[category.page]]  </div>    
+                  </section>  
+                  <section>
+                  <div left> Page name </div>
+                  <div right> [[category.name]]  </div>  
+                  </section>  
+                  <section>
+                  <div left> title </div>
+                  <div right> [[category.title]]  </div>     
+                  </section>  
+                  <section>           
+                  <div left> image </div>
+                  <div right> [[category.image]]  </div> 
+                  </section>  
+                  <section>
+                  <div left> placeholder </div>
+                  <div right> [[category.placeholder]]  </div>                               
+                </section>  
               </nav>
             </article>
           </template>
         </dom-repeat>
-        <cms-page-form closed="[[closed]]" categories="{{categories}}" setter="{{setter}}">
+        <cms-page-form closed="{{closed}}" categorie="[[categorie]]">
         </cms-page-form>
       </main>  
 </body>
@@ -145,12 +174,12 @@ class cmsPageViewer extends PolymerElement {
 
   static get properties() {
     return {
-      setter:{
-        type: String,
-        observer: 'set'
-      },
       categories: {
         type: Array,
+        notify: true
+      },
+      categorie: {
+        type: Object,
         notify: true
       },
       closed: {
@@ -161,7 +190,7 @@ class cmsPageViewer extends PolymerElement {
   }
 
   _getPagename(cats) {
-   // console.log(cats)
+    // console.log(cats)
     return cats.name
   }
 
@@ -170,13 +199,12 @@ class cmsPageViewer extends PolymerElement {
   }
 
   edit(event) {
-   // console.log(event, event.model.children[1].children[1], event.model.__data)
-  }
-
-  set(data){
-    this.categories = []
-    this.categories = data
-    console.log(data, 'in viwer')
+    this.type = "update"
+    let index = event.srcElement.parentElement.value
+    this.categorie = {}
+    this.categorie = this.categories[index]
+    this.closed = !this.closed
+    // console.log(index)
   }
 
   showName(cats, name) {
@@ -198,17 +226,9 @@ class cmsPageViewer extends PolymerElement {
 
   }
 
-  showCats(categories) {
-    let finalString = []
-    for (let par in categories) {
-      finalString.push({ name: par, par: categories[par] });
-    }
-    return finalString
-  }
-
   handleResponse(res) {
 
-  //  console.log(res)
+    //  console.log(res)
   }
 
 }

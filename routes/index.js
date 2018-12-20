@@ -7,9 +7,9 @@ const prpl = require('prpl-server');
     entrypoint: 'index.html',
     unregisterMissingServiceWorkers: false,
     builds: [
-      {name: '/', browserCapabilities: ['es2015', 'push']},
+    /*  {name: '/', browserCapabilities: ['es2015', 'push']},
       {name: 'esm-bundled', browserCapabilities: ['modules', 'push']},
-      {name: 'es5-bundled'}
+      {name: 'es5-bundled'}*/
     ],
   })
 );
