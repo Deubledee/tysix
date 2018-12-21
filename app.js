@@ -2,6 +2,8 @@
 const express = require('express');
 //const expressSession = require("express-session")
 const serveIndex = require('serve-index');
+const finalhandler = require('finalhandler')
+const serveStatic = require('serve-static')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -20,73 +22,82 @@ admin.initializeApp({
 const settings = { timestampsInSnapshots: true };
 
 const dB = admin.firestore()
+
 dB.settings(settings);
-// view engine setup
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(responseTime());
-//app.use('/node', express.static(path.join(__dirname, 'public/bower_components/webcomponentsjs')));
 app.use('/webcomponentsjs', express.static(path.join(__dirname, 'node_modules/@webcomponents/webcomponentsjs')));
 app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
-
-/**
- * Apply this filter function to files. Defaults to `false`. The `filter` function
-is called for each file, with the signature `filter(filename, index, files, dir)`
-where `filename` is the name of the file, `index` is the array index, `files` is
-the array of files and `dir` is the absolute path the file is located (and thus,
-the directory the listing is for).
- */
-
-app.use('/artcleimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
-app.use('/pageimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
-//firebase admin
+app.use('/articleimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
+app.use('/pageimagedir', express.static('/images'), serveIndex(__dirname + '/images'))
 app.use('/', index);
 
+//firebase admin
 app.post('/admin', (req, res) => {
-  resolveUsersdb(req.query, data => {
-    let admin = data.admin.booleanValue
-    if (admin === true) {
-      resolveUsers(res, req.query, admin)
-    } else {
-      res.send({ error: 'not Admin' })
-    }
-  })
-})
-
-app.post('/update', (req, res) => {
-  // getUserDoc(query)
-  updateUsers(res, req.query.obj)
-})
-
-app.post('/create', (req, res) => {
-  //getUserDoc(query)
-  createUsers(res, req.query.obj)
-})
-
-function resolveUsersdb(query, call) {
-  let userRef = dB.collection('users')
-  var queryRef = userRef.where('uid', '==', query.uid);
-  queryRef.get().then((items) => {
-    items.forEach(r => {
-      call(r._fieldsProto)
+  checkAdmin(req.query).then((items) => {
+    items.forEach(user => {
+      let admin = user.data().role
+      if (admin === 'admin') {
+        resolveUsers(res, admin)
+      } else {
+        res.send({ error: 'not Admin', admin })
+        console.log(data)
+      }
     });
   }).catch((error) => {
     console.log(error);
   })
-  res.send('parsed')
+})
 
+app.post('/update', (req, res) => {
+  checkAdmin(req.query).then((items) => {
+    items.forEach(user => {
+      let admin = user.data().role
+      if (admin === 'admin') {
+        updateUsers(res, req.query, admin)
+      } else {
+        res.send({ error: 'not Admin', admin })
+        console.log(data)
+      }
+    });
+  }).catch((error) => {
+    console.log(error);
+  })
+})
+
+app.post('/create', (req, res) => {
+  checkAdmin(req.query).then((items) => {
+    items.forEach(user => {
+      let admin = user.data().role
+      if (admin === 'admin') {
+        createUsers(res, req.query.obj, admin)
+      } else {
+        res.send({ error: 'not Admin', admin })
+        console.log(data)
+      }
+    });
+  }).catch((error) => {
+    console.log(error);
+  })
+})
+
+function checkAdmin(query) {
+  let userRef = dB.collection('users')
+  var queryRef = userRef.where('uid', '==', query.uid);
+  return queryRef.get()
 }
 
-function resolveUsers(res, query, accepted, nextPageToken) {
+function resolveUsers(res, accepted, nextPageToken) {
   admin.auth().listUsers(1, nextPageToken)
     .then(function (listUsersResult) {
       listUsersResult.users.forEach(function (userRecord) {
         let obj = { accepted: accepted, data: userRecord }
-        res.send(obj)
+        res.status(200).send(obj)
       });
       if (listUsersResult.pageToken) {
         // List next batch of users.
@@ -96,13 +107,14 @@ function resolveUsers(res, query, accepted, nextPageToken) {
       console.log("Error listing users:", error);
     });
 }
-function createUsers(res, obj) {
+
+function createUsers(res, obj, accepted) {
   let parse = JSON.parse(obj)
   let uid = parse.uid
   admin.auth().createUser(uid, parse)
     .then(function (userRecord) {
-      // See the UserRecord reference doc for the contents of userRecord.
-      res.send(userRecord.toJSON())
+      let obj2 = { accepted: accepted, data: userRecord }
+      res.status(200).send(obj2)
       console.info("Successfully updated user");
     })
     .catch(function (error) {
@@ -111,16 +123,16 @@ function createUsers(res, obj) {
     });
 }
 
-function updateUsers(res, obj) {
-  let parse = JSON.parse(obj)
-  let uid = parse.uid
+function updateUsers(res, query, accepted) {
+  let parse = JSON.parse(query.obj)
+  let uid = query.uid
   // var docRef = db.collection('users').doc(uid).set(obj);
-  console.info("Successfull updated request");
+  console.info("Successfull update request");
   admin.auth().updateUser(uid, parse)
     .then(function (userRecord) {
-      // See the UserRecord reference doc for the contents of userRecord.
-      res.send(userRecord.toJSON())
-      console.info("Successfully updated user", userRecord.toJSON());
+      let obj2 = { accepted: accepted, data: userRecord }
+      res.status(200).send(obj2)
+      console.info("Successfully updated user");
     })
     .catch(function (error) {
       res.send({ "error": error })

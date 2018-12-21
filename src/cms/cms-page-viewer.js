@@ -133,7 +133,7 @@ class cmsPageViewer extends PolymerElement {
                     <span>  {{_getPagename(category)}} </span>
                   </div>
                   <div>
-                    <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-edit"></paper-icon-button>
+                    <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
                   </div>  
                   <div>
                     <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
@@ -164,7 +164,7 @@ class cmsPageViewer extends PolymerElement {
             </article>
           </template>
         </dom-repeat>
-        <cms-page-form closed="{{closed}}" categorie="[[categorie]]">
+        <cms-page-form closed="{{closed}}" categorie="{{categorie}}">
         </cms-page-form>
       </main>  
 </body>
@@ -199,12 +199,10 @@ class cmsPageViewer extends PolymerElement {
   }
 
   edit(event) {
-    this.type = "update"
-    let index = event.srcElement.parentElement.value
-    this.categorie = {}
+    let index = event.srcElement.parentElement.parentElement.value
     this.categorie = this.categories[index]
     this.closed = !this.closed
-    // console.log(index)
+
   }
 
   showName(cats, name) {

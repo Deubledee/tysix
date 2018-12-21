@@ -81,9 +81,10 @@ class cmsPageForm extends PolymerElement {
                     type: Boolean,
                     notify: true
                },
-               categories: {
-                    type: Array,
-                    notify: true
+               categorie: {
+                    type: Object,
+                    notify: true,
+                    observer: 'set'
                },
                setter: {
                     type: Array,
@@ -144,6 +145,14 @@ class cmsPageForm extends PolymerElement {
                // console.log(items)
                this.createURL(items)
           })
+     }
+     set(data) {
+          console.log(data)
+          this.pageName = data.name || 'N/a'
+          this.type = data.title || 'N/a'
+          this.title = data.title || 'N/a'
+          this.image = data.image || 'N/a'
+          this.placeholder = data.placeholder || 'N/a'
      }
 
      setValues() {

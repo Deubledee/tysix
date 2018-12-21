@@ -214,7 +214,8 @@ class cmsUserViewer extends PolymerElement {
       console.log(event)
     })
     window.addEventListener('user-updated', event => {
-      console.log(event)
+      console.log('user-updated', event)
+      this.updatUsers(event.detail)
     })
     window.addEventListener('user-list', event => {
       this.categories = {}
@@ -242,8 +243,8 @@ class cmsUserViewer extends PolymerElement {
 
   requestHandler(event) {
     if (event.length > 0) {
-      console.log('just shit on your soup')
-      window.dispatchEvent(new CustomEvent('user-changed', { detail: event[0] }));
+      //console.log('just shit on your soup', event.pop())
+      window.dispatchEvent(new CustomEvent('user-changed', { detail: event.pop() }));
     }
   }
 

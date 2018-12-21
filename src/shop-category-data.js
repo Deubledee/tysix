@@ -2,49 +2,45 @@ import { PolymerElement } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
 
-/*
-function fsd(urlo, call) {
-  let url = urlo, json = [], str = ''
-  let xhr = new XMLHttpRequest();
-  xhr.addEventListener('load', onLoad.bind(this))
-  xhr.addEventListener('error', onError);
-  xhr.open('GET', url);
-  xhr.send();
-  function onLoad(e) {
-    json.push(JSON.parse(e.target.responseText))
-    str = json[0]
-    call(str)
-    // console.log(str, this.categories)
-  }
-  function onError(e) {
-    console.log(e)
-  }
-}
-
-function getFirebaseContent(url) {
-  fsd(url, config => {
-    firebase.initializeApp(config.pop());
-  })
-}*/
 
 var db = {}
+db = firebase.firestore();
 var categories = []
-
-function getDb(table) {
-  db.collection(table.name).get().then(function (querySnapshot) {
-    // console.log(querySnapshot)
+var lang = navigator.language.split('-')[0]
+function getLang(data) {
+  let obj = { name: 'pages', query: data }
+  categories = []
+  getDocList(obj).then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
-      categories.push(doc.data())
-      // console.log(doc.id, " => ", doc.data());
+      categories.push(doc.data()[obj.query])
     });
   });
 }
-
+getLang(lang)
+function getDocList(table) {
+  var categoriesRef = db.collection(table.name);
+  return categoriesRef.get()
+  /* .then((querySnapshot) => {
+   querySnapshot.forEach((doc) => {
+     categories.push(doc.data()[table.query])
+   });
+ });*/
+}
+function getDoc(table) {
+  var categoriesRef = db.collection(table.name).doc(table.doc);
+  return categoriesRef.get()
+  /* .then((querySnapshot) => {
+   querySnapshot.forEach((doc) => {
+     categories.push(doc.data()[table.query])
+   });
+ });*/
+}
 //setTimeout(() => {
-db = firebase.firestore();
-let obj = { name: 'pages' }
-getDb(obj)
 
+/*
+let obj = { name: 'pages', query: lang }
+getDocList(obj)
+*/
 //}, 10)
 
 
@@ -59,12 +55,16 @@ class ShopCategoryData extends PolymerElement {
       itemName: String,
       categories: {
         type: Array,
-        notify: true
-        // observer: 'log'
+        notify: true,
+        value: categories
       },
       firebase: {
         type: Object,
         value: firebase
+      },
+      lang: {
+        type: String,
+        value: lang
       },
       db: {
         type: Object
@@ -106,8 +106,10 @@ class ShopCategoryData extends PolymerElement {
 
   ready() {
     super.ready();
+    let cats = this.categories
+    this.categories = ''
     setTimeout(() => {
-      this.categories = categories
+      this.categories = cats
     }, 1000)
     window.addEventListener('category-added', (evt) => {
       let bool
@@ -136,12 +138,14 @@ class ShopCategoryData extends PolymerElement {
 
   }
 
-  handleResponse(data) {
-    var sfDocRef = db.collection("cities").doc("SF");
+  getLang(data) {
+    getLang(data)
+  }
 
+  handleResponse(data) {
+    var sfDocRef = db.collection("usres").doc();
     // Uncomment to initialize the doc.
     // sfDocRef.set({ population: 0 });
-
     return db.runTransaction(function (transaction) {
       // This code may get re-run multiple times if there are conflicts.
       return transaction.get(sfDocRef).then(function (sfDoc) {
@@ -149,8 +153,7 @@ class ShopCategoryData extends PolymerElement {
           throw "Document does not exist!";
         }
 
-        var newPopulation = sfDoc.data().population + 1;
-        transaction.update(sfDocRef, { population: newPopulation });
+        var newPopulation = sfDoc.data()
       });
     }).then(function () {
       console.log("Transaction successfully committed!");
@@ -160,7 +163,6 @@ class ShopCategoryData extends PolymerElement {
   }
 
   _getCategoryObject(categoryName) {
-    console.log(categoryName, 'set')
     if (this.categories !== undefined) {
       for (let i = 0, c; c = this.categories[i]; ++i) {
         if (c.name === categoryName) {
@@ -170,12 +172,16 @@ class ShopCategoryData extends PolymerElement {
     }
   }
   _computeCategory(categoryName) {
-    // Fetch the items of the category. Note that the fetch is asynchronous,
-    // which means `category.items` may not be set initially (but that path
-    // will be notified when the fetch completes).
-    let categoryObj = this._getCategoryObject(categoryName);
-    this._fetchItems(categoryObj, 1);
-    return categoryObj;
+    if (this.categories.length > 0) {
+      let categoryObj = this._getCategoryObject(categoryName);
+      if (categoryObj !== undefined) {
+        let obj = { name: 'articles', doc: categoryObj.id }
+        getDoc(obj).then((querySnapshot) => {
+          this.set('category.items', querySnapshot.data()[this.lang]);
+        });
+      }
+      return categoryObj;
+    }
   }
 
   _computeItem(items, itemName) {
@@ -189,53 +195,11 @@ class ShopCategoryData extends PolymerElement {
     }
   }
 
-  _fetchItems(category, attempts) {
-    this._setFailure(false);
-    // Only fetch the items of a category if it has not been previously set.
-    if (!category || category.items) {
-      return;
-    }
-    this._getResource({
-      url: 'data/' + category.name + '.json',
-      onLoad(e) {
-        this.set('category.items', JSON.parse(e.target.responseText));
-        obj = JSON.parse(e.target.responseText)
-
-        let table = {
-          name: "articles",
-          docName: category.name,
-          doc: { 'conteudo': obj }
-        }
-
-        // this.fillDbDocs(table) 
-      },
-      onError(e) {
-        this._setFailure(true);
-      }
-    }, attempts);
-  }
-
-  _getResource(rq, attempts) {
-    let xhr = new XMLHttpRequest();
-    xhr.addEventListener('load', rq.onLoad.bind(this));
-    xhr.addEventListener('error', (e) => {
-      // Flaky connections might fail fetching resources
-      if (attempts > 1) {
-        this._getResourceDebouncer = Debouncer.debounce(this._getResourceDebouncer,
-          timeOut.after(200), this._getResource.bind(this, rq, attempts - 1));
-      } else {
-        rq.onError.call(this, e);
-      }
-    });
-
-    xhr.open('GET', rq.url);
-    xhr.send();
-  }
-
   refresh() {
     if (this.categoryName) {
       // Try at most 3 times to get the items.
-      this._fetchItems(this._getCategoryObject(this.categoryName), 3);
+      // this._fetchItems(this._getCategoryObject(this.categoryName), 3);
+      this._computeCategory(this.categoryName)
     }
   }
 

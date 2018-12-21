@@ -16,7 +16,7 @@ class cmsImageViwer extends PolymerElement {
         flex-flow: column;        
         background-color: aliceblue;
         position: fixed;
-        top: 149px;
+        top: 44px;
         width: 77%;
         height: 0px;
         padding: 5px;
@@ -26,7 +26,7 @@ class cmsImageViwer extends PolymerElement {
       }
 
       main[closed] {
-        height: 530px;
+        height: 76%;
         visibility: visible;
         transition-property: height, visibility;
         transition-duration: 2s, .5s;
@@ -70,16 +70,18 @@ class cmsImageViwer extends PolymerElement {
           cursor: pointer
       }
       section {
-        width: 177px;
         display: block;
         padding: 10px;
         box-shadow: 0px 1px 3px grey;
         margin-left: auto;
         margin-right: auto;
-        background-color: transparent;
+        background-color: #ececec;
         margin-bottom: 2px;
-        width: 99%;
+        width: 23%;
       } 
+      paper-button {
+        background-color: var(--light-theme-divider-color);
+      }
       article {
         overflow: auto;
         box-shadow: 6px 6px 8px #aea9a9;

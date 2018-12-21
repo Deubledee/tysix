@@ -135,7 +135,13 @@ class cmsUserForm extends PolymerElement {
             }
         }
     }
-
+    ready() {
+        super.ready()
+        window.addEventListener('article-images', event => {
+            //console.log('article-images', event.detail)
+            this.createURL(event.detail)
+        })
+    }
 
     createURL(items) {
         let arr = new Array()
@@ -149,10 +155,7 @@ class cmsUserForm extends PolymerElement {
     }
 
     file() {
-        fsd("http://localhost:3000/imagedir", items => {
-            // console.log(items)
-            this.createURL(items)
-        })
+        window.dispatchEvent(new CustomEvent('ask-article-images'))
     }
 
     setUserData(data) {

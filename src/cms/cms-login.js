@@ -189,17 +189,34 @@ class cmsLogin extends PolymerElement {
                     // No user is signed in.
                }
           });
+          window.addEventListener('ask-article-images', (event) => {
+               let user = firebase.auth().currentUser
+               let string = `http://localhost:3000/articleimagedir?uid=${user.uid}`
+               fsd(string, items => {
+                    //console.log(items)
+                    window.dispatchEvent(new CustomEvent('article-images', {
+                         detail: items
+                    }));
+               }, 'GET')
+          })
           window.addEventListener('user-changed', (event) => {
                let user = firebase.auth().currentUser
-               let string = `http://localhost:3000/update?obj=${JSON.stringify(event[0])}&uid=${user.uid}`
+               let string = `http://localhost:3000/update?obj=${JSON.stringify(event.detail)}&uid=${user.uid}`
+               console.log(event.detail, string)
                fsd(string, items => {
-                    console.log('update sucssessfull')
+                    console.log('update sucssessfull', JSON.parse(items))
+                    let content = JSON.parse(items)
+                    if (content.accepted === 'admin') {
+                         window.dispatchEvent(new CustomEvent('user-updated', {
+                              detail: this
+                                   .removeSensitiveData(JSON.parse(items))
+                         }))
 
-                    window.dispatchEvent(new CustomEvent('user-updated', {
-                         detail: this
-                              .removeSensitiveData(JSON
-                                   .parse(items)).pop()
-                    }));
+                    } else {
+                         window.dispatchEvent(new CustomEvent('app-error', {
+                              detail: content.error
+                         }));
+                    }
                }, 'POST')
           })
           window.addEventListener('ask-for-users', (event) => {
@@ -210,8 +227,7 @@ class cmsLogin extends PolymerElement {
                }
                fsd(string, items => {
                     let content = JSON.parse(items)
-                    console.log(content)
-                    if (content.accepted === true) {
+                    if (content.accepted === 'admin') {
                          window.dispatchEvent(new CustomEvent('user-list', {
                               detail: this.removeSensitiveData(content.data)
                          }));
