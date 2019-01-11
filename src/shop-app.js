@@ -19,7 +19,8 @@ import './shop-list.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-
+import './cms/cms-login.js';
+import { dataBaseworker } from './cms/dataBaseWorker.js';
 // performance logging
 window.performance && performance.mark && performance.mark('shop-app - before register');
 
@@ -27,7 +28,6 @@ class ShopApp extends PolymerElement {
   static get template() {
     return html`
     <style>
-
       :host {
         display: block;
         position: relative;
@@ -247,7 +247,7 @@ class ShopApp extends PolymerElement {
     <!--
       shop-category-data provides the list of categories.
     -->
-    <shop-category-data categories="{{categories}}"></shop-category-data>
+    <shop-category-data categories="{{categories}}" DBW="[[DBW]]" lang="{{lang}}"></shop-category-data>
 
     <!--
       shop-cart-data maintains the state of the user's shopping cart (in localstorage) and
@@ -331,23 +331,24 @@ class ShopApp extends PolymerElement {
     </dom-if>
 
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
-      <!-- home view -->
-      <cms-controler route="[[route]]" name="admin" categories="{{categories}}"></cms-controler>
+        <!-- home view -->
+        <shop-home name="home" categories="[[categories]]"></shop-home>
+        <!-- list view of items in a category -->
+        <shop-list name="list" route="[[subroute]]" offline="[[offline]]"></shop-list>
+        <!-- detail view of one item -->
+        <shop-detail name="detail" route="[[subroute]]" offline="[[offline]]"></shop-detail>
+        <!-- cart view -->
+        <shop-cart name="cart" cart="[[cart]]" total="[[total]]"></shop-cart>
+        <!-- checkout view -->
+        <shop-checkout name="checkout" cart="[[cart]]" total="[[total]]" route="{{subroute}}"></shop-checkout>
+        <cms-login name="admin" user="{{user}}" DBW="[[DBW]]">
+          <cms-controler slot="app" route="[[route]]" categories="{{categories}}" DBW="[[DBW]]" lang=[[lang]]></cms-controler>
+        </cms-login>
 
-      <shop-home name="home" categories="[[categories]]"></shop-home>
-      <!-- list view of items in a category -->
-      <shop-list name="list" route="[[subroute]]" offline="[[offline]]"></shop-list>
-      <!-- detail view of one item -->
-      <shop-detail name="detail" route="[[subroute]]" offline="[[offline]]"></shop-detail>
-      <!-- cart view -->
-      <shop-cart name="cart" cart="[[cart]]" total="[[total]]"></shop-cart>
-      <!-- checkout view -->
-      <shop-checkout name="checkout" cart="[[cart]]" total="[[total]]" route="{{subroute}}"></shop-checkout>
-
-      <shop-404-warning name="404"></shop-404-warning>
+        <shop-404-warning name="404"></shop-404-warning>
     </iron-pages>
 
-    <footer>
+    <footer id="footer">
       <a href="https://github.com/Deubledee">Made by Deubledee</a>
       <div class="demo-label">Development</div>
     </footer>
@@ -361,10 +362,26 @@ class ShopApp extends PolymerElement {
 
   static get properties() {
     return {
+      DBW: {
+        type: Object,
+        value: function () {
+          return new dataBaseworker()
+        },
+        notify: true
+      },
+      lang: {
+        type: String,
+        notify: true
+        // value: lang
+      },
       page: {
         type: String,
         reflectToAttribute: true,
         observer: '_pageChanged'
+      },
+      user: {
+        type: Object,
+        notify: true
       },
       categoryPage: {
         type: String,
@@ -372,14 +389,6 @@ class ShopApp extends PolymerElement {
       },
       categories: {
         type: Array,
-        notify: true
-      },
-      /*categoriesArray: {
-        type: Array,
-        observer: 'getitright'
-      },*/
-      user: {
-        type: Object,
         notify: true
       },
       numItems: {
@@ -455,8 +464,10 @@ class ShopApp extends PolymerElement {
     this._listScrollTop = window.pageYOffset;
     if (page === 'admin') {
       this.$.toolbar.style.display = "none"
+      this.$.footer.style.display = "none"
     } else {
       this.$.toolbar.style.display = "var(--layout-horizontal_-_display)"
+      this.$.footer.style.display = "initial"
     }
 
     this.page = page || 'home';
@@ -481,7 +492,7 @@ class ShopApp extends PolymerElement {
           import('./shop-checkout.js').then(cb);
           break;
         case 'admin':
-          import('./cms/cms-controler.js').then(cb);
+          import('./cms/cms-login.js').then(cb);
           break;
         default:
           this._pageLoaded(Boolean(oldPage));
@@ -550,7 +561,6 @@ class ShopApp extends PolymerElement {
   // Response by a11y announcing the section and syncronizing the category.
   _onChangeSection(event) {
     let detail = event.detail;
-    console.log(detail)
     // Scroll to the top of the page when navigating to a non-list page. For list view,
     // scroll to the last saved position only if the category has not changed.
     let scrollTop = 0;

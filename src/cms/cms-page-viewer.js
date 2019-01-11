@@ -1,5 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
+import { scroll } from '@polymer/app-layout/helpers/helpers.js';
+import { dataBaseworker } from './dataBaseWorker.js';
 import './cms-page-form.js';
 
 class cmsPageViewer extends PolymerElement {
@@ -8,22 +10,13 @@ class cmsPageViewer extends PolymerElement {
     <custom-style>
     <style is="custom-style">
 
-      html {
-        --app-drawer-width: 350px;
-      }
-
-      body {
-        margin: 0;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        background-color: #eee;
-      }
-
-      main {
-        word-break: break-all;
-        padding: 4px;
-        position: absolute;
-        left: -65px;
-        width: 100%;
+           main {
+            word-break: break-all;
+            padding: 4px;
+            position: absolute;
+            left: -42px;
+            top: 52px;
+            width: 100%;
       }
 
       article {
@@ -42,6 +35,9 @@ class cmsPageViewer extends PolymerElement {
       } 
 
       nav[top] {
+        position: relative;
+        top: 33px;
+        margin-bottom: 60px;
         height: 166px;
         background-color: var(--primary-background-color);
         box-shadow: 4px 4px 7px #989898;
@@ -102,16 +98,18 @@ class cmsPageViewer extends PolymerElement {
       iron-icon {
         color: #929696;
       }
+
+      div[center]{        
+        text-align: center;
+      }
     </style>
-  </custom-style>
-</head>
-<body>   
+  </custom-style>  
     <main>
         <nav top> 
           <div>
             <section title>
               <paper-icon-button-light>
-                <iron-icon icon="content-copy" aria-label="Go back"></iron-icon>
+                <iron-icon icon="av:library-books" aria-label="Go back"></iron-icon>
               </paper-icon-button-light>
                   Pages
             </section>
@@ -119,7 +117,7 @@ class cmsPageViewer extends PolymerElement {
           <div add>
             <section title on-click="add">
               <paper-icon-button-light>
-                <iron-icon icon="add-circle-outline" aria-label="Go back"></iron-icon>
+                <iron-icon icon="av:library-add" aria-label="Go back"></iron-icon>
               </paper-icon-button-light>
               Add
             </section>
@@ -132,11 +130,14 @@ class cmsPageViewer extends PolymerElement {
                   <div>
                     <span>  {{_getPagename(category)}} </span>
                   </div>
-                  <div>
+                  <div center>
                     <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
                   </div>  
-                  <div>
+                  <div center>
                     <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                  </div>   
+                  <div center>
+                    <paper-icon-button on-click="delete" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
                   </div>                  
               </nav> 
               <nav bottom>       
@@ -164,45 +165,106 @@ class cmsPageViewer extends PolymerElement {
             </article>
           </template>
         </dom-repeat>
-        <cms-page-form closed="{{closed}}" categorie="{{categorie}}">
+        <cms-page-form id="form" closed="{{closed}}" categorie="{{categorie}}" setter="{{setter}}" >
         </cms-page-form>
       </main>  
-</body>
 `
   }
   static get is() { return 'cms-page-viewer'; }
 
   static get properties() {
     return {
+      DBW: {
+        type: Object,
+        value: function () {
+          return new dataBaseworker()
+        },
+      },
+      lang: {
+        type: String,
+        notify: true
+        // value: lang
+      },
       categories: {
         type: Array,
-        notify: true
+        notify: true,
       },
       categorie: {
         type: Object,
         notify: true
       },
+      setter: {
+        type: String,
+        notify: true,
+        observer: 'resetCollor'
+      },
       closed: {
         type: Boolean,
         notify: true,
       },
+      lastChosen: {
+        type: Array,
+        value: new Array()
+      }
     }
   }
 
+  log(data) {
+    console.log(data)
+  }
+
+  ready() {
+    super.ready();
+    this.AskPages()
+  }
+
+  AskPages() {
+    this.DBW.askAllPages((done) => {
+      this.categories = []
+      this.categories = done
+      scroll({ top: 0, behavior: 'smooth' });
+    }, { name: 'pages' })
+  }
+
   _getPagename(cats) {
-    // console.log(cats)
     return cats.name
   }
 
-  add(event) {
+  add() {
     this.closed = !this.closed
+    this.$.form.edit = false
+    this.$.form.reset({})
+  }
+
+  resetCollor(data) {
+    console.log(data)
+    if (data === 'true' || data === 'newPage') {
+      this.lastChosen[0].style.color = "rgb(128, 152, 173)"
+      this.lastChosen = []
+      this.setter = false
+    }
+    if (data === 'newPage') {
+      this.AskPages()
+    }
+  }
+
+  setLastChosen(elem) {
+    let arr = new Array()
+    arr.push(elem)
+    this.lastChosen = arr
+    elem.style.color = "var(--google-blue-700)"
   }
 
   edit(event) {
-    let index = event.srcElement.parentElement.parentElement.value
-    this.categorie = this.categories[index]
-    this.closed = !this.closed
-
+    if (this.lastChosen.length < 1) {
+      scroll({ top: 200, behavior: 'smooth' });
+      scroll({ bottom: 220, behavior: 'smooth' });
+      let index = event.srcElement.parentElement.parentElement.value, arr = new Array()
+      this.categorie = this.categories[index]
+      this.closed = !this.closed
+      this.$.form.edit = true
+      this.setLastChosen(event.srcElement)
+    }
   }
 
   showName(cats, name) {
@@ -210,25 +272,19 @@ class cmsPageViewer extends PolymerElement {
   }
 
   showPage(event) {
-    console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
     if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "435px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
+      this.setLastChosen(event.srcElement)
     } else {
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "0px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "0"
       event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
+      this.resetCollor('true')
     }
-
   }
-
-  handleResponse(res) {
-
-    //  console.log(res)
-  }
-
 }
 
 customElements.define(cmsPageViewer.is, cmsPageViewer);

@@ -197,34 +197,39 @@ class ShopDetail extends PolymerElement {
 
   static get is() { return 'shop-detail'; }
 
-  static get properties() { return {
+  static get properties() {
+    return {
 
-    item: Object,
+      item: Object,
 
-    route: Object,
+      route: Object,
 
-    routeData: Object,
+      routeData: Object,
 
-    visible: {
-      type: Boolean,
-      value: false
-    },
+      visible: {
+        type: Boolean,
+        value: false
+      },
 
-    offline: {
-      type: Boolean,
-      observer: '_offlineChanged'
-    },
+      offline: {
+        type: Boolean,
+        observer: '_offlineChanged'
+      },
 
-    failure: Boolean
+      failure: Boolean
 
-  }}
+    }
+  }
 
-  static get observers() { return [
-    '_itemChanged(item, visible)'
-  ]}
+  static get observers() {
+    return [
+      '_itemChanged(item, visible)'
+    ]
+  }
 
   _itemChanged(item, visible) {
     if (visible) {
+      this.failure = false
       this._itemChangeDebouncer = Debouncer.debounce(this._itemChangeDebouncer,
         microTask, () => {
           // The item description contains escaped HTML (e.g. "&lt;br&gt;"), so we need to
@@ -243,7 +248,8 @@ class ShopDetail extends PolymerElement {
               title: item ? item.title : '',
               description: item ? item.description.substring(0, 100) : '',
               image: item ? this.baseURI + item.image : ''
-            }}));
+            }
+          }));
         })
     }
   }
@@ -255,7 +261,11 @@ class ShopDetail extends PolymerElement {
   }
 
   _formatPrice(price) {
-    return price ? '$' + price.toFixed(2) : '';
+    let pric = parseInt(price), props = {
+      style: "currency",
+      currency: "EUR"
+    };
+    return pric.toLocaleString("pt", props);;
   }
 
   _addToCart() {
@@ -265,7 +275,8 @@ class ShopDetail extends PolymerElement {
         item: this.item,
         quantity: parseInt(this.$.quantitySelect.value, 10),
         size: this.$.sizeSelect.value
-      }}));
+      }
+    }));
   }
 
   _isDefined(item) {

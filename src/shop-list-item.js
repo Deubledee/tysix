@@ -48,14 +48,20 @@ class ShopListItem extends PolymerElement {
 
   static get is() { return 'shop-list-item'; }
 
-  static get properties() { return {
+  static get properties() {
+    return {
 
-    item: Object
+      item: Object
 
-  }}
+    }
+  }
 
   _formatPrice(price) {
-    return price ? '$' + price.toFixed(2) : '';
+    let pric = parseInt(price), props = {
+      style: "currency",
+      currency: "EUR"
+    };
+    return pric.toLocaleString("pt", props);;
   }
 }
 

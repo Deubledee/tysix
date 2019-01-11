@@ -1,26 +1,23 @@
 //express\\
 const express = require('express');
-//const expressSession = require("express-session")
-const serveIndex = require('serve-index');
-const finalhandler = require('finalhandler')
-const serveStatic = require('serve-static')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const app = express();
+let fs = require('fs');
 const responseTime = require('response-time')
 const cors = require('cors');
 const index = require('./routes/index');
-
 //firebase\\;
+const formidable = require('formidable');
 const admin = require("firebase-admin");
+const util = require('util');
 const serviceAccount = require("./routes/tysix-75b86-firebase-adminsdk-8yguk-63709f70f1.js");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://tysix-75b86.firebaseio.com"
 });
 const settings = { timestampsInSnapshots: true };
-
 const dB = admin.firestore()
 
 dB.settings(settings);
@@ -33,10 +30,9 @@ app.use('/webcomponentsjs', express.static(path.join(__dirname, 'node_modules/@w
 app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
-app.use('/articleimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
-app.use('/pageimagedir', express.static('/images'), serveIndex(__dirname + '/images'))
+/*app.use('/articleimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
+app.use('/pageimagedir', express.static('/images'), serveIndex(__dirname + '/images'))*/
 app.use('/', index);
-
 //firebase admin
 app.post('/admin', (req, res) => {
   checkAdmin(req.query).then((items) => {
@@ -46,12 +42,68 @@ app.post('/admin', (req, res) => {
         resolveUsers(res, admin)
       } else {
         res.send({ error: 'not Admin', admin })
-        console.log(data)
+        util.log(data)
       }
     });
   }).catch((error) => {
-    console.log(error);
+    util.log(error);
   })
+})
+let workingDirectory = process.cwd();
+
+function checkDirectory(directory, callback) {
+  fs.stat(directory, function (err, stats) {
+    if (stats === undefined) {
+      fs.mkdir(directory, callback);
+    } else {
+      callback('exists')
+    }
+  });
+}
+
+function writeData(req, res, fields, files, next) {
+  next()
+  let directory = path.join(workingDirectory, 'data', fields.gallerie)
+  checkDirectory(directory, item => {
+    let inStream = fs.createReadStream(files.filepond.path);
+    let outStream = fs.createWriteStream(path.join(workingDirectory, 'data', fields.gallerie, files.filepond.name));
+    inStream.pipe(outStream);
+    inStream.on('end', function () {
+      fs.unlinkSync(files.filepond.path);
+    });
+    inStream.on('error', function (err) {
+      if (err) {
+        util.log("move file error: " + err.toString());
+        res.statusCode = 400;
+        return;
+      }
+    });
+    res.write('Received Upload')
+    res.end();
+    next()
+  })
+}
+
+let uploadHandler = function (req, res, next) {
+  let form = new formidable.IncomingForm();
+  form.multiples = true
+  form.parse(req, function (err, fields, files) {
+    if (err) {
+      util.log("upload error: " + err.toString());
+      res.statusCode = 400;
+      return;
+    }
+    writeData(req, res, fields, files, next)
+  });
+  form.on('progress', function (bytesReceived, bytesExpected) {
+    util.log(bytesReceived, bytesExpected);
+  });
+  return;
+}
+
+app.post('/images', (req, res, next) => {
+  res.writeHead(200, { 'content-type': 'text/plain' });
+  uploadHandler(req, res, next)
 })
 
 app.post('/update', (req, res) => {
@@ -88,7 +140,7 @@ app.post('/create', (req, res) => {
 
 function checkAdmin(query) {
   let userRef = dB.collection('users')
-  var queryRef = userRef.where('uid', '==', query.uid);
+  let queryRef = userRef.where('uid', '==', query.uid);
   return queryRef.get()
 }
 
@@ -126,7 +178,7 @@ function createUsers(res, obj, accepted) {
 function updateUsers(res, query, accepted) {
   let parse = JSON.parse(query.obj)
   let uid = query.uid
-  // var docRef = db.collection('users').doc(uid).set(obj);
+  // let docRef = db.collection('users').doc(uid).set(obj);
   console.info("Successfull update request");
   admin.auth().updateUser(uid, parse)
     .then(function (userRecord) {

@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
+import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/iron-icon/iron-icon.js';
@@ -9,13 +10,14 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import './cms-input-sellector.js';
-
+import './cms-image-viewer.js';
+import '../shop-image.js';
+import { dataBaseworker } from './dataBaseWorker.js';
 class cmsPageForm extends PolymerElement {
      static get template() {
           return html`
-    <custom-style>
-    <style is="custom-style">
-          main {
+    <style>
+       /*   main {
                background-color: aliceblue;
                position: fixed;
                top: 149px;
@@ -24,49 +26,112 @@ class cmsPageForm extends PolymerElement {
                padding: 5px;
                visibility: collapse;
                transition-property: height, visibility;
+               transition-delay: .5s, 0s;
                transition-duration: 2s, 1s;
-          }
+          }*/
 
           main[closed] {
-               height: 530px;
+               height: 584px;
                visibility: visible;
                transition-property: height, visibility;
+               /*transition-delay: .5s, 0s;*/
                transition-duration: 2s, .5s;
           }
-      
-    </style>
-  </custom-style>
-</head>
-<body>   
+          main {
+               display: flex;
+               flex-flow: column;
+              /* overflow: auto;*/
+               background-color: aliceblue;
+               position: absolute;
+               top: 196px;
+               width: 99%;
+               /* width: 77%; */
+               height: 0px;
+               padding: 5px;
+               visibility: collapse;
+               transition-property: height, visibility;
+               transition-duration: 2s, 1s;
+             }
+
+             img {
+               width: 190px
+           }
+           
+           nav {
+               display: flex;
+               flex-flow: row
+           }
+           shop-image::before {
+               content: "";
+               display: block;
+               padding-top: 100%;
+             }
+           div[images] {
+               box-sizing: border-box;
+               padding: 13px;
+               margin-top: 34px;
+               background-color: #ececec;
+               margin-bottom: 2px;
+               width: 100px;
+               height: 60px;
+               margin-right: 5px;
+           }
+           paper-button {
+               background-color: var(--google-blue-100)
+             }
+             div [button]{
+               background-color: var(--google-grey-300)
+             }
+             cms-image-viewer.diferent{
+               --main-style:{
+                 position: relative;
+                 margin-left: 0px;
+               }
+             }
+             </style>
      <main closed$="[[closed]]">
-          <cms-input-sellector options="[[pageTypes]]" value="{{type}}">          
-          </cms-input-sellector>
+          <cms-input-sellector id="sellector1"  options="[[pageTypes]]" value="{{type}}">          
+          </cms-input-sellector>          
           <paper-input always-float-label label="Page Name" value="{{pageName}}"></paper-input>
           <paper-input always-float-label label="title" value="{{title}}"></paper-input>
-          <paper-input always-float-label label="image" value="{{image}}"></paper-input>
-          <paper-input always-float-label label="placeholder" value="{{placeholder}}"></paper-input>
+          <paper-input always-float-label label="Language" placeholder="Ex: pt, en, es, fr" value="{{lang}}"></paper-input>
+          <div button>
+               <paper-button id="art" class="diferent" on-click="file">          
+                    choose image
+               </paper-button>
+          </div>   
+          <shop-image src="[[image.url]]" alt="[[image.title]]"></shop-image>  
+          <!--paper-input always-float-label label="image" value="{{image}}"></paper-input-->          
           <div>
                <cms-input-sellector options="[[layouts]]" value="{{layout}}">          
                </cms-input-sellector>
           <div>
           <nav>
-               <paper-button on-click="clean">
-                    cancel
-               </paper-button>
-
-               <paper-button on-click="setValues">
-                    Save
-               </paper-button>
-           <nav>
-     </main>  
-     <cms-image-viwer closed="{{openViewer}}" images="[[images]]" image="{{photoURL}}"></cms-image-viwer>
-</body>
+          <div images>
+              <paper-button on-click="clean">
+                  cancel
+              </paper-button>
+          </div>
+          <div images>
+              <paper-button on-click="setValues">
+                  Save
+              </paper-button>
+          </div>
+      <nav>
+   </main>     
+     <cms-image-viewer closed="{{openViewer}}" open="false" class="diferent" image="{{image}}"></cms-image-viewer>
 `
      }
      static get is() { return 'cms-page-form'; }
 
      static get properties() {
           return {
+               DBW: {
+                    type: Object,
+                    value: function () {
+                         return new dataBaseworker()
+                    },
+               },
                closed: {
                     type: Boolean,
                     notify: true,
@@ -79,27 +144,34 @@ class cmsPageForm extends PolymerElement {
                },
                openViewer: {
                     type: Boolean,
-                    notify: true
+                    notify: true,
+                    value: false,
+                    reflectToAttribute: true,
                },
                categorie: {
                     type: Object,
                     notify: true,
-                    observer: 'set'
+                    observer: 'reset'
                },
                setter: {
-                    type: Array,
-                    notify: true
+                    type: String,
+                    notify: true,
+                    value: 'false'
                },
                pageName: {
                     type: String,
+               },
+               edit: {
+                    type: Boolean,
+                    value: false
                },
                title: {
                     type: String,
                },
                image: {
-                    type: String,
+                    type: Object,
                },
-               placeholder: {
+               iD: {
                     type: String,
                },
                layout: {
@@ -116,12 +188,14 @@ class cmsPageForm extends PolymerElement {
                },
                type: {
                     type: String,
+                    notify: true,
                },
                pageTypes: {
                     type: Array,
                     value: [
                          { label: 'Page type' },
-                         { id: 'agents', name: 'List' },
+                         { id: 'agents', name: '---' },
+                         { id: 'agents2', name: 'list' },
                          { id: 'compressor', name: 'Blog', notAtive: false },
                          { id: 'delay', name: 'Social', notAtive: false },
                          { id: 'wave-shaper', name: 'Video', notAtive: false }]
@@ -132,7 +206,6 @@ class cmsPageForm extends PolymerElement {
      createURL(items) {
           let arr = new Array()
           let parsed = JSON.parse(items)
-          // console.log(parsed)
           for (let i = 0; i < parsed.length; i++) {
                arr.push({ url: 'http://localhost:3000/data/images/' + parsed[i], title: parsed[i] })
           }
@@ -141,39 +214,64 @@ class cmsPageForm extends PolymerElement {
      }
 
      file() {
-          fsd("http://localhost:3000/imagedir", items => {
-               // console.log(items)
-               this.createURL(items)
-          })
+          this.openViewer = true
+          scroll({ top: 500, behavior: 'smooth' });
+          scroll({ bottom: 520, behavior: 'smooth' });
      }
-     set(data) {
-          console.log(data)
+
+     reset(data) {
           this.pageName = data.name || 'N/a'
-          this.type = data.title || 'N/a'
+          this.lang = data.lang || 'N/a'
+          this.type = data.page || '---'
           this.title = data.title || 'N/a'
-          this.image = data.image || 'N/a'
+          this.image = { url: data.image, title: data.title } || 'N/a'
           this.placeholder = data.placeholder || 'N/a'
+          console.log(this.type)
      }
 
      setValues() {
-          let obj = {
-               'name': this.pageName,
+          let thiso = this
+          let parsed = {
+               'lang': this.lang,
+               'name': this.pageName.toLocaleLowerCase().split(' ').join('_'),
                'page': this.type,
                'title': this.title,
-               'image': this.image,
-               'placeholder': this.placeholder
+               'image': this.image.url,
+               'placeholder': this.pageName
+               // 'id': this.iD.toLocaleLowerCase().split(' ').join('_')
           }
-          this.clean()
-          this.dispatchEvent(new CustomEvent('category-added', { detail: obj, bubbles: true }));
+          if (this.edit === false) {
+               this.DBW.setPages((done, err) => {
+                    if (done !== 'error') {
+                         thiso.clean('newPage')
+                    } else {
+                         console.log(err)
+                    }
+               }, parsed)
+          }
+          if (this.edit === true) {
+               this.DBW.writePageContent((done, err) => {
+                    if (done !== 'error') {
+                         thiso.clean('newPage')
+                    } else {
+                         console.log(err)
+                         thiso.clean('true')
+                    }
+               }, parsed)
+          }
      }
 
-     clean() {
-          this.closed = !this.closed
-          this.pageName = ''
-          this.type = ''
-          this.title = ''
-          this.image = ''
-          this.placeholder = ''
+     clean(setterValue) {
+          let setter
+          if (setterValue instanceof MouseEvent === true) {
+               setter = 'true'
+          } else {
+               setter = setterValue
+          }
+          scroll({ top: 0, behavior: 'smooth' });
+          this.closed = false
+          this.setter = setter
+          this.reset({})
      }
 }
 

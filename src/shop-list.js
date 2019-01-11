@@ -115,35 +115,42 @@ class ShopList extends PolymerElement {
 
   </template>
   `;
-}
+  }
 
   static get is() { return 'shop-list'; }
 
-  static get properties() { return {
+  static get properties() {
+    return {
 
-    category: Object,
+      category: {
+        type: Object,
+        // observer: 'setNotFail'
+      },
 
-    route: Object,
+      route: Object,
 
-    routeData: Object,
+      routeData: Object,
 
-    visible: {
-      type: Boolean,
-      value: false
-    },
+      visible: {
+        type: Boolean,
+        value: false
+      },
 
-    offline: {
-      type: Boolean,
-      observer: '_offlineChanged'
-    },
+      offline: {
+        type: Boolean,
+        observer: '_offlineChanged'
+      },
 
-    failure: Boolean
+      failure: Boolean
 
-  }}
+    }
+  }
 
-  static get observers() { return [
-    '_categoryChanged(category, visible)'
-  ]}
+  static get observers() {
+    return [
+      '_categoryChanged(category, visible)'
+    ]
+  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -157,7 +164,7 @@ class ShopList extends PolymerElement {
 
   _getListItems(items) {
     // Return placeholder items when the items haven't loaded yet.
-    return items || [{},{},{},{},{},{},{},{},{},{}];
+    return items || [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
   }
 
   _getItemHref(item) {
@@ -171,12 +178,13 @@ class ShopList extends PolymerElement {
       return '';
     }
     let pluralizedQ = quantity === 1 ? 'item' : 'items';
-    return  '(' + quantity + ' ' + pluralizedQ + ')';
+    return '(' + quantity + ' ' + pluralizedQ + ')';
   }
 
   _categoryChanged(catego, visible) {
     //console.log(this.routeData)
     let category = this.routeData.category
+    this.failure = false
     if (!visible) {
       return;
     }
@@ -191,10 +199,12 @@ class ShopList extends PolymerElement {
               page: category.page,
               title: category.title,
               image: this.baseURI + category.image
-            }}));
+            }
+          }));
         } else {
           this.dispatchEvent(new CustomEvent('show-invalid-url-warning', {
-            bubbles: true, composed: true}));
+            bubbles: true, composed: true
+          }));
         }
       });
   }

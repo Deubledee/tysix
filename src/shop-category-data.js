@@ -1,62 +1,22 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { timeOut } from '@polymer/polymer/lib/utils/async';
-
-
-var db = {}
-db = firebase.firestore();
-var categories = []
-var lang = navigator.language.split('-')[0]
-function getLang(data) {
-  let obj = { name: 'pages', query: data }
-  categories = []
-  getDocList(obj).then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      categories.push(doc.data()[obj.query])
-    });
-  });
-}
-getLang(lang)
-function getDocList(table) {
-  var categoriesRef = db.collection(table.name);
-  return categoriesRef.get()
-  /* .then((querySnapshot) => {
-   querySnapshot.forEach((doc) => {
-     categories.push(doc.data()[table.query])
-   });
- });*/
-}
-function getDoc(table) {
-  var categoriesRef = db.collection(table.name).doc(table.doc);
-  return categoriesRef.get()
-  /* .then((querySnapshot) => {
-   querySnapshot.forEach((doc) => {
-     categories.push(doc.data()[table.query])
-   });
- });*/
-}
-//setTimeout(() => {
-
-/*
-let obj = { name: 'pages', query: lang }
-getDocList(obj)
-*/
-//}, 10)
-
+import { dataBaseworker } from './cms/dataBaseWorker.js';
 
 class ShopCategoryData extends PolymerElement {
-
   static get is() { return 'shop-category-data'; }
   static get properties() {
     return {
-
+      DBW: {
+        type: Object,
+        value: function () {
+          return new dataBaseworker()
+        },
+      },
       categoryName: String,
-
       itemName: String,
       categories: {
         type: Array,
         notify: true,
-        value: categories
+        value: []
       },
       firebase: {
         type: Object,
@@ -64,7 +24,10 @@ class ShopCategoryData extends PolymerElement {
       },
       lang: {
         type: String,
-        value: lang
+        notify: true,
+        value: function () {
+          return navigator.language.split('-')[0]
+        }
       },
       db: {
         type: Object
@@ -94,23 +57,13 @@ class ShopCategoryData extends PolymerElement {
     }
   }
 
-  fillDbDocs(table) {
-    db.collection(table.name).doc(table.docName).set(table.doc)
-      .then(function () {
-        console.log("Document successfully written!");
-      })
-      .catch(function (error) {
-        console.error("Error writing document: ", error);
-      });
-  }
-
   ready() {
     super.ready();
-    let cats = this.categories
-    this.categories = ''
-    setTimeout(() => {
-      this.categories = cats
-    }, 1000)
+    this.DBW.getPagesEqualTo(done => {
+      this.categories = done.categories
+      this.lang = done.lang
+    }, 'lang', this.lang)
+
     window.addEventListener('category-added', (evt) => {
       let bool
       for (let i = 0, item = ''; item = this.categories[i]; i++) {
@@ -142,26 +95,6 @@ class ShopCategoryData extends PolymerElement {
     getLang(data)
   }
 
-  handleResponse(data) {
-    var sfDocRef = db.collection("usres").doc();
-    // Uncomment to initialize the doc.
-    // sfDocRef.set({ population: 0 });
-    return db.runTransaction(function (transaction) {
-      // This code may get re-run multiple times if there are conflicts.
-      return transaction.get(sfDocRef).then(function (sfDoc) {
-        if (!sfDoc.exists) {
-          throw "Document does not exist!";
-        }
-
-        var newPopulation = sfDoc.data()
-      });
-    }).then(function () {
-      console.log("Transaction successfully committed!");
-    }).catch(function (error) {
-      console.log("Transaction failed: ", error);
-    });
-  }
-
   _getCategoryObject(categoryName) {
     if (this.categories !== undefined) {
       for (let i = 0, c; c = this.categories[i]; ++i) {
@@ -171,13 +104,17 @@ class ShopCategoryData extends PolymerElement {
       }
     }
   }
+
   _computeCategory(categoryName) {
     if (this.categories.length > 0) {
       let categoryObj = this._getCategoryObject(categoryName);
       if (categoryObj !== undefined) {
-        let obj = { name: 'articles', doc: categoryObj.id }
-        getDoc(obj).then((querySnapshot) => {
-          this.set('category.items', querySnapshot.data()[this.lang]);
+        let obj = { name: 'articles', doc: categoryObj.name }
+        this.DBW.getDoc(obj).then((querySnapshot) => {
+          console.log(querySnapshot.data().content)
+          let content = querySnapshot.data().content
+          this.set('category.items', content);
+          console.log(this.category)
         });
       }
       return categoryObj;

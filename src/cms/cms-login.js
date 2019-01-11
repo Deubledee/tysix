@@ -9,21 +9,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import './cms-input-sellector.js';
-
-
-if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-     var email = window.localStorage.getItem('emailForSignIn');
-     if (!email) {
-          email = window.prompt('Please provide your email for confirmation');
-     }
-     firebase.auth().signInWithEmailLink(email, window.location.href)
-          .then(function (result) {
-               window.localStorage.removeItem('emailForSignIn');
-          })
-          .catch(function (error) {
-          });
-}
-
+import { dataBaseworker } from './dataBaseWorker.js';
 class cmsLogin extends PolymerElement {
      static get template() {
           return html`
@@ -36,21 +22,15 @@ class cmsLogin extends PolymerElement {
                          height: 0px;
                          padding: 5px;
                          padding-left: 40%;
-                         transition-property: height, visibility;
-                         transition-duration: 2s, 1s;
                     }
                     main[closed] {
-                         display: none
-                    }
-                    .slot[closed] {
-                         visibility: block;
-                         transition-property: height, visibility;
-                         transition-duration: 2s, .5s;
-                    }
-                    .slot[closed] {
                          display: none;
-                         transition-property: height, visibility;
-                         transition-duration: 2s, .5s;
+                    }
+                    .slot {
+                         display: block;
+                    }
+                    .slot [closed]{
+                         display: none;
                     }
                     div[login] {
                          width: 260px;
@@ -147,6 +127,12 @@ class cmsLogin extends PolymerElement {
 
      static get properties() {
           return {
+               DBW: {
+                    type: Object,
+                    value: function () {
+                         return new dataBaseworker()
+                    },
+               },
                closed: {
                     type: Boolean,
                     notify: true,
@@ -180,24 +166,13 @@ class cmsLogin extends PolymerElement {
 
      ready() {
           super.ready();
-          firebase.auth().onAuthStateChanged((user) => {
-               if (user) {
+          this.DBW.authStateChanged((user, err) => {
+               if (user !== 0) {
                     this.closed = !this.closed
-                    this.firstElementChild.user = user
+                    this._userAccepted(user)
                } else {
-                    console.log('No user is signed in.')
-                    // No user is signed in.
+                    console.log(err)
                }
-          });
-          window.addEventListener('ask-article-images', (event) => {
-               let user = firebase.auth().currentUser
-               let string = `http://localhost:3000/articleimagedir?uid=${user.uid}`
-               fsd(string, items => {
-                    //console.log(items)
-                    window.dispatchEvent(new CustomEvent('article-images', {
-                         detail: items
-                    }));
-               }, 'GET')
           })
           window.addEventListener('user-changed', (event) => {
                let user = firebase.auth().currentUser
@@ -241,6 +216,14 @@ class cmsLogin extends PolymerElement {
           })
      }
 
+     _userAccepted(user) {
+          // let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+          import('./cms-controler.js').then(() => {
+               this.user = user
+               this.firstElementChild.user = user
+          });
+     }
+
      removeSensitiveData(categories) {
           let finalString = [], obj = {}
           for (let par in categories) {
@@ -267,25 +250,10 @@ class cmsLogin extends PolymerElement {
                'email': this.email,
                'pwd': this.pwd
           }
-          this.loginFire(obj)
+          this.DBW.loginFire(obj)
           this.email = ''
           this.pwd = ''
      }
-
-     loginFire(user) {
-          firebase.auth().signInWithEmailAndPassword(user.email, user.pwd).then((item) => {
-               console.log(item.uid)
-               uid = item.uid
-          }).catch(function (error) {
-               // Handle Errors here.
-               var errorCode = error.code;
-               var errorMessage = error.message;
-               console.log(errorMessage, errorCode)
-               // ...
-          });
-
-     }
-
 }
 
 customElements.define(cmsLogin.is, cmsLogin);

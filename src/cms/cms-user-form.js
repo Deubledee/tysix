@@ -9,81 +9,113 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import './cms-input-sellector.js';
-import './cms-image-viwer.js';
+import './cms-image-viewer.js';
 import '../shop-image.js';
-//import { object } from 'firebase-functions/lib/providers/storage';
-
 class cmsUserForm extends PolymerElement {
     static get template() {
         return html`
-    <custom-style>
-    <style is="custom-style">
-          main {
-            display: flex;
-            flex-flow: column;
-            overflow: auto;
-            background-color: aliceblue;
-            position: fixed;
-            top: 149px;
-            width: 77%;
-            height: 0px;
-            padding: 5px;
-            visibility: collapse;
-            transition-property: height, visibility;
-            transition-duration: 2s, 1s;
-          }
-
-          main[closed] {
-            height: 530px;
-            visibility: visible;
-            transition-property: height, visibility;
-            transition-duration: 2s, .5s;
-          }
-          img {
-            width: 190px
+        <style>
+        /*   main {
+                 background-color: aliceblue;
+                 position: fixed;
+                 top: 149px;
+                 width: 77%;
+                 height: 0px;
+                 padding: 5px;
+                 visibility: collapse;
+                 transition-property: height, visibility;
+                 transition-delay: .5s, 0s;
+                 transition-duration: 2s, 1s;
+            }*/
+      
+        main[closed] {
+          height: 530px;
+          visibility: visible;
+          transition-property: height, visibility;
+          transition-duration: 2s, .5s;
         }
-        
+      
+        main {
+          display: flex;
+          flex-flow: column;
+          background-color: aliceblue;
+          position: relative;
+          top: -46px;
+          padding: 5px;
+          visibility: collapse;
+          transition-property: height, visibility;
+          transition-duration: 2s, 1s;
+        }
+      
+        img {
+          width: 190px
+        }
+      
         nav {
-            display: flex;
-            flex-flow: row
+          display: flex;
+          flex-flow: row
         }
+      
         shop-image::before {
-            content: "";
-            display: block;
-            padding-top: 100%;
+          content: "";
+          display: block;
+          padding-top: 100%;
+        }
+      
+        div[images] {
+          box-sizing: border-box;
+          padding: 13px;
+          margin-top: 34px;
+          background-color: #ececec;
+          margin-bottom: 2px;
+          width: 100px;
+          height: 60px;
+          margin-right: 5px;
+        }
+      
+        paper-button {
+          background-color: var(--google-blue-100)
+        }
+      
+        div [button] {
+          background-color: var(--google-grey-300)
+        }
+      
+        cms-image-viewer.diferent{                       
+            --main-style:{
+              position: relative;
+              top: -354px;
+              margin-left: 0px;
+            }
           }
-    </style>
-  </custom-style>
-</head>
-<body>   
-     <main closed$="[[closed]]">
-        <!--cms-input-sellector options="[[userTypes]]" value="{{type}}">          
+      </style>
+        <main closed$="[[closed]]">
+          <!--cms-input-sellector options="[[userTypes]]" value="{{type}}">          
         </cms-input-sellector-->
-        <paper-input always-float-label label="uid" value="{{uid}}"></paper-input>
-        <paper-input always-float-label label="displayName" value="{{displayName}}"></paper-input>
-        <paper-input always-float-label label="email" value="{{email}}"></paper-input>
-
-        <paper-button id="art" class="diferent" on-click="file">
-            choose image
-        </paper-button>
-        <shop-image src="[[photoURL]]" alt="[[photoURL]]"></shop-image>       
-        <paper-input always-float-label label="emailVerified" value="{{emailVerified}}"></paper-input>
-        <!--div>
-            <cms-input-sellector options="[[active]]" value="{{layout}}">          
-            </cms-input-sellector>
-        <div-->
-        <nav>
-            <paper-button on-click="clean">
+          <paper-input always-float-label label="uid" value="{{uid}}"></paper-input>
+          <paper-input always-float-label label="displayName" value="{{displayName}}"></paper-input>
+          <paper-input always-float-label label="email" value="{{email}}"></paper-input <div button>
+          <div button>
+            <paper-button id="art" class="diferent" on-click="file">
+              choose image
+            </paper-button>          
+          </div>
+          <shop-image src="[[photoURL]]" alt="[[photoURL]]"></shop-image>
+          <paper-input always-float-label label="emailVerified" value="{{emailVerified}}"></paper-input>
+          <nav>
+            <div images>
+              <paper-button on-click="clean">
                 cancel
-            </paper-button>
-
-            <paper-button on-click="setValues">
+              </paper-button>
+            </div>
+            <div images>
+              <paper-button on-click="setValues">
                 Save
-            </paper-button>
-        <nav>
-     </main>  
-     <cms-image-viwer closed="{{openViewer}}" images="[[images]]" image="{{photoURL}}"></cms-image-viwer>
-</body>
+              </paper-button>
+            </div>
+            <nav>
+        </main>
+        <cms-image-viewer closed="{{openViewer}}" class="diferent" open="false" image="{{image}}"></cms-image-viewer>
 `
     }
     static get is() { return 'cms-user-form'; }
@@ -98,7 +130,14 @@ class cmsUserForm extends PolymerElement {
             },
             openViewer: {
                 type: Boolean,
-                notify: true
+                notify: true,
+                value: false,
+                reflectToAttribute: true,
+            },
+            setter: {
+                type: Boolean,
+                notify: true,
+                value: false
             },
             user: {
                 type: Object,
@@ -137,25 +176,6 @@ class cmsUserForm extends PolymerElement {
     }
     ready() {
         super.ready()
-        window.addEventListener('article-images', event => {
-            //console.log('article-images', event.detail)
-            this.createURL(event.detail)
-        })
-    }
-
-    createURL(items) {
-        let arr = new Array()
-        let parsed = JSON.parse(items)
-        // console.log(parsed)
-        for (let i = 0; i < parsed.length; i++) {
-            arr.push({ url: 'http://localhost:3000/data/images/' + parsed[i], title: parsed[i] })
-        }
-        this.images = arr
-        this.openViewer = !this.openViewer
-    }
-
-    file() {
-        window.dispatchEvent(new CustomEvent('ask-article-images'))
     }
 
     setUserData(data) {
@@ -165,6 +185,10 @@ class cmsUserForm extends PolymerElement {
         this.photoURL = data.photoURL
         this.emailVerified = data.emailVerified
         this.uid = data.uid
+    }
+
+    file() {
+        this.openViewer = true
     }
 
     setValues() {
@@ -180,6 +204,7 @@ class cmsUserForm extends PolymerElement {
         this.request = []
         this.request = arr
         this.clean()
+        this.setter = true
     }
 
     clean() {
@@ -189,6 +214,7 @@ class cmsUserForm extends PolymerElement {
         this.photoURL = ''
         this.emailVerified = ''
         this.uid = ''
+        this.setter = true
     }
 }
 

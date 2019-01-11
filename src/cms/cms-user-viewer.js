@@ -60,11 +60,11 @@ class cmsUserViewer extends PolymerElement {
       }
 
       main {
-        position: absolute;
         word-break: break-all;
         padding: 4px;
-        word-break: break-all;    ;
-        left: -65px;
+        position: absolute;
+        left: -42px;
+        top: 52px;
         width: 100%;
       }
       section paper-button{
@@ -80,6 +80,9 @@ class cmsUserViewer extends PolymerElement {
       }       
 
       nav[top] {
+        position: relative;
+        top: 33px;
+        margin-bottom: 60px;
         height: 166px;
         background-color: var(--primary-background-color);
         box-shadow: 4px 4px 7px #989898;
@@ -118,7 +121,7 @@ class cmsUserViewer extends PolymerElement {
           <div>
             <section title>
               <paper-icon-button-light>
-                <iron-icon icon="content-copy" aria-label="Go back"></iron-icon>
+                <iron-icon icon="social:person-outline" aria-label="Go back"></iron-icon>
               </paper-icon-button-light>
                   Users
             </section>
@@ -126,7 +129,7 @@ class cmsUserViewer extends PolymerElement {
           <div add>
             <section title on-click="add">
               <paper-icon-button-light>
-                <iron-icon icon="add-circle-outline" aria-label="Go back"></iron-icon>
+                <iron-icon icon="social:person-add" aria-label="Go back"></iron-icon>
               </paper-icon-button-light>
               Add
             </section>
@@ -144,7 +147,10 @@ class cmsUserViewer extends PolymerElement {
               </div>                                   
               <div on-click="edit">
                 <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-              </div>           
+              </div>                                    
+              <div on-click="delete">
+                <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
+              </div>          
             </nav> 
             <nav bottom>                        
               <section>
@@ -169,7 +175,7 @@ class cmsUserViewer extends PolymerElement {
           </article>
         </template>
       </dom-repeat>
-        <cms-user-form closed="{{closed}}" user="[[user]]" request="{{request}}">
+        <cms-user-form closed="{{closed}}" user="[[user]]" request="{{request}}" setter="{{setter}}">
         </cms-user-form>
       </main> 
 `
@@ -189,6 +195,11 @@ class cmsUserViewer extends PolymerElement {
       type: {
         type: String,
         notify: true
+      },
+      setter: {
+        type: Boolean,
+        notify: true,
+        observer: 'resetCollor'
       },
       request: {
         type: Array,
@@ -214,14 +225,27 @@ class cmsUserViewer extends PolymerElement {
       console.log(event)
     })
     window.addEventListener('user-updated', event => {
-      console.log('user-updated', event)
       this.updatUsers(event.detail)
     })
     window.addEventListener('user-list', event => {
-      this.categories = {}
+      this.categories = [{}]
       this.categories = event.detail
-      console.log(event)
     })
+  }
+
+  resetCollor(data) {
+    if (data === true) {
+      this.lastChosen[0].style.color = "rgb(128, 152, 173)"
+      this.lastChosen = []
+      this.setter = false
+    }
+  }
+
+  setLastChosen(elem) {
+    let arr = new Array()
+    arr.push(elem)
+    this.lastChosen = arr
+    elem.style.color = "var(--google-blue-700)"
   }
 
   _getPagename(cats) {
@@ -238,6 +262,7 @@ class cmsUserViewer extends PolymerElement {
     this.user = {}
     this.user = this.categories[index]
     this.closed = !this.closed
+    this.setLastChosen(event.srcElement)
     // console.log(index)
   }
 
@@ -265,18 +290,20 @@ class cmsUserViewer extends PolymerElement {
     this.categories = []
     this.categories = temp
   }
+
   showPage(event) {
     if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "515px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
+      this.setLastChosen(event.srcElement)
     } else {
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "0px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "0"
       event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
+      this.resetCollor(true)
     }
-
   }
 
   showCats(categories) {

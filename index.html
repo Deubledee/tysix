@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <body>
   <script>
-    function fsd(urlo, call, method) {
+    function fsd(urlo, call, method, formData) {
       let url = urlo, json = [], str = ''
       let xhr = new XMLHttpRequest();
       let meth = method || 'GET'
@@ -71,17 +71,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost/')
       xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST')
       xhr.setRequestHeader("Accept", "application/json");
-      xhr.send();
+      if (formData) {
+        xhr.setRequestHeader("Content-Type", "multipart/form-data");
+        xhr.send(formData);
+        console.log('formData')
+      } else {
+        xhr.send();
+      }
       function onLoad(e) {
-        // json.push(JSON.parse(e.target.responseText))
-        // str = json[0]
-        // console.log(e.target.responseText)
         call(e.target.responseText)
-        // console.log(str, this.categories)
       }
       function onError(e) {
         console.log(e)
       }
+      return xhr
     }
 
     function getFirebaseContent(url) {
@@ -114,10 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    // Initialize Firebase
 
   </script>
-  <script type="module" src="src/cms/cms-login.js"></script>
-  <cms-login>
-    <shop-app slot="app" unresolved> </shop-app>
-  </cms-login>
+  <shop-app unresolved> </shop-app>
   <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
   <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
@@ -131,3 +131,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </body>
 
 </html>
+
+</main>

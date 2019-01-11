@@ -79,7 +79,7 @@ class cmsInputSellector extends PolymerElement {
                },
                value: {
                     type: String,
-                    value: 'list',
+                    value: '---',
                     notify: true,
                },
                options: {
@@ -95,10 +95,10 @@ class cmsInputSellector extends PolymerElement {
           return label
      }
      changeToOne(data) {
-         // if (data.model.__data.option.id !== 'agents') {
-              // if (data.model.__data.option.notAtive === false) {
-                    this.value = data.model.__data.option.name
-              
+          // if (data.model.__data.option.id !== 'agents') {
+          // if (data.model.__data.option.notAtive === false) {
+          this.value = data.model.__data.option.name
+
      }
 }
 customElements.define(cmsInputSellector.is, cmsInputSellector);  
