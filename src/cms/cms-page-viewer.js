@@ -3,6 +3,7 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import './cms-page-form.js';
+import './cms-confirm.js';
 
 class cmsPageViewer extends PolymerElement {
   static get template() {
@@ -101,7 +102,7 @@ class cmsPageViewer extends PolymerElement {
 
       div[center]{        
         text-align: center;
-      }
+        }
     </style>
   </custom-style>  
     <main>
@@ -137,7 +138,7 @@ class cmsPageViewer extends PolymerElement {
                     <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                   </div>   
                   <div center>
-                    <paper-icon-button on-click="delete" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
+                    <paper-icon-button on-click="openConfirm" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
                   </div>                  
               </nav> 
               <nav bottom>       
@@ -165,8 +166,11 @@ class cmsPageViewer extends PolymerElement {
             </article>
           </template>
         </dom-repeat>
-        <cms-page-form id="form" closed="{{closed}}" categorie="{{categorie}}" setter="{{setter}}" >
+        <cms-page-form id="form" closed="{{closed}}" categorie="{{categorie}}" setter="{{setter}}">
         </cms-page-form>
+        <cms-confirm id="confirm" bottom2 confirm$="[[confirm]]">           
+     
+        </cms-confirm> 
       </main>  
 `
   }
@@ -189,6 +193,10 @@ class cmsPageViewer extends PolymerElement {
         type: Array,
         notify: true,
       },
+      page: {
+        type: Object,
+        notify: true
+      },
       categorie: {
         type: Object,
         notify: true
@@ -202,6 +210,12 @@ class cmsPageViewer extends PolymerElement {
         type: Boolean,
         notify: true,
       },
+      confirm: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        reflectToAttribute: true
+      },
       lastChosen: {
         type: Array,
         value: new Array()
@@ -210,7 +224,11 @@ class cmsPageViewer extends PolymerElement {
   }
 
   log(data) {
-    console.log(data)
+    console.log('log from cms-page-viewer', data)
+  }
+
+  error(data) {
+    console.error('error from cms-page-viewer', data)
   }
 
   ready() {
@@ -222,7 +240,7 @@ class cmsPageViewer extends PolymerElement {
     this.DBW.askAllPages((done) => {
       this.categories = []
       this.categories = done
-      scroll({ top: 0, behavior: 'smooth' });
+      scroll({ top: 0, behavior: 'silent' });
     }, { name: 'pages' })
   }
 
@@ -237,7 +255,7 @@ class cmsPageViewer extends PolymerElement {
   }
 
   resetCollor(data) {
-    console.log(data)
+    this.log(data)
     if (data === 'true' || data === 'newPage') {
       this.lastChosen[0].style.color = "rgb(128, 152, 173)"
       this.lastChosen = []
@@ -269,6 +287,27 @@ class cmsPageViewer extends PolymerElement {
 
   showName(cats, name) {
     return cats[name]
+  }
+
+  delete(data) {
+    let page = data
+    this.log(data)
+    this.DBW.deletePage((msg, done) => {
+      if (msg !== 'error') {
+        this.openConfirm()
+        this.log(msg, done)
+      } else {
+        this.error(msg, done)
+      }
+    }, page)
+  }
+
+  openConfirm(event) {
+    if (this.confirm === false) {
+      this.$.confirm.openConfirm(event.model.__data.category)
+      this.$.confirm.method = this.delete
+      this.confirm = true
+    }
   }
 
   showPage(event) {

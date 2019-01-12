@@ -1,9 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { dataBaseworker } from './dataBaseWorker.js';
 import * as FilePond from 'filepond';
 class cmsUpload extends PolymerElement {
-    static get template() {
-        return html`
+  static get template() {
+    return html`
 
     <style>     
 
@@ -66,7 +65,10 @@ class cmsUpload extends PolymerElement {
             right: 1em;
             top: 0;
             margin: 0;
-            color: #4f4f4f;
+            letter-spacing: 1px;
+            color: #f9f9f9;
+            text-shadow: 2px 2px 2px #1d1c1c;
+            color: #dfdfdf;
             display: -ms-flexbox;
             display: flex;
             -ms-flex-pack: center;
@@ -90,8 +92,8 @@ class cmsUpload extends PolymerElement {
           
           .filepond--drop-label label {
             cursor: default;
-            font-size: 0.875em;
-            font-weight: normal;
+            font-size: 1.25em;
+            font-weight: 600;
             text-align: center;
             line-height: 1.5;
           }
@@ -866,78 +868,78 @@ class cmsUpload extends PolymerElement {
         <input id="input" type="file" class="filepond" required multiple ></input>
     </main>
 `
-    }
-    static get is() { return 'cms-upload'; }
+  }
+  static get is() { return 'cms-upload'; }
 
-    static get properties() {
-        return {
-            files: {
-                type: Array,
-            },
-            gallerie: {
-                type: String,
-                observer: 'setPondConfig'
-            },
-            imageArray: {
-                type: Array,
-                notify: true
-            },
-            pond: {
-                type: Object,
-            }
-        }
+  static get properties() {
+    return {
+      files: {
+        type: Array,
+      },
+      gallerie: {
+        type: String,
+        observer: 'setPondConfig'
+      },
+      imageArray: {
+        type: Array,
+        notify: true
+      },
+      pond: {
+        type: Object,
+      }
     }
+  }
 
-    ready() {
-        super.ready();
-        window.addEventListener('FilePond:loaded', e => {
-            console.log('FilePond ready for use', e.detail);
-        });
-        this.pond = this.getPond()
+  ready() {
+    super.ready();
+    window.addEventListener('FilePond:loaded', e => {
+      console.log('FilePond ready for use', e.detail);
+    });
+    this.pond = this.getPond()
+  }
+
+  getPond() {
+    if (this.pond instanceof Function === false) {
+      const pond = FilePond.create(this.$.input);
+      return pond
     }
+  }
 
-    getPond() {
-        if (this.pond instanceof Function === false) {
-            const pond = FilePond.create(this.$.input);
-            return pond
-        }
-    }
-
-    setPondConfig(gall) {
-        let that = this, arr = []
-        setTimeout(() => {
-            let process = '/images', gallerie = gall
-            this.pond.setOptions({
-                allowDrop: false,
-                allowReplace: false,
-                instantUpload: false,
-                server: {
-                    url: 'http://localhost:3000',
-                    process: {
-                        url: process,
-                        ondata: (formData) => {
-                            formData.forEach(item => {
-                                if (item !== "{}") {
-                                    arr.push(item)
-                                }
-                            })
-                            this.imageArray = arr
-                            formData.append('gallerie', gallerie);
-                            return formData;
-                        }
-                    },
-                    revert: './revert',
-                    fetch: null,
-                    restore: null,
-                    load: null,
+  setPondConfig(gall) {
+    let that = this, arr = []
+    setTimeout(() => {
+      let process = '/images', gallerie = gall
+      this.pond.setOptions({
+        allowDrop: true,
+        allowReplace: true,
+        instantUpload: false,
+        server: {
+          url: 'http://localhost:3000',
+          process: {
+            url: process,
+            ondata: (formData) => {
+              formData.forEach(item => {
+                if (item !== "{}") {
+                  arr.push(item)
                 }
-            })
+              })
+              this.imageArray = arr
+              formData.append('gallerie', gallerie);
+              return formData;
+            }
+          },
+          revert: './revert',
+          fetch: null,
+          restore: null,
+          load: null,
+        }
+      })
 
-        }, 200)
-    }
-    sendFile(files) {
-        let arr = files
-    };
+    }, 200)
+  }
+  sendFile(files) {
+    let arr = files
+  };
 }
 
 customElements.define(cmsUpload.is, cmsUpload);

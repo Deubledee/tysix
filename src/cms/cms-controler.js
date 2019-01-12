@@ -182,7 +182,7 @@ class cmsControler extends PolymerElement {
               <cms-page-viewer name="pages" lang=[[lang]]></cms-page-viewer>
               <cms-user-viewer name="users"></cms-user-viewer>
               <cms-articles-viewer name="articles" lang=[[lang]]></cms-articles-viewer>
-              <cms-image-viewer name="galleries" sett="[[open]]" class="diferent"></cms-image-viewer>
+              <cms-image-viewer id="viewer" name="galleries" sett="[[open]]" open="[[open]]" class="diferent"></cms-image-viewer>
               <my-view404 name="view404"></my-view404>
             </iron-pages>
           </app-header-layout>
@@ -259,15 +259,15 @@ class cmsControler extends PolymerElement {
         import('./cms-articles-viewer.js');
         break;
       case 'galleries':
-        import('./cms-image-viewer.js');
+        import('./cms-image-viewer.js').then(() => {
+          this.$.viewer.open = true
+        });
         break;
       case 'view404':
         import('../shop-404-warning.js');
         break;
     }
-    scroll({ top: 0, behavior: 'silent' });
   }
-
 }
 
 customElements.define(cmsControler.is, cmsControler);

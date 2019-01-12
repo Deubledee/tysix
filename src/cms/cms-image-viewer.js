@@ -97,8 +97,16 @@ class cmsImageViewer extends PolymerElement {
           margin-right: 7px;
         }
 
+        cms-galleries {
+          display: none
+        }
+        
+        cms-galleries[closed] {
+          display: block
+        }
+
       </style>
-      <main closed$="[[closed]]">  
+      <main closed$="[[open]]">   
         <dom-if if="[[!sett]]">
           <template>
             <nav controler>
@@ -119,10 +127,10 @@ class cmsImageViewer extends PolymerElement {
                 </section>
               </div> 
             </nav>
-          </template> 
-        </dom-if>          
-        <cms-galleries id="galleries" sett={{open}} images="{{images}}"> </cms-galleries>  
-        <cms-images images="{{images}}" cancel="[[cancel>]]" sett={{open}}></cms-images> 
+          </template>
+        </dom-if>                  
+        <cms-galleries closed$="[[open]]" id="galleries" sett={{sett}} images="{{images}}" setter="{{clear}}" clear="{{clear}}"> </cms-galleries>  
+        <cms-images id="images" images="[[images]]" image="{{image}}" cancel="{{evet}}" sett={{sett}} clear="{{clear}}"></cms-images> 
       </main>
     `;
   }
@@ -154,8 +162,16 @@ class cmsImageViewer extends PolymerElement {
         type: Array,
         notify: true,
       },
-      event: {
-        type: Object
+      clear: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      evet: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: 'cancel'
       },
       image: {
         type: Object,
@@ -173,8 +189,7 @@ class cmsImageViewer extends PolymerElement {
       open: {
         type: Boolean,
         notify: true,
-        value: false,
-        reflectToAttribute: true
+        value: true
       },
       closed: {
         type: Boolean,
@@ -196,15 +211,17 @@ class cmsImageViewer extends PolymerElement {
 
   setOpen(data) {
     this.open = data
+    scroll({ top: 0, behavior: 'silent' });
   }
 
   cancel() {
     scroll({ top: 200, behavior: 'smooth' });
     scroll({ bottom: 220, behavior: 'smooth' });
-    this.closed = !this.closed
+    this.open = !this.open
     this.images = []
     this.galleries = []
-    this.$.images.style.height = "56px"
+    if (this.sett === true)
+      this.$.images.style.height = "56px"
   }
 }
 customElements.define(cmsImageViewer.is, cmsImageViewer);

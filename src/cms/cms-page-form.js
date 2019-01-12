@@ -119,7 +119,7 @@ class cmsPageForm extends PolymerElement {
           </div>
       <nav>
    </main>     
-     <cms-image-viewer closed="{{openViewer}}" open="false" class="diferent" image="{{image}}"></cms-image-viewer>
+     <cms-image-viewer id="viewer" class="diferent" image="{{image}}"></cms-image-viewer>
 `
      }
      static get is() { return 'cms-page-form'; }
@@ -138,6 +138,12 @@ class cmsPageForm extends PolymerElement {
                     value: false,
                     reflectToAttribute: true,
                },
+               close: {
+                    type: Boolean,
+                    notify: true,
+                    value: false,
+                    observer: 'file'
+               },
                request: {
                     type: Array,
                     notify: true
@@ -145,8 +151,7 @@ class cmsPageForm extends PolymerElement {
                openViewer: {
                     type: Boolean,
                     notify: true,
-                    value: false,
-                    reflectToAttribute: true,
+                    value: false
                },
                categorie: {
                     type: Object,
@@ -203,6 +208,11 @@ class cmsPageForm extends PolymerElement {
           }
      }
 
+     ready() {
+          super.ready()
+          this.$.viewer.open = false
+     }
+
      createURL(items) {
           let arr = new Array()
           let parsed = JSON.parse(items)
@@ -210,11 +220,12 @@ class cmsPageForm extends PolymerElement {
                arr.push({ url: 'http://localhost:3000/data/images/' + parsed[i], title: parsed[i] })
           }
           this.images = arr
-          this.openViewer = !this.openViewer
+          // this.openViewer = !this.openViewer
      }
 
      file() {
-          this.openViewer = true
+          //this.openViewer = true
+          this.$.viewer.open = true
           scroll({ top: 500, behavior: 'smooth' });
           scroll({ bottom: 520, behavior: 'smooth' });
      }
@@ -268,10 +279,13 @@ class cmsPageForm extends PolymerElement {
           } else {
                setter = setterValue
           }
+          if (this.pageName === 'N/a' || setterValue === 'newPage') {
+               this.reset({})
+               setter = false
+          }
           scroll({ top: 0, behavior: 'smooth' });
           this.closed = false
           this.setter = setter
-          this.reset({})
      }
 }
 

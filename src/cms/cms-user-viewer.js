@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import './cms-user-form.js';
+import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 class cmsUserViewer extends PolymerElement {
   static get template() {
     return html`
@@ -226,10 +227,12 @@ class cmsUserViewer extends PolymerElement {
     })
     window.addEventListener('user-updated', event => {
       this.updatUsers(event.detail)
+      scroll({ top: 0, behavior: 'silent' });
     })
     window.addEventListener('user-list', event => {
       this.categories = [{}]
       this.categories = event.detail
+      scroll({ top: 0, behavior: 'silent' });
     })
   }
 

@@ -71,6 +71,11 @@ class cmsGalleries extends PolymerElement {
                 type: Array,
                 notify: true,
             },
+            setter: {
+                type: String,
+                notify: true,
+                value: 'false'
+            },
             reset: {
                 type: String,
                 observer: 'getImageGalleries',
@@ -86,10 +91,6 @@ class cmsGalleries extends PolymerElement {
                 type: Boolean,
                 value: true
             },
-            images: {
-                type: Array,
-                notify: true,
-            },
             galleries: {
                 type: Array,
                 notify: true
@@ -101,11 +102,15 @@ class cmsGalleries extends PolymerElement {
         super.ready()
         this.getImageGalleries(true)
     }
+
+    clearImages() {
+        this.images = []
+    }
+
     log(data) {
         console.log(data)
     }
     openform(data) {
-        console.log(data)
         this.$.gallForm.closed = data
     }
 
@@ -124,11 +129,12 @@ class cmsGalleries extends PolymerElement {
     }
 
     setg(event) {
-        console.log(event)
-        this.images = event.content
-        this.show = true
-        if (this.sett === true) {
-            // this.$.images.style.height = "450px"
+        if (event.content) {
+            this.settg = {}
+            this.images = event.content
+            this.show = true
+        } else {
+            this.images = {}
         }
     }
 }

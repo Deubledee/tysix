@@ -115,8 +115,7 @@ class cmsUserForm extends PolymerElement {
             </div>
             <nav>
         </main>
-        <cms-image-viewer closed="{{openViewer}}" class="diferent" open="false" image="{{image}}"></cms-image-viewer>
-`
+        <cms-image-viewer id="viewer" class="diferent" image="{{image}}"></cms-image-viewer>`
     }
     static get is() { return 'cms-user-form'; }
 
@@ -176,6 +175,7 @@ class cmsUserForm extends PolymerElement {
     }
     ready() {
         super.ready()
+        this.$.viewer.open = false
     }
 
     setUserData(data) {
@@ -188,7 +188,7 @@ class cmsUserForm extends PolymerElement {
     }
 
     file() {
-        this.openViewer = true
+        this.$.viewer.open = true
     }
 
     setValues() {

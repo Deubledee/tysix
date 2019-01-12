@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
+import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import './cms-page-form.js';
 
 class cmsArticlesViewer extends PolymerElement {
@@ -202,6 +203,11 @@ class cmsArticlesViewer extends PolymerElement {
   _getPagename(cats) {
     // console.log(cats)
     return cats.name
+  }
+  ready() {
+    super.ready();
+    //this.AskPages()
+    scroll({ top: 0, behavior: 'silent' });
   }
 
   add(event) {

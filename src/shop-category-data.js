@@ -110,12 +110,12 @@ class ShopCategoryData extends PolymerElement {
       let categoryObj = this._getCategoryObject(categoryName);
       if (categoryObj !== undefined) {
         let obj = { name: 'articles', doc: categoryObj.name }
-        this.DBW.getDoc(obj).then((querySnapshot) => {
-          console.log(querySnapshot.data().content)
-          let content = querySnapshot.data().content
-          this.set('category.items', content);
-          console.log(this.category)
-        });
+        this.DBW.getArticle((msg, content) => {
+          if (msg !== "error") {
+            this.set('category.items', content);
+            console.log(this.category)
+          }
+        }, categoryObj);
       }
       return categoryObj;
     }

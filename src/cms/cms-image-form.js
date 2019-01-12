@@ -118,6 +118,7 @@ class cmsImageForm extends PolymerElement {
     ready() {
         super.ready();
     }
+
     setValues() {
         console.log(this.$.upload.imageArray)
         if (this.$.upload.imageArray.length > 1) {
@@ -129,7 +130,6 @@ class cmsImageForm extends PolymerElement {
                 let name = item.name.split('.')[0]
                 finalArr.push({ url: target, title: name })
             })
-
             let parsed = {
                 gallerie: this.gallerie + '_images',
                 content: finalArr

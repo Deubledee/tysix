@@ -87,16 +87,18 @@ class cmsImages extends PolymerElement {
           }
   
           nav[central][show]{
-            display: block
+            display: inline-flex;
+            flex-flow: row
           }
   
           div[central]{
-            display: block
+            display: block;
           }
   
           div[central][toggle]{
             display: none
           }
+
           .title2{
             margin-left: auto;
             margin-right: auto;
@@ -120,9 +122,15 @@ class cmsImages extends PolymerElement {
             <div central toggle$="[[toggle]]">
                 <paper-icon-button central on-click="toggleView" title="align row" icon="image:grid-on" aria-label="toggle-view"></paper-icon-button>
             </div>
+            <div central toggle$="[[!toggle]]">
+                <paper-icon-button central on-click="clearImages" title="clear mages" icon="image:crop-free" aria-label="toggle-view"></paper-icon-button>
+            </div>
+            <div central toggle$="[[toggle]]">
+                <paper-icon-button central on-click="clearImages" title="clear mages" icon="image:crop-free" aria-label="toggle-view"></paper-icon-button>
+            </div>
         </nav>  
         <article images toggle$="[[!toggle]]"  class="grid" id="images">  
-            <dom-repeat items="[[images]]" as="image">
+            <dom-repeat id="repeat" items="[[contents]]" as="image">
                 <template>
                 <nav images>
                     <!--dom-repeat items="[[count]]" as="image">
@@ -145,7 +153,7 @@ class cmsImages extends PolymerElement {
         <dom-if if="[[sett]]">
           <template>
             <div images>
-              <paper-button on-click="cancel">
+              <paper-button on-click="close">
                 cancel
               </paper-button>
             </div>
@@ -166,16 +174,27 @@ class cmsImages extends PolymerElement {
                 notify: true
             },
             cancel: {
-                type: Object
+                type: Boolean,
+                notify: true
             },
             sett: {
                 type: Boolean,
                 value: true
             },
+            image: {
+                type: Object,
+                notify: true
+            },
             images: {
                 type: Array,
                 notify: true,
                 observer: 'open'
+            },
+            clear: {
+                type: Boolean,
+                value: false,
+                notify: true,
+                observer: 'clearImages'
             },
             show: {
                 type: Boolean,
@@ -189,6 +208,10 @@ class cmsImages extends PolymerElement {
                 value: true,
                 reflectToAttribute: true
             },
+            contents: {
+                type: Array,
+                notify: true,
+            },
         }
     }
 
@@ -196,14 +219,26 @@ class cmsImages extends PolymerElement {
         super.ready()
     }
 
-    open() {
-        this.show = true
+    clearImages() {
+        this.contents = []
+        this.show = false
+    }
+
+    open(data) {
+        if (data instanceof Array === true && data.length > 0) {
+            this.show = true
+            this.contents = data
+        }
+    }
+
+    close() {
+        this.cancel = !this.cancel
     }
 
     setImage(event) {
         if (this.sett === true) {
             this.image = event.model.__data.image
-            this.cancel()
+            this.cancel = !this.cancel
         }
     }
 

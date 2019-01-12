@@ -125,7 +125,7 @@ class cmsGalleriesItem extends PolymerElement {
                 </p>
             </paper-dialog>      
         </nav> 
-        <cms-image-form id="imgForm" setter={{reset}} gallerie="[[gallerie.gallerie]]"></cms-image-form>
+        <cms-image-form id="imgForm" setter={{setter}} gallerie="[[gallerie.gallerie]]"></cms-image-form>
         `
     }
 
@@ -145,6 +145,11 @@ class cmsGalleriesItem extends PolymerElement {
                 notify: true,
                 value: 'false'
             },
+            /* reset: {
+                 type: String,
+                 observer: 'getImageGalleries',
+                 value: 'false'
+             },*/
             confirm: {
                 type: Boolean,
                 notify: true,
@@ -193,6 +198,7 @@ class cmsGalleriesItem extends PolymerElement {
 
     openConfirm(event) {
         if (this.confirm === false) {
+            this.$.confirm.openConfirm({ name: gallerie.gallerie })
             this.confirm = true
             this.$.animated.open()
             scroll({ top: 0, behavior: 'smooth' });
