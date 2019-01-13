@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/paper-input/paper-input.js';
 import { dataBaseworker } from './dataBaseWorker.js';
+import '../shop-image.js';
 class cmsImages extends PolymerElement {
     static get template() {
         return html` 

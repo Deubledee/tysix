@@ -2,7 +2,8 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import './cms-page-form.js';
+import { dataBaseworker } from './dataBaseWorker.js';
+import '../shop-image.js';
 
 class cmsArticlesViewer extends PolymerElement {
   static get template() {
@@ -57,12 +58,35 @@ class cmsArticlesViewer extends PolymerElement {
         flex-grow: 1      
       }
 
+       div[bottom] {
+        margin-bottom: 18px;   
+      }
+
+      nav[bottom] div {
+        flex-basis: unset;
+        flex-grow: 1;
+        height: auto;    
+      }
+
       section {
         display: flex;
         flex-flow: row;        
         font-weight: bold;
         padding: 4px;
         height: 50px;
+      }
+
+      section[bottom] {
+        display: flex;
+        font-weight: bold;
+        padding: 4px;
+        height: auto!important;
+        margin-bottom: 100px;
+      }
+
+      section[bottom2] {
+        flex-flow: column;
+        height: auto!important;
       }
 
       section div[left] {
@@ -106,7 +130,12 @@ class cmsArticlesViewer extends PolymerElement {
         background-color: #e1e2d8;
         text-shadow: 1px 1px 1px var(--primary-text-color);
       }
+
       iron-icon {
+        height: 150px;
+      }
+
+      shop-image {
         color: #929696;
       }
 
@@ -133,12 +162,12 @@ class cmsArticlesViewer extends PolymerElement {
             </section>
           </div>
         </nav>     
-        <dom-repeat items="[[categories]]" as="category">
+        <dom-repeat items="[[articles]]" as="article">
           <template>
             <article>
-              <nav value="[[index]]">
+              <nav>
                   <div>
-                    <span>  {{_getPagename(category)}} </span>
+                    <span>  {{_getArticlename(article)}} </span>
                   </div>
                   <div center>
                     <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
@@ -150,27 +179,37 @@ class cmsArticlesViewer extends PolymerElement {
                     <paper-icon-button on-click="delete" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
                   </div>                  
               </nav> 
-              <nav bottom>       
-                <section>
-                  <div left> Page type </div>
-                  <div right> [[category.page]]  </div>    
-                  </section>  
-                  <section>
-                  <div left> Page name </div>
-                  <div right> [[category.name]]  </div>  
-                  </section>  
-                  <section>
-                  <div left> title </div>
-                  <div right> [[category.title]]  </div>     
-                  </section>  
-                  <section>           
-                  <div left> image </div>
-                  <div right> [[category.image]]  </div> 
-                  </section>  
-                  <section>
-                  <div left> placeholder </div>
-                  <div right> [[category.placeholder]]  </div>                               
-                </section>  
+              <nav bottom>  
+                <dom-repeat items="[[article.content]]" as="art">
+                  <template> 
+                    <div bottom>
+                      <section bottom>
+                        <div left> brand </div>
+                        <div right> [[art.brand]]  </div>    
+                      </section>  
+                      <section bottom>
+                        <div left> category </div>
+                        <div right> [[art.category]]  </div>  
+                      </section>  
+                      <section bottom>
+                        <div left> description </div>
+                        <div right> [[art.description]]  </div>     
+                      </section>  
+                      <section bottom2>           
+                        <div left> images </div>  
+                          <cms-images id="images" images="[[getImage(art)]]" image="{{image}}" cancel="{{evet}}" sett={{sett}} clear="{{clear}}"></cms-images>  
+                      </section> 
+                      <section bottom>
+                        <div left> price </div>
+                        <div right> [[art.price]]  </div>                               
+                      </section>  
+                      <section bottom>
+                        <div left> title </div>
+                        <div right> [[art.title]]  </div>                               
+                      </section> 
+                    </div>
+                  </template>
+                </dom-repeat>
               </nav>
             </article>
           </template>
@@ -184,14 +223,16 @@ class cmsArticlesViewer extends PolymerElement {
 
   static get properties() {
     return {
-      categories: {
-        type: Array,
+      DBW: {
+        type: Object,
+        value: function () {
+          return new dataBaseworker()
+        },
         notify: true
       },
-      lang: {
-        type: String,
+      articles: {
+        type: Array,
         notify: true
-        // value: lang
       },
       closed: {
         type: Boolean,
@@ -200,14 +241,34 @@ class cmsArticlesViewer extends PolymerElement {
     }
   }
 
-  _getPagename(cats) {
-    // console.log(cats)
-    return cats.name
+  log(data) {
+    console.log('log from cms-page-viewer', data)
   }
+
+  error(data) {
+    console.error('error from cms-page-viewer', data)
+  }
+
   ready() {
     super.ready();
-    //this.AskPages()
+    this._getArticles()
     scroll({ top: 0, behavior: 'silent' });
+  }
+
+  getImage(image) {
+    console.log(image)
+    return [image]
+  }
+
+  _getArticles() {
+    this.DBW.askAllArticles((data) => {
+      this.articles = data
+    })
+  }
+
+  _getArticlename(article) {
+    console.log('log from cms-page-viewer', article)
+    return article.content[0].category
   }
 
   add(event) {
@@ -226,7 +287,7 @@ class cmsArticlesViewer extends PolymerElement {
     console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
     if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
-      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "435px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "auto"
       event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
       event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
     } else {

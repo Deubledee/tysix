@@ -241,7 +241,7 @@ class cmsPageViewer extends PolymerElement {
       this.categories = []
       this.categories = done
       scroll({ top: 0, behavior: 'silent' });
-    }, { name: 'pages' })
+    })
   }
 
   _getPagename(cats) {
@@ -291,7 +291,6 @@ class cmsPageViewer extends PolymerElement {
 
   delete(data) {
     let page = data
-    this.log(data)
     this.DBW.deletePage((msg, done) => {
       if (msg !== 'error') {
         this.openConfirm()

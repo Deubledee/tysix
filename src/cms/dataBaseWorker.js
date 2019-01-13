@@ -52,11 +52,8 @@ Object.defineProperty(woker, 'deleteDoc', {
 Object.defineProperty(woker, 'handleTransaction', {
     value: function handleTransaction(table) {
         var sfDocRef = db.collection(table.name).doc(table.doc);
-        // Uncomment to initialize the doc.
-        //ex:{role: admin}
         sfDocRef.set(table.query);
         return db.runTransaction(function (transaction) {
-            // This code may get re-run multiple times if there are conflicts.
             return transaction.get(sfDocRef).then(function (sfDoc) {
                 if (!sfDoc.exists) {
                     throw "Document does not exist!";
@@ -142,18 +139,19 @@ Object.defineProperty(dataBaseworker.prototype, 'getArticle', {
 })
 
 Object.defineProperty(dataBaseworker.prototype, 'askAllArticles', {
-    value: function askAllArticles(done, list) {
-        woker.getDocList(list)
+    value: function askAllArticles(done) {
+        let obj = { name: 'articles' }
+        woker.getDocList(obj)
             .then((querySnapshot) => {
                 this.categories = []
                 querySnapshot.forEach((doc) => {
                     this.categories.push(doc.data())
-                }).catch(function (error) {
-                    console.error("Error getting All Articles: " + value, error);
-                    done("error", error)
-                });
+                })
                 done(this.categories)
-            })
+            }).catch(function (error) {
+                console.error("Error getting All Articles: " + value, error);
+                done("error", error)
+            });
     },
     writable: false, enumerable: false, configurable: false
 })
@@ -204,8 +202,9 @@ Object.defineProperty(dataBaseworker.prototype, 'deletePage', {
 })
 
 Object.defineProperty(dataBaseworker.prototype, 'askAllPages', {
-    value: function askAllPages(done, list) {
-        woker.getDocList(list)
+    value: function askAllPages(done) {
+        let obj = { name: 'pages' }
+        woker.getDocList(obj)
             .then((querySnapshot) => {
                 this.categories = []
                 querySnapshot.forEach((doc) => {

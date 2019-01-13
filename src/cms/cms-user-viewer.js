@@ -1,6 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import './cms-user-form.js';
+import '../shop-image.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 class cmsUserViewer extends PolymerElement {
   static get template() {
@@ -164,7 +165,10 @@ class cmsUserViewer extends PolymerElement {
                   <div left> displayName </div> <div right> [[category.displayName]]  </div>   
               </section> 
               <section> 
-                  <div left> photoURL </div> <div rightImage> [[category.photoURL]]  </div>  <img src="[[category.photoURL]]"> 
+                  <div left> photoURL </div> <div rightImage> [[category.photoURL]]  </div> 
+              </section>                
+              <section> 
+                  <shop-image src="[[photoURL]]" alt="[[photoURL]]"></shop-image>
               </section> 
               <section>  
                   <div left> phoneNumber </div> <div right> [[category.phoneNumber]]  </div>   
