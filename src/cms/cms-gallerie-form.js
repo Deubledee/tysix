@@ -9,7 +9,10 @@ class cmsGallerieForm extends PolymerElement {
         return html`
 
     <style>      
-        main[closed] {
+        main[closed] {    
+            position: fixed;
+            top: 194px;
+            left: 26%;
             display: flex;
             flex-flow: column;
             box-sizing: border-box;
@@ -17,19 +20,17 @@ class cmsGallerieForm extends PolymerElement {
             width: 755px;
             visibility: visible;
             transition-property: height, visibility;
-            transition-duration: 2s, .5s;
+            transition-duration: 2s, 2s;
             padding: 52px;
         }
       
         main {
             display: none;
-          background-color: aliceblue;
-          width: 755px;
-          height: 0px;
-          padding: 5px;
-          visibility: collapse;
-          transition-property: height, visibility;
-          transition-duration: 2s, 1s;
+            background-color: aliceblue;
+            width: 755px;
+            height: 0px;
+            padding: 5px;
+            visibility: collapse;
         }
       
         img {
@@ -61,12 +62,12 @@ class cmsGallerieForm extends PolymerElement {
         <paper-input always-float-label label="Gallerie Name" value="{{pageName}}"></paper-input>
         <nav>
             <div images>
-                <paper-button on-click="clean">
+                <paper-button raised="true" on-click="clean">
                     cancel
                 </paper-button>
             </div>
             <div images>
-                <paper-button on-click="setValues">
+                <paper-button raised="true" on-click="setValues">
                     Save
                 </paper-button>
             </div>

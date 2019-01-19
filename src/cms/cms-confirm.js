@@ -22,46 +22,72 @@ class cmsConfirm extends PolymerElement {
         }
 
         paper-dialog.diferent {
-            left: 170.5px;
-            width: 79.5%;
-            height: 200px;
+            left: 29%;
+            width: 585px;
+            height: 236px;
+            border-radius: 4px;
         }
 
-        paper-dialog.diferent h3 {
+        paper-dialog.diferent div {
+            text-align: center;
+            word-break: break-word;
             letter-spacing: 2px;
-            color: #ff4700;
-            background-color: #454748;
+            color: #356ea1;
             margin-left: auto;
             margin-right: auto;
-            max-width: 14em;
-            min-width: 8em;
             border-radius: 5px;
+            width: 20%;
+        }
+
+        paper-dialog.diferent div[one] {
+            height: 44px;
+        }
+
+
+        paper-dialog.diferent div[tow] {
+            width: 61%;
         }
 
         paper-dialog.diferent h2 {
-            color: #f2f2f2;
-            text-shadow: 1px 1px 1px #161616;
+            color: #d87e7e;
+            text-shadow: 2px 2px 2px #161616;
             text-align: center;
-            background-color: #e2dfdc;
             margin-left: auto;
             margin-right: auto;
-            width: 17%;
+            width: 42%;
             border-radius: 5px;
+            height: 35px;
+            font-size: 29px;
         }
+
+        paper-button {
+            background-color: #e3e3e3
+        }
+
+        paper-button[right] {
+            float: right;
+        }
+
+        paper-button[left] {
+            float: left;
+        }
+        
     </style>
 
-    <nav id="navbottom" bottom2 confirm$="[[confirm]]">           
+    <nav id="navbottom" bottom2 confirm$="[[open]]">           
         <paper-dialog id="animated" class="diferent" exit-animation="fade-out-animation">
-            <h2> Delete page </h2>
-            <h3>[[title]]</h3>
-            <p>
-            <paper-button on-click="openConfirm">
-                cancel 
-            </paper-button>
-            <paper-button on-click="delete">
-                confirm 
-            </paper-button>
-            </p>
+            <h2> Delete [[type]] </h2>
+            <div one>
+                <h3>[[title]]</h3>
+            </div>
+            <div tow>
+                <paper-button left on-click="openConfirm">
+                    cancel 
+                </paper-button>
+                <paper-button right on-click="delete">
+                    confirm 
+                </paper-button>
+            </div>
         </paper-dialog>      
     </nav>
     `}
@@ -80,11 +106,20 @@ class cmsConfirm extends PolymerElement {
                 type: Boolean,
                 notify: true,
                 value: false,
-                reflectToAttribute: true
+                reflectToAttribute: true,
+            },
+            open: {
+                type: Boolean,
+                notify: true,
+                value: false,
             },
             title: {
                 type: Object,
-                notify: true
+                notify: true,
+                observer: 'cleanUnderscore'
+            },
+            type: {
+                type: String
             },
             method: {
                 type: Object
@@ -92,31 +127,39 @@ class cmsConfirm extends PolymerElement {
         }
     }
 
-    delete() {
-        this.method(this.title)
-    }
-
     log(data) {
         console.log('log from cms-confirm', data)
     }
 
     error(data) {
-        console.error('error from cms-confirm', data)
+        console.error('error from cms-page-viewer', data)
+    }
+
+    delete() {
+        this.method(this.title)
+        this.open = !this.open
+    }
+
+    cleanUnderscore(data) {
+        let cleaned = data
+        cleaned = cleaned.split('_').join(' ')
+        return cleaned
     }
 
     ready() {
         super.ready();
     }
+
     openConfirm(event) {
         if (this.confirm === false) {
-            this.title = {}
-            this.title = event.name
+            // this.title = {}
+            this.title = this.cleanUnderscore(event.name)
             this.confirm = true
             this.$.animated.open()
-            scroll({ top: 0, behavior: 'smooth' });
         } else {
             this.$.animated.cancel()
             setTimeout(() => {
+                this.open = false
                 this.confirm = false
             }, 400)
         }

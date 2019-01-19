@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import { dataBaseworker } from './dataBaseWorker.js';
+import '@polymer/paper-spinner/paper-spinner.js';
 import './cms-page-form.js';
 import './cms-confirm.js';
 
@@ -102,7 +103,12 @@ class cmsPageViewer extends PolymerElement {
 
       div[center]{        
         text-align: center;
-        }
+      }
+
+      paper-spinner{
+        left: 47%;
+      }
+      
     </style>
   </custom-style>  
     <main>
@@ -123,7 +129,8 @@ class cmsPageViewer extends PolymerElement {
               Add
             </section>
           </div>
-        </nav>     
+        </nav>    
+        <paper-spinner id="spinner" active></paper-spinner> 
         <dom-repeat items="[[categories]]" as="category">
           <template>
             <article>
@@ -132,7 +139,7 @@ class cmsPageViewer extends PolymerElement {
                     <span>  {{_getPagename(category)}} </span>
                   </div>
                   <div center>
-                    <paper-icon-button on-click="showPage" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
+                    <paper-icon-button on-click="showPage" icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
                   </div>  
                   <div center>
                     <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
@@ -168,8 +175,7 @@ class cmsPageViewer extends PolymerElement {
         </dom-repeat>
         <cms-page-form id="form" closed="{{closed}}" categorie="{{categorie}}" setter="{{setter}}">
         </cms-page-form>
-        <cms-confirm id="confirm" bottom2 confirm$="[[confirm]]">           
-     
+        <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="page"> 
         </cms-confirm> 
       </main>  
 `
@@ -192,6 +198,7 @@ class cmsPageViewer extends PolymerElement {
       categories: {
         type: Array,
         notify: true,
+        observer: 'deSpin'
       },
       page: {
         type: Object,
@@ -214,7 +221,6 @@ class cmsPageViewer extends PolymerElement {
         type: Boolean,
         notify: true,
         value: false,
-        reflectToAttribute: true
       },
       lastChosen: {
         type: Array,
@@ -225,6 +231,12 @@ class cmsPageViewer extends PolymerElement {
 
   log(data) {
     console.log('log from cms-page-viewer', data)
+  }
+
+  deSpin(data) {
+    if (this.$.spinner.active === true) {
+      this.$.spinner.active = false
+    }
   }
 
   error(data) {
@@ -255,7 +267,6 @@ class cmsPageViewer extends PolymerElement {
   }
 
   resetCollor(data) {
-    this.log(data)
     if (data === 'true' || data === 'newPage') {
       this.lastChosen[0].style.color = "rgb(128, 152, 173)"
       this.lastChosen = []

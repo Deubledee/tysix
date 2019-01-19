@@ -90,15 +90,19 @@ class ShopHome extends PolymerElement {
 
     <dom-repeat items="[[categories]]">
       <template strip-whitespace="">
-        <div class="item">
-          <a class="image-link" href\$="/list/[[item.name]]">
-            <shop-image src="[[item.image]]" alt="[[item.title]]" placeholder-img="[[item.placeholder]]"></shop-image>
-          </a>
-          <h2>[[item.title]]</h2>
-          <shop-button>
-            <a aria-label\$="[[item.title]] Shop Now" href\$="/list/[[item.name]]">Shop Now</a>
-          </shop-button>
-        </div>
+        <dom-if if="[[_renderListOnly(item.type)]]">
+          <template>
+            <div class="item">
+              <a class="image-link" href\$="/list/[[item.name]]">
+                <shop-image src="[[item.image]]" alt="[[item.title]]" placeholder-img="[[item.placeholder]]"></shop-image>
+              </a>
+              <h2>[[item.title]]</h2>
+              <shop-button>
+                <a aria-label\$="[[item.title]] Shop Now" href\$="/list/[[item.name]]">Shop Now</a>
+              </shop-button>
+            </div>
+          </template>
+        </dom-if>
       </template>
     </dom-repeat>
 `;
@@ -106,23 +110,34 @@ class ShopHome extends PolymerElement {
 
   static get is() { return 'shop-home'; }
 
-  static get properties() { return {
+  static get properties() {
+    return {
 
-    categories: {
-      type: Array
-    },
+      categories: {
+        type: Array
+      },
 
-    visible: {
-      type: Boolean,
-      observer: '_visibleChanged'
+      visible: {
+        type: Boolean,
+        observer: '_visibleChanged'
+      }
+
     }
+  }
 
-  }}
+  _renderListOnly(categoryType) {
+    if (categoryType === 'list') {
+      return true
+    } else {
+      return false
+    }
+  }
 
   _visibleChanged(visible) {
     if (visible) {
       this.dispatchEvent(new CustomEvent('change-section', {
-        bubbles: true, composed: true, detail: {title: 'Home'}}));
+        bubbles: true, composed: true, detail: { title: 'Home' }
+      }));
     }
   }
 }

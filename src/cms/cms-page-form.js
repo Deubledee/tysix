@@ -17,19 +17,6 @@ class cmsPageForm extends PolymerElement {
      static get template() {
           return html`
     <style>
-       /*   main {
-               background-color: aliceblue;
-               position: fixed;
-               top: 149px;
-               width: 77%;
-               height: 0px;
-               padding: 5px;
-               visibility: collapse;
-               transition-property: height, visibility;
-               transition-delay: .5s, 0s;
-               transition-duration: 2s, 1s;
-          }*/
-
           main[closed] {
                height: 584px;
                visibility: visible;
@@ -38,35 +25,35 @@ class cmsPageForm extends PolymerElement {
                transition-duration: 2s, .5s;
           }
           main {
+               box-sizing: border-box;
                display: flex;
                flex-flow: column;
-              /* overflow: auto;*/
-               background-color: aliceblue;
+               background-color: #dfdfdf;
                position: absolute;
                top: 196px;
+               border-radius: 4px;
                width: 99%;
-               /* width: 77%; */
                height: 0px;
-               padding: 5px;
+               padding: 75px;
                visibility: collapse;
                transition-property: height, visibility;
                transition-duration: 2s, 1s;
-             }
+          }
 
-             img {
+          img {
                width: 190px
-           }
-           
-           nav {
+          }
+
+          nav {
                display: flex;
                flex-flow: row
-           }
-           shop-image::before {
+          }
+          shop-image::before {
                content: "";
                display: block;
                padding-top: 100%;
-             }
-           div[images] {
+          }
+          div[images] {
                box-sizing: border-box;
                padding: 13px;
                margin-top: 34px;
@@ -75,19 +62,20 @@ class cmsPageForm extends PolymerElement {
                width: 100px;
                height: 60px;
                margin-right: 5px;
-           }
-           paper-button {
+          }
+          paper-button {
                background-color: var(--google-blue-100)
-             }
-             div [button]{
+          }
+          div [button]{
                background-color: var(--google-grey-300)
-             }
-             cms-image-viewer.diferent{
+          }
+          cms-image-viewer.diferent{
                --main-style:{
-                 position: relative;
-                 margin-left: 0px;
+                    position: absolute;
+                    width: 99%;
+                    top: 43%;
                }
-             }
+          }
              </style>
      <main closed$="[[closed]]">
           <cms-input-sellector id="sellector1"  options="[[pageTypes]]" value="{{type}}">          
@@ -107,19 +95,19 @@ class cmsPageForm extends PolymerElement {
                </cms-input-sellector>
           <div>
           <nav>
-          <div images>
-              <paper-button on-click="clean">
-                  cancel
-              </paper-button>
-          </div>
-          <div images>
-              <paper-button on-click="setValues">
-                  Save
-              </paper-button>
-          </div>
-      <nav>
-   </main>     
-     <cms-image-viewer id="viewer" class="diferent" image="{{image}}"></cms-image-viewer>
+               <div images>
+                    <paper-button on-click="clean">
+                         cancel
+                    </paper-button>
+               </div>
+               <div images>
+                    <paper-button on-click="setValues">
+                         Save
+                    </paper-button>
+               </div>
+          <nav>     
+     </main>       
+     <cms-image-viewer id="viewer" class="diferent" image="{{image}}" putCancelButton="[[sett]]"></cms-image-viewer>
 `
      }
      static get is() { return 'cms-page-form'; }
@@ -148,15 +136,20 @@ class cmsPageForm extends PolymerElement {
                     type: Array,
                     notify: true
                },
-               openViewer: {
-                    type: Boolean,
-                    notify: true,
-                    value: false
-               },
                categorie: {
                     type: Object,
                     notify: true,
                     observer: 'reset'
+               },
+               closeHead: {
+                    type: Boolean,
+                    notify: true,
+                    value: true
+               },
+               sett: {
+                    type: Boolean,
+                    notify: true,
+                    value: true
                },
                setter: {
                     type: String,
@@ -201,7 +194,7 @@ class cmsPageForm extends PolymerElement {
                          { label: 'Page type' },
                          { id: 'agents', name: '---' },
                          { id: 'agents2', name: 'list' },
-                         { id: 'compressor', name: 'Blog', notAtive: false },
+                         { id: 'compressor', name: 'sub-categoty', notAtive: false },
                          { id: 'delay', name: 'Social', notAtive: false },
                          { id: 'wave-shaper', name: 'Video', notAtive: false }]
                }
@@ -211,6 +204,9 @@ class cmsPageForm extends PolymerElement {
      ready() {
           super.ready()
           this.$.viewer.open = false
+          this.$.viewer.closeHead = true
+          this.$.viewer.killSett = true
+          this.$.viewer.openMain = false
      }
 
      createURL(items) {
@@ -225,7 +221,11 @@ class cmsPageForm extends PolymerElement {
 
      file() {
           //this.openViewer = true
+          this.$.viewer.closeHead = true
           this.$.viewer.open = true
+          this.$.viewer.show = true
+          this.$.viewer.openMain = true
+          this.$.viewer.killSett = true
           scroll({ top: 500, behavior: 'smooth' });
           scroll({ bottom: 520, behavior: 'smooth' });
      }
@@ -237,7 +237,6 @@ class cmsPageForm extends PolymerElement {
           this.title = data.title || 'N/a'
           this.image = { url: data.image, title: data.title } || 'N/a'
           this.placeholder = data.placeholder || 'N/a'
-          console.log(this.type)
      }
 
      setValues() {
@@ -249,7 +248,6 @@ class cmsPageForm extends PolymerElement {
                'title': this.title,
                'image': this.image.url,
                'placeholder': this.pageName
-               // 'id': this.iD.toLocaleLowerCase().split(' ').join('_')
           }
           if (this.edit === false) {
                this.DBW.setPages((done, err) => {
@@ -286,6 +284,7 @@ class cmsPageForm extends PolymerElement {
           scroll({ top: 0, behavior: 'smooth' });
           this.closed = false
           this.setter = setter
+          this.$.viewer.openmain = false
      }
 }
 

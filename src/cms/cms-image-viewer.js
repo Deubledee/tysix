@@ -13,19 +13,10 @@ class cmsImageViewer extends PolymerElement {
           @apply --layout-center-justified;
           text-align: center;
         }
-      
+
         main {
+          display: none;
           position: relative;
-          bottom: 672px;
-          height: 0px;
-          visibility: collapse;
-          transition-property: height, visibility;
-          transition-delay: .5s, .5s;
-          transition-duration: 2s, 1s;
-          @apply --main-style;
-        }
-      
-        main[closed] {
           width: 101%;
           background-color: #f2f2f2;;
           border-radius: 4px;
@@ -37,6 +28,10 @@ class cmsImageViewer extends PolymerElement {
           @apply --main-style;
         }
       
+        main[mainOpend] {
+          display: block
+        }
+
         @media (max-width: 767px) {
           :host {
             margin: 0 12px;
@@ -62,6 +57,10 @@ class cmsImageViewer extends PolymerElement {
           flex-flow: row;
           padding: 10px;
           padding-left: 21px;
+        }
+
+        .hidde {
+          display: none!important
         }
 
         nav[controler] div {
@@ -93,6 +92,7 @@ class cmsImageViewer extends PolymerElement {
         }
 
         paper-icon-button-light{
+          color: #929696;
           margin-left: 8px;
           margin-right: 7px;
         }
@@ -106,31 +106,48 @@ class cmsImageViewer extends PolymerElement {
         }
 
       </style>
-      <main closed$="[[open]]">   
-        <dom-if if="[[!sett]]">
-          <template>
-            <nav controler>
-              <div>
-                <section title2>
-                  <paper-icon-button-light>
-                    <iron-icon icon="image:photo-library" aria-label="galleries"></iron-icon>
-                  </paper-icon-button-light>
-                  <div> Galleries </div>
-                </section>
-              </div>
-              <div add>
-                <section title on-click="createGallerie">
-                  <paper-icon-button-light>
-                    <iron-icon icon="image:loupe" aria-label="Go back"></iron-icon>
-                  </paper-icon-button-light>
-                  Add
-                </section>
-              </div> 
-            </nav>
-          </template>
-        </dom-if>                  
-        <cms-galleries closed$="[[open]]" id="galleries" sett={{sett}} images="{{images}}" setter="{{clear}}" clear="{{clear}}"> </cms-galleries>  
-        <cms-images id="images" images="[[images]]" image="{{image}}" cancel="{{evet}}" sett={{sett}} clear="{{clear}}"></cms-images> 
+      <main mainOpend$="[[openMain]]">
+          <nav id="controler" controler>
+            <div>
+              <section title2>
+                <paper-icon-button-light>
+                  <iron-icon icon="image:photo-library" aria-label="galleries"></iron-icon>
+                </paper-icon-button-light>
+                <div> Galleries </div>
+              </section>
+            </div>
+            <div>
+              <section title on-click="createGallerie">
+                <paper-icon-button-light>
+                  <iron-icon icon="image:loupe" aria-label="Go back"></iron-icon>
+                </paper-icon-button-light>
+                Add
+              </section>
+            </div> 
+          </nav>
+        <cms-gallerie-form id="gallForm"
+          setter={{reset}}>
+        </cms-gallerie-form>   
+
+        <cms-galleries id="galleries"
+            closed$="[[open]]"
+            sett=[[sett]]
+            images="{{images}}"
+            setter="{{clear}}"
+            clear="{{clear}}"
+            confirm="{{confirm}}"
+            reset="[[reset]]">
+        </cms-galleries> 
+
+        <cms-images id="images"
+            images="[[images]]"
+            image="{{image}}"
+            cancel="{{evet}}"
+            sett="[[sett]]"
+            clear="{{clear}}"
+            confirm="{{confirm}}"
+            openMain="{{openMain}}">
+        </cms-images> 
       </main>
     `;
   }
@@ -150,22 +167,44 @@ class cmsImageViewer extends PolymerElement {
         type: Array,
         notify: true
       },
+      mainOpend: {
+        type: Boolean,
+        notify: true,
+        value: true,
+        reflectToAttribute: true,
+      },
+      openMain: {
+        type: Boolean,
+        notify: true,
+        value: true
+      },
       images: {
         type: Array,
         notify: true,
+      },
+      confirm: {
+        type: Boolean,
+        notify: true,
+        value: false
       },
       openGallerieForm: {
         type: Boolean,
         value: false
       },
-      fourCounted: {
-        type: Array,
-        notify: true,
+      reset: {
+        type: Boolean,
+        notify: true
       },
       clear: {
         type: Boolean,
         value: false,
         notify: true
+      },
+      show: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        observer: 'showButtons'
       },
       evet: {
         type: Boolean,
@@ -181,10 +220,27 @@ class cmsImageViewer extends PolymerElement {
         type: String,
         notify: true
       },
+      closeHead: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        observer: 'clearHead',
+      },
+      killFormAndSet: {
+        type: Boolean,
+        notify: true,
+        value: false,
+        observer: 'settAndFormKiller'
+      },
+      form: {
+        type: Boolean,
+        notify: true,
+        value: true
+      },
       sett: {
         type: Boolean,
-        observer: 'setOpen',
-        value: true
+        notify: true,
+        value: false,
       },
       open: {
         type: Boolean,
@@ -203,25 +259,53 @@ class cmsImageViewer extends PolymerElement {
 
   ready() {
     super.ready()
+    this.$.images.form = true
   }
 
+  log(msg, data) {
+    console.log(msg, data)
+  }
+
+  showButtons(data) {
+    this.$.images.form = false
+    this.$.images.sett = data
+  }
+
+  settAndFormKiller(data) {
+    if (data === true) {
+      this.$.images.killSettAndForm = data
+      this.log('settAndFormKiller', data)
+    }
+  }
+
+  error(data) {
+    console.error('error from cms-image-viewer', data)
+  }
   createGallerie() {
-    this.$.galleries.openform(true)
+    this.$.gallForm.closed = true
+  }
+
+  clearHead(data) {
+    if (data === true) {
+      this.$.controler.classList.toggle('hidde')
+    }
   }
 
   setOpen(data) {
-    this.open = data
+    //this.open = data
     scroll({ top: 0, behavior: 'silent' });
   }
 
-  cancel() {
-    scroll({ top: 200, behavior: 'smooth' });
-    scroll({ bottom: 220, behavior: 'smooth' });
-    this.open = !this.open
-    this.images = []
-    this.galleries = []
-    if (this.sett === true)
-      this.$.images.style.height = "56px"
+  cancel(event) {
+    if (event === true) {
+      scroll({ top: 200, behavior: 'smooth' });
+      scroll({ bottom: 220, behavior: 'smooth' });
+      this.open = !this.open
+      this.evet = !this.evet
+      this.show = !this.show
+      this.openMain = !this.openMain
+      this.$.images.killSettAndForm = this.killSettAndForm = !this.killSettAndForm
+    }
   }
 }
 customElements.define(cmsImageViewer.is, cmsImageViewer);

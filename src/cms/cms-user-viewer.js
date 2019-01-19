@@ -1,5 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
+import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
+import '@polymer/paper-spinner/paper-spinner.js';
 import './cms-user-form.js';
 import '../shop-image.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
@@ -113,73 +114,79 @@ class cmsUserViewer extends PolymerElement {
         background-color: #e1e2d8;
         text-shadow: 1px 1px 1px var(--primary-text-color);
       }
+      
       iron-icon {
         color: #929696;
       }
+      
+      paper-spinner{
+        left: 47%;
+      }
     </style>
   </custom-style>
-    <main>
-        <nav top> 
-          <div>
-            <section title>
-              <paper-icon-button-light>
-                <iron-icon icon="social:person-outline" aria-label="Go back"></iron-icon>
-              </paper-icon-button-light>
-                  Users
-            </section>
-          </div>
-          <div add>
-            <section title on-click="add">
-              <paper-icon-button-light>
-                <iron-icon icon="social:person-add" aria-label="Go back"></iron-icon>
-              </paper-icon-button-light>
-              Add
-            </section>
-          </div>
-        </nav>  
-        <dom-repeat items="[[categories]]" as="category" initial-count="4">
-        <template>
-          <article>
-            <nav value="[[index]]">
-              <div>
-                <span>  {{_getPagename(category)}} </span>
-              </div>
-              <div on-click="showPage">
-                <paper-icon-button icon="editor:drag-handle" aria-label="open"></paper-icon-button>
-              </div>                                   
-              <div on-click="edit">
-                <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-              </div>                                    
-              <div on-click="delete">
-                <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
-              </div>          
-            </nav> 
-            <nav bottom>                        
-              <section>
-                  <div left> uid </div> <div right> [[category.uid]]  </div>           
-              </section> 
-              <section>   
-                  <div left> emailVerified </div> <div right> [[category.emailVerified]]  </div>  
-              </section> 
-              <section>  
-                  <div left> displayName </div> <div right> [[category.displayName]]  </div>   
-              </section> 
-              <section> 
-                  <div left> photoURL </div> <div rightImage> [[category.photoURL]]  </div> 
-              </section>                
-              <section> 
-                  <shop-image src="[[photoURL]]" alt="[[photoURL]]"></shop-image>
-              </section> 
-              <section>  
-                  <div left> phoneNumber </div> <div right> [[category.phoneNumber]]  </div>   
-              </section> 
-              <section> 
-                  <div left> disabled </div> <div right> [[category.disabled]]  </div>    
-              </section>    
-            </nav>
-          </article>
-        </template>
-      </dom-repeat>
+      <main>
+          <nav top> 
+            <div>
+              <section title>
+                <paper-icon-button-light>
+                  <iron-icon icon="social:person-outline" aria-label="Go back"></iron-icon>
+                </paper-icon-button-light>
+                    Users
+              </section>
+            </div>
+            <div add>
+              <section title on-click="add">
+                <paper-icon-button-light>
+                  <iron-icon icon="social:person-add" aria-label="Go back"></iron-icon>
+                </paper-icon-button-light>
+                Add
+              </section>
+            </div>
+          </nav>  
+        <paper-spinner id="spinner" active></paper-spinner>
+          <dom-repeat items="[[categories]]" as="category" initial-count="4">
+            <template>
+              <article>
+                <nav value="[[index]]">
+                  <div>
+                    <span> {{_getPagename(category)}} </span>
+                  </div>
+                  <div on-click="showPage">
+                    <paper-icon-button icon="image:remove-red-eye" aria-label="open"></paper-icon-button>
+                  </div>                                   
+                  <div on-click="edit">
+                    <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                  </div>                                    
+                  <div on-click="delete">
+                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
+                  </div>          
+                </nav> 
+                <nav bottom>                        
+                  <section>
+                      <div left> uid </div> <div right> [[category.uid]]  </div>           
+                  </section> 
+                  <section>   
+                      <div left> emailVerified </div> <div right> [[category.emailVerified]]  </div>  
+                  </section> 
+                  <section>  
+                      <div left> displayName </div> <div right> [[category.displayName]]  </div>   
+                  </section> 
+                  <section> 
+                      <div left> photoURL </div> <div rightImage> [[category.photoURL]]  </div> 
+                  </section>                
+                  <section> 
+                      <shop-image src="[[photoURL]]" alt="[[photoURL]]"></shop-image>
+                  </section> 
+                  <section>  
+                      <div left> phoneNumber </div> <div right> [[category.phoneNumber]]  </div>   
+                  </section> 
+                  <section> 
+                      <div left> disabled </div> <div right> [[category.disabled]]  </div>    
+                  </section>    
+                </nav>
+              </article>
+            </template>
+          </dom-repeat>
         <cms-user-form closed="{{closed}}" user="[[user]]" request="{{request}}" setter="{{setter}}">
         </cms-user-form>
       </main> 
@@ -191,7 +198,8 @@ class cmsUserViewer extends PolymerElement {
     return {
       categories: {
         type: Array,
-        notify: true
+        notify: true,
+        observer: 'deSpin'
       },
       user: {
         type: Object,
@@ -238,6 +246,12 @@ class cmsUserViewer extends PolymerElement {
       this.categories = event.detail
       scroll({ top: 0, behavior: 'silent' });
     })
+  }
+
+  deSpin(data) {
+    if (this.$.spinner.active === true) {
+      this.$.spinner.active = false
+    }
   }
 
   resetCollor(data) {

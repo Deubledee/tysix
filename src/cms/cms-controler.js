@@ -182,7 +182,7 @@ class cmsControler extends PolymerElement {
               <cms-page-viewer name="pages" lang=[[lang]]></cms-page-viewer>
               <cms-user-viewer name="users"></cms-user-viewer>
               <cms-articles-viewer name="articles" lang=[[lang]]></cms-articles-viewer>
-              <cms-image-viewer id="viewer" name="galleries" sett="[[open]]" open="[[open]]" class="diferent"></cms-image-viewer>
+              <cms-image-viewer id="viewer" name="galleries" openMain="[[openMain]]" open="[[open]]" class="diferent"></cms-image-viewer>
               <my-view404 name="view404"></my-view404>
             </iron-pages>
           </app-header-layout>
@@ -202,6 +202,11 @@ class cmsControler extends PolymerElement {
         type: String,
         notify: true
         // value: lang
+      },
+      openMain: {
+        type: Boolean,
+        notify: true,
+        //value: true,
       },
       page: {
         type: String,

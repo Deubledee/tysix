@@ -95,10 +95,26 @@ function dataBaseworker() {
     this.categories = []
 }
 
+
+Object.defineProperty(dataBaseworker.prototype, 'updateArticles', {
+    value: function writeImageContent(done, table) {
+        let teble = { name: "articles", doc: table.name, data: { content: table.content } }
+        woker.updateContent(done, teble)
+            .then(function () {
+                console.log("gallerie successfully updated!");
+                done("gallerie successfully updated!", table.gallerie)
+            })
+            .catch(function (error) {
+                done("Error", error)
+            });
+    },
+    writable: false, enumerable: false, configurable: false
+})
+
 Object.defineProperty(dataBaseworker.prototype, 'setArticles', {
     value: function setArticles(done, parsed) {
         console.log(parsed)
-        woker.createDoc({ name: 'pages', docName: parsed.name, doc: parsed })
+        woker.createDoc({ name: 'articles', docName: parsed.name, doc: parsed })
             .then(function () {
                 done('newPage')
             })
@@ -112,7 +128,7 @@ Object.defineProperty(dataBaseworker.prototype, 'setArticles', {
 
 Object.defineProperty(dataBaseworker.prototype, 'deleteArticles', {
     value: function deleteArticles(done, page) {
-        woker.deleteDoc({ name: 'pages', docName: page })
+        woker.deleteDoc({ name: 'articles', docName: page })
             .then(function () {
                 done("Page successfully deleted!", gallerie)
             }).catch(function (error) {
@@ -149,7 +165,7 @@ Object.defineProperty(dataBaseworker.prototype, 'askAllArticles', {
                 })
                 done(this.categories)
             }).catch(function (error) {
-                console.error("Error getting All Articles: " + value, error);
+                console.error("Error getting All Articles: ", error);
                 done("error", error)
             });
     },

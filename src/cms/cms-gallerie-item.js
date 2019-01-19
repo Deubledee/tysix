@@ -3,6 +3,7 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/paper-input/paper-input.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import './cms-image-form.js';
+import './cms-confirm.js';
 class cmsGalleriesItem extends PolymerElement {
     static get template() {
         return html` 
@@ -110,22 +111,11 @@ class cmsGalleriesItem extends PolymerElement {
                     </template> 
                 </dom-if>  
             </div>
-        </article>
-        <nav id="navbottom" bottom confirm$="[[confirm]]">           
-            <paper-dialog id="animated" class="diferent" exit-animation="fade-out-animation">
-                <h2>Delete gallerie </h2>
-                <h3>[[gallerie.gallerie]]</h3>
-                <p>
-                <paper-button on-click="openConfirm">
-                    cancel 
-                </paper-button>
-                <paper-button on-click="deleteGallerie">
-                    confirm 
-                </paper-button>
-                </p>
-            </paper-dialog>      
-        </nav> 
-        <cms-image-form id="imgForm" setter={{setter}} gallerie="[[gallerie.gallerie]]"></cms-image-form>
+        </article> 
+        <cms-image-form id="imgForm" setter={{setter}} gallerie="[[gallerie.gallerie]]">
+        </cms-image-form>
+        <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery"> 
+        </cms-confirm>
         `
     }
 
@@ -140,21 +130,20 @@ class cmsGalleriesItem extends PolymerElement {
                 },
                 notify: true
             },
+            openMain: {
+                type: Boolean,
+                notify: true,
+                value: true,
+            },
             setter: {
                 type: String,
                 notify: true,
                 value: 'false'
             },
-            /* reset: {
-                 type: String,
-                 observer: 'getImageGalleries',
-                 value: 'false'
-             },*/
             confirm: {
                 type: Boolean,
                 notify: true,
-                value: false,
-                reflectToAttribute: true
+                value: false
             },
             sett: {
                 type: Boolean,
@@ -185,29 +174,22 @@ class cmsGalleriesItem extends PolymerElement {
         this.$.imgForm.closed = true
     }
 
-    deleteGallerie() {
+    deleteGallerie(data) {
+        this.setter = true
         this.DBW.deleteGallerie((done, err) => {
             if (done !== 'error') {
                 this.setter = true
-                this.openConfirm(event)
             } else {
                 console.error(err)
             }
-        }, this.gallerie.gallerie)
+        }, data)
     }
 
     openConfirm(event) {
         if (this.confirm === false) {
-            this.$.confirm.openConfirm({ name: gallerie.gallerie })
+            this.$.confirm.openConfirm({ name: this.gallerie.gallerie })
+            this.$.confirm.method = (this.deleteGallerie).bind(this)
             this.confirm = true
-            this.$.animated.open()
-            scroll({ top: 0, behavior: 'smooth' });
-            scroll({ bottom: 0, behavior: 'smooth' });
-        } else {
-            this.$.animated.cancel()
-            setTimeout(() => {
-                this.confirm = false
-            }, 400)
         }
     }
 }

@@ -247,7 +247,7 @@ class ShopApp extends PolymerElement {
     <!--
       shop-category-data provides the list of categories.
     -->
-    <shop-category-data categories="{{categories}}" DBW="[[DBW]]" lang="{{lang}}"></shop-category-data>
+    <shop-category-data categories="{{categories}}" lang="{{lang}}"></shop-category-data>
 
     <!--
       shop-cart-data maintains the state of the user's shopping cart (in localstorage) and
@@ -287,8 +287,7 @@ class ShopApp extends PolymerElement {
           <div class="user-badge">[[user.email]]</div>      
         </div>
         <div class="cart-btn-container">      
-          <paper-icon-button on-click="reset" icon="refresh" aria-label\$=""></paper-icon-button> 
-               
+          <paper-icon-button on-click="reset" icon="refresh" aria-label\$=""></paper-icon-button>                
         </div>        
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
@@ -303,9 +302,13 @@ class ShopApp extends PolymerElement {
             <shop-tabs selected="[[categoryName]]" attr-for-selected="name">
               <dom-repeat items="[[categories]]" as="category" initial-count="4">
                 <template>
-                <shop-tab name="[[category.name]]">
-                  <a href="/[[category.page]]/[[category.name]]">[[category.title]]</a>
-                </shop-tab>
+                  <dom-if if="[[_renderListOnly(category.type)]]">
+                    <template>
+                      <shop-tab name="[[category.name]]">
+                        <a href="/[[category.type]]/[[category.name]]">[[category.title]]</a>
+                      </shop-tab>
+                    </template>
+                  </dom-if>
                 </template>
               </dom-repeat>
             </shop-tabs>
@@ -322,7 +325,11 @@ class ShopApp extends PolymerElement {
         <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
           <dom-repeat items="[[categories]]" as="category" initial-count="4">
             <template>
-              <a name="[[category.name]]" href="/[[category.page]]/[[category.name]]">[[category.title]]</a>
+              <dom-if if="[[_renderListOnly(category.type)]]">
+                  <template>
+                    <a name="[[category.name]]" href="/[[category.type]]/[[category.name]]">[[category.title]]</a>
+                  </template>
+              </dom-if>
             </template>
           </dom-repeat>
         </iron-selector>
@@ -456,6 +463,14 @@ class ShopApp extends PolymerElement {
     });
   }
 
+  _renderListOnly(categoryType) {
+    if (categoryType === 'list') {
+      return true
+    } else {
+      return false
+    }
+  }
+
   _shouldRenderDasboard() {
     return true
   }
@@ -575,7 +590,7 @@ class ShopApp extends PolymerElement {
     // Use `Polymer.AppLayout.scroll` with `behavior: 'silent'` to disable header scroll
     // effects during the scroll.
     scroll({ top: scrollTop, behavior: 'silent' });
-    this.categoryPage = detail.page || '';
+    this.categoryType = detail.type || '';
     this.categoryName = detail.category || '';
 
     // Announce the page's title
