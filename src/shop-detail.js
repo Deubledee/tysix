@@ -244,7 +244,7 @@ class ShopDetail extends PolymerElement {
           this.dispatchEvent(new CustomEvent('change-section', {
             bubbles: true, composed: true, detail: {
               category: item ? item.category : '',
-              type: item ? item.type : '',
+              type: item ? item.page : '',
               title: item ? item.title : '',
               description: item ? item.description.substring(0, 100) : '',
               image: item ? this.baseURI + item.image : ''

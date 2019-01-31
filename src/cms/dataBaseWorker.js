@@ -97,7 +97,7 @@ function dataBaseworker() {
 
 
 Object.defineProperty(dataBaseworker.prototype, 'updateArticles', {
-    value: function writeImageContent(done, table) {
+    value: function updateArticles(done, table) {
         let teble = { name: "articles", doc: table.name, data: { content: table.content } }
         woker.updateContent(done, teble)
             .then(function () {
@@ -112,9 +112,13 @@ Object.defineProperty(dataBaseworker.prototype, 'updateArticles', {
 })
 
 Object.defineProperty(dataBaseworker.prototype, 'setArticles', {
-    value: function setArticles(done, parsed) {
-        console.log(parsed)
-        woker.createDoc({ name: 'articles', docName: parsed.name, doc: parsed })
+    value: function setArticles(done, table) {
+        let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false
+        if (obj === false) {
+            done(false, false)
+            return
+        }
+        woker.createDoc(obj)
             .then(function () {
                 done('newPage')
             })
@@ -192,7 +196,12 @@ Object.defineProperty(dataBaseworker.prototype, 'writePageContent', {
 Object.defineProperty(dataBaseworker.prototype, 'setPages', {
     value: function setPages(done, parsed) {
         console.log(parsed)
-        woker.createDoc({ name: 'pages', docName: parsed.name, doc: parsed })
+        let obj = parsed.name !== undefined ? { name: 'pages', docName: parsed.name, doc: parsed } : false
+        if (obj === false) {
+            done(false, false)
+            return
+        }
+        woker.createDoc(obj)
             .then(function () {
                 done('newPage')
             })

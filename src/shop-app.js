@@ -273,7 +273,7 @@ class ShopApp extends PolymerElement {
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
-          <a class="back-btn" href="/[[categoryPage]]/[[categoryName]]" tabindex="-1">
+          <a class="back-btn" href="/[[categoryType]]/[[categoryName]]" tabindex="-1">
             <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
           </a>
         </div>

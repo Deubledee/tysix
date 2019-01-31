@@ -9,7 +9,8 @@ class cmsGallerieForm extends PolymerElement {
         return html`
 
     <style>      
-        main[closed] {    
+        main[closed] {
+            z-index: 123;
             position: fixed;
             top: 194px;
             left: 26%;

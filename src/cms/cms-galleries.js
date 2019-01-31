@@ -9,13 +9,13 @@ class cmsGalleries extends PolymerElement {
         return html` 
         <style>        
             nav[galleries] {
-                overflow-y: auto;
-                background-color: #ebecec;
+               /* overflow-y: auto;
+                background-color: #ebecec;*/
                 margin-bottom: 25px;
                 display: flex;
                 flex-flow: column;
                 margin-top: 20px;
-                height: 185px;
+               /* height: 185px;*/
                 visibility: visible;
                 transition-property: height, visibility;
                 transition-delay: 0s, 0s;
@@ -25,7 +25,7 @@ class cmsGalleries extends PolymerElement {
             div[galleries] {  
                 padding: 10px;
                 margin-bottom: 2px;
-                height: 179px;
+               /* height: 179px;*/
                 }
 
             .grid {
@@ -121,9 +121,11 @@ class cmsGalleries extends PolymerElement {
     }
 
     getImageGalleries(data) {
+        console.log(data)
         if (data === true || data === 'true') {
             this.DBW.getImageGalleries((done) => {
                 this.eventFunction(done)
+                this.reset = !this.reset
             })
         }
     }

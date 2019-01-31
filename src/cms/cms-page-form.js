@@ -192,11 +192,11 @@ class cmsPageForm extends PolymerElement {
                     type: Array,
                     value: [
                          { label: 'Page type' },
-                         { id: 'agents', name: '---' },
-                         { id: 'agents2', name: 'list' },
-                         { id: 'compressor', name: 'sub-categoty', notAtive: false },
-                         { id: 'delay', name: 'Social', notAtive: false },
-                         { id: 'wave-shaper', name: 'Video', notAtive: false }]
+                         { name: '---' },
+                         { name: 'list' },
+                         { name: 'sub-categoty', notAtive: false },
+                         { name: 'Social', notAtive: false },
+                         { name: 'Video', notAtive: false }]
                }
           }
      }

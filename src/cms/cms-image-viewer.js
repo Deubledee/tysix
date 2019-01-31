@@ -9,14 +9,13 @@ class cmsImageViewer extends PolymerElement {
     return html`
         <style>
         :host {
-          @apply --layout-vertical;
-          @apply --layout-center-justified;
+          position: relative;
           text-align: center;
+          z-index: 122;
         }
 
         main {
           display: none;
-          position: relative;
           width: 101%;
           background-color: #f2f2f2;;
           border-radius: 4px;
@@ -47,16 +46,18 @@ class cmsImageViewer extends PolymerElement {
 
         nav[controler] {
           position: relative;
-          top: 33px;
+          top: -6px;
           margin-bottom: 50px;
           height: 166px;
-          background-color: var(--primary-background-color);
-          box-shadow: 4px 4px 7px #989898;
           color: #8098ad;
           display: flex;
-          flex-flow: row;
+          flex-flow: column;
           padding: 10px;
           padding-left: 21px;
+          max-width: 1300px;
+          margin-left: auto;
+          margin-right: auto;
+          height: 73px;
         }
 
         .hidde {
@@ -64,8 +65,14 @@ class cmsImageViewer extends PolymerElement {
         }
 
         nav[controler] div {
-          flex-basis: 120px;
-          flex-grow: 1      
+          display: block;
+          border-radius: 4px;
+        }
+
+        div[controler] {  
+          background-color: #dbdbdb; 
+          margin-top: 18px;
+          color: #8098ad;
         }
 
         section {
@@ -77,8 +84,7 @@ class cmsImageViewer extends PolymerElement {
           padding: 1px;
           height: 58px;
           width: 190px;
-          border-radius: 10px;
-          background-color: #e1e2d8;
+          border-radius: 10px;          
           text-shadow: 1px 1px 1px var(--primary-text-color);
         }
 
@@ -87,8 +93,19 @@ class cmsImageViewer extends PolymerElement {
         }
 
         section[title2] {
+          /*margin-right: auto;*/
+          margin-left: 32.5%;
           display: flex;
           width: 190px;
+          flex-basis: 34px;
+          cursor: pointer;
+          color: #787676;
+          font-weight: 600;
+          font-size: 55px;
+          text-align: center;
+          border-radius: 10px;
+          /* background-color: #e1e2d8; */
+          text-shadow: 3px 3px 2px #ababab;
         }
 
         paper-icon-button-light{
@@ -102,9 +119,27 @@ class cmsImageViewer extends PolymerElement {
         }
         
         cms-galleries[closed] {
-          display: block
+          display: block;
         }
 
+        paper-tabs {
+          font-size: 17px;
+          font-weight: bold;
+        }
+
+        app-toolbar {
+          height: 36px;
+        }
+        cms-images {
+          display: none;
+          position: absolute;
+          top: -561px;
+          left: -33px;
+          /* width: max-content; */
+          width: 900px;          
+          height: 600px;
+          background-color: aliceblue;
+        }
       </style>
       <main mainOpend$="[[openMain]]">
           <nav id="controler" controler>
@@ -116,19 +151,19 @@ class cmsImageViewer extends PolymerElement {
                 <div> Galleries </div>
               </section>
             </div>
-            <div>
-              <section title on-click="createGallerie">
-                <paper-icon-button-light>
-                  <iron-icon icon="image:loupe" aria-label="Go back"></iron-icon>
-                </paper-icon-button-light>
-                Add
-              </section>
-            </div> 
-          </nav>
-        <cms-gallerie-form id="gallForm"
-          setter={{reset}}>
-        </cms-gallerie-form>   
-
+            <div controler>
+              <app-toolbar>
+                  <paper-tabs no-bar >
+                    <paper-tab on-click="createGallerie">
+                          Add
+                      <paper-icon-button-light>
+                        <iron-icon icon="image:loupe" aria-label="Go back"></iron-icon>
+                      </paper-icon-button-light>
+                    </paper-tab>
+                  </paper-tabs>
+              </app-toolbar> 
+            </div>  
+          </nav> 
         <cms-galleries id="galleries"
             closed$="[[open]]"
             sett=[[sett]]
@@ -137,18 +172,21 @@ class cmsImageViewer extends PolymerElement {
             clear="{{clear}}"
             confirm="{{confirm}}"
             reset="[[reset]]">
-        </cms-galleries> 
-
+        </cms-galleries>
+        <cms-gallerie-form id="gallForm"
+          setter={{reset}}>
+        </cms-gallerie-form> 
+        <cms-image-form id="imgForm" setter={{setter}} gallerie="[[gallerie.gallerie]]">
+        </cms-image-form> 
+      </main>
         <cms-images id="images"
-            images="[[images]]"
             image="{{image}}"
             cancel="{{evet}}"
             sett="[[sett]]"
             clear="{{clear}}"
             confirm="{{confirm}}"
-            openMain="{{openMain}}">
-        </cms-images> 
-      </main>
+            openMain="{{doNotOpenMain}}">
+        </cms-images>
     `;
   }
 
@@ -173,6 +211,11 @@ class cmsImageViewer extends PolymerElement {
         value: true,
         reflectToAttribute: true,
       },
+      doNotOpenMain: {
+        type: Boolean,
+        notify: true,
+        value: false
+      },
       openMain: {
         type: Boolean,
         notify: true,
@@ -181,6 +224,10 @@ class cmsImageViewer extends PolymerElement {
       images: {
         type: Array,
         notify: true,
+        observer: 'opensie'
+      },
+      addMethod: {
+        type: Object
       },
       confirm: {
         type: Boolean,
@@ -198,7 +245,9 @@ class cmsImageViewer extends PolymerElement {
       clear: {
         type: Boolean,
         value: false,
-        notify: true
+        notify: true,
+        observer: 'opensie'
+
       },
       show: {
         type: Boolean,
@@ -214,7 +263,8 @@ class cmsImageViewer extends PolymerElement {
       },
       image: {
         type: Object,
-        notify: true
+        notify: true,
+        observer: 'runAddMethod'
       },
       gallerie: {
         type: String,
@@ -251,8 +301,7 @@ class cmsImageViewer extends PolymerElement {
         type: Boolean,
         notify: true,
         value: true,
-        reflectToAttribute: true,
-        // observer: 'getImageGalleries',
+        reflectToAttribute: true
       },
     }
   }
@@ -260,6 +309,8 @@ class cmsImageViewer extends PolymerElement {
   ready() {
     super.ready()
     this.$.images.form = true
+    this.$.images.del = true
+    this.addEventListener('add-image', this.addImage)
   }
 
   log(msg, data) {
@@ -271,10 +322,39 @@ class cmsImageViewer extends PolymerElement {
     this.$.images.sett = data
   }
 
+  opensie(data) {
+    if (data instanceof Array === true) {
+      this.$.images.style.display = 'block'
+      this.$.images.style.height = '600px'
+      setTimeout(() => {
+        this.$.images.images = data
+      }, 200)
+    }
+    if (data === false) {
+      this.$.images.style.display = 'none'
+      this.$.images.style.height = '0px'
+      this.clear = !this.clear
+    }
+    /*setTimeout(() => {
+    }, 200)*/
+  }
+
+  addImage(event) {
+    this.$.imgForm.imageArray = event.detail.imageArray
+    this.$.imgForm.gallerie = event.detail.gallerie
+    this.$.imgForm.closed = true
+  }
+
+  runAddMethod(image) {
+    if ('url' in image) {
+      this.addMethod(image)
+      this.image = {}
+    }
+  }
+
   settAndFormKiller(data) {
     if (data === true) {
-      this.$.images.killSettAndForm = data
-      this.log('settAndFormKiller', data)
+      this.$.images.killSett = data
     }
   }
 
@@ -291,15 +371,8 @@ class cmsImageViewer extends PolymerElement {
     }
   }
 
-  setOpen(data) {
-    //this.open = data
-    scroll({ top: 0, behavior: 'silent' });
-  }
-
   cancel(event) {
     if (event === true) {
-      scroll({ top: 200, behavior: 'smooth' });
-      scroll({ bottom: 220, behavior: 'smooth' });
       this.open = !this.open
       this.evet = !this.evet
       this.show = !this.show

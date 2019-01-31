@@ -196,7 +196,7 @@ class ShopList extends PolymerElement {
           this.dispatchEvent(new CustomEvent('change-section', {
             bubbles: true, composed: true, detail: {
               category: category.name,
-              type: category.type,
+              type: category.page,
               title: category.title,
               image: this.baseURI + category.image
             }

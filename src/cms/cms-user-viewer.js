@@ -25,6 +25,9 @@ class cmsUserViewer extends PolymerElement {
         /*box-shadow: 4px 4px 4px #909090;*/
         margin-bottom: 10px;
         padding: 12px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
       } 
 
       section {
@@ -89,6 +92,9 @@ class cmsUserViewer extends PolymerElement {
         height: 166px;
         background-color: var(--primary-background-color);
         box-shadow: 4px 4px 7px #989898;
+        max-width: 1300px;
+        margin-left: auto;
+        margin-right: auto;;
       }   
       nav div {
         flex-basis: 120px;

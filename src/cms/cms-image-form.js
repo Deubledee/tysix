@@ -20,7 +20,6 @@ class cmsImageForm extends PolymerElement {
             flex-flow: column;
             box-sizing: border-box;
             height: 459px;
-            width: 93%;
             visibility: visible;
             transition-property: height, visibility;
             transition-duration: 2s, .5s;

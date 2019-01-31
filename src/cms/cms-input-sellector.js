@@ -77,6 +77,10 @@ class cmsInputSellector extends PolymerElement {
                     notify: true,
                     reflectToAttribute: true
                },
+               change: {
+                    type: Array,
+                    notify: true,
+               },
                value: {
                     type: String,
                     value: '---',
@@ -88,17 +92,20 @@ class cmsInputSellector extends PolymerElement {
                }
           }
      }
+
      LabelThis(options) {
           let label = options[0].label
           options.reverse().pop()
           this.options = options.reverse()
           return label
      }
-     changeToOne(data) {
-          // if (data.model.__data.option.id !== 'agents') {
-          // if (data.model.__data.option.notAtive === false) {
-          this.value = data.model.__data.option.name
 
+     setInputing() {
+     }
+
+     changeToOne(data) {
+          this.value = data.model.__data.option.name
+          this.setInputing()
      }
 }
 customElements.define(cmsInputSellector.is, cmsInputSellector);  

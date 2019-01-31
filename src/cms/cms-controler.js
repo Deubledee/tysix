@@ -22,6 +22,7 @@ import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-icons/social-icons.js'
+import './cms-confirm.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
@@ -187,6 +188,9 @@ class cmsControler extends PolymerElement {
             </iron-pages>
           </app-header-layout>
         </app-drawer-layout>
+        <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery"> 
+        </cms-confirm>
+        
         `;
   }
 
@@ -221,6 +225,11 @@ class cmsControler extends PolymerElement {
         type: Array,
         notify: true
       },
+      confirm: {
+        type: Boolean,
+        notify: true,
+        value: false
+      },
       routeData: Object,
       subroute: Object
     };
@@ -229,6 +238,19 @@ class cmsControler extends PolymerElement {
     return [
       '_routePageChanged(routeData.pages)'
     ];
+  }
+
+  ready() {
+    super.ready()
+    this.addEventListener('confirm', this.openConfirm)
+  }
+
+  openConfirm(event) {
+    //console.log(event)
+    this.$.confirm.openConfirm({ name: event.detail.name })
+    this.$.confirm.method = event.detail.method
+    this.confirm = !this.confirm
+
   }
 
   _routePageChanged(page) {

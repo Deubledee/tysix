@@ -138,6 +138,7 @@ class cmsConfirm extends PolymerElement {
     delete() {
         this.method(this.title)
         this.open = !this.open
+        this.confirm = false
     }
 
     cleanUnderscore(data) {
@@ -152,7 +153,6 @@ class cmsConfirm extends PolymerElement {
 
     openConfirm(event) {
         if (this.confirm === false) {
-            // this.title = {}
             this.title = this.cleanUnderscore(event.name)
             this.confirm = true
             this.$.animated.open()
