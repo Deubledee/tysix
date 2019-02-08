@@ -12,8 +12,7 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         display: block;
         word-break: break-all;
         padding: 4px;
-        position: relative;
-        top: 52px;
+        position: relative;        
         width: 100%;
       }
       nav {
@@ -24,15 +23,36 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         padding-left: 21px;
       }
     
+       
+      section[bottom]{
+        ￼    max-height: 408px;
+        }
+
+        section[bottom3] {
+            display: block; 
+            flex-basis: 92%;      
+        }
+
+        [adding] {
+            display: none!important
+        } 
       nav[bottom] {
         box-sizing: border-box;
-        display: flow-root;
+        display: flex;
+        flex-flow: column;
         padding: 0px;
         height: 0px;
         opacity: 0;
         transition-property: height, opacity;
         transition-duration: .5s, 1s;
       }
+
+      paper-button[chis] {
+        max-width: 20px;
+        color: aqua;
+        background-color: #e5e5e5;
+        border-radius: 18px;
+    }
 
       nav[bottom][open] {
           opacity: 1;
@@ -58,8 +78,7 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         flex-flow: wrap;
         padding: 20px;
         flex-basis: unset;
-        flex-grow: 1;
-        height: auto;
+        flex-grow: 1;;
         background: #ffffff;
       }
     
@@ -80,7 +99,7 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         margin-bottom: 100px;
       }
         
-      section[bottom2] {
+      section[bottom2], section[bottom3] {
         display: flex;
         flex-flow: column;
         font-weight: bold;
@@ -89,6 +108,21 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         margin-bottom: 100px;
       }
 
+      section[bottom] {
+        max-height: 359px;
+        flex-basis: 30%
+      }
+
+    section[bottom2] {
+        max-height: 359px;
+        flex-basis: 100%
+    }
+
+    section[bottom3] {
+        display: block;  
+        max-width: 92%;    
+    }
+       
       div[rightimages]{
         overflow-y: auto
      }
@@ -123,13 +157,18 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
         color: #616161;
         opacity: 1;
         max-height: 50px;
+        word-break: break-word;
+        text-align: left;
        /* width: 495px;*/
       }
 
       section div[rightImages] {
-        flex-basis: 60%;
+       /* box-shadow: 3px 3px 8px #b6b6b6;*/
+        height: 334px;
         color: #616161;
         opacity: 1;
+        width: 98%;
+        overflow: hidden;
       }
     
       section paper-button {
@@ -137,16 +176,18 @@ $_documentContainer.innerHTML = `<dom-module id="cms-common-styles">
       }
     
       section[title] {
+        width: 25%;
         flex-basis: 34px;
         cursor: pointer;
-        color: #f0f0f0;
-        font-size: 35px;
         text-align: center;
         height: 52px;
-        width: 120px;
         border-radius: 10px;
-        background-color: #e1e2d8;
-        text-shadow: 1px 1px 1px var(--primary-text-color);
+        margin-left: auto;
+        margin-right: auto;
+        color: #787676;
+        font-size: 55px;
+        text-align: center;
+        text-shadow: 3px 3px 2px #ababab;
       }
     
       paper-spinner {

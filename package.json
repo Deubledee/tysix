@@ -32,6 +32,7 @@
     "@polymer/iron-overlay-behavior": "^3.0.2",
     "@polymer/iron-pages": "^3.0.1",
     "@polymer/iron-selector": "^3.0.1",
+    "@polymer/lit-element": "^0.7.1",
     "@polymer/neon-animation": "^3.0.1",
     "@polymer/paper-behaviors": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
@@ -62,6 +63,7 @@
     "lit-element": "^2.0.0-rc.2"
   },
   "devDependencies": {
+    "@polymer/iron-component-page": "^4.0.1",
     "del": "^3.0.0",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",

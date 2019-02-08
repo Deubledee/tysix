@@ -3,7 +3,6 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import { dataBaseworker } from './dataBaseWorker.js';
-import '@polymer/paper-spinner/paper-spinner.js';
 import '@polymer/paper-input/paper-input.js';
 import './cms-article-list-viewer';
 class cmsArticleListType extends PolymerElement {
@@ -17,6 +16,10 @@ class cmsArticleListType extends PolymerElement {
         max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
+      }
+      
+      .diferent{
+        display: none!important
       }
 
       nav paper-icon-button {
@@ -49,6 +52,26 @@ class cmsArticleListType extends PolymerElement {
         background: #ffffff;
       }
       
+      div[left] {
+        width: 119px;
+      }
+
+    .rightImages {
+        display: flex;
+        /*box-shadow: 3px 3px 8px #b6b6b6;*/
+        padding: 24px;
+        box-sizing: border-box;
+      }
+  
+      cms-images.images {
+        width: 800px;          
+        height: 350px;
+        background-color: inherit;
+        --images-article-images: {          
+            height: 300px!important;
+        }
+      } 
+
       cms-article-list-viewer {
         flex-grow: 1;
       }
@@ -56,6 +79,10 @@ class cmsArticleListType extends PolymerElement {
       div[icons] {
         text-align: center
       }
+
+      cms-article-content {
+        max-width: 1200px;
+    }
 
     </style>
   <article> 
@@ -82,6 +109,9 @@ class cmsArticleListType extends PolymerElement {
     </cms-article-content> 
     <nav bottom>    
         <cms-article-list-viewer id="viewer">
+            <cms-article-content id="content" add="" delete="">
+            <!-- images element lands here to :)-->
+            </cms-article-content>
         </cms-article-list-viewer>
     </nav>
   </article>`
@@ -199,8 +229,6 @@ class cmsArticleListType extends PolymerElement {
     }
 
     showPage(event, theother) {
-        console.log(event.clientY, event.layerY, event.screenY)
-        // this.scrollTo = event.clientY
         let elem = this.$.viewer
         if (elem.content.length === 0) {
             elem.content = this.article.content

@@ -9,7 +9,6 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import './cms-input-sellector.js';
-import './cms-image-viewer.js';
 import '../shop-image.js';
 class cmsUserForm extends PolymerElement {
     static get template() {
@@ -114,8 +113,7 @@ class cmsUserForm extends PolymerElement {
               </paper-button>
             </div>
             <nav>
-        </main>
-        <cms-image-viewer id="viewer" class="diferent" image="{{image}}"></cms-image-viewer>`
+        </main>`
     }
     static get is() { return 'cms-user-form'; }
 
@@ -175,7 +173,6 @@ class cmsUserForm extends PolymerElement {
     }
     ready() {
         super.ready()
-        this.$.viewer.open = false
     }
 
     setUserData(data) {

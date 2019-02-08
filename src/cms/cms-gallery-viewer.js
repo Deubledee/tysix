@@ -9,15 +9,19 @@ class cmsGalleryViewer extends PolymerElement {
         return html`
         <style>
         :host {
-          position: relative;
-          text-align: center;
-          z-index: 122;
-        }
+            text-align: center;
+            z-index: 122;
+            position: absolute;
+            min-height: 400px;
+            width: 100%;
+            left: -6px;
+            padding: 5px;
+            background-color: rgba(63, 71, 86, 0.62);
+            border-radius: 2px
+        } 
 
         main {
           display: none;
-          width: 101%;
-          background-color: #f2f2f2;;
           border-radius: 4px;;
           visibility: visible;
           transition-property: height, visibility;
@@ -43,35 +47,41 @@ class cmsGalleryViewer extends PolymerElement {
         cms-galleries[closed] {
           display: block;
         }
-        cms-images {
-          display: none;
-          position: absolute;
-          left: -33px;
-          /* width: max-content; */
-          width: 900px;          
-          height: 600px;
-          background-color: aliceblue;
+
+        cms-images.images  {
+            display: none; 
+            left: -33px;
+            width: 98%;
+            --images-article-images: {
+                background-color: #f2f2f2;
+                height: 512px;
+                overflow: auto;
+                padding-top: 12px
+            };
+            --images-paper-icon-button-central: {
+                color: #fff;
+            }
         }
+        
       </style>
       <main mainOpend$="[[openMain]]">
         <cms-galleries id="galleries"
             closed$="[[open]]"
-            sett=[[sett]]
+            sett
             images="{{images}}"
             setter="{{clear}}"
             clear="{{clear}}"
             confirm="{{confirm}}"
             reset="[[reset]]">
         </cms-galleries>
-        <cms-images id="images"
+        <cms-images class="images" id="images"
             image="{{image}}"
             cancel="{{evet}}"
             sett="[[sett]]"
             clear="{{clear}}"
             confirm="{{confirm}}"
             openMain="{{doNotOpenMain}}">
-        </cms-images>
-    `;
+        </cms-images>`
     }
 
     static get is() { return 'cms-gallery-viewer'; }
@@ -110,16 +120,9 @@ class cmsGalleryViewer extends PolymerElement {
                 notify: true,
                 observer: 'opensie'
             },
-            addMethod: {
-                type: Object
-            },
             confirm: {
                 type: Boolean,
                 notify: true,
-                value: false
-            },
-            openGallerieForm: {
-                type: Boolean,
                 value: false
             },
             reset: {
@@ -148,7 +151,7 @@ class cmsGalleryViewer extends PolymerElement {
             image: {
                 type: Object,
                 notify: true,
-                //observer: 'runAddMethod'
+                observer: 'addMethod'
             },
             gallerie: {
                 type: String,
@@ -197,13 +200,20 @@ class cmsGalleryViewer extends PolymerElement {
         this.$.images.sett = data
     }
 
+    addMethod(data) {
+        /**overriden by parent*/
+        console.log(data)
+    }
+
     opensie(data) {
         if (data instanceof Array === true) {
             this.$.images.style.display = 'block'
             this.$.images.style.height = '600px'
             this.$.images.settAndFormKiller(true)
+            this.$.images.set('sett', true)
+            this.set('activeData', data)
             setTimeout(() => {
-                this.$.images.images = data
+                this.$.images.set('images', data)
             }, 200)
         }
         if (data === false) {
@@ -211,8 +221,6 @@ class cmsGalleryViewer extends PolymerElement {
             this.$.images.style.height = '0px'
             this.clear = !this.clear
         }
-        /*setTimeout(() => {
-        }, 200)*/
     }
 
     settAndFormKiller(data) {

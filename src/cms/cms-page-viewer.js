@@ -3,158 +3,209 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import '@polymer/paper-spinner/paper-spinner.js';
-import './cms-image-viewer.js';
+import '@polymer/paper-tabs/paper-tabs'
+import '@polymer/paper-tabs/paper-tab'
 import './cms-confirm.js';
 import './cms-page-content.js';
 import './cms-common-styles.js';
+import './cms-pge-list-type.js';
+import './cms-gallery-viewer';
 
 class cmsPageViewer extends PolymerElement {
   static get template() {
     return html`
-    <style include="cms-common-styles">
-
-      main {
-        word-break: break-all;
-        padding: 4px;
-        position: absolute;
-        left: -42px;
-        top: 52px;
-        width: 100%;
-      }
-
-      article {
-        box-sizing: border-box;
-        /*box-shadow: 4px 4px 4px #909090;*/
-        margin-bottom: 10px;
-        padding: 12px;
-        max-width: 1300px;
-        margin-left: auto;
-        margin-right: auto;;
-      } 
-
-      nav[top] {
-        position: relative;
-        top: 33px;
-        margin-bottom: 60px;
-        height: 166px;
-        background-color: var(--primary-background-color);
-        box-shadow: 4px 4px 7px #989898;
-        max-width: 1300px;
-        margin-left: auto;
-        margin-right: auto;;
-      }
+    <style>
+        main {
+          display: block;
+          word-break: break-all;
+          padding: 4px;
+          position: absolute;
+          left: -42px;
+          top: 52px;
+          width: 100%;
+        }
       
-      section paper-button{
-        color: #7a8c94;
-        margin-left: 50px;
-      }
+        .rightImages {
+          display: flex;
+        /*  box-shadow: 3px 3px 8px #b6b6b6;*/
+          padding: 24px;
+          box-sizing: border-box;
+        }
+
+        cms-images.images {
+          width: 800px;          
+          height: 300px;
+          --images-article-images: {          
+              height: 200px!important;
+              overflow: none
+            }
+        }
+
+        article {
+          box-sizing: border-box;
+          margin-bottom: 10px;
+          padding: 12px;
+          max-width: 1200px;
+          margin-left: auto;
+          margin-right: auto;
+        }
       
-      section[title] {
-        cursor: pointer;
-        color: #f0f0f0;
-        font-size: 35px;
-        text-align: center;
-        display: block;
-        padding: 1px;
-        height: 58px;
-        width: 140px;
-        border-radius: 10px;
-        background-color: #e1e2d8;
-        text-shadow: 1px 1px 1px var(--primary-text-color);
-      }
-      iron-icon {
-        color: #929696;
-      }
-
-      div[center]{        
-        text-align: center;
-      }
-
-      paper-spinner{
-        left: 47%;
-      }
+        nav {
+          color: #8098ad;
+          display: flex;
+          flex-flow: row;
+          padding: 10px;
+          padding-left: 21px;
+        }
       
-      nav[bottom] {
-        box-sizing: border-box;
-        display: flow-root;
-        padding: 0px;
-        height: 0px;
-        opacity: 0;
-        transition-property: height, opacity;
-        transition-duration: 1.5s, 2s;
-      }
-
-      cms-images.overHidd {
-      ￼    position: relative;
-      ￼    bottom: 427px;
-      ￼    z-index: 122;
-          --images-shop-image: {
-          ￼    max-height: 186px;
-          }
-
-          --images-frame2-div: {
-              overflow-y: hidden;
-          }
-
-          --images-title2: {
-              width: 217px;
-          }
-      }
-
+        nav[top] {
+          flex-flow: wrap;
+          flex-direction: column;
+          position: relative;
+          top: 5px;
+          height: 34px;
+          background-color: #dbdbdb;
+          max-width: 1300px;
+          margin-left: auto;
+          margin-right: auto;
+          border-radius: 4px;
+        }
+    
+          div[top] {
+          padding-left: 20px;
+        }
+    
+        section {
+          display: flex;
+          flex-flow: row;
+          font-weight: bold;
+          padding: 4px;
+          height: 50px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      
+        section[title] {
+          flex-basis: 34px;
+          cursor: pointer;
+          color: #f0f0f0;
+          font-size: 35px;
+          text-align: center;
+          height: 52px;
+          width: 120px;
+          border-radius: 10px;
+          background-color: #e1e2d8;
+          text-shadow: 1px 1px 1px var(--primary-text-color);
+        }
+      
+        section[title2] {
+          flex-basis: 34px;
+          cursor: pointer;
+          color: #787676;
+          font-size: 55px;
+          text-align: center;
+          height: 72px;
+          width: 257px;
+          border-radius: 10px;
+          /* background-color: #e1e2d8; */
+          text-shadow: 3px 3px 2px #ababab;
+        }
+    
+        paper-icon-button-light {
+          color: #929696;
+          margin-left: 10px
+        }
+      
+        paper-spinner {
+          left: 47%;
+        }
+    
+        paper-button {
+          min-width: 98px;
+        }
+    
+        .hidden {
+            display: none!important
+        }
+    
+        paper-tabs {
+          font-size: 17px;
+          font-weight: bold;
+        }
+    
+        nav[center] {
+          flex-flow: column;
+        }
+    
+        .diferent {
+          display: none;
+        }
+        paper-tabs a {
+          text-decoration: none;
+          color: inherit
+        }
     </style>
   </custom-style>  
-    <main>
-        <nav top> 
-          <div>
-            <section title>
-              <paper-icon-button-light>
-                <iron-icon icon="av:library-books" aria-label="Go back"></iron-icon>
-              </paper-icon-button-light>
-                  Pages
-            </section>
-          </div>
-          <div add>
-            <section title on-click="add">
-              <paper-icon-button-light>
-                <iron-icon icon="av:library-add" aria-label="Go back"></iron-icon>
-              </paper-icon-button-light>
-              Add
-            </section>
-          </div>
-        </nav>    
-        <paper-spinner id="spinner" active></paper-spinner> 
-        <article>
-          <cms-page-content id="content" setter="{{setter}}">
-          </cms-page-content>
-        </article>
-        <dom-repeat items="[[categories]]" as="category">
-          <template>
-            <article>
-              <nav value="[[index]]">
-                  <div>
-                    <span>  {{_getPagename(category)}} </span>
-                  </div>
-                  <div center>
-                    <paper-icon-button on-click="showPage" icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
-                        &
-                    <paper-icon-button on-click="showPage" icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                  </div>  
-                  <div center>
-                    <paper-icon-button on-click="openConfirm" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
-                  </div>                  
-              </nav> 
-              <nav bottom> 
-                <cms-page-content add="" delete="" setter="{{setter}}">
-                </cms-page-content>
-              </nav>
-            </article>
-          </template>
-        </dom-repeat>
-        <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="page"> 
-        </cms-confirm> 
-        <cms-image-viewer id="viewer" image="{{image}}" putCancelButton="[[!sett]]"></cms-image-viewer>
-      </main>  
-`
+  <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <main> 
+        <div top>
+          <section title2>
+            <paper-icon-button-light>
+              <iron-icon icon="av:library-books" aria-label="pages"></iron-icon>
+            </paper-icon-button-light>
+            <div> Pages </div>
+          </section>
+        </div>
+      <nav top>
+        <app-toolbar typer>
+            <paper-tabs no-bar>
+              <a href="/admin/pages[[add]]">
+                <paper-tab name="add" on-click="_add">
+                    Add
+                  <paper-icon-button-light>
+                      <iron-icon icon="av:library-add" aria-label="add">
+                      </iron-icon>
+                  </paper-icon-button-light>
+                </paper-tab>
+              </a> 
+              <a href="/admin/pages[[categories]]">
+                <paper-tab name="categories" on-click="toggleLists">
+                    category pages
+                  <paper-icon-button-light>
+                      <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+                  </paper-icon-button-light>
+                </paper-tab>
+              </a> 
+              <a href="/admin/pages[[suCategories]]">
+                <paper-tab name="sub_categories" on-click="toggleCats">
+                  sub category pages
+                  <paper-icon-button-light>
+                      <iron-icon icon="av:library-add" aria-label="sub categories"></iron-icon>
+                  </paper-icon-button-light>
+                </paper-tab>
+              </a> 
+            </paper-tabs>
+        </app-toolbar> 
+      </nav>      
+      <article id="editarea" class="diferent">
+        <cms-page-content id="content">
+        </cms-page-content>
+      </article>
+      <article>  
+        <nav center id="typer" class="diferent"> 
+          <cms-page-list-type pages=[[pages]]>
+          </cms-page-list-type>  
+        </nav>
+      </article>
+      <article>
+        <nav center id="subCats" class="diferent"> 
+              <cms-page-sub-cat-type article=[[article]]>
+              </cms-page-sub-cat-type> 
+        </nav>
+      </article>
+    </main>  
+
+      `
   }
   static get is() { return 'cms-page-viewer'; }
 
@@ -169,42 +220,34 @@ class cmsPageViewer extends PolymerElement {
       lang: {
         type: String,
         notify: true
-        // value: lang
       },
-      categories: {
-        type: Array,
-        notify: true,
-        observer: 'deSpin'
-      },
-      page: {
-        type: Object,
-        notify: true
-      },
-      categorie: {
-        type: Object,
-        notify: true
-      },
-      image: {
-        type: Object,
-        notify: true,
-        observer: 'sendImage'
-      },
-      setter: {
+      add: {
         type: String,
         notify: true,
-        observer: 'resetCollor'
+        value: '/add'
       },
-      closed: {
-        type: Boolean,
+      add: {
+        type: String,
         notify: true,
+        value: '/add'
       },
-      confirm: {
-        type: Boolean,
+      categories: {
+        type: String,
         notify: true,
-        value: false,
+        value: '/categories'
       },
-      setImage: {
-        type: Object
+      suCategories: {
+        type: String,
+        notify: true,
+        value: '/sub_categories'
+      },
+      active: {
+        type: String,
+        value: ''
+      },
+      pages: {
+        type: Array,
+        notify: true
       },
       lastChosen: {
         type: Array,
@@ -213,90 +256,83 @@ class cmsPageViewer extends PolymerElement {
     }
   }
 
-  log(data) {
-    console.log('log from cms-page-viewer', data)
+  ready() {
+    super.ready()
+    this.AskPages()
+    this._routePageChanged(this.routeData)
+    scroll({ top: 0, behavior: 'silent' });
   }
 
-  deSpin(data) {
-    if (this.$.spinner.active === true) {
-      this.$.spinner.active = false
-    }
+  log(data) {
+    console.log('log from cms-page-viewer', data)
   }
 
   error(data) {
     console.error('error from cms-page-viewer', data)
   }
 
-  ready() {
-    super.ready();
-    this.AskPages()
-    scroll({ top: 0, behavior: 'silent' });
-    this.addEventListener('page-open-image-viewer', this._openImagevVewer)
-    this.addEventListener('page-cancel-image', this._cancelImage)
-  }
+  _routePageChanged(data, boll) {
+    if (data.page === 'add') {
+      this._add()
+    }
 
-  sendImage(data) {
-    console.log(data)
-    //this.setImage.set(data)
-  }
+    if (data.page === 'categories') {
+      this.toggleLists(data)
+    }
 
-  _cancelImage() {
-    this.image = {}
-  }
+    if (data.page === 'sub_categories') {
+      this.toggleCats(data)
 
-  _openImagevVewer(event) {
-    if (this.$.viewer.style.display === 'block') {
-      this.$.viewer.style.display = 'none'
-      this.$.viewer.style.bottom = 'initial'
-      this.$.viewer.style.height = '0px'
-      this.setImage = {}
-    } else {
-      this.setImage = event.detail
-      this.$.viewer.closeHead = true
-      this.$.viewer.open = true
-      this.$.viewer.show = false
-      this.$.viewer.openMain = true
-      this.$.viewer.set('killFormAndSet', true)
-      this.$.viewer.style.display = 'block'
-      this.$.viewer.style.height = '600px'
-      this.$.viewer.style.bottom = '215px'
     }
   }
 
-  AskPages() {
-    this.DBW.askAllPages((done) => {
-      this.categories = []
-      this.categories = done
-      scroll({ top: 0, behavior: 'silent' });
-    })
+  toggleLists(data) {
+    this.$.typer.classList.toggle('diferent')
+    setTimeout(() => {
+      if (this.routeData.page === 'categories') {
+        this.active = this.categories
+        this.categories = '/'
+      } else if (this.categories === '/') {
+        this.categories = '/categories'
+        this.active = ''
+      }
+    }, 60)
   }
 
-  _getPagename(cats) {
-    return cats.name
+  toggleCats(data) {
+    this.$.subCats.classList.toggle('diferent')
+    setTimeout(() => {
+      if (this.routeData.page === 'sub_categories') {
+        this.active = this.suCategories
+        this.suCategories = '/'
+      } else if (this.suCategories === '/') {
+        this.suCategories = '/sub_categories'
+        this.active = ''
+      }
+    }, 60)
   }
 
-  openPageContent(event) {
-    let elem = event.srcElement.parentElement.parentElement.nextElementSibling.firstElementChild
-    let index = event.model.__data.index
-    if (elem.tada === false) {
-      elem.set('content', [event.model.__data.category])
-      elem.set('add', false)
-      elem.set('category', this.categories[index])
-      elem.set('categoryIndex', event.model.index)
-      elem.set('categoryName', this.categories[index].parent)
-    }
-    elem.set('tada', !elem.tada)
-  }
-
-  add(event) {
+  _add(event) {
     let elem = this.$.content
-    this.setLastChosen(event.srcElement, true)
+    setTimeout(() => {
+      if (this.routeData.page === 'add') {
+        this.add = '/'
+      } else if (this.add === '/') {
+        this.add = '/add'
+        if (this.active !== '') {
+          window.history.pushState({}, null, '/admin/pages' + this.active);
+          window.dispatchEvent(new CustomEvent('location-changed'));
+        }
+      } else {
+        console.log(this.routeData)
+      }
+    }, 60)
     if (elem.tada === false) {
       elem.set('content', [{ title: '', lang: '', type: '', name: '', image: '', placeholder: '' }])
       elem.set('add', true)
     }
-    elem.set('tada', !elem.tada)
-    elem.set('adding', !elem.adding)
+    elem.parentElement.classList.toggle('diferent')
+    elem.toggleElementPlease()
   }
 
   resetCollor(data) {
@@ -318,62 +354,15 @@ class cmsPageViewer extends PolymerElement {
     }
   }
 
+  AskPages() {
+    this.DBW.askAllPages((done) => {
+      this.set('pages', done)
+      scroll({ top: 0, behavior: 'silent' });
+    })
+  }
+
   showName(cats, name) {
     return cats[name]
-  }
-
-  delete(data) {
-    let page = data
-    this.DBW.deletePage((msg, done) => {
-      if (msg !== 'error') {
-        this.openConfirm()
-        this.log(msg, done)
-      } else {
-        this.error(msg, done)
-      }
-    }, page)
-  }
-
-  openConfirm(event) {
-    if (this.confirm === false) {
-      this.$.confirm.openConfirm(event.model.__data.category)
-      this.$.confirm.method = this.delete
-      this.confirm = true
-    }
-  }
-
-  showPage(event, theother) {
-    let elem = event.srcElement.parentElement.parentElement.parentElement
-    this.toggleElementPlease(elem.children[1], event.srcElement, event)
-  }
-
-  toggleElementPlease(elem, srcElement, event) {
-    if (elem.hasAttribute('open') === false) {
-      elem.style.opacity = "1"
-      elem.style.height = "auto"
-      elem.setAttribute("open", true)
-      this.setLastChosen(srcElement)
-      this.openPageContent(event)
-    } else {
-      elem.style.height = "0px"
-      elem.style.opacity = "0"
-      elem.removeAttribute("open")
-      this.setLastChosen(srcElement)
-      this.openPageContent(event)
-    }
-  }
-
-  openPageContent(event) {
-    let elem = event.srcElement.parentElement.parentElement.nextElementSibling.firstElementChild
-    let index = event.model.__data.index
-    if (elem.tada === false) {
-      elem.set('content', [event.model.__data.category])
-      elem.set('add', false)
-      elem.set('category', this.categories[index])
-      elem.set('categoryIndex', event.model.index)
-      elem.set('categoryName', this.categories[index].parent)
-    }
-    elem.set('tada', !elem.tada)
   }
 
 }

@@ -37,7 +37,6 @@ class cmsGalleriesItem extends PolymerElement {
                 top: -7px;
                 left: -7px;
                 display: block;
-                flex-basis: 197px;
                 padding: 6px;
                 border-radius: 4px;
                 height: 97px;
@@ -163,7 +162,7 @@ class cmsGalleriesItem extends PolymerElement {
             gallerie: {
                 type: Array,
                 notify: true,
-                observer: 'log'
+                observer: 'setGallerie'
             },
         }
     }
@@ -172,27 +171,41 @@ class cmsGalleriesItem extends PolymerElement {
         super.ready()
     }
 
-    log(data, again) {
-        // console.log(data.content[0].url, this.$.galleries.style.backgroundImage)
+    setGallerie(data, ain) {
+        let again = ain || 0
         if (data.content[0] !== undefined) {
-            let thisLoaded = false, img = new Image()
-            this.$.galleries.style.backgroundImage = `url(${data.content[0].url})`
+            let img = new Image()
+
+            img.crossOrigin = "Anonymous";
 
             img.onload = (event) => {
-                thisLoaded = true
                 this.$.img.crossOrigin = "Anonymous";
-                this.$.img.src = again === undefined ? data.content[0].url : data.content[again].url
-                this.$.galleries.style.backgroundImage = again === undefined ? `url(${data.content[0].url})` : `url(${data.content[again].url})`
+                this.$.img.src = img.src
+                this.$.galleries.style.backgroundImage = `url(${img.src})`
             }
 
             img.onerror = (event) => {
-                if (data.content.length > 0) {
-                    again = again === undefined ? 0 : again + 1
-                    this.log(data, again)
+                this._checkDataPlease(data, again)
+                console.info("Smile Tho' your heart is ! Smile Even tho' it's breaking... :)")
+            }
+
+            try {
+                if (data.content.length >= 0) {
+                    img.src = again === 0 ? data.content[0].url : data.content[again].url
+                    img.onload()
+                    return
                 }
             }
-            img.crossOrigin = "Anonymous";
-            img.src = again === undefined ? data.content[0].url : data.content[again].url
+            catch (err) {
+                console.info("strumming my pain with his fingers.. killing me softly with his song..! :)")
+            }
+        }
+    }
+
+    _checkDataPlease(data, again) {
+        if (data.content.length > 0) {
+            again = again + 1
+            this.setGallerie(data, again)
         }
     }
 
@@ -209,7 +222,6 @@ class cmsGalleriesItem extends PolymerElement {
     }
 
     deleteGallerie(data) {
-        this.setter = true
         this.DBW.deleteGallerie((done, err) => {
             if (done !== 'error') {
                 this.setter = true

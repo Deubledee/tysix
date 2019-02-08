@@ -106,22 +106,16 @@ class cmsGalleries extends PolymerElement {
         this.getImageGalleries(true)
     }
 
-    clearImages() {
-        this.images = []
-    }
-
     log(data) {
         console.log(data)
     }
 
     eventFunction(event) {
-        this.galleries = []
         this.reset = 'false'
-        this.galleries = event
+        this.set('galleries', event)
     }
 
     getImageGalleries(data) {
-        console.log(data)
         if (data === true || data === 'true') {
             this.DBW.getImageGalleries((done) => {
                 this.eventFunction(done)

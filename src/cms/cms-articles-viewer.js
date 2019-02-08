@@ -40,14 +40,14 @@ class cmsArticlesViewer extends PolymerElement {
       padding: 10px;
       padding-left: 21px;
     }
-  
+
     nav[top] {
       flex-flow: wrap;
       flex-direction: column;
       position: relative;
       top: 5px;
       margin-bottom: 60px;
-      height: 18px;
+      height: 34px;
       background-color: #dbdbdb;
       max-width: 1300px;
       margin-left: auto;
@@ -108,14 +108,6 @@ class cmsArticlesViewer extends PolymerElement {
       min-width: 98px;
     }
 
-   /* cms-image-viewer.diferent{
-      --main-style:{
-           position: absolute;
-           width: 99%;
-           top: 43%;
-      }
-    }*/
-
     .hidden {
         display: none!important
     }
@@ -153,7 +145,6 @@ class cmsArticlesViewer extends PolymerElement {
             </paper-tab>
           </paper-tabs>
       </app-toolbar> 
-      <paper-spinner id="spinner1" active></paper-spinner>
     </nav>
     <article>  
       <nav center id="typer" class="diferent">   
@@ -175,8 +166,7 @@ class cmsArticlesViewer extends PolymerElement {
         </dom-repeat>   
       </nav>
     </article> 
-  </main>
-   
+  </main>   
 `
   }
   static get is() { return 'cms-articles-viewer'; }
@@ -192,8 +182,7 @@ class cmsArticlesViewer extends PolymerElement {
       },
       articles: {
         type: Array,
-        notify: true,
-        observer: 'deSpin',
+        notify: true
       },
       setter: {
         type: String,
@@ -239,15 +228,15 @@ class cmsArticlesViewer extends PolymerElement {
     console.error('error from cms-article-viewer', data)
   }
 
-  deSpin() {
+  /*deSpin() {
     this.$.spinner1.active = !this.$.spinner1.active
     //this.$.spinner2.active = !//this.$.spinner2.active
-  }
+  }*/
 
   _getArticles() {
-    if (this.$.spinner1.active === false) {
-      this.deSpin()
-    }
+    /* if (this.$.spinner1.active === false) {
+       this.deSpin()
+     }*/
     this.DBW.askAllArticles((data) => {
       this.articles = data
       scroll({ top: 0, behavior: 'silent' });

@@ -7,8 +7,7 @@ import '../shop-image.js';
 class cmsImages extends PolymerElement {
     static get template() {
         return html` 
-        <style>
-
+        <style>       
         main {
             display: none;
             max-width: 1200px;
@@ -24,7 +23,7 @@ class cmsImages extends PolymerElement {
 
         shop-image {
             cursor: pointer;
-            max-height: 300px;
+            max-height: 200px;
             margin: 32px 0 16px;;        
             @apply --images-shop-image
         }
@@ -36,13 +35,13 @@ class cmsImages extends PolymerElement {
         } 
 
         nav[images] {
-            -webkit-flex: 1 1;
+          /*  -webkit-flex: 1 1;
             flex: 1 1;
             -webkit-flex-basis: 33%;
             flex-basis: 16%;
             margin-top: 1px;
             margin-bottom: 0px;
-            margin-right: 4px; 
+            margin-right: 4px; */
             @apply --images-nav-images;
         }
 
@@ -56,8 +55,12 @@ class cmsImages extends PolymerElement {
         }
 
         div[frame2] {
-            min-height: 373px;
-            max-height: 344px;
+            margin-left: auto;
+            margin-right: auto;
+            min-width: 250px;
+            max-width: 600px;
+            min-height: 284px;
+            max-height: 373px;
         ￼    overflow: unset;
             @apply --images-frame2-div;
         }
@@ -79,18 +82,32 @@ class cmsImages extends PolymerElement {
         }
 
         article[images] {
-            height: auto;
-            min-height: 375px;
-            height: 600px;
+            height: 900px;
             overflow: auto;
             margin-top: 18px;
-            flex-flow: wrap;
+            background-color: #fff;  
+            @apply --images-article-images
         }
 
         article[images][toggle] {
             flex-flow: column;   
             @apply --images-article-images
         }
+
+        /* scrollbar */
+        article[images]::-webkit-scrollbar-track {
+            background: #dddddd;
+          }
+      
+        article[images]::-webkit-scrollbar {
+        width: 7.5px;
+        }
+    
+        article[images]::-webkit-scrollbar-thumb {
+        background-color: #8098ad; //fallback
+        background-color: blue;
+        }
+        /*scrollbar\*/
 
         paper-icon-button {
             height: 30px;
@@ -193,7 +210,7 @@ class cmsImages extends PolymerElement {
        
     </paper-spinner>
     <h1>[[loading]]</h1>
-        <main id="main" class="mainish">   
+        <main id="main">  
             <dom-if if="[[sett]]">
                 <template>
                     <nav top show$="[[sett]]">
@@ -205,12 +222,9 @@ class cmsImages extends PolymerElement {
                                 <paper-icon-button central on-click="toggleView" title="align row" icon="image:grid-on" aria-label="toggle-view"></paper-icon-button>
                             </div>
                         </nav>
-                        <div top>
-                            <paper-icon-button central on-click="close" title="close" icon="image:crop-free" aria-label="toggle-view"></paper-icon-button>  
-                        </div>
                     </nav>
                 </template> 
-            </dom-if>  
+            </dom-if> 
             <dom-if if="[[form]]">
                 <template>
                     <nav central show$="[[show]]">
@@ -241,7 +255,7 @@ class cmsImages extends PolymerElement {
                                             <paper-icon-button on-click="deleteImg" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
                                         </template> 
                                     </dom-if> 
-                                <shop-image src="[[image.url]]" alt="[[image.title]]" on-click="setImage"></shop-image>                      
+                                <shop-image src="[[image.url]]" alt="[[image.title]]" on-click="setImage"></shop-image> 
                             </div>
                         </nav>
                     </template>
@@ -277,8 +291,11 @@ class cmsImages extends PolymerElement {
             openMain: {
                 type: Boolean,
                 notify: true,
-                value: true,
-                //observer: 'mainToggle'
+                value: true
+            },
+            closeMethod: {
+                type: Object,
+                notify: true
             },
             confirm: {
                 type: Boolean,
@@ -294,7 +311,7 @@ class cmsImages extends PolymerElement {
             sett: {
                 type: Boolean,
                 notify: true,
-                value: true
+                value: false
             },
             image: {
                 type: Object,
@@ -304,6 +321,7 @@ class cmsImages extends PolymerElement {
             images: {
                 type: Array,
                 notify: true,
+                value: [],
                 observer: 'open'
             },
             clear: {
@@ -324,7 +342,7 @@ class cmsImages extends PolymerElement {
             form: {
                 type: Boolean,
                 notify: true,
-                value: false
+                value: true
             },
             show: {
                 type: Boolean,
@@ -354,24 +372,19 @@ class cmsImages extends PolymerElement {
         super.ready()
     }
 
-    mainToggle(openMain) {
-        /*  if (openMain === false) {
-              this.openMain = true
-              this.$.main.classList.toggle('mainish')
-          }*/
+    log(data) {
+        console.log(data)
     }
 
-    log(data) {
+    closeMethod(data) {
         console.log(data)
     }
 
     settAndFormKiller(data) {
         this.sett = !data
         this.form = true
-        this.del = false
+        this.del = true
         this.setButton = true
-        console.log(this.form)
-
     }
 
     killSpinner(contents, index) {
@@ -382,12 +395,16 @@ class cmsImages extends PolymerElement {
     }
 
     clearImages() {
-        this.images = []
-        this.contents = []
-        this.show = false
-        this.clear = !this.clear
-        this.showTop = false
-        this.$.spinner1.active = true
+        if (this.$.spinner1.active === false) {
+            this.images = []
+            this.contents = []
+            this.set('show', false)
+            this.clear = !this.clear
+            this.showTop = false
+            this.$.spinner1.active = true
+            this.$.main.classList.remove('mainish')
+            this.closeMethod(false)
+        }
     }
 
     open(data) {
@@ -399,10 +416,10 @@ class cmsImages extends PolymerElement {
                 this.show = false
                 this.showTop = true
             }
+            this.$.main.classList.add('mainish')
             this.contents = []
             setTimeout(() => {
                 this.contents = data
-                console.log(this.data)
             }, 60)
         }
     }
@@ -413,19 +430,20 @@ class cmsImages extends PolymerElement {
     }
 
     deleteImg(data) {
-        let contents = this.contents
-        this.contents = []
-        this.set('remove', data.model.__data.image)
-        let start = data.model.__data.index
-        let end = data.model.__data.index > 0 ? data.model.__data.index : data.model.__data.index + 1
-        contents.splice(start, end)
-        this.contents = contents
+        console.log(data.model.__data.image)
+        /* let contents = this.contents
+         this.contents = []
+         this.set('remove', data.model.__data.image)
+         let start = data.model.__data.index
+         let end = data.model.__data.index > 0 ? data.model.__data.index : data.model.__data.index + 1
+         contents.splice(start, end)
+         this.contents = contents*/
     }
 
     setImage(event) {
         this.image = event.model.__data.image
         if (this.sett === true || this.setButton === true) {
-            this.image = event.model.__data.image
+            this.set('image', event.model.__data.image)
         }
     }
 

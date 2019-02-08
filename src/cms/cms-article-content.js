@@ -21,46 +21,54 @@ class cmsArticleContent extends PolymerElement {
         }
 
         main{
-            width: 99%
+            width: 96%;
+            left: -44px;
         }
-
-        section[bottom] {
-            max-height: 359px;
-            flex-basis: 30%
-        }
-
-        section[bottom2] {
-            max-height: 359px;
-            flex-basis: 100%
-        }
-        cms-image-viewer {
-            display: block;
-            top: -403px;
-        } 
-        
+     
         .open {
             opacity: 1!important;
             height: auto!important;
         }
-
+        
         paper-button.close {
             background-color: #a9e5e5;
             color: black;
             font-weight: bold;
         }
+
+        section[bottom]{
+            ￼    max-height: 408px;
+            }
+    
+            section[bottom3] {
+                display: block;  
+                flex-basis: 92%;    
+            }
+    
+        [adding] {
+            display: none!important
+        }  
+
+        div[buttons]{
+            display: flex
+        }
+
+
         </style>
         <main id="main">
             <nav bottom id="bottom">
-                <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
-                        SAVE [[editing]]
-                </paper-button>
-                <dom-if if="[[!add]]">
-                    <template>
-                        <paper-button on-click="toggleTada" class="close" aria-label="mode-save">
-                                close
-                        </paper-button>
-                    </template>
-                </dom-if>
+                <div buttons>
+                    <dom-if if="[[!add]]">
+                        <template>
+                            <paper-button chis on-click="toggleTada" aria-label="mode-save">
+                                    X
+                            </paper-button>
+                        </template>
+                    </dom-if>
+                    <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
+                            SAVE [[editing]]
+                    </paper-button>
+                </div>
                 <dom-repeat items="[[content]]" as="art">
                     <template>
                         <div bottom>
@@ -82,7 +90,7 @@ class cmsArticleContent extends PolymerElement {
                                     <paper-input hidden value="[[art.title]]" on-input="inputing" placeholder=>"[[art.title]]"></paper-input>
                                 </div>
                             </section>
-                            <section bottom>
+                            <!--section bottom>
                                 <div left>
                                     <paper-button >
                                         category
@@ -97,8 +105,8 @@ class cmsArticleContent extends PolymerElement {
                                     <div>
                                         [[art.category]]
                                     </div>                                 
-                                    <!--cms-input-sellector  class="diferent" options="[[categories]]" value="{{art.category}}">          
-                                    </cms-input-sellector--> 
+                                    <cms-input-sellector  class="diferent" options="[[categories]]" value="{{art.category}}">          
+                                    </cms-input-sellector> 
                                 </div>
                             </section>
                             <section bottom>
@@ -119,7 +127,7 @@ class cmsArticleContent extends PolymerElement {
                                     <cms-input-sellector class="diferent" options="[[pageTypes]]" value="{{art.type}}">          
                                     </cms-input-sellector> 
                                 </div> 
-                            </section>
+                            </section-->
                             <section bottom>
                                 <div left>
                                     <paper-button >
@@ -158,7 +166,7 @@ class cmsArticleContent extends PolymerElement {
                             </section>
                             <section bottom2>
                                 <div left>
-                                    <paper-button >
+                                    <paper-button>
                                         description
                                     </paper-button>
                                     <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
@@ -171,32 +179,12 @@ class cmsArticleContent extends PolymerElement {
                                     <div>
                                         [[art.description]]
                                     </div>
-                                    <paper-input hidden value="[[art.description]]" on-input="inputing" placeholder=>"[[art.description]]"></paper-input>
+                                    <paper-textarea hidden value="[[art.description]]" on-input="inputing" placeholder=>"[[art.description]]">
+                                    </paper-textarea>
                                 </div>
                             </section>
-                            <section bottom2>
-                                <div left>
-                                    <div>
-                                        <paper-button on-click="openSideImages">
-                                            images
-                                        </paper-button>
-                                        <paper-icon-button on-click="addImage" icon="image:loupe" aria-label="mode-edit">
-                                        </paper-icon-button> 
-                                    </div>
-                                    <paper-button class="diferent" on-click="cancelImages" aria-label="mode-cancel">
-                                        cancel
-                                    </paper-button> 
-                                </div>                                     
-                                <div rightImages>                           
-                                    <cms-images 
-                                    adding$="[[!adding]]" 
-                                    contents="[[getImage(art)]]" 
-                                    sett="[[sett]]" 
-                                    del 
-                                    remove="{{remove}}">
-                                    </cms-images>
-                                    <slot></slot>
-                                </div>
+                            <section bottom3>
+                                    [[setImageElement(art)]]
                                 <slot></slot>
                             </section>
                         </div>
@@ -238,11 +226,6 @@ class cmsArticleContent extends PolymerElement {
             articleIndex: {
                 type: Number,
                 notify: true
-            },
-            image: {
-                type: Object,
-                notify: true,
-                observer: 'setImage'
             },
             add: {
                 type: Boolean,
@@ -322,21 +305,23 @@ class cmsArticleContent extends PolymerElement {
     }
 
     toggleTada(data) {
-        this.tada = !this.tada
+        this.tada = false
+        this.removeChild(this.children[0])
+        this.set('content', [])
+        for (let i = 1; 0 < this.childElementCount; i++) {
+            this.removeChild(this.children[0])
+        }
+
     }
 
     toggleZIndex(data) {
         if (data === true) {
-            //  console.log(this.style.zIndex, this.$.bottom)
             this.style.display = 'block'
             setTimeout(() => {
                 this.$.bottom.classList.add('open')
             }, 100)
         } else {
-            //   console.log(data, this.$.bottom)
             this.$.bottom.classList.remove('open')
-            //   this.$.bottom.style.transitionProperty = 'height, opacity';
-            //  this.$.bottom.style.transitionDuration = '.5s, 1s'
             setTimeout(() => {
                 this.style.display = 'none'
             }, 1000)
@@ -351,9 +336,7 @@ class cmsArticleContent extends PolymerElement {
             name: this.articleName,
             content: this.article.content
         }
-
         this.DBW.updateArticles((done) => {
-            console.log(done);
             this.editing = 0
             this.temp = ''
             this.cancelButton.classList.add('diferent')
@@ -365,8 +348,6 @@ class cmsArticleContent extends PolymerElement {
         let elem = event.srcElement.parentElement.parentElement.children[2]
         let elem1 = event.srcElement.parentElement.parentElement.children[1]
         let color = event.srcElement.computedStyleMap().get('color').toString()
-        console.log(elem1)
-        //this.indexed = event.model.__data.index
         if (color === "rgb(128, 152, 173)") {
             event.srcElement.style.color = "var(--google-blue-700)"
         } else {
@@ -385,8 +366,6 @@ class cmsArticleContent extends PolymerElement {
         let elem = event.srcElement.parentElement.children[2]
         let elem1 = event.srcElement.parentElement.children[1]
         let color = event.srcElement.computedStyleMap().get('color').toString()
-        console.log(elem1, elem)
-        //this.indexed = event.model.__data.index
         if (color === "rgb(128, 152, 173)") {
             event.srcElement.style.color = "var(--google-blue-700)"
         } else {
@@ -405,44 +384,113 @@ class cmsArticleContent extends PolymerElement {
     }
 
     inputState(event, par) {
-        this.cancelButton = event.srcElement.parentElement.previousElementSibling.children[1]
-        if (this.temp === '') {
-            let arr = '' + event.model.__data.art[par]
-            if (arr.split('').length > 0) {
-                this.temp = arr.split('').length === 0 ? null : event.model.__data.art[par]
-                this.cancelButton.classList.remove('diferent')
-                this.$.saveButton.classList.remove('diferent')
+        console.log(event.model.__data.index)
+        this.set('cancelButton', event.srcElement.parentElement.previousElementSibling.children[1])
+        let arr = '' + event.model.__data.art[par], index = event.model.__data.index
+        if (arr.split('').length > 0) {
+            if (this.tempArray[par] === undefined) {
+                this.set('tempArray.' + par, arr.split('').length === 0 ? null : event.model.__data.art[par])
                 this.editing = this.editing + 1
-                console.log(this.editing, 'editing')
             }
+            this.cancelButton.classList.remove('diferent')
+            this.$.saveButton.classList.remove('diferent')
         }
     }
 
-    addImage() {
-        if (this.viewerSet !== true) {
-            console.log('came here instead')
-            this.viewerSet = true
-            this.viewer = document.createElement('cms-gallery-viewer')
-            this.viewer.killSett = true
-            /*this.viewer.closeHead = true
-            this.viewer.openMain = true*/
-            this.viewer.addMethod = (this.setImage).bind(this)
-            this.appendChild(this.viewer)
+    cancel(event) {
+        let par = event.srcElement.previousElementSibling.innerText.toLowerCase()
+        let input = event.srcElement.parentElement.nextElementSibling.children[2]
+        let string = "art." + par, index = event.model.__data.index
+        input.value = this.tempArray[par]
+        // event.srcElement.classList.add('diferent')
+        if (this.canceled !== true) {
+            this.cancelState(event.srcElement.parentElement.nextElementSibling, par)
+            event.model.set(string, input.value)
+        }
+    }
+
+    cancelState(srcElement, par) {
+        delete this.tempArray[par]
+        if (this.editing <= 1) {
+            this.set('editing', 0)
+            this.$.saveButton.classList.add('diferent')
         } else {
-            this.viewerSet = false
-            this.removeChild(this.viewer)
+            this.set('editing', this.editing - 1)
+            this.canceled = true
+        }
+        //srcElement.classList.add('diferent')
+        srcElement.children[2].hidden = true
+        srcElement.children[1].classList.remove('diferent')
+    }
+    setImageElement(cat) {
+        let template = html`
+        <div left>
+            <paper-button>
+                images
+            </paper-button>
+            <paper-icon-button on-click="addImage" icon="image:loupe" aria-label="mode-edit">
+            </paper-icon-button> 
+            <paper-button class="diferent" on-click="cancelImages" aria-label="mode-cancel">
+                cancel
+            </paper-button>            
+        </div>                                
+        <div class="rightImages">
+            <cms-images class="images">
+            </cms-images>
+        </div>        
+        `
+        this.appendChild(template.content.children[0])
+        this.appendChild(template.content.children[0])
+        this.imageElement = this.children[1].children[0]
+        this.imageElement.deleteImg = (this.deleteImg).bind(this)
+        this.imageElement.set('sett', true)
+        this.imageElement.set('form', false)
+        this.imageElement.set('del', true)
+        this.imageElement.set('images', this.getImage(cat))
+        this.imageElement.set('adding', !this.imageElement.adding)
+        this.cancelButton = this.children[0].children[2]
+        this.children[0].children[1].addEventListener('click', (this.addImage).bind(this))
+        this.cancelButton.addEventListener('click', (this.cancelImages).bind(this))
+    }
+
+
+    addImage() {
+        let template = html`<cms-gallery-viewer></cms-gallery-viewer>`
+        console.log(this.children[1].childElementCount)
+        if (this.children[1].childElementCount < 2) {
+            this.children[1].prepend(template.content.children[0])
+            this.children[1].children[0].addMethod = (this.setImage).bind(this)
+        } else {
+            this.children[1].removeChild(this.children[1].children[0])
         }
     }
 
     getImage(image) {
         if (image !== undefined) {
-            let url = image.image instanceof Array === true ? image.image[0] : image.image
-            let url2 = image.largeImage instanceof Array === true ? image.largeImage[0] : image.largeImage
-            let obj1 = { url: url, title: image.title, type: 'image' }
-            let obj2 = { url: url2, title: image.title, type: 'largeImage' }
-            let arr = []
-            arr.push(obj1)
-            arr.push(obj2)
+            let url = image.image,
+                url2 = image.largeImage,
+                obj1, obj2, arr = []
+            if (image.image instanceof Array === true) {
+                for (let i = 0; i < image.image.length; i++) {
+                    url = image.image[i]
+                    obj1 = { url: url, title: image.title, type: 'image' }
+                    arr.push(obj1)
+                }
+            } else {
+                obj1 = { url: url, title: image.title, type: 'image' }
+                arr.push(obj1)
+            }
+
+            if (image.largeImage instanceof Array === true) {
+                for (let i = 0; i < image.largeImage.length; i++) {
+                    url2 = image.largeImage[i]
+                    obj2 = { url: url2, title: image.title, type: 'largeImage' }
+                    arr.push(obj2)
+                }
+            } else {
+                obj2 = { url: url2, title: image.title, type: 'largeImage' }
+                arr.push(obj2)
+            }
             console.log(arr)
             return arr
         } else {
@@ -451,25 +499,38 @@ class cmsArticleContent extends PolymerElement {
     }
 
     setImage(data) {/**/
-        console.log(data, this.imageElement)
+        //console.log(this.content[0].image, 'data')
         if ('url' in data) {
-            this.set('tempArray', [{ url: this.content[0].image, title: data.title }])
-            this.setImages(data)
+            let img = new Image(), arr = []
+            img.src = data.url
+            if (img.naturalHeight < 600) {
+                if (this.content[0].image instanceof Array === true) {
+                    arr = this.content[0].image
+                } else {
+                    arr.push(this.content[0].image)
+                }
+                arr.push(data.url)
+                console.log(this.content[0].image, 'darr2')
+            }
+            if (img.naturalHeight >= 600) {
+                if (this.content[0].largeImage instanceof Array === true) {
+                    arr = this.content[0].largeImage
+                } else {
+                    arr.push(this.content[0].largeImage)
+                }
+                arr.push(data.url)
+                console.log(this.content[0].largeImage, 'arr2')
+            }
             this.addingcancel = this.adding
             this.adding = !this.adding
-            this.imageElement.contents = []
-            this.imageElement.contents = [data]
-            this.cancelButton.classList.remove('diferent')
+            //this.cancelButton.classList.remove('diferent')
             this.$.saveButton.classList.remove('diferent')
             this.editing = this.editing + 1
         }
     }
 
     setImages() {
-        for (let i = 0, temp = this.tempArray; i < temp.length; i++) {
-            this.content[0][temp[i].type] = temp[i].url
-        }
-        console.log(this.content)
+
     }
 
     del() {
@@ -480,19 +541,18 @@ class cmsArticleContent extends PolymerElement {
 
     deleteImg(data) {
         let arr = Object.keys(data)
+        console.log(data)
         if (arr.length > 0) {
-            this.push('tempArray', data)
-            this.del()
-            this.cancelButton.classList.remove('diferent')
-            this.$.saveButton.classList.remove('diferent')
-            this.editing = this.editing + 1
-            this.remove = {}
+            /*   this.push('tempArray', data)
+               this.del()
+               this.cancelButton.classList.remove('diferent')
+               this.$.saveButton.classList.remove('diferent')
+               this.editing = this.editing + 1
+               this.remove = {}*/
         }
     }
 
     cancelImages() {
-        //  this.cancelButton.classList.add('diferent')
-        //this.$.saveButton.classList.add('diferent')
         let arr = []
         arr = this.imageElement.images
         for (let i = 0; i < this.tempArray.length; i++) {
@@ -515,81 +575,5 @@ class cmsArticleContent extends PolymerElement {
         this.imageElement.contents = arr
         this.tempArray = []
     }
-
-    cancel(event) {
-        let par = event.srcElement.previousElementSibling.innerText.toLowerCase()
-        let input = event.srcElement.parentElement.nextElementSibling.children[2]
-        let string = "art." + par
-        input.value = this.temp
-        event.srcElement.classList.add('diferent')
-        if (this.canceled !== true) {
-            this.cancelState(event.srcElement.parentElement.nextElementSibling)
-            event.model.set(string, input.value)
-            // this.canceled = !this.canceled
-        }
-    }
-
-    cancelState(srcElement) {
-        this.temp = ''
-        if (this.editing <= 1) {
-            this.editing = 0
-            this.$.saveButton.classList.add('diferent')
-            srcElement.children[2].hidden = true
-            srcElement.children[1].classList.remove('diferent')
-        } else {
-            this.editing = this.editing - 1
-            this.canceled = true
-            srcElement.classList.add('diferent')
-            srcElement.children[2].hidden = true
-            srcElement.children[1].classList.remove('diferent')
-        }
-    }
-
-    /**
-     * @param {number} a - this is a value.
-     * @param {number} b - this is a value.
-     * @return {number} result of the sum value.
-     */
-
-    openSideImages(event) {
-        this.openSide(event)
-        let elem = event.srcElement.parentElement.nextElementSibling.children[0]
-        let elemAdd = event.srcElement.parentElement.children[2]
-        elemAdd.classList.toggle('diferent')
-        this.imageElement = elem
-        this.imageElement.killSett = true
-        console.log('openSideImages', elem)
-    }
-
-    openSide(event) {
-        let elem = event.srcElement.parentElement.nextElementSibling
-        this.cancelButton = event.srcElement.parentElement.children[1]
-        if (this.temp !== '' || this.canceled === true) {
-            this.temp = ''
-            this.canceled = false
-        }
-        elem.style.transitionProperty = 'opacity';
-        elem.style.transitionDuration = '2s'
-        elem.parentElement.style.transitionProperty = 'witdh, height';
-        elem.parentElement.style.transitionDuration = '2s';
-        if (elem.style.display === 'none' || elem.style.display === '') {
-            if (elem.hasAttribute('rightImages') === true) {
-                elem.style.display = 'flex'
-                elem.style.flexFlow = 'column';
-            } else {
-                elem.style.display = 'block'
-            }
-            setTimeout(() => {
-                elem.parentElement.style.width = '495px'
-                elem.style.opacity = 1
-            }, 60)
-        } else {
-            elem.style.display = 'none'
-            elem.style.flexFlow = 'unset';
-            elem.style.opacity = 0
-            elem.parentElement.style.width = 'auto'
-        }
-    }
-
 }
 customElements.define(cmsArticleContent.is, cmsArticleContent);

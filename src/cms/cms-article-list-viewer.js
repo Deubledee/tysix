@@ -1,9 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
-import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import { dataBaseworker } from './dataBaseWorker.js';
-import '@polymer/paper-spinner/paper-spinner.js';
 import '@polymer/paper-input/paper-input.js';
 import './cms-article-content.js';
 import '../shop-image.js';
@@ -37,10 +34,6 @@ class cmsArticleListViewer extends PolymerElement {
         border-radius: 5px;
       }
 
-    cms-article-content {
-        max-width: 1200px;
-    }
-
    /* cms-article-content.zIndex {        
         z-index: 123 
     }*/
@@ -49,9 +42,6 @@ class cmsArticleListViewer extends PolymerElement {
         height: 81px; 
     }
     </style>
-
-    <cms-article-content id="content" add="" delete="">
-    </cms-article-content>
     <article>
         <dom-repeat items="[[content]]" as="art">
             <template>
@@ -63,6 +53,7 @@ class cmsArticleListViewer extends PolymerElement {
                 </div>
             </template>
         </dom-repeat>
+    <slot></slot>
     </article>
         `
     }
@@ -97,10 +88,6 @@ class cmsArticleListViewer extends PolymerElement {
         console.error('error from cms-article-viewer', data)
     }
 
-    deSpin() {
-        this.$.spinner.active = !this.$.spinner.active
-    }
-
     _getCatParents(cats) {
         let arr = []
         for (let i = 0, parent; parent = cats[i].parent; i++) {
@@ -112,8 +99,7 @@ class cmsArticleListViewer extends PolymerElement {
     }
 
     openArticleContent(event) {
-        let elem = this.$.content
-        console.log(event.index)
+        let elem = this.children[0]
         if (elem.tada === false) {
             elem.set('content', [this.content[event.model.__data.index]])
             elem.set('add', false)

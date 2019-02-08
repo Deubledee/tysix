@@ -5,31 +5,17 @@ import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import '@polymer/paper-spinner/paper-spinner.js';
 import '@polymer/paper-input/paper-input.js';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import { microTask } from '@polymer/polymer/lib/utils/async.js';
 import './cms-images.js';
 import './cms-common-styles.js';
 
 class cmsPageContent extends PolymerElement {
     static get template() {
         return html`
-        <style include="cms-common-styles">
-        
-        section[bottom]{
-        ￼    max-height: 408px;
-        }
-
-        section div[rightImages] {
-            max-height: 403px;
-        }
-
-        [adding] {
-            display: none!important
-        } 
-
+        <style include="cms-common-styles">    
+    
         </style>
-        <main>
-            <nav bottom open$="[[tada]]">
+        <main id="main">
+            <nav bottom id="bottom" open$>
                 <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
                         SAVE [[editing]]
                 </paper-button>
@@ -38,7 +24,7 @@ class cmsPageContent extends PolymerElement {
                         <div bottom>
                             <section bottom>
                                 <div left>
-                                    <paper-button on-click="openSide">
+                                    <paper-button>
                                         Page title 
                                     </paper-button>
                                     <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
@@ -58,7 +44,7 @@ class cmsPageContent extends PolymerElement {
                             </section>
                             <section bottom>
                                 <div left>
-                                    <paper-button on-click="openSide">
+                                    <paper-button>
                                         Page lang 
                                     </paper-button>
                                     <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
@@ -78,7 +64,7 @@ class cmsPageContent extends PolymerElement {
                             </section>
                             <section bottom>
                                 <div left>
-                                    <paper-button on-click="openSide">
+                                    <paper-button>
                                         Page type 
                                     </paper-button>
                                     <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
@@ -96,47 +82,9 @@ class cmsPageContent extends PolymerElement {
                                     <paper-input hidden value="[[cat.type]]" on-input="inputing" placeholder=>"[[cat.type]]"></paper-input>
                                 </div>
                             </section>
-                            <!--section bottom>
+                            <section bottom2>
                                 <div left>
-                                    <paper-button on-click="openSide">
-                                    Page name
-                                    </paper-button>
-                                    <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
-                                        cancel
-                                    </paper-button>
-                                </div>
-                                <div right>
-                                    <div>
-                                        <paper-icon-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        </paper-icon-button>
-                                    </div>
-                                    <div>
-                                        [[cat.name]]
-                                    </div>
-                                    <paper-input hidden value="[[ addDashes cat.name]]" on-input="inputing" placeholder=>"[[cat.name]]"></paper-input>
-                                </div>
-                            </section-->
-                            <section bottom>
-                                <div left>
-                                    <paper-button on-click="openSideImages">
-                                        images
-                                    </paper-button>
-                                    <paper-button class="diferent" on-click="cancelImages" aria-label="mode-cancel">
-                                        cancel
-                                    </paper-button>
-                                </div>                                
-                                <div rightImages>
-                                    <div>
-                                        <paper-icon-button on-click="addImage" icon="image:loupe" aria-label="mode-edit">
-                                        </paper-icon-button>
-                                    </div>                                
-                                    <cms-images class="overHidd" adding$="[[!adding]]" images="[[getImage(cat)]]" sett="[[sett]]" del remove="{{remove}}">
-                                    </cms-images>
-                                </div>
-                            </section>
-                            <section bottom>
-                                <div left>
-                                    <paper-button on-click="openSide">
+                                    <paper-button>
                                     placeholder
                                     </paper-button>
                                     <paper-button class="diferent" on-click="cancel" aria-label="mode-cancel">
@@ -153,6 +101,10 @@ class cmsPageContent extends PolymerElement {
                                     </div>
                                     <paper-input hidden value="[[cat.placeholder]]" on-input="inputing" placeholder=>"[[cat.placeholder]]"></paper-input>
                                 </div>
+                            </section>
+                            <section bottom3>
+                                    [[setImageElement(cat)]]
+                                <slot></slot>
                             </section>
                         </div>
                     </template>
@@ -181,6 +133,12 @@ class cmsPageContent extends PolymerElement {
                 type: String,
                 value: '',
                 notify: true
+            },
+            open: {
+                type: Boolean,
+                notify: true,
+                value: false,
+                reflectToAttribute: true
             },
             adding: {
                 type: Boolean,
@@ -322,7 +280,6 @@ class cmsPageContent extends PolymerElement {
         let elem = event.srcElement.parentElement.parentElement.children[2]
         let elem1 = event.srcElement.parentElement.parentElement.children[1]
         let color = event.srcElement.computedStyleMap().get('color').toString()
-        //this.indexed = event.model.__data.index
         if (color === "rgb(128, 152, 173)") {
             event.srcElement.style.color = "var(--google-blue-700)"
         } else {
@@ -355,14 +312,71 @@ class cmsPageContent extends PolymerElement {
         }
     }
 
+    toggleElementPlease(noDel) {
+        if (this.tada === false) {
+            this.$.bottom.style.opacity = "1"
+            this.$.bottom.style.height = "auto"
+            this.setAttribute("open", true)
+            this.$.main.style.zIndex = 120
+            this.set('tada', !this.tada)
+            if (noDel !== undefined) {
+                setTimeout(() => {
+                    this.imageElement.set('del', false)
+                }, 200)
+            }
+            //this.openPageContent(event)
+        } else {
+            this.$.bottom.style.height = "0px"
+            this.$.bottom.style.opacity = 0
+            this.setAttribute("open", false)
+            this.set('tada', !this.tada)
+            this.$.main.style.zIndex = 0
+            this.set('content', [])
+            for (let i = 0; 0 < this.childElementCount; i++) {
+                this.removeChild(this.children[0])
+            }
+        }
+    }
+
+    setImageElement(cat) {
+        let template = html`
+        <div left>
+            <paper-button>
+                images
+            </paper-button>
+            <paper-icon-button icon="image:loupe" aria-label="mode-edit">
+            </paper-icon-button> 
+            <paper-button class="diferent" aria-label="mode-cancel">
+                cancel
+            </paper-button>            
+        </div>                                
+        <div class="rightImages">
+            <cms-images class="images">
+            </cms-images>
+        </div>        
+        `
+        this.appendChild(template.content.children[0])
+        this.appendChild(template.content.children[0])
+        this.imageElement = this.children[1].children[0]
+        this.imageElement.deleteImg = (this.deleteImg).bind(this)
+        this.imageElement.set('sett', true)
+        this.imageElement.set('form', false)
+        this.imageElement.set('del', true)
+        this.imageElement.set('images', this.getImage(cat))
+        this.imageElement.set('adding', !this.imageElement.adding)
+        this.cancelButton = this.children[0].children[2]
+        this.children[0].children[1].addEventListener('click', (this.addImage).bind(this))
+        this.cancelButton.addEventListener('click', (this.cancelImages).bind(this))
+    }
+
     addImage() {
-        let that = this
-        this._itemChangeDebouncer = Debouncer.debounce(this._itemChangeDebouncer,
-            microTask, () => {
-                this.dispatchEvent(new CustomEvent('page-open-image-viewer', {
-                    bubbles: true, composed: true, detail: { set: (this.setImage).bind(this) }
-                }))
-            })
+        let template = html`<cms-gallery-viewer></cms-gallery-viewer>`
+        if (this.children[1].childElementCount < 2) {
+            this.children[1].prepend(template.content.children[0])
+            this.children[1].children[0].addMethod = (this.setImage).bind(this)
+        } else {
+            this.children[1].removeChild(this.children[1].children[0])
+        }
     }
 
     /**
@@ -383,14 +397,31 @@ class cmsPageContent extends PolymerElement {
      */
     setImage(data) {/**/
         console.log(data, this.imageElement)
+        //console.log(this.content[0].image, 'data')
         if ('url' in data) {
-            this.set('tempArray', [{ url: this.content[0].image, title: data.title }])
-            this.setImages(data)
+            let img = new Image(), arr = []
+            img.src = data.url
+            if (img.naturalHeight < 600) {
+                if (this.content[0].image instanceof Array === true) {
+                    arr = this.content[0].image
+                } else {
+                    arr.push(this.content[0].image)
+                }
+                arr.push(data.url)
+                console.log(this.content[0].image, 'darr2')
+            }
+            if (img.naturalHeight >= 600) {
+                if (this.content[0].largeImage instanceof Array === true) {
+                    arr = this.content[0].largeImage
+                } else {
+                    arr.push(this.content[0].largeImage)
+                }
+                arr.push(data.url)
+                console.log(this.content[0].largeImage, 'arr2')
+            }
             this.addingcancel = this.adding
             this.adding = !this.adding
-            this.imageElement.contents = []
-            this.imageElement.contents = [data]
-            this.cancelButton.classList.remove('diferent')
+            //this.cancelButton.classList.remove('diferent')
             this.$.saveButton.classList.remove('diferent')
             this.editing = this.editing + 1
         }
@@ -405,6 +436,7 @@ class cmsPageContent extends PolymerElement {
      * @param {content[0].image} del - removes the image before cancel or save
      */
     del() {
+        console.log(this.content[0])
         this.content[0].image = ''
     }
     /**
@@ -416,7 +448,8 @@ class cmsPageContent extends PolymerElement {
      */
     deleteImg(data) {
         if (data !== undefined) {
-            this.push('tempArray', data)
+            console.log(data.model.__data.image)
+            this.push('tempArray', data.model.__data.image)
             this.del()
             this.cancelButton.classList.remove('diferent')
             this.$.saveButton.classList.remove('diferent')
@@ -430,24 +463,18 @@ class cmsPageContent extends PolymerElement {
         this.$.saveButton.classList.add('diferent')
         this.cancelState()
         if (this.addingcancel === false) {
-            this._itemChangeDebouncer = Debouncer.debounce(this._itemChangeDebouncer,
+            /*this._itemChangeDebouncer = Debouncer.debounce(this._itemChangeDebouncer,
                 microTask, () => {
                     this.dispatchEvent(new CustomEvent('page-cancel-image', {
                         bubbles: true, composed: true
                     }))
-                })
+                })*/
             this.adding = !this.adding
         }
         this.setImages(this.tempArray[0])
-        this.imageElement.contents = []
-        this.imageElement.set('contents', this.tempArray)
+        //this.children.contents = []
+        this.children.set('images', this.tempArray)
         this.tempArray = []
-    }
-
-    openSideImages(event) {
-        this.openSide(event)
-        let elem = event.srcElement.parentElement.nextElementSibling.children[1]
-        this.imageElement = elem
     }
 
     cancel(event) {
@@ -475,30 +502,9 @@ class cmsPageContent extends PolymerElement {
     }
 
     openSide(event) {
-        let elem = event.srcElement.parentElement.nextElementSibling
-        this.cancelButton = event.srcElement.parentElement.children[1]
-        elem.style.transitionProperty = 'opacity';
-        elem.style.transitionDuration = '2s'
-        elem.parentElement.style.transitionProperty = 'witdh, height';
-        elem.parentElement.style.transitionDuration = '2s';
-        if (elem.style.display === 'none' || elem.style.display === '') {
-            if (elem.hasAttribute('rightImages') === true) {
-                elem.style.display = 'flex'
-                elem.style.flexFlow = 'column';
-            } else {
-                elem.style.display = 'block'
-            }
-            setTimeout(() => {
-                elem.parentElement.style.width = '640px'
-                elem.style.opacity = 1
-            }, 60)
-        } else {
-            elem.style.display = 'none'
-            elem.style.flexFlow = 'unset';
-            elem.style.opacity = 0
-            elem.parentElement.style.width = 'auto'
-        }
+        let elem = event.srcElement//.parentElement//.nextElementSibling
+        this.cancelButton = event.srcElement.children
+        console.log(elem, event.srcElement, this.cancelButton)
     }
-
 }
 customElements.define(cmsPageContent.is, cmsPageContent);

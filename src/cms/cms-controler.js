@@ -16,6 +16,7 @@ import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/paper-dialog/paper-dialog.js';
 import '@polymer/paper-dialog-behavior/paper-dialog-behavior.js'
 import '@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js'
+import '@polymer/paper-input/paper-textarea.js'
 import '@polymer/paper-button/paper-button.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/editor-icons.js';
@@ -23,7 +24,6 @@ import '@polymer/iron-icons/av-icons.js';
 import '@polymer/iron-icons/image-icons.js';
 import '@polymer/iron-icons/social-icons.js'
 import './cms-confirm.js';
-import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -35,7 +35,8 @@ setRootPath(MyAppGlobals.rootPath);
 class cmsControler extends PolymerElement {
   static get template() {
     return html`
-        <style>
+        <style>        
+
           :host {
             --app-primary-color: #4285f4;
             --app-secondary-color: black;
@@ -180,10 +181,10 @@ class cmsControler extends PolymerElement {
           </app-toolbar>
             </app-header>
             <iron-pages selected="[[page]]" attr-for-selected="name">
-              <cms-page-viewer name="pages" lang=[[lang]]></cms-page-viewer>
-              <cms-user-viewer name="users"></cms-user-viewer>
-              <cms-articles-viewer name="articles" lang=[[lang]]></cms-articles-viewer>
-              <cms-image-viewer id="viewer" name="galleries" openMain="[[openMain]]" open="[[open]]" class="diferent"></cms-image-viewer>
+              <cms-page-viewer route="[[subroute]]" name="pages" lang=[[lang]]></cms-page-viewer>
+              <cms-user-viewer route="[[subroute]]" name="users"></cms-user-viewer>
+              <cms-articles-viewer route="[[subroute]]" name="articles" lang=[[lang]]></cms-articles-viewer>
+              <cms-image-viewer route="[[subroute]]" id="viewer" name="galleries" openMain="[[openMain]]" open="[[open]]" class="diferent"></cms-image-viewer>
               <my-view404 name="view404"></my-view404>
             </iron-pages>
           </app-header-layout>
