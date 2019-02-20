@@ -105,7 +105,7 @@ class cmsArticleListType extends PolymerElement {
             <paper-icon-button on-click="delete" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
         </div>
     </nav>
-    <cms-article-content id="content" add="" delete="">
+    <cms-article-content id="content" add="true" delete="false">
     </cms-article-content> 
     <nav bottom>    
         <cms-article-list-viewer id="viewer">
@@ -184,6 +184,18 @@ class cmsArticleListType extends PolymerElement {
 
     deSpin() {
         this.$.spinner.active = !this.$.spinner.active
+    }
+
+    openConfirm(event) {
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+            microTask, () => {
+                /*  this.dispatchEvent(new CustomEvent('confirm', {
+                      bubbles: true, composed: true,
+                      detail:
+                          { name: this.article.parent, method: (this.deleteGallerie).bind(this) }
+                  }))*/
+            }
+        )
     }
 
     _getCatParents(cats) {

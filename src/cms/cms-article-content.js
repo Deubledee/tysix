@@ -422,6 +422,7 @@ class cmsArticleContent extends PolymerElement {
         srcElement.children[2].hidden = true
         srcElement.children[1].classList.remove('diferent')
     }
+
     setImageElement(cat) {
         let template = html`
         <div left>
@@ -447,6 +448,7 @@ class cmsArticleContent extends PolymerElement {
         this.imageElement.set('form', false)
         this.imageElement.set('del', true)
         this.imageElement.set('images', this.getImage(cat))
+        this.tempArray = this.getImage(cat)
         this.imageElement.set('adding', !this.imageElement.adding)
         this.cancelButton = this.children[0].children[2]
         this.children[0].children[1].addEventListener('click', (this.addImage).bind(this))
@@ -465,41 +467,71 @@ class cmsArticleContent extends PolymerElement {
         }
     }
 
+    _fromImage(image) {
+        let url, obj1, obj2, arr = []
+        if (image.image.length >= 1) {
+            for (let i = 0; i < image.image.length; i++) {
+                url = image.image[i]
+                obj1 = { url: url, title: image.title, type: 'image' }
+                arr.push(obj1)
+            }
+            this.imageElement.set('del', true)
+        } else {
+            url = ''
+            obj2 = { url: url, title: '' }
+            arr.push(obj2)
+            this.imageElement.set('del', false)
+        }
+        return arr
+    }
+
+    _fromlargeImage(image) {
+        let url2, obj2, arr = []
+        if (image.largeImage.length >= 1) {
+            for (let i = 0; i < image.largeImage.length; i++) {
+                url2 = image.largeImage[i]
+                obj2 = { url: url2, title: image.title, type: 'largeImage' }
+                arr.push(obj2)
+            }
+            this.imageElement.set('del', true)
+        } else {
+            url = ''
+            obj2 = { url: url, title: '' }
+            arr.push(obj2)
+            this.imageElement.set('del', false)
+        }
+        return arr
+    }
+
     getImage(image) {
         if (image !== undefined) {
             let url = image.image,
                 url2 = image.largeImage,
-                obj1, obj2, arr = []
+                obj1, obj2,
+                arr = []
             if (image.image instanceof Array === true) {
-                for (let i = 0; i < image.image.length; i++) {
-                    url = image.image[i]
-                    obj1 = { url: url, title: image.title, type: 'image' }
-                    arr.push(obj1)
-                }
+                obj1 = this._fromImage(image)
             } else {
-                obj1 = { url: url, title: image.title, type: 'image' }
+                obj1 = [{ url: url, title: image.title, type: 'image' }]
                 arr.push(obj1)
             }
 
             if (image.largeImage instanceof Array === true) {
-                for (let i = 0; i < image.largeImage.length; i++) {
-                    url2 = image.largeImage[i]
-                    obj2 = { url: url2, title: image.title, type: 'largeImage' }
-                    arr.push(obj2)
-                }
+                obj2 = this._fromlargeImage(image)
             } else {
-                obj2 = { url: url2, title: image.title, type: 'largeImage' }
+                obj2 = [{ url: url2, title: image.title, type: 'largeImage' }]
                 arr.push(obj2)
             }
-            console.log(arr)
-            return arr
+            console.log(arr.concat(obj1, obj2))
+            return arr.concat(obj1, obj2)
         } else {
+            console.log('fucck')
             return [{ url: '', title: '', type: '' }]
         }
     }
 
     setImage(data) {/**/
-        //console.log(this.content[0].image, 'data')
+        console.log(this.content[0].image, 'data')
         if ('url' in data) {
             let img = new Image(), arr = []
             img.src = data.url
@@ -509,8 +541,7 @@ class cmsArticleContent extends PolymerElement {
                 } else {
                     arr.push(this.content[0].image)
                 }
-                arr.push(data.url)
-                console.log(this.content[0].image, 'darr2')
+                // arr.push(data.url)
             }
             if (img.naturalHeight >= 600) {
                 if (this.content[0].largeImage instanceof Array === true) {
@@ -518,62 +549,48 @@ class cmsArticleContent extends PolymerElement {
                 } else {
                     arr.push(this.content[0].largeImage)
                 }
-                arr.push(data.url)
-                console.log(this.content[0].largeImage, 'arr2')
+                // arr.push(data.url)
             }
             this.addingcancel = this.adding
             this.adding = !this.adding
-            //this.cancelButton.classList.remove('diferent')
+            this.imageElement.set('del', true)
+            this.imageElement.set('images', this.getImage(this.content[0]))
+            this.cancelButton.classList.remove('diferent')
             this.$.saveButton.classList.remove('diferent')
             this.editing = this.editing + 1
         }
     }
 
-    setImages() {
-
-    }
-
-    del() {
-        for (let i = 0, temp = this.tempArray; i < temp.length; i++) {
-            this.content[0][temp[i].type] = ''
+    del(data, index) {
+        if (this.content[0].image instanceof Array === true) {
+            if (index > 0) {
+                this.content[0][data.type].splice(index, index)
+            } else {
+                this.content[0][data.type].splice(0, 1)
+            }
+        } else {
+            this.content[0][data.type] = []
         }
+        this.imageElement.set('images', this.getImage(this.content[0]))
     }
 
     deleteImg(data) {
-        let arr = Object.keys(data)
-        console.log(data)
-        if (arr.length > 0) {
-            /*   this.push('tempArray', data)
-               this.del()
-               this.cancelButton.classList.remove('diferent')
-               this.$.saveButton.classList.remove('diferent')
-               this.editing = this.editing + 1
-               this.remove = {}*/
+        if (data !== undefined) {
+            this.del(data.model.__data.image, data.model.__data.index)
+            this.cancelButton.classList.remove('diferent')
+            this.$.saveButton.classList.remove('diferent')
+            this.editing = this.editing + 1
+            this.remove = undefined
         }
     }
 
     cancelImages() {
-        let arr = []
-        arr = this.imageElement.images
-        for (let i = 0; i < this.tempArray.length; i++) {
-            if ('url' in this.tempArray[i]) {
-                arr.push(this.tempArray[i])
-            }
-        }
+        this.imageElement.set('images', this.tempArray)
+        this.imageElement.set('del', true)
+        this.cancelState()
         if (this.addingcancel === false) {
-            this._itemChangeDebouncer = Debouncer.debounce(this._itemChangeDebouncer,
-                microTask, () => {
-                    this.dispatchEvent(new CustomEvent('article-cancel-image', {
-                        bubbles: true, composed: true
-                    }))
-                })
             this.adding = !this.adding
         }
-        this.cancelState()
-        this.setImages()
-        this.imageElement.contents = []
-        this.imageElement.contents = arr
-        this.tempArray = []
     }
 }
 customElements.define(cmsArticleContent.is, cmsArticleContent);

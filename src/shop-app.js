@@ -237,19 +237,6 @@ class ShopApp extends PolymerElement {
 
     <shop-analytics key="UA-39334307-16"></shop-analytics>
     <!--
-      app-location and app-route elements provide the state of the URL for the app.
-    -->
-    <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-
-    <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-
-    <!--
-      shop-category-data provides the list of categories.
-    -->
-    <shop-category-data categories="{{categories}}" lang="{{lang}}"></shop-category-data>
-
-    <!--
       shop-cart-data maintains the state of the user's shopping cart (in localstorage) and
       calculates the total amount.
     -->

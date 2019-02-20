@@ -3,6 +3,8 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/paper-input/paper-input.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import './cms-image-form.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { microTask } from '@polymer/polymer/lib/utils/async.js';
 class cmsGalleriesItem extends PolymerElement {
     static get template() {
         return html` 
@@ -232,11 +234,15 @@ class cmsGalleriesItem extends PolymerElement {
     }
 
     openConfirm(event) {
-        this.dispatchEvent(new CustomEvent('confirm', {
-            bubbles: true, composed: true,
-            detail:
-                { name: this.gallerie.gallerie, method: (this.deleteGallerie).bind(this) }
-        }))
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+            microTask, () => {
+                this.dispatchEvent(new CustomEvent('confirm', {
+                    bubbles: true, composed: true,
+                    detail:
+                        { name: this.gallerie.gallerie, method: (this.deleteGallerie).bind(this) }
+                }))
+            }
+        )
     }
 }
 customElements.define(cmsGalleriesItem.is, cmsGalleriesItem);

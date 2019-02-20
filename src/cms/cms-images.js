@@ -104,8 +104,8 @@ class cmsImages extends PolymerElement {
         }
     
         article[images]::-webkit-scrollbar-thumb {
-        background-color: #8098ad; //fallback
-        background-color: blue;
+            background-color: #8098ad;
+            background-color: blue;
         }
         /*scrollbar\*/
 
@@ -442,6 +442,7 @@ class cmsImages extends PolymerElement {
 
     setImage(event) {
         this.image = event.model.__data.image
+        event.srcElement.style.filter = 'drop-shadow(8px 8px 10px gray)'
         if (this.sett === true || this.setButton === true) {
             this.set('image', event.model.__data.image)
         }

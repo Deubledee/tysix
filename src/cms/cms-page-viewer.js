@@ -1,53 +1,33 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import { dataBaseworker } from './dataBaseWorker.js';
 import '@polymer/paper-spinner/paper-spinner.js';
 import '@polymer/paper-tabs/paper-tabs'
 import '@polymer/paper-tabs/paper-tab'
-import './cms-confirm.js';
-import './cms-page-content.js';
-import './cms-common-styles.js';
-import './cms-pge-list-type.js';
+import '@polymer/iron-pages/iron-pages.js';
+import '@polymer/iron-selector/iron-selector.js';
 import './cms-gallery-viewer';
-
+import './cms-common-styles.js';
 class cmsPageViewer extends PolymerElement {
   static get template() {
     return html`
-    <style>
+    <style include="cms-common-styles">
+        :host {
+          position: relative;
+        }
+
         main {
-          display: block;
+          background-color: #fff;
           word-break: break-all;
-          padding: 4px;
-          position: absolute;
-          left: -42px;
-          top: 52px;
-          width: 100%;
+          position: relative;
         }
       
-        .rightImages {
-          display: flex;
-        /*  box-shadow: 3px 3px 8px #b6b6b6;*/
-          padding: 24px;
-          box-sizing: border-box;
-        }
-
-        cms-images.images {
-          width: 800px;          
-          height: 300px;
-          --images-article-images: {          
-              height: 200px!important;
-              overflow: none
-            }
-        }
-
         article {
-          box-sizing: border-box;
-          margin-bottom: 10px;
-          padding: 12px;
-          max-width: 1200px;
-          margin-left: auto;
-          margin-right: auto;
+          max-width: 1890px;
+          min-width: 730px;
+          color: #5487b6;
+          padding-left: 21px;
+          padding-right: 18px;
         }
       
         nav {
@@ -62,17 +42,19 @@ class cmsPageViewer extends PolymerElement {
           flex-flow: wrap;
           flex-direction: column;
           position: relative;
-          top: 5px;
-          height: 34px;
-          background-color: #dbdbdb;
-          max-width: 1300px;
-          margin-left: auto;
-          margin-right: auto;
-          border-radius: 4px;
+          left: 0px;
+          top: -38px;
+          height: 19px;
+          max-width: 483px;
         }
     
           div[top] {
-          padding-left: 20px;
+            background-color: #fff;
+            width: 100.4%;
+            height: 130px;
+            box-sizing: border-box;
+            padding-top: 30px;
+            border-bottom: 1px solid #8098ad;
         }
     
         section {
@@ -81,8 +63,8 @@ class cmsPageViewer extends PolymerElement {
           font-weight: bold;
           padding: 4px;
           height: 50px;
-          margin-left: auto;
-          margin-right: auto;
+          margin-left: 20px;
+         /* margin-right: auto;*/
         }
       
         section[title] {
@@ -101,14 +83,11 @@ class cmsPageViewer extends PolymerElement {
         section[title2] {
           flex-basis: 34px;
           cursor: pointer;
-          color: #787676;
-          font-size: 55px;
+          color: #000;
+          font-size: 25px;
           text-align: center;
           height: 72px;
           width: 257px;
-          border-radius: 10px;
-          /* background-color: #e1e2d8; */
-          text-shadow: 3px 3px 2px #ababab;
         }
     
         paper-icon-button-light {
@@ -131,78 +110,76 @@ class cmsPageViewer extends PolymerElement {
         paper-tabs {
           font-size: 17px;
           font-weight: bold;
+          padding-top: 7px;
         }
     
         nav[center] {
           flex-flow: column;
+          font-weight: bold;
+          letter-spacing: 0.02em;
         }
     
         .diferent {
           display: none;
         }
+
         paper-tabs a {
           text-decoration: none;
-          color: inherit
+          color: inherit;
+          border-left: 1px solid;
+          height: 38px;
+          border-top: 1px solid;
+          border-right: 1px solid;
+          border-top-right-radius: 17px;
+          background-color: #ffffff;
+          margin-right: 2px;
         }
+        
     </style>
   </custom-style>  
-  <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-    <main> 
-        <div top>
-          <section title2>
-            <paper-icon-button-light>
-              <iron-icon icon="av:library-books" aria-label="pages"></iron-icon>
-            </paper-icon-button-light>
-            <div> Pages </div>
-          </section>
-        </div>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" autoActivate>
+    </app-route>
+    <main id="main">
       <nav top>
         <app-toolbar typer>
             <paper-tabs no-bar>
-              <a href="/admin/pages[[add]]">
-                <paper-tab name="add" on-click="_add">
-                    Add
-                  <paper-icon-button-light>
-                      <iron-icon icon="av:library-add" aria-label="add">
-                      </iron-icon>
-                  </paper-icon-button-light>
-                </paper-tab>
-              </a> 
-              <a href="/admin/pages[[categories]]">
-                <paper-tab name="categories" on-click="toggleLists">
-                    category pages
-                  <paper-icon-button-light>
-                      <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                  </paper-icon-button-light>
-                </paper-tab>
-              </a> 
-              <a href="/admin/pages[[suCategories]]">
-                <paper-tab name="sub_categories" on-click="toggleCats">
-                  sub category pages
-                  <paper-icon-button-light>
-                      <iron-icon icon="av:library-add" aria-label="sub categories"></iron-icon>
-                  </paper-icon-button-light>
-                </paper-tab>
-              </a> 
+              <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                <a href="[[rootPath]]content/pages/add-category-pages">
+                  <paper-tab name="add-category-pages">
+                      category pages
+                    <paper-icon-button-light>
+                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+                    </paper-icon-button-light>
+                  </paper-tab>
+                </a>
+                <a href="[[rootPath]]content/pages/"
+                  <paper-tab name="add-sub-categoriy-pages">
+                    sub category pages
+                    <paper-icon-button-light>
+                        <iron-icon icon="av:library-add" aria-label="sub categories"></iron-icon>
+                    </paper-icon-button-light>
+                  </paper-tab>
+                </a>
+              </iron-selector>
+
             </paper-tabs>
         </app-toolbar> 
-      </nav>      
-      <article id="editarea" class="diferent">
-        <cms-page-content id="content">
-        </cms-page-content>
-      </article>
-      <article>  
-        <nav center id="typer" class="diferent"> 
-          <cms-page-list-type pages=[[pages]]>
-          </cms-page-list-type>  
-        </nav>
-      </article>
-      <article>
-        <nav center id="subCats" class="diferent"> 
-              <cms-page-sub-cat-type article=[[article]]>
-              </cms-page-sub-cat-type> 
-        </nav>
-      </article>
+      </nav>  
+       
+      <iron-pages selected="[[page]]" attr-for-selected="name"> 
+          <article name="add-category-pages">  
+            <slot name="add"></slot>  
+          </article>
+
+          <article name="home"+>           
+            <slot name="categories">
+            </slot>
+
+            <slot name="suCategories">
+            </slot>
+          </article>
+
+      </iron-pages>  
     </main>  
 
       `
@@ -211,35 +188,14 @@ class cmsPageViewer extends PolymerElement {
 
   static get properties() {
     return {
-      DBW: {
-        type: Object,
-        value: function () {
-          return new dataBaseworker()
-        },
-      },
       lang: {
         type: String,
         notify: true
       },
-      add: {
+      page: {
         type: String,
-        notify: true,
-        value: '/add'
-      },
-      add: {
-        type: String,
-        notify: true,
-        value: '/add'
-      },
-      categories: {
-        type: String,
-        notify: true,
-        value: '/categories'
-      },
-      suCategories: {
-        type: String,
-        notify: true,
-        value: '/sub_categories'
+        reflectToAttribute: true,
+        observer: '_pageChanged'
       },
       active: {
         type: String,
@@ -256,89 +212,67 @@ class cmsPageViewer extends PolymerElement {
     }
   }
 
+  static get observers() {
+    return [
+      '_routePageChanged(routeData)'
+    ];
+  }
+
   ready() {
     super.ready()
-    this.AskPages()
+    //this.AskPages()
     this._routePageChanged(this.routeData)
     scroll({ top: 0, behavior: 'silent' });
   }
 
-  log(data) {
-    console.log('log from cms-page-viewer', data)
+  log(event) {
+    console.log('log from cms-page-viewer', event)
+  }
+
+  _adaptToScreen(event) {
+    console.log('log from cms-page-viewer', event,
+      window.screen.availWidth,
+      window.screen.width)
+    this.$.main
   }
 
   error(data) {
     console.error('error from cms-page-viewer', data)
   }
 
-  _routePageChanged(data, boll) {
-    if (data.page === 'add') {
-      this._add()
-    }
-
-    if (data.page === 'categories') {
-      this.toggleLists(data)
-    }
-
-    if (data.page === 'sub_categories') {
-      this.toggleCats(data)
-
-    }
-  }
-
-  toggleLists(data) {
-    this.$.typer.classList.toggle('diferent')
-    setTimeout(() => {
-      if (this.routeData.page === 'categories') {
-        this.active = this.categories
-        this.categories = '/'
-      } else if (this.categories === '/') {
-        this.categories = '/categories'
-        this.active = ''
-      }
-    }, 60)
-  }
-
-  toggleCats(data) {
-    this.$.subCats.classList.toggle('diferent')
-    setTimeout(() => {
-      if (this.routeData.page === 'sub_categories') {
-        this.active = this.suCategories
-        this.suCategories = '/'
-      } else if (this.suCategories === '/') {
-        this.suCategories = '/sub_categories'
-        this.active = ''
-      }
-    }, 60)
-  }
-
-  _add(event) {
-    let elem = this.$.content
-    setTimeout(() => {
-      if (this.routeData.page === 'add') {
-        this.add = '/'
-      } else if (this.add === '/') {
-        this.add = '/add'
-        if (this.active !== '') {
-          window.history.pushState({}, null, '/admin/pages' + this.active);
-          window.dispatchEvent(new CustomEvent('location-changed'));
-        }
+  _routePageChanged(page) {
+    if (page !== undefined && 'page' in page) {
+      if (!page.page) {
+        this.page = 'home';
+      } else if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
+        this.page = 'add-category-pages';
       } else {
-        console.log(this.routeData)
+        this.page = 'view404';
       }
-    }, 60)
-    if (elem.tada === false) {
-      elem.set('content', [{ title: '', lang: '', type: '', name: '', image: '', placeholder: '' }])
-      elem.set('add', true)
+    } else if (page instanceof Object === true) {
+      this.page = 'home';
     }
-    elem.parentElement.classList.toggle('diferent')
-    elem.toggleElementPlease()
   }
 
-  resetCollor(data) {
-    if (data === 'newPage') {
-      this.AskPages()
-      this.lastChosen.pop()
+  _pageChanged(page) {
+    if (page !== undefined) {
+      if (page === 'home') {
+        import('./cms-page-list-type.js').then(item => {
+        });
+        /* import('./cms-page-sub-cat-type.js').then(item => {
+         });*/
+        return
+      }
+      if (page === 'add-category-pages') {
+        import('./cms-page-content.js').then(item => {
+          console.log(page)
+        });
+        return
+      }
+      if (page === 'view404') {
+        import('../shop-404-warning.js');
+        return
+      }
     }
   }
 
@@ -352,13 +286,6 @@ class cmsPageViewer extends PolymerElement {
       arr.push(elem)
       this.lastChosen = arr
     }
-  }
-
-  AskPages() {
-    this.DBW.askAllPages((done) => {
-      this.set('pages', done)
-      scroll({ top: 0, behavior: 'silent' });
-    })
   }
 
   showName(cats, name) {

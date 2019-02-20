@@ -210,14 +210,11 @@ class ShopDetail extends PolymerElement {
         type: Boolean,
         value: false
       },
-
       offline: {
         type: Boolean,
         observer: '_offlineChanged'
       },
-
       failure: Boolean
-
     }
   }
 

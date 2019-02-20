@@ -100,7 +100,11 @@ class cmsLogin extends PolymerElement {
                          }
                     }
           </style>
-     </custom-style>  
+     </custom-style> 
+     <app-location route="{{route}}">
+     </app-location>
+     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
+     </app-route> 
      <main closed$="[[!closed]]">      
           <div login>      
                <nav>
@@ -119,8 +123,13 @@ class cmsLogin extends PolymerElement {
                     <span four> Deubledee </span>              
                </nav>
           <div>
-     </main>  
-     <slot name="app" class="slot" closed$="[[closed]]"></slot>`
+     </main> 
+
+     <slot name="controler" class="slot" closed$="[[closed]]"></slot>
+
+     <slot name="app" class="slot" closed$="[[closed]]"></slot>
+
+     `
      }
 
      static get is() { return 'cms-login'; }
@@ -162,6 +171,12 @@ class cmsLogin extends PolymerElement {
                          { id: 'wave-shaper', name: 'Video', notAtive: false }]
                }
           }
+     }
+
+     static get observers() {
+          return [
+               '_routePageChanged(routeData.page, route)'
+          ];
      }
 
      ready() {
@@ -219,7 +234,8 @@ class cmsLogin extends PolymerElement {
      _userAccepted(user) {
           // let cb = this._pageLoaded.bind(this, Boolean(oldPage));
           import('./cms-controler.js').then(() => {
-               this.user = user
+               this.set('user', user)
+               this.children[0].set('user', user)
                this.firstElementChild.user = user
           });
      }
@@ -234,17 +250,6 @@ class cmsLogin extends PolymerElement {
           return finalString
      }
 
-     showPage(event) {
-          if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
-               event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "block"
-               event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
-          } else {
-               event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "none"
-               event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
-          }
-
-     }
-
      setValues() {
           let obj = {
                'email': this.email,
@@ -253,6 +258,32 @@ class cmsLogin extends PolymerElement {
           this.DBW.loginFire(obj)
           this.email = ''
           this.pwd = ''
+     }
+
+     _routePageChanged(page, rtr) {
+          if (!page) {
+               this.page = '';
+          } else if (['app', 'controler'].indexOf(page) !== -1) {
+               this.page = page;
+          } else {
+               this.page = 'view404';
+          }
+     }
+
+     _pageChanged(page) {
+          switch (page) {
+               case 'app':
+                    import('../shop-app');
+                    break;
+               case 'controler':
+                    import('./cms-controler.js');
+                    break;
+               case 'view404':
+                    import('../shop-404-warning.js');
+                    break;
+               default:
+                    break
+          }
      }
 }
 

@@ -30,7 +30,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
   <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
   <style>
-
     body {
       margin: 0;
       font-family: 'Roboto', 'Noto', sans-serif;
@@ -53,7 +52,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       padding: 0 16px;
       overflow: visible;
     }
-
   </style>
 
 </head>
@@ -117,11 +115,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    // Initialize Firebase
 
   </script>
-  <shop-app unresolved> </shop-app>
+
+  <cms-login unresolved>
+    <cms-controler slot="controler">
+    </cms-controler>
+    <shop-app slot="app" route="[[route]]" categories="{{categories}}" lang=[[lang]]>
+    </shop-app>
+  </cms-login>
+
   <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
   <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
-  <script type="module" src="./src/shop-app.js"></script>
+
+  <script type="module" src="./src/cms/cms-login.js"></script>
 
   <script>
     window.performance && performance.mark && performance.mark('index.html');
