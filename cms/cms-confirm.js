@@ -1,34 +1,27 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
-import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import { dataBaseworker } from './dataBaseWorker.js';
+import './cms-comon-style_v3';
 
 class cmsConfirm extends PolymerElement {
 
     static get template() {
         return html`
-
-
-    <style>
+    <style  include="cms-comon-style_v3">
         nav[bottom2]{
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.45098039215686275);
             display: none;
             position: fixed;
-            top: 0px;
-            left: 0px;
+            top: 0%;
+            width: 100%;
+            height: 100%;
+            padding: 118px;
         }
 
         nav[bottom2][confirm]{
-            display: block;
+            @apply --layout-vertical;
         }
 
-        paper-dialog.diferent {
-            left: 29%;
-            width: 585px;
-            height: 236px;
-            border-radius: 4px;
-        }
-
-        paper-dialog.diferent div {
+        nav[bottom2] div {
             text-align: center;
             word-break: break-word;
             letter-spacing: 2px;
@@ -36,20 +29,24 @@ class cmsConfirm extends PolymerElement {
             margin-left: auto;
             margin-right: auto;
             border-radius: 5px;
-            width: 20%;
+            width: auto;
+            padding: 34px;
         }
 
-        paper-dialog.diferent div[one] {
+        nav[bottom2] div[one] {
             height: 44px;
+            color: #3bdbdd;
+            font-size: 26px;
+            text-shadow: 1px 1px 1px black;;
         }
 
 
-        paper-dialog.diferent div[tow] {
+        nav[bottom2]div[tow] {
             width: 61%;
         }
 
-        paper-dialog.diferent h2 {
-            color: #d87e7e;
+        nav[bottom2] h2 {
+            color: #ff5600;
             text-shadow: 2px 2px 2px #161616;
             text-align: center;
             margin-left: auto;
@@ -57,9 +54,12 @@ class cmsConfirm extends PolymerElement {
             width: 42%;
             border-radius: 5px;
             height: 35px;
-            font-size: 29px;
+            font-size: 44px;
         }
-
+        nav[bottom2] h2[pub="publish"] {
+            color: #75ff32;
+            font-size: 64px;
+        }
         paper-button {
             background-color: #e3e3e3
         }
@@ -74,21 +74,20 @@ class cmsConfirm extends PolymerElement {
         
     </style>
 
-    <nav id="navbottom" bottom2 confirm$="[[open]]">           
-        <paper-dialog id="animated" class="diferent" exit-animation="fade-out-animation">
-            <h2> Delete [[type]] </h2>
-            <div one>
-                <h3>[[title]]</h3>
-            </div>
-            <div tow>
-                <paper-button left on-click="openConfirm">
-                    cancel 
-                </paper-button>
-                <paper-button right on-click="delete">
-                    confirm 
-                </paper-button>
-            </div>
-        </paper-dialog>      
+    <nav id="navbottom" bottom2 confirm$="[[open]]" id="animated">
+        <h2 pub$="[[headderMsg]]"> [[headderMsg]] </h2>
+        <h3>[[type]]</h3>
+        <div one>
+            <h3>[[title]]</h3>
+        </div>
+        <div tow>
+            <paper-button left on-click="openConfirm">
+                cancel 
+            </paper-button>
+            <paper-button right on-click="delete">
+                confirm 
+            </paper-button>
+        </div>     
     </nav>
     `}
 
@@ -96,14 +95,14 @@ class cmsConfirm extends PolymerElement {
 
     static get properties() {
         return {
-            DBW: {
-                type: Object,
-                value: function () {
-                    return new dataBaseworker()
-                },
-            },
             confirm: {
                 type: Boolean,
+                notify: true,
+                value: false,
+                reflectToAttribute: true,
+            },
+            pub: {
+                type: String,
                 notify: true,
                 value: false,
                 reflectToAttribute: true,
@@ -118,12 +117,9 @@ class cmsConfirm extends PolymerElement {
                 notify: true,
                 observer: 'cleanUnderscore'
             },
-            type: {
-                type: String
-            },
-            method: {
-                type: Object
-            }
+            headderMsg: String,
+            type: String,
+            method: Object
         }
     }
 
@@ -155,15 +151,10 @@ class cmsConfirm extends PolymerElement {
         if (this.confirm === false) {
             this.title = this.cleanUnderscore(event.name)
             this.confirm = true
-            this.$.animated.open()
         } else {
-            this.$.animated.cancel()
-            setTimeout(() => {
-                this.open = false
-                this.confirm = false
-            }, 400)
+            this.open = false
+            this.confirm = false
         }
     }
-
 }
 customElements.define(cmsConfirm.is, cmsConfirm);

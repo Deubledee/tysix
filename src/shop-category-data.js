@@ -1,6 +1,6 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element';
 import { dataBaseworker } from './cms/dataBaseWorker.js';
-
+const __DEV = true
 class ShopCategoryData extends PolymerElement {
   static get is() { return 'shop-category-data'; }
   static get properties() {
@@ -62,7 +62,7 @@ class ShopCategoryData extends PolymerElement {
     this.DBW.getPagesEqualTo(done => {
       this.categories = done.categories
       this.lang = done.lang
-    }, 'lang', this.lang)
+    }, 'lang', this.lang, __DEV)
 
     window.addEventListener('category-added', (evt) => {
       let bool
@@ -113,9 +113,8 @@ class ShopCategoryData extends PolymerElement {
         this.DBW.getArticle((msg, content) => {
           if (msg !== "error") {
             this.set('category.items', content);
-            console.log(this.category)
           }
-        }, categoryObj);
+        }, categoryObj, __DEV);
       }
       return categoryObj;
     }

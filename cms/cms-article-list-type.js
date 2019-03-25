@@ -105,7 +105,7 @@ class cmsArticleListType extends PolymerElement {
             <paper-icon-button on-click="delete" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>
         </div>
     </nav>
-    <cms-article-content id="content" add="true" delete="false">
+    <cms-article-content route="{{route}}" id="content" add="true" delete="false">
     </cms-article-content> 
     <nav bottom>    
         <cms-article-list-viewer id="viewer">

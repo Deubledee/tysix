@@ -1,55 +1,77 @@
-//express\\
+
 const express = require('express');
+const session = require('express-session')
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const app = express();
-let fs = require('fs');
 const responseTime = require('response-time')
 const cors = require('cors');
 const index = require('./routes/index');
-//firebase\\;
 const formidable = require('formidable');
+const app = express();
+let fs = require('fs');
+//const index2 = require('./routes/index2');
 const admin = require("firebase-admin");
 const util = require('util');
-const serviceAccount = require("./routes/tysix-75b86-firebase-adminsdk-8yguk-63709f70f1.js");
+const serviceAccount = require("./routes/tysix-75b86-firebase-adminsdk-8yguk-63709f70f1.js")
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://tysix-75b86.firebaseio.com"
 });
-const settings = { timestampsInSnapshots: true };
+//const settings = { timestampsInSnapshots: true };
 const dB = admin.firestore()
-
-dB.settings(settings);
+// view engine setup
+//dB.settings(settings);
+app.use(session({
+  secret: "mkljmdsaldsdad!jm7sa7k341234$#",
+  resave: true,
+  saveUninitialized: true,
+  clientInfo: {
+    uid: '',
+    role: '',
+    name: '',
+    loginDateTime: ''
+  }
+}));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(responseTime());
+//app.use('/node', express.static(path.join(__dirname, 'public/bower_components/webcomponentsjs')));
 app.use('/webcomponentsjs', express.static(path.join(__dirname, 'node_modules/@webcomponents/webcomponentsjs')));
 app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
-/*app.use('/articleimagedir', express.static('/data/images'), serveIndex(__dirname + '/data/images'))
-app.use('/pageimagedir', express.static('/images'), serveIndex(__dirname + '/images'))*/
+
 app.use('/', index);
-//firebase admin
+app.use('/home', index);
+app.use('/content', index);
+app.use('/content/articles', index);
+app.use('/content/pages', index);
+app.use('/content/pages/edit-category-pages', index);
+app.use('/content/search', index);
+app.use('/users', index);
+app.use('/galleries', index);
+app.use('/view404', index);
+
 app.post('/admin', (req, res) => {
-  checkAdmin(req.query).then((items) => {
-    items.forEach(user => {
-      let admin = user.data().role
-      if (admin === 'admin') {
-        resolveUsers(res, admin)
-      } else {
-        res.send({ error: 'not Admin', admin })
-        util.log(data)
-      }
-    });
-  }).catch((error) => {
-    util.log(error);
-  })
+  console.log(req.session)
+  resolveUsers(res, admin)
 })
+
 let workingDirectory = process.cwd();
+
+app.post('/images', (req, res, next) => {
+  res.writeHead(200, { 'content-type': 'text/plain' });
+  uploadHandler(req, res, next)
+})
+
+function checkAdmin(query) {
+  let userRef = dB.collection('users')
+  let queryRef = userRef.where('uid', '==', query.uid);
+  return queryRef.get()
+}
 
 function checkDirectory(directory, callback) {
   fs.stat(directory, function (err, stats) {
@@ -101,94 +123,21 @@ let uploadHandler = function (req, res, next) {
   return;
 }
 
-app.post('/images', (req, res, next) => {
-  res.writeHead(200, { 'content-type': 'text/plain' });
-  uploadHandler(req, res, next)
-})
-
-app.post('/update', (req, res) => {
-  checkAdmin(req.query).then((items) => {
-    items.forEach(user => {
-      let admin = user.data().role
-      if (admin === 'admin') {
-        updateUsers(res, req.query, admin)
-      } else {
-        res.send({ error: 'not Admin', admin })
-        console.log(data)
-      }
-    });
-  }).catch((error) => {
-    console.log(error);
-  })
-})
-
-app.post('/create', (req, res) => {
-  checkAdmin(req.query).then((items) => {
-    items.forEach(user => {
-      let admin = user.data().role
-      if (admin === 'admin') {
-        createUsers(res, req.query.obj, admin)
-      } else {
-        res.send({ error: 'not Admin', admin })
-        console.log(data)
-      }
-    });
-  }).catch((error) => {
-    console.log(error);
-  })
-})
-
-function checkAdmin(query) {
-  let userRef = dB.collection('users')
-  let queryRef = userRef.where('uid', '==', query.uid);
-  return queryRef.get()
-}
-
 function resolveUsers(res, accepted, nextPageToken) {
   admin.auth().listUsers(1, nextPageToken)
     .then(function (listUsersResult) {
+      let obj
       listUsersResult.users.forEach(function (userRecord) {
-        let obj = { accepted: accepted, data: userRecord }
-        res.status(200).send(obj)
+        obj = { accepted: accepted, data: userRecord }
       });
       if (listUsersResult.pageToken) {
         // List next batch of users.
       }
+      //  console.log(obj.data)
+      res.status(200).send(obj.data)
     })
     .catch(function (error) {
       console.log("Error listing users:", error);
-    });
-}
-
-function createUsers(res, obj, accepted) {
-  let parse = JSON.parse(obj)
-  let uid = parse.uid
-  admin.auth().createUser(uid, parse)
-    .then(function (userRecord) {
-      let obj2 = { accepted: accepted, data: userRecord }
-      res.status(200).send(obj2)
-      console.info("Successfully updated user");
-    })
-    .catch(function (error) {
-      res.send({ "error": error })
-      console.error("Error updating user:", error);
-    });
-}
-
-function updateUsers(res, query, accepted) {
-  let parse = JSON.parse(query.obj)
-  let uid = query.uid
-  // let docRef = db.collection('users').doc(uid).set(obj);
-  console.info("Successfull update request");
-  admin.auth().updateUser(uid, parse)
-    .then(function (userRecord) {
-      let obj2 = { accepted: accepted, data: userRecord }
-      res.status(200).send(obj2)
-      console.info("Successfully updated user");
-    })
-    .catch(function (error) {
-      res.send({ "error": error })
-      console.error("Error updating user:", error);
     });
 }
 
@@ -202,7 +151,4 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   //res.render('error');
 });
-
 module.exports = app;
-
-

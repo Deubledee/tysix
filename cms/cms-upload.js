@@ -882,7 +882,9 @@ class cmsUpload extends PolymerElement {
       },
       imageArray: {
         type: Array,
-        notify: true
+        notify: true,
+        value: [],
+        observer: '_log'
       },
       pond: {
         type: Object,
@@ -897,7 +899,9 @@ class cmsUpload extends PolymerElement {
     });
     this.pond = this.getPond()
   }
-
+  _log(data) {
+    console.log(data)
+  }
   getPond() {
     if (this.pond instanceof Function === false) {
       const pond = FilePond.create(this.$.input);
@@ -908,7 +912,7 @@ class cmsUpload extends PolymerElement {
   setPondConfig(gall) {
     let that = this, arr = []
     setTimeout(() => {
-      let process = '/images', gallerie = gall
+      let path = '/images', gallerie = gall
       this.pond.setOptions({
         allowDrop: true,
         allowReplace: true,
@@ -916,14 +920,15 @@ class cmsUpload extends PolymerElement {
         server: {
           url: 'http://localhost:3000',
           process: {
-            url: process,
+            url: path,
             ondata: (formData) => {
               formData.forEach(item => {
                 if (item !== "{}") {
+                  this.log(item)
                   arr.push(item)
                 }
               })
-              this.imageArray = arr
+              this.set('imageArray', arr)
               formData.append('gallerie', gallerie);
               return formData;
             }
@@ -937,6 +942,7 @@ class cmsUpload extends PolymerElement {
 
     }, 200)
   }
+
   sendFile(files) {
     let arr = files
   };

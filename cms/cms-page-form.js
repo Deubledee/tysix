@@ -11,7 +11,7 @@ import '@polymer/paper-input/paper-input.js';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
 import './cms-input-sellector.js';
 import './cms-image-viewer.js';
-import '../shop-image.js';
+import '../src/shop-image.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 class cmsPageForm extends PolymerElement {
      static get template() {

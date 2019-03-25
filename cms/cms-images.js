@@ -3,7 +3,7 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/paper-input/paper-input.js';
 import { dataBaseworker } from './dataBaseWorker.js';
 import '@polymer/paper-spinner/paper-spinner.js';
-import '../shop-image.js';
+import '../src/shop-image.js';
 class cmsImages extends PolymerElement {
     static get template() {
         return html` 

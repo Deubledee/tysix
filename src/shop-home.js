@@ -1,13 +1,25 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shop-button.js';
 import './shop-image.js';
+import { dataBaseworker } from './cms/dataBaseWorker.js';
+const _DBW = new dataBaseworker();
+const __DEV = true
+const _STYLES = _DBW.getElementAssets('shop-home', __DEV)
+var STYLE = {};
+
+_STYLES.then((querySnapshot) => {
+  let style = querySnapshot.data()
+  STYLE = style.styles
+}).catch(function (error) {
+  console.error("Error reteaving assets: ", error);
+});
 
 class ShopHome extends PolymerElement {
   static get template() {
     return html`
     <style include="shop-button">
 
-      .image-link {
+ /*     .image-link {
         outline: none;
       }
 
@@ -85,7 +97,7 @@ class ShopHome extends PolymerElement {
           padding: 8px 24px;
         }
       }
-
+*/
     </style>
 
     <dom-repeat items="[[categories]]">
@@ -94,7 +106,7 @@ class ShopHome extends PolymerElement {
           <template>
             <div class="item">
               <a class="image-link" href\$="/list/[[item.name]]">
-                <shop-image src="[[item.image]]" alt="[[item.title]]" placeholder-img="[[item.placeholder]]"></shop-image>
+                <shop-image src="[[_getImage(item.image)]]" alt="[[item.title]]" placeholder-img="[[item.placeholder]]"></shop-image>
               </a>
               <h2>[[item.title]]</h2>
               <shop-button>
@@ -112,7 +124,6 @@ class ShopHome extends PolymerElement {
 
   static get properties() {
     return {
-
       categories: {
         type: Array
       },
@@ -123,6 +134,20 @@ class ShopHome extends PolymerElement {
       }
 
     }
+  }
+
+  ready() {
+    super.ready()
+    this.addEventListener('confirm', this.openConfirm)
+    this.changeStyle()
+  }
+
+  changeStyle() {
+    this.shadowRoot.firstElementChild.innerText += STYLE
+  }
+
+  _getImage(data) {
+    return data.pop().url
   }
 
   _renderListOnly(categoryType) {

@@ -3,7 +3,7 @@ import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
 import '@polymer/paper-input/paper-input.js';
 import './cms-article-content.js';
-import '../shop-image.js';
+import '../src/shop-image.js';
 class cmsArticleListViewer extends PolymerElement {
     static get template() {
         return html`

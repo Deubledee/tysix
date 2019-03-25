@@ -1,9 +1,8 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import { dataBaseworker } from './dataBaseWorker.js';
 import './cms-galleries.js';
 import './cms-images.js';
+import './cms-image-form.js';
 class cmsImageViewer extends PolymerElement {
   static get template() {
     return html`

@@ -38,27 +38,28 @@ function expresso() {
             console.error(err)
         }
     }
+
     return { send: send, trigger: trigger }
 }
-/*     
-    var eventHandler = expresso()
 
-    >   eventHandler.send('getto', (req, res, next) => {
-            console.log(event, '3')
-            next('getto', 'alo')
-        })
-    >   eventHandler.send('getto', (req, res, next) => {
-            console.log(event, '2')
-            next('getto', res)
-        })
-    >   eventHandler.send('getto', (req, res, next) => {
-            console.log(res, '1')
-        })
-    
-    >   eventHandler.trigger('getto', 'callback' || 12 || [] || {} || ()) // sets in event.detail Object
-    
-    <   CustomEvent {isTrusted: false, detail: null, type: "getto", target: Window, currentTarget: Window, …} "3"
-    <   CustomEvent {isTrusted: false, detail: null, type: "getto", target: Window, currentTarget: Window, …} "2"
-    <   alo 1
-*/
+/*  var eventHandler = expresso()
+
+     eventHandler.send('getto', (req, res, next) => {
+          console.log(event, '3')
+          next('getto', 'alo')
+      })
+     eventHandler.send('getto', (req, res, next) => {
+          console.log(event, '2')
+          next('getto', res)
+      })
+     eventHandler.send('getto', (req, res, next) => {
+          console.log(res, '1')
+      })
+  
+     eventHandler.trigger('getto', 'callback' || 12 || [] || {} || ()) // sets in event.detail Object
+  
+   /*  CustomEvent {isTrusted: false, detail: null, type: "getto", target: Window, currentTarget: Window, …} "3"
+     CustomEvent {isTrusted: false, detail: null, type: "getto", target: Window, currentTarget: Window, …} "2"
+     alo 1*/
+
 export { expresso };

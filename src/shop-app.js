@@ -13,13 +13,12 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import './shop-category-data.js';
+import './shop-category-data.js'0;
 import './shop-home.js';
 import './shop-list.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import './cms/cms-login.js';
 import { dataBaseworker } from './cms/dataBaseWorker.js';
 // performance logging
 window.performance && performance.mark && performance.mark('shop-app - before register');
@@ -241,7 +240,16 @@ class ShopApp extends PolymerElement {
       calculates the total amount.
     -->
     <shop-cart-data id="cart" cart="{{cart}}" num-items="{{numItems}}" total="{{total}}"></shop-cart-data>
-
+    <!--
+    app-location and app-route elements provide the state of the URL for the app.
+  -->
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
+    <!--
+      shop-category-data provides the list of categories.
+    -->
+  <shop-category-data categories="{{categories}}"></shop-category-data>
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
       <app-toolbar id="toolbar">
         <dom-if if="[[_shouldRenderDasboard]]">
@@ -427,9 +435,9 @@ class ShopApp extends PolymerElement {
     console.log(data)
   }
 
-  catPage(page) {
+  /*catPage(page) {
     return page
-  }
+  }*/
 
   ready() {
     super.ready();

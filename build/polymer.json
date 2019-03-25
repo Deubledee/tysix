@@ -1,11 +1,15 @@
 {
   "entrypoint": "index.html",
-  "shell": "./cms/cms-controler.js",
+  "shell": "cms/cms-controler.js",
+  "fragments": [],
   "sources": [
     "data/**/*",
-    "images/**/*"
+    "images/**/*",
+    "index.html",
+    "cms/cms-controler.js"
   ],
   "extraDependencies": [
+    "bower_components/webcomponentsjs/*.js",
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**"
   ],
@@ -64,11 +68,12 @@
       "addServiceWorker": true
     }
   ],
-  "moduleResolution": "node",
-  "npm": true,
   "lint": {
     "rules": [
       "polymer-3"
     ]
-  }
+  },
+  "npm": true,
+  "componentDir": "node_modules/",
+  "moduleResolution": "node"
 }

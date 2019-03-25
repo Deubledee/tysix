@@ -9,7 +9,7 @@ class cmsImageForm extends PolymerElement {
         return html`
 
     <style>      
-        main[closed] {
+        main {
             position: absolute;
             left: -1%;
             top: 63%;
@@ -24,17 +24,6 @@ class cmsImageForm extends PolymerElement {
             transition-property: height, visibility;
             transition-duration: 2s, .5s;
             padding: 52px;
-        }
-      
-        main {
-            display: none;
-          background-color: aliceblue;
-          width: 755px;
-          height: 0px;
-          padding: 5px;
-          visibility: collapse;
-          transition-property: height, visibility;
-          transition-duration: 2s, 1s;
         }
       
         img {
@@ -62,7 +51,7 @@ class cmsImageForm extends PolymerElement {
         }
 
     </style>
-    <main closed$="[[closed]]">
+    <main>
         <nav>
             <div images>
                 <paper-button on-click="clean">
@@ -75,8 +64,7 @@ class cmsImageForm extends PolymerElement {
                 </paper-button>
             </div>
         </nav>
-        <cms-upload id="upload" gallerie="[[gallerie]]">
-        </cms-upload>
+        <input id="input" type="file" required multiple accept="image/png, image/jpeg"></input>
     </main>
 `
     }
@@ -89,17 +77,6 @@ class cmsImageForm extends PolymerElement {
                 value: function () {
                     return new dataBaseworker()
                 },
-            },
-            closed: {
-                type: Boolean,
-                notify: true,
-                value: false,
-                reflectToAttribute: true,
-            },
-            setter: {
-                type: String,
-                notify: true,
-                value: 'false'
             },
             files: {
                 type: Array,
@@ -119,30 +96,31 @@ class cmsImageForm extends PolymerElement {
     }
 
     setValues() {
-        console.log(this.$.upload.imageArray)
-        if (this.$.upload.imageArray.length > 1) {
-            let content = this.$.upload.imageArray, finalArr = new Array()
-            content.map(item => {
-                console.log(item)
-                let target = 'http://localhost:3000/data'
-                target = target + '/' + this.gallerie + '/' + item.name
-                let name = item.name.split('.')[0]
-                finalArr.push({ url: target, title: name })
-            })
-            let parsed = {
-                gallerie: this.gallerie + '_images',
-                content: finalArr
-            }
-            console.log(parsed)
-            this.DBW.writeImageContent((msg, gallerie) => {
-                if (msg !== 'error') {
-                    console.log(msg, gallerie)
-                    this.clean('true')
-                } else {
-                    console.log(msg, this.pageName)
-                }
-            }, parsed)
-        }
+        // if (this.$.upload.imageArray.length > 1) {
+        console.log(this.$.input)
+
+        /*  let content = this.$.upload.imageArray, finalArr = new Array()
+          content.map(item => {
+              console.log(item)
+              let target = 'http://localhost:3000/data'
+              target = target + '/' + this.gallerie + '/' + item.name
+              let name = item.name.split('.')[0]
+              finalArr.push({ url: target, title: name })
+          })
+          let parsed = {
+              gallerie: this.gallerie + '_images',
+              content: finalArr
+          }
+          console.log(parsed)
+          this.DBW.writeImageContent((msg, gallerie) => {
+              if (msg !== 'error') {
+                  console.log(msg, gallerie)
+                  this.clean('true')
+              } else {
+                  console.log(msg, this.pageName)
+              }
+          }, parsed)*/
+        // }
     }
 
     clean(setterValue) {
