@@ -1,11 +1,11 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
 import '@polymer/iron-icons/editor-icons.js';
-import './cms-page-form.js';
+import './pages/cms-page-form.js/index.js';
 
 class cmsHomeViewer extends PolymerElement {
-    static get template() {
-        return html`
+  static get template() {
+    return html`
     <custom-style>
     <style is="custom-style">
 
@@ -139,59 +139,59 @@ class cmsHomeViewer extends PolymerElement {
       </main>  
 </body>
 `
+  }
+  static get is() { return 'cms-home-viewer'; }
+
+  static get properties() {
+    return {
+      categories: {
+        type: Array,
+        notify: true
+      },
+
+      closed: {
+        type: Boolean,
+        notify: true,
+      },
     }
-    static get is() { return 'cms-home-viewer'; }
+  }
 
-    static get properties() {
-        return {
-            categories: {
-                type: Array,
-                notify: true
-            },
+  _getPagename(cats) {
+    // console.log(cats)
+    return cats.name
+  }
 
-            closed: {
-                type: Boolean,
-                notify: true,
-            },
-        }
-    }
+  add(event) {
+    this.closed = !this.closed
+  }
 
-    _getPagename(cats) {
-        // console.log(cats)
-        return cats.name
-    }
+  edit(event) {
+    // console.log(event, event.model.children[1].children[1], event.model.__data)
+  }
 
-    add(event) {
-        this.closed = !this.closed
-    }
+  showName(cats, name) {
+    return cats[name]
+  }
 
-    edit(event) {
-        // console.log(event, event.model.children[1].children[1], event.model.__data)
-    }
-
-    showName(cats, name) {
-        return cats[name]
-    }
-
-    showPage(event) {
-        console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
-        if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
-            event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
-            event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "435px"
-            event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
-            event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
-        } else {
-            event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "0px"
-            event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "0"
-            event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
-        }
-
+  showPage(event) {
+    console.log(event.srcElement.parentElement.parentElement.parentElement.children[1])
+    if (event.srcElement.parentElement.parentElement.parentElement.children[1].hasAttribute('open') === false) {
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "1"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "435px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.display = "0px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].setAttribute("open", true)
+    } else {
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.height = "0px"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].style.opacity = "0"
+      event.srcElement.parentElement.parentElement.parentElement.children[1].removeAttribute("open")
     }
 
-    handleResponse(res) {
+  }
 
-        //  console.log(res)
-    }
+  handleResponse(res) {
+
+    //  console.log(res)
+  }
 
 }
 

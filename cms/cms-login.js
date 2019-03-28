@@ -8,11 +8,11 @@ import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-item';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
-import './cms-input-sellector';
+import './tools/cms-input-sellector';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { dataBaseworker } from './dataBaseWorker';
-import { reuest } from './http-handler';
+import { dataBaseworker } from './tools/dataBaseWorker';
+import { reuest } from './tools/http-handler';
 class cmsLogin extends PolymerElement {
     static get template() {
         return html`

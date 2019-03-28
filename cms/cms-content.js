@@ -1,5 +1,5 @@
-import { cmsTopPageTemplate } from './cms-top-page-template.js';
-import { dataBaseworker } from './dataBaseWorker';
+import { cmsTopPageTemplate } from './templates/cms-top-page-template';
+import { dataBaseworker } from './tools/dataBaseWorker';
 const __DEV = true;
 const _DBW = new dataBaseworker();
 const _STYLES = _DBW.getElementAssets('cms-content', __DEV);
@@ -104,7 +104,7 @@ class cmsContent extends cmsTopPageTemplate {
   _pageChanged(page) {
     if (page !== undefined) {
       if (page === 'pages') {
-        import('./cms-page-viewer').then(module => {
+        import('./pages/cms-page-viewer').then(module => {
           return;
         }).catch(error => {
           console.log(error);
@@ -112,7 +112,7 @@ class cmsContent extends cmsTopPageTemplate {
         return;
       }
       if (page === 'articles') {
-        import('./cms-articles-viewer');
+        import('./articles/cms-articles-viewer');
         return;
       }
       if (page === 'view404') {

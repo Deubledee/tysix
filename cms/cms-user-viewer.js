@@ -1,9 +1,9 @@
 import { cmsTopPageTemplate } from './cms-top-page-template.js';
 import { html } from '@polymer/polymer/polymer-element';
-import { dataBaseworker } from './dataBaseWorker';
+import { dataBaseworker } from './tools/dataBaseWorker';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
 import '@polymer/paper-spinner/paper-spinner.js';
-import './cms-common-top-styles';
+import './styles/cms-common-top-styles';
 const __DEV = true;
 const _DBW = new dataBaseworker();
 const _STYLES = _DBW.getElementAssets('cms-user-viewer', true);

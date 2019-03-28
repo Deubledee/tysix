@@ -1,9 +1,9 @@
-import { cmsTopPageTemplate } from './cms-top-page-template.js';
+import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { dataBaseworker } from './dataBaseWorker';
+import { dataBaseworker } from './tools/dataBaseWorker';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/paper-spinner/paper-spinner.js';
-import './cms-common-top-styles';
+import './styles/cms-common-top-styles';
 const __DEV = true;
 const _DBW = new dataBaseworker();
 const _STYLES = _DBW.getElementAssets('cms-image-viewer', __DEV);
@@ -158,7 +158,7 @@ class cmsMedia extends cmsTopPageTemplate {
   _pageChanged(page) {
     if (page !== undefined) {
       if (page === 'images') {
-        import('./cms-gallery-viewer').then(module => {
+        import('./media/cms-gallery-viewer').then(module => {
           return;
         }).catch(error => {
           console.log(error);
