@@ -1,8 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '../styles/cms-comon-style_v3';
-
+import { dataBaseworker } from '../tools/dataBaseWorker';
+const _DBW = new dataBaseworker();
+const __DEV = true;
+const _STYLES = _DBW.getElementAssets('cms-confirm', __DEV);
 class cmsConfirm extends PolymerElement {
-
     static get template() {
         return html`
     <style  include="cms-comon-style_v3">
@@ -45,18 +47,24 @@ class cmsConfirm extends PolymerElement {
             width: 61%;
         }
 
-        nav[bottom2] h2 {
-            color: #ff5600;
-            text-shadow: 2px 2px 2px #161616;
+        h2 {
             text-align: center;
             margin-left: auto;
+            text-shadow: 2px 2px 2px #161616;
             margin-right: auto;
             width: 42%;
             border-radius: 5px;
             height: 35px;
+        }
+        .typeKind{
+            color: #ff5600;
             font-size: 44px;
         }
-        nav[bottom2] h2[pub="publish"] {
+        .typeheader {
+            color: #32bbff;
+            font-size: 40px;
+        }
+        h2[pub="publish"] {
             color: #75ff32;
             font-size: 64px;
         }
@@ -75,8 +83,8 @@ class cmsConfirm extends PolymerElement {
     </style>
 
     <nav id="navbottom" bottom2 confirm$="[[open]]" id="animated">
-        <h2 pub$="[[headderMsg]]"> [[headderMsg]] </h2>
-        <h3>[[type]]</h3>
+        <h2 class="typeKind" pub$="[[headderMsgKind]]"> [[headderMsg]] </h2>    
+        <h2 class="typeheader">[[type]]</h1>
         <div one>
             <h3>[[title]]</h3>
         </div>
@@ -84,7 +92,7 @@ class cmsConfirm extends PolymerElement {
             <paper-button left on-click="openConfirm">
                 cancel 
             </paper-button>
-            <paper-button right on-click="delete">
+            <paper-button right on-click="execute">
                 confirm 
             </paper-button>
         </div>     
@@ -95,6 +103,18 @@ class cmsConfirm extends PolymerElement {
 
     static get properties() {
         return {
+            user: {
+                type: Object,
+                notify: true
+            },
+            lang: {
+                type: String,
+                observer: '__changeLang'
+            },
+            langs: {
+                type: Object,
+                value: {}
+            },
             confirm: {
                 type: Boolean,
                 notify: true,
@@ -115,41 +135,62 @@ class cmsConfirm extends PolymerElement {
             title: {
                 type: Object,
                 notify: true,
-                observer: 'cleanUnderscore'
             },
-            headderMsg: String,
-            type: String,
+            headderMsg: {
+                type: Object,
+                notify: true,
+            },
+            type: {
+                type: Object,
+                notify: true,
+            },
             method: Object
         }
     }
 
-    log(data) {
-        console.log('log from cms-confirm', data)
+    ready() {
+        super.ready();
+        _STYLES.then((querySnapshot) => {
+            let langs = querySnapshot.data();
+            this._setLangObject(langs);
+        }).catch(function (error) {
+            console.error("Error reteaving assets: ", error);
+        });
     }
-
-    error(data) {
-        console.error('error from cms-page-viewer', data)
+    __changeLang() {
+        if (this.langs[this.lang]) {
+            let obj = this.langs[this.lang];
+            for (let par in obj) {
+                this.set(par, obj[par]);
+            }
+        }
     }
-
-    delete() {
-        this.method(this.title)
+    _setLangObject(langs) {
+        for (let par in langs) {
+            if (par !== 'styles') {
+                this.langs[par] = langs[par].pop();
+            }
+        }
+        this.__changeLang();
+    }
+    execute() {
+        this.method(this.argument)
         this.open = !this.open
         this.confirm = false
     }
-
-    cleanUnderscore(data) {
+    _cleanUnderscore(data) {
         let cleaned = data
         cleaned = cleaned.split('_').join(' ')
         return cleaned
     }
-
-    ready() {
-        super.ready();
-    }
-
     openConfirm(event) {
         if (this.confirm === false) {
-            this.title = this.cleanUnderscore(event.name)
+            this.title = this._cleanUnderscore(event.name)
+            this.method = event.method;
+            this.argument = event.argument
+            this.headderMsg = this[event.headderMsgKind] || event.headderMsgKind
+            this.headderMsgKind = event.headderMsgKind
+            this.type = this[event.type] || event.type
             this.confirm = true
         } else {
             this.open = false

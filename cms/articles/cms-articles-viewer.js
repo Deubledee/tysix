@@ -14,11 +14,15 @@ class cmsArticlesViewer extends cmsViewerTemplate {
         <article name="add-category-pages">  
             <slot name="add"></slot>  
         </article>
-
+        <article name="add-edit-articles">  
+            <slot name="addart"></slot>  
+        </article>
         <article name="home">           
             <slot name="categories"></slot>
-            <slot name="view"></slot>
             <slot name="suCategories"></slot>
+        </article>
+        <article name="view-articles"> 
+            <slot name="view"></slot>
         </article>`
   }
   static get is() { return 'cms-articles-viewer'; }
@@ -32,21 +36,20 @@ class cmsArticlesViewer extends cmsViewerTemplate {
   ready() {
     super.ready();
     this._routePageChanged(this.routeData);
-    window.addEventListener('reset-list-type-content', (this.__reset).bind(this));
+
   }
 
-  __reset(event) {
-    if (['categorypages'].indexOf(event.detail) !== -1) {
-      let template = html`<cms-article-list-type slot="categories">
-       </cms-article-list-type>`;
-      let clone = document.importNode(template.content, true);
-      clone.route = this.route;
-      clone.lang = this.lang;
-      if (this.childElementCount < 5) {
-        this.appendChild(clone);
-        this.$.reset.click();
-      }
-    }
+  __setEleemnt() {
+    let template = html`<cms-article-view id="view" slot="view">
+                         </cms-article-view>`;
+    let clone = document.importNode(template.content, true);
+    clone.route = this.route;
+    clone.user = this.user;
+    clone.lang = this.lang;
+    setTimeout(() => {
+      // this.appendChild(clone)
+      console.log('elem', this.children[this.childElementCount - 1])
+    }, 500)
   }
 
   _routePageChanged(route, page) {

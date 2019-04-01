@@ -1,4 +1,4 @@
-import { cmsTopPageTemplate } from './cms-top-page-template.js';
+import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element';
 import { dataBaseworker } from './tools/dataBaseWorker';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';

@@ -1,4 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { microTask } from '@polymer/polymer/lib/utils/async';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';;
 import '@polymer/paper-tabs/paper-tabs';
 import '@polymer/paper-tabs/paper-tab';
@@ -51,27 +53,27 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   static get topPages() {
     return html`
-      <a href="[[rootPath]]content/search">
-        <paper-button class="button" front$="[[search]]" name="search" aria-label="pages">
-                    [[Search]]
-                <iron-icon icon="icons:search" aria-label="categories">
-                </iron-icon>
-        </paper-button>
+        <a  on-click="_resetEvent" href="[[rootPath]]content/search">
+          <paper-button class="button" front$="[[search]]" name="search" aria-label="pages">
+                  [[Search]]
+              <iron-icon icon="icons:search" aria-label="categories">
+              </iron-icon>
+          </paper-button>
         </a> 
-        <a href="[[rootPath]]content/pages" id="pages">
-        <paper-button class="button" front$="[[pages]]" name="pages" aria-label="pages">
-                    [[Pages]]
-                <iron-icon icon="av:library-books" aria-label="categories">
-                </iron-icon>
-        </paper-button>
+        <a  on-click="_resetEvent" href="[[rootPath]]content/pages" id="pages">
+          <paper-button class="button" front$="[[pages]]" name="pages" aria-label="pages">
+                  [[Pages]]
+              <iron-icon icon="av:library-books" aria-label="categories">
+              </iron-icon>
+          </paper-button>
         </a> 
-        <a href="[[rootPath]]content/articles">
-        <paper-button  class="button" front$="[[articles]]" name="articles" aria-label="Articles">    
-                    [[Articles]]
-                <iron-icon icon="av:art-track" aria-label="sub categories">
-                </iron-icon> 
-        </paper-button>      
-      </a>`
+        <a on-click="_resetEvent" href="[[rootPath]]content/articles">
+          <paper-button  class="button" front$="[[articles]]" name="articles" aria-label="Articles">    
+                  [[Articles]]
+              <iron-icon icon="av:art-track" aria-label="sub categories">
+              </iron-icon> 
+          </paper-button>      
+        </a>`
   }
   static get homePage() {
     return html` 
@@ -107,26 +109,26 @@ export class cmsTopPageTemplate extends PolymerElement {
 
     </cms-page-viewer>
 
-    <cms-articles-viewer route="[[subroute]]" name="articles" lang="[[lang]]">
+    <cms-articles-viewer  name="articles" route="[[subroute]]" lang="[[lang]]">
     
-        <cms-article-sub-cat-content slot="add" id="content" 
+        <cms-article-sub-cat-content slot="add" id="addeditsubcat" 
           route="[[subroute]]" user="[[user]]">
         </cms-article-sub-cat-content>  
 
-        <cms-article-content slot="add" id="content" 
+        <cms-article-content slot="addart" id="addeditart" 
           lang="[[lang]]" route="[[subroute]]" user="[[user]]">
-        </cms-article-content>   
-        
-        <cms-article-view slot="view" id="content" 
-          lang="[[lang]]" route="[[subroute]]" user="[[user]]">
-        </cms-article-view>
+        </cms-article-content>  
 
         <cms-article-list-type slot="categories" lang="[[lang]]" 
           route="[[subroute]]" >
         </cms-article-list-type>  
 
         <cms-article-sub-cat-type slot="suCategories" route="[[subroute]]" >
-        </cms-article-sub-cat-type>
+        </cms-article-sub-cat-type> 
+        
+        <cms-article-view slot="view" id="view"  lang="[[lang]]" 
+          route="[[subroute]]" user="[[user]]">
+        </cms-article-view>
     </cms-articles-viewer>
     `
   }
@@ -144,7 +146,13 @@ export class cmsTopPageTemplate extends PolymerElement {
   ready() {
     super.ready();
   }
-
+  _resetEvent() {
+    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+      microTask, () => {
+        window.dispatchEvent(new CustomEvent('reset'))
+      }
+    )
+  }
   _checkMyName(event, name) {
     if (event === name) {
       return true;

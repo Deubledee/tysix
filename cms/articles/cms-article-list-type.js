@@ -39,12 +39,12 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
            </section>                        
            <section class="flexchildbotom">
                <div class="flexleft">
-                   <h3> [[publishedCount]] #</h3>
+                   <h3> [[items]] #</h3>
                </div>
-           </section>                        
+           </section>                         
            <section class="flexchildbotom">
                <div class="flexleft">
-                   <h3> [[delete]] </h3>
+                   <h3> [[publishedCount]] #</h3>
                </div>
            </section>
            `
@@ -139,7 +139,7 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
             console.error("Error reteaving assets: ", error);
         });
         this._getArticles()
-        // window.addEventListener('reset-artlist-type', (this._contentChanged.bind(this)));
+        window.addEventListener('reset-artlist-type', (this._contentChanged.bind(this)));
     }
 
     __changeLang() {
@@ -157,6 +157,10 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
             }
         }
         this.__changeLang();
+    }
+    _contentChanged() {
+        this.set('pages', [])
+        this.innerHTML = ''
     }
     _getArticles() {
         this.DBW.askAllArticles((data) => {

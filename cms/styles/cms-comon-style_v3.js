@@ -207,6 +207,12 @@ $_documentContainer.innerHTML = `
                 color: var(--app-published-color)
             }
 
+            .spanpadding {
+                padding: 4px;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
             section div[rightImages] {
                 height: 334px;
                 color: var(--content-color-section);

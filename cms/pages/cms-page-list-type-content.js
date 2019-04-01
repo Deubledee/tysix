@@ -56,21 +56,6 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         }
         this.__changeLang();
     }
-
-    /* clean(setterValue) {
-         let setter;
-         if (setterValue instanceof MouseEvent === true) {
-             setter = 'true';
-         }
-         else {
-             setter = setterValue;
-         }
-         if (this.pageName === 'N/a' || setterValue === 'newPage') {
-             setter = false;
-         }
-         scroll({ top: 0, behavior: 'smooth' });
-         this.setter = setter;
-     }*/
     _getPublishedBy(publishedBy) {
         if (publishedBy !== undefined && publishedBy.length > 0) {
             let pubuser = publishedBy[0].name;

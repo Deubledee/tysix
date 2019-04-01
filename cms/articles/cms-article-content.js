@@ -6,6 +6,15 @@ const _DBW = new dataBaseworker();
 const _STYLES = _DBW.getElementAssets('cms-page-list-type-content', __DEV);
 
 class cmsArticleContent extends cmsContentTemplate {
+    static get _getAnchor() {
+        return html`
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a id="anchor">
+                <paper-icon-button icon="arrow-back" aria-label="Go back">
+                </paper-icon-button>
+            </a>
+        </iron-selector>`
+    }
     static get _getContentItems() {
         return html`
         <dom-repeat repeat items="[[content]]" as="art">
@@ -15,7 +24,7 @@ class cmsArticleContent extends cmsContentTemplate {
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
-                                    [[articletitle]]
+                                    [[articletitle]]articletitle
                                 </paper-button>
 
                                 <paper-button  value="title" class="diferent" on-click="Cancel" aria-label="mode-cancel">
@@ -56,7 +65,7 @@ class cmsArticleContent extends cmsContentTemplate {
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
-                                    [[pageCategory]]
+                                    [[pageCategory]]pageCategory
                                 </paper-button>
                                 <paper-button  value="category" class="diferent" on-click="Cancel" aria-label="mode-cancel">
                                     [[cancel]]
@@ -84,9 +93,9 @@ class cmsArticleContent extends cmsContentTemplate {
                             <div class="flexright">
                                 <div>
                                     <paper-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        [[art.type]]
+                                        [[art.page]]
                                     </paper-button>
-                                    <paper-input hidden name="type" value="[[art.type]]" on-input="inputing" placeholder="[[art.type]]">
+                                    <paper-input hidden name="type" value="[[art.page]]" on-input="inputing" placeholder="[[art.type]]">
                                     </paper-input>
                                 </div>
                             </div>
@@ -94,7 +103,7 @@ class cmsArticleContent extends cmsContentTemplate {
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
-                                    [[brand]]
+                                    [[brand]]brand
                                 </paper-button>
                                 <paper-button  value="brand" class="diferent" on-click="Cancel" aria-label="mode-cancel">
                                     [[cancel]]
@@ -113,7 +122,7 @@ class cmsArticleContent extends cmsContentTemplate {
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
-                                    [[price]]
+                                    [[price]]price
                                 </paper-button>
                                 <paper-button  value="price" class="diferent" on-click="Cancel" aria-label="mode-cancel">
                                     [[cancel]]
@@ -129,6 +138,8 @@ class cmsArticleContent extends cmsContentTemplate {
                                 </div>
                             </div>
                         </section>
+                    </div>
+                    <section class="flexchildbotom3">
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
@@ -149,8 +160,6 @@ class cmsArticleContent extends cmsContentTemplate {
                                 </div>
                             </div>
                         </section>
-                    </div>
-                    <section class="flexchildbotom3">
                         <div left>
                             <paper-button>
                                 images
@@ -171,112 +180,112 @@ class cmsArticleContent extends cmsContentTemplate {
     }
     static get _getSideInfo() {
         return html`
-        <dom-repeat repeat items="[[article]]" as="art">
-            <template>
+        <!--dom-repeat repeat items="[[article]]" as="art">
+            <template-->
                 <div class="flexsidecenter">
                     <aside>
                         <span>
-                            [[info]]
+                            [[info]]info
                         </span>
                     </aside>
                 </div>
                 <div class="navsideleft">
                     <aside>
                         <span>
-                            [[publishedby]]
+                            [[publishedby]]publishedby
                         </span>
                     </aside>
                     <aside>
                         <span>
-                            [[publiShed]]
+                            [[publiShed]]publiShed
                         </span>
                     </aside>
                     <aside>
                         <span>
-                            [[datepublished]]
+                            [[datepublished]]datepublished
                         </span>
                     </aside>
                 </div>
                 <div class="navsideright">
                     <aside>
                         <span>
-                            [[ _getPublishedBy(art.publishedBy)]]
+                            [[ _getPublishedBy(art.publishedBy)]]publishedBy
                         </span>
                     </aside>
                     <aside published$="[[art.published]]">
                         <span>
                             [[art.published]]
-                        </span>
+                        </span>published
                     </aside>
                     <aside>
                         <span>
-                            [[art.datePublished]]
+                            [[art.datePublished]]datePublished
                         </span>
                     </aside>
                 </div>
                 <div class="navsideleft">
                     <aside>
                         <span>
-                            [[author]]
+                            [[author]]author
                         </span>
                     </aside>
                     <aside>
                         <span>
-                            [[datecreated]]
+                            [[datecreated]]datecreated
                         </span>
                     </aside>
                 </div>
                 <div class="navsideright">
                     <aside>
                         <span>
-                            [[art.author]]
+                            [[art.author]]author
                         </span>
                     </aside>
                     <aside>
                         <span>
-                            [[art.dateCreated]]
+                            [[art.dateCreated]]dateCreated
                         </span>
                     </aside>
                 </div>
                 <div class="flexsidecenter">
                     <aside>
                         <span>
-                            [[lastmodified]]
+                            [[lastmodified]]lastmodified
                         </span>
                     </aside>
                 </div>
                 <div class="navsideleft">
                     <aside>
                         <span>
-                            [[author]]
+                            [[author]]author
                         </span>
                     </aside>
                     <aside>
                         <span>
-                            [[date]]
+                            [[date]]date
                         </span>
                     </aside>
                 </div>
                 <div rightSide>
-                    <dom-repeat repeat items="[[art.lastModified]]" as="createdAt">
-                        <template>
+                    <!--dom-repeat repeat items="[[art.lastModified]]" as="createdAt">
+                        <template-->
                             <section>
                                 <aside>
                                     <span>
-                                        [[createdAt.author]]
+                                        [[createdAt.author]]author
                                     </span>
                                 </aside>
                                 <aside>
                                     <span>
-                                        [[createdAt.date]]
+                                        [[createdAt.date]]date
                                     </span>
                                 </aside>
                             </section>
-                        </template>
-                    </dom-repeat>
+                        <!--/template>
+                    </dom-repeat-->
                 </div>
-            </template>
-        </dom-repeat>`
+            <!--/template>
+        </dom-repeat-->`
     }
     static get is() { return 'cms-article-content'; }
 
@@ -299,12 +308,8 @@ class cmsArticleContent extends cmsContentTemplate {
     _routePageChanged(routeData, query, active) {
         if (Boolean(active) === true && Boolean(routeData.page) === true) {
             this.set('content', []);
-            if ('catlistcreated' in query === false && 'catlistupdated' in query === false) {
-                if ('content' in query) {
-                    this.set('content', [JSON.parse(window.atob(query.content))]);
-                    this.set('add', (query.add === 'true'));
-                    this.slashed = false;
-                }
+            if ('content' in query) {
+                this._setContent(query.content, query)
             }
         }
         else if (Boolean(active) === false && Boolean(this.slashed) === false) {
@@ -316,6 +321,12 @@ class cmsArticleContent extends cmsContentTemplate {
         }
     }
 
+    _setContent(content, query) {
+        this.$.anchor.href = `${this.rootPath}content/articles/view-articles?content=${content}`
+        this.set('content', JSON.parse(window.atob(content)));
+        this.set('add', (query.add === 'true'));
+        this.slashed = false;
+    }
     __changeLang() {
         if (this.langs[this.lang]) {
             let obj = this.langs[this.lang];
@@ -334,81 +345,14 @@ class cmsArticleContent extends cmsContentTemplate {
         this.__changeLang();
     }
 
-    save(event) {
-        if (this.add === true) {
-            this.push('article.content', this.content.pop())
-        }
-        let table = {
-            name: this.articleName,
-            content: this.article.content
-        }
-        this.DBW.updateArticles((done) => {
-            this.editing = 0
-            this.temp = ''
-            this.cancelButton.classList.add('diferent')
-            this.$.saveButton.classList.add('diferent')
-        }, table)
-    }
-
-    editCats(event) {
-        let elem = event.srcElement.parentElement.parentElement.children[2]
-        let elem1 = event.srcElement.parentElement.parentElement.children[1]
-        let color = event.srcElement.computedStyleMap().get('color').toString()
-        if (color === "rgb(128, 152, 173)") {
-            event.srcElement.style.color = "var(--google-blue-700)"
-        } else {
-            event.srcElement.style.color = "rgb(128, 152, 173)"
-        }
-        elem.setInputing = (function () {
-            this.cancelButton.classList.remove('diferent')
-            this.$.saveButton.classList.remove('diferent')
-            this.editing = this.editing + 1
-        }).bind(this)
-        elem.classList.toggle('diferent')
-        elem1.classList.toggle('diferent')
-    }
-
-    edit(event) {
-        let elem = event.srcElement.parentElement.children[2]
-        let elem1 = event.srcElement.parentElement.children[1]
-        let color = event.srcElement.computedStyleMap().get('color').toString()
-        if (color === "rgb(128, 152, 173)") {
-            event.srcElement.style.color = "var(--google-blue-700)"
-        } else {
-            event.srcElement.style.color = "rgb(128, 152, 173)"
-        }
-        elem.hidden = !elem.hidden
-        elem1.classList.toggle('diferent')
-    }
-
-    slotImageElement(art) {
-        let template = html` <cms-image slot="image">
-                               <cms-image-form slot="imageForm">
-                               </cms-image-form>
-                            </cms-image>`,
-            clone = document.importNode(template.content, true);
-        this.appendChild(clone)
-        this.imageElement = this.children[0]
-        this.imageElement.set('images', art)
-        this.cancelButton = this.imageElement.$.cancel
-
-        if ('deleted' in this.query && this.query.deleted === true || this.query.deleted === 'true') {
-            this.cancelButton.classList.remove('diferent')
-        }
-        this.imageElement.deleteImg = (this.deleteImg).bind(this)
-        this.imageElement.$.add.addEventListener('click', (this.addImage).bind(this))
-        this.imageElement.$.cancel.addEventListener('click', (this.cancelImages).bind(this))
-    }
-
     addImage() {
-        let template = html`<cms-gallery-viewer></cms-gallery-viewer>`
-        console.log(this.children[1].childElementCount)
-        if (this.children[1].childElementCount < 2) {
-            this.children[1].prepend(template.content.children[0])
-            this.children[1].children[0].addMethod = (this.setImage).bind(this)
-        } else {
-            this.children[1].removeChild(this.children[1].children[0])
-        }
+        let string = 'edit-articles&content=' + this.query.content
+        this.set('slashed', true)
+        window.history.pushState({}, null, `/media/images/galleries?addimagetoarticle=${string}`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        window.onbeforeunload = function (e) {
+            return "you might have changes to be saved, are you sure you whant to leave?";
+        };
     }
 
     _fromImage(image) {
@@ -475,7 +419,6 @@ class cmsArticleContent extends cmsContentTemplate {
     }
 
     setImage(data) {/**/
-        console.log(this.content[0].image, 'data')
         if ('url' in data) {
             let img = new Image(), arr = []
             img.src = data.url

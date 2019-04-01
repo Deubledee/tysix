@@ -10,17 +10,13 @@ export class cmsContentTemplate extends PolymerElement {
         :host {
             position: relative
         }
+
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>
         <main id="main">
             <div>
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    <a href="[[rootPath]]content/pages/">
-                        <paper-icon-button icon="arrow-back" aria-label="Go back">
-                        </paper-icon-button>
-                    </a>
-                </iron-selector>
+                ${this._getAnchor}
                 <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
                     SAVE
                 </paper-button>
@@ -35,6 +31,15 @@ export class cmsContentTemplate extends PolymerElement {
             </div>
         </main>
         `;
+    }
+    static get _getAnchor() {
+        return html`
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a href="[[rootPath]]content/pages/">
+                <paper-icon-button icon="arrow-back" aria-label="Go back">
+                </paper-icon-button>
+            </a>
+        </iron-selector>`
     }
     static get _getContentItems() {
         return html`
@@ -102,6 +107,8 @@ export class cmsContentTemplate extends PolymerElement {
                                 </div>
                             </div>
                         </section>
+                    </div>
+                    <section class="flexchildbotom3">
                         <section class="flexchildbotom">
                             <div class="flexleft">
                                 <paper-button on-click="editTo">
@@ -117,13 +124,11 @@ export class cmsContentTemplate extends PolymerElement {
                                         [[cat.contentText]]
                                     </paper-button>
                                     <paper-input hidden name="contentText" value="[[cat.contentText]]" on-input="inputing"
-                                     placeholder="[[cat.contentText]]">
+                                    placeholder="[[cat.contentText]]">
                                     </paper-input>
                                 </div>
                             </div>
                         </section>
-                    </div>
-                    <section class="flexchildbotom3">
                         <div left>
                             <paper-button>
                                 images
@@ -315,6 +320,25 @@ export class cmsContentTemplate extends PolymerElement {
         super.ready();
     }
 
+    slotImageElement(cat) {
+        if (this.imageElement instanceof HTMLElement === true) {
+            this.removeChild(this.children[0])
+            this.set('imageElement', undefined)
+        }
+        if (this.imageElement === undefined && 'image' in cat && cat.image.length > 0) {
+            let template = html`<cms-image slot="image">
+                                </cms-image>`,
+                clone = document.importNode(template.content, true);
+            this.appendChild(clone);
+            this.imageElement = this.children[0];
+            this.imageElement.set('images', cat);
+            this.cancelButton = this.imageElement.$.cancel;
+            if ('deleted' in this.query && this.query.deleted === true || this.query.deleted === 'true') {
+                this.cancelButton.classList.remove('diferent');
+            }
+            this.imageElement.deleteImg = (this.deleteImg).bind(this);
+        }
+    }
     editTo(event) {
         let inpt, buttn, par, cancel, mainElem = event.srcElement.parentElement.parentElement.children[1].children[0];
         buttn = mainElem.children[0];
@@ -413,27 +437,6 @@ export class cmsContentTemplate extends PolymerElement {
         }
         else {
             this.editing = this.editing - 1;
-        }
-    }
-    slotImageElement(cat) {
-        if (this.imageElement instanceof HTMLElement === true) {
-            this.removeChild(this.children[0])
-            this.set('imageElement', undefined)
-        }
-        if (this.imageElement === undefined && 'image' in cat && cat.image.length > 0) {
-            let template = html`<cms-image slot="image">
-                                    <cms-image-form slot="imageForm">
-                                    </cms-image-form>
-                                </cms-image>`,
-                clone = document.importNode(template.content, true);
-            this.appendChild(clone);
-            this.imageElement = this.children[0];
-            this.imageElement.set('images', cat);
-            this.cancelButton = this.imageElement.$.cancel;
-            if ('deleted' in this.query && this.query.deleted === true || this.query.deleted === 'true') {
-                this.cancelButton.classList.remove('diferent');
-            }
-            this.imageElement.deleteImg = (this.deleteImg).bind(this);
         }
     }
 }

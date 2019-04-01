@@ -1,12 +1,13 @@
+
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { microTask } from '@polymer/polymer/lib/utils/async';
 import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
 class cmsImage extends cmsItemImageTemplate {
+
     static get is() { return 'cms-image'; }
+
     static get properties() {
         return {
-            images: {
-                type: Object,
-                notify: true
-            },
             content: {
                 type: Array,
                 notify: true,
@@ -27,10 +28,10 @@ class cmsImage extends cmsItemImageTemplate {
     }
     _fromAray(data) {
         let url, arr = [], obj2;
-        if (data.image.length >= 1) {
+        if (data instanceof Array === true && data.length >= 1) {
             let t = new Date();
-            for (let i = 0; i < data.image.length; i++) {
-                obj2 = data.image[i];
+            for (let i = 0; i < data.length; i++) {
+                obj2 = data[i];
                 arr.push(obj2);
             }
         }
@@ -42,7 +43,7 @@ class cmsImage extends cmsItemImageTemplate {
         return arr;
     }
     getImage(data) {
-        let arr = this._fromAray(data);
+        let arr = this._fromAray(data.image);
         return arr;
     }
     setImage(data) {
@@ -85,6 +86,18 @@ class cmsImage extends cmsItemImageTemplate {
         if (this.addingcancel === false) {
             this.adding = !this.adding;
         }
+    }
+    _deleteImg(data) {
+        console.log(data)
+    }
+    _openConfirm(event) {
+        let index = event.srcElement.parentElement.parentElement.getAttribute('value')
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true,
+                detail: { name: this.content[index].title, method: (this._deleteImg).bind(this), argument: index, headderMsgKind: 'delete', type: 'image' }
+            }));
+        });
     }
 }
 customElements.define(cmsImage.is, cmsImage);

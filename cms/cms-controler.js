@@ -1,5 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { microTask } from '@polymer/polymer/lib/utils/async';
 import '@polymer/app-route/app-location';
 import '@polymer/app-route/app-route';
 import '@polymer/iron-icon/iron-icon';
@@ -160,28 +162,28 @@ class cmsControler extends PolymerElement {
             <nav>
                 <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
                 <div>
-                    <a name="Preview" href="[[rootPath]]app">[[preview]]</a>
+                    <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
                 </div>
             </nav>
             <nav>
                 <paper-icon-button icon="social:pages" aria-label="content">
                 </paper-icon-button>
                 <div>
-                    <a name="content" href="[[rootPath]]content/search">[[content]]</a>
+                    <a on-click="_resetEvent" name="content" href="[[rootPath]]content/search">[[content]]</a>
                 </div>
             </nav>
             <nav>
                 <paper-icon-button icon="social:person-outline" aria-label="users">
                 </paper-icon-button>
                 <div>
-                    <a name="users" href="[[rootPath]]users/search">[[users]]</a>
+                    <a on-click="_resetEvent" name="users" href="[[rootPath]]users/search">[[users]]</a>
                 </div>
             </nav>
             <nav>
                 <paper-icon-button icon="image:photo-library" aria-label="galleries">
                 </paper-icon-button>
                 <div>
-                    <a name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
+                    <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
                 </div>
             </nav>
         </div>
@@ -215,7 +217,7 @@ class cmsControler extends PolymerElement {
 
     <my-view404 name="view404"></my-view404>
   </iron-pages>
-  <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery">
+  <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery" user="[[user]]" lang="[[lang]]">
   </cms-confirm>       
         `;
   }
@@ -318,8 +320,13 @@ class cmsControler extends PolymerElement {
       this.set('lang', 'en');
     }
   }
-
-
+  _resetEvent() {
+    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+      microTask, () => {
+        window.dispatchEvent(new CustomEvent('reset'))
+      }
+    )
+  }
   __setMedia(event) {
     window.history.pushState({}, null, `${this.rootPath}media/images?${event.detail}`);
     this.page = 'media';
@@ -328,9 +335,7 @@ class cmsControler extends PolymerElement {
 
 
   openConfirm(event) {
-    this.$.confirm.openConfirm({ name: event.detail.name });
-    this.$.confirm.method = event.detail.method;
-    this.$.confirm.headderMsg = event.detail.headderMsg
+    this.$.confirm.openConfirm(event.detail);
     this.confirm = !this.confirm;
   }
   _routePageChanged(page) {

@@ -93,14 +93,15 @@ class cmsGalleriesItem extends PolymerElement {
             }
         }, data)
     }
-
     _openConfirm(event) {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
             microTask, () => {
                 this.dispatchEvent(new CustomEvent('confirm', {
                     bubbles: true, composed: true,
-                    detail:
-                        { name: this.gallerie.gallerie, method: (this.deleteGallerie).bind(this) }
+                    detail: {
+                        name: this.gallerie.gallerie, method: (this.deleteGallerie).bind(this),
+                        argument: this.gallerie.gallerie, headderMsgKind: 'delete', type: 'gallery'
+                    }
                 }))
             }
         )

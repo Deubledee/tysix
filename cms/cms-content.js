@@ -42,7 +42,7 @@ class cmsContent extends cmsTopPageTemplate {
   }
   static get observers() {
     return [
-      '_routePageChanged(routeData, query)'
+      '_routePageChanged(routeData, query, route)'
     ];
   }
 
@@ -86,7 +86,7 @@ class cmsContent extends cmsTopPageTemplate {
       console.error(err)
     }
   }
-  _routePageChanged(page, query) {
+  _routePageChanged(page, query, route) {
     if (this.route.prefix === '/content') {
       if (page !== undefined && 'page' in page) {
         if (['articles', 'pages', 'search'].indexOf(page.page) !== -1) {

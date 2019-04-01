@@ -4,7 +4,6 @@ import '@polymer/paper-input/paper-input';
 import { dataBaseworker } from '../tools/dataBaseWorker';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-const __DEV = true;
 class cmsPageListItem extends PolymerElement {
     static get template() {
         return html`
@@ -38,6 +37,22 @@ class cmsPageListItem extends PolymerElement {
     ready() {
         super.ready();
     }
+    __changeLang() {
+        if (this.langs[this.lang]) {
+            let obj = this.langs[this.lang];
+            for (let par in obj) {
+                this.set(par, obj[par]);
+            }
+        }
+    }
+    _setLangObject(langs) {
+        for (let par in langs) {
+            if (par !== 'styles') {
+                this.langs[par] = langs[par].pop();
+            }
+        }
+        this.__changeLang();
+    }
     _putRow(data) {
         let template = html`
         <article centerListItem slot="table">
@@ -60,21 +75,18 @@ class cmsPageListItem extends PolymerElement {
         template.content.children[0].
             children[0].innerHTML = `
             <span> 
-                ${this._getPagename(data)}
+                ${this._getPagename(data.title)}
             </span>`;
         template.content.children[0].
             children[2].innerHTML += `
-                <span class="${this._getPublished(data)}"> 
-                   <paper-button> ${this._getPublished(data)} </paper-button>
+                <span class="${this._getPagename(data.published)}"> 
+                   <paper-button> ${this._getPagename(data.published)} </paper-button>
                 </span>`;
         let clone = document.importNode(template.content, true);
         this.append(clone);
         this.children[0].children[1].
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
-        /* this.children[0].children[1].
-             children[1].addEventListener('click', (this.showPage).
-                 bind(this));*/
         this.children[0].children[2].
             children[0].addEventListener('click', (this._confirmPublish).
                 bind(this));
@@ -82,19 +94,9 @@ class cmsPageListItem extends PolymerElement {
             children[0].addEventListener('click', (this._openConfirm).
                 bind(this));
     }
-    /*  returnImage(data) {
-          let damm = data;
-          return typeof damm === 'object' ? damm[0] : damm;
-      }*/
     _getPagename(cats) {
-        return cats.title;
+        return cats;
     }
-    _getPublished(cats) {
-        return cats.published;
-    }
-    /* _getImage(cats) {
-         return cats.image.pop();
-     }*/
     error(data) {
         console.error('error from cms-article-viewer', data);
     }
@@ -117,14 +119,17 @@ class cmsPageListItem extends PolymerElement {
             }
         }, page, __DEV);
     }
-    __publish() {
-        console.log('!!to be done!!')
+    __publish(data) {
+        console.log(data)
     }
     _openConfirm() {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
-                detail: { name: this._getPagename(this.page), method: (this.__delete).bind(this), headderMsg: 'delete category page' }
+                detail: {
+                    name: this.page.name, method: (this.__delete).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'delete', type: 'categoryPage'
+                }
             }));
         });
     }
@@ -132,7 +137,10 @@ class cmsPageListItem extends PolymerElement {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
-                detail: { name: this._getPagename(this.page), method: (this.__publish).bind(this), headderMsg: 'publish', type: 'category page' }
+                detail: {
+                    name: this.page.name, method: (this.__publish).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'publish', type: 'categoryPage'
+                }
             }));
         });
     }

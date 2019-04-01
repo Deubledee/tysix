@@ -17,22 +17,24 @@ $_documentContainer.innerHTML = `
     .divtop,
     .padding,
     article,
-    article[centerListItem] {
+    article[centerListItem], article[centerImageItem] {
         box-sizing: var(--app-default-box-sizing)
     }
 
-    article[centerListItem]{
+    article[centerListItem], article[centerImageItem]{
         @apply --layout-horizontal;
     }
 
     article[centerListItem],
     nav,
-    section {
+    section , 
+    article[centerImageItem]{
         display: var(--app-flex)
     }
 
     article[centerListItem],
-    section[title2] {
+    section[title2],
+     article[centerImageItem] {
         text-align: var(--app-default-text-align)
     }
 
@@ -70,20 +72,43 @@ $_documentContainer.innerHTML = `
     article[centerListItem] {
         letter-spacing: var(--app-content-letter-spacing);
         font-size: var(--app-content-font-size);
+        word-break: keep-all;
     }
 
-    article[centerListItem] div {
+    article[centerImageItem]  {
+        letter-spacing: var(--app-content-letter-spacing, 1px);
+        font-size: var(--app-content-font-size, x-small);
+    }
+    
+    article[centerListItem] div, article[centerImageItem] div {
         @apply --layout-flex;
         box-shadow: 1px 1px 3px var(--paper-blue-300);
-        height: var(--app-content-article-height)
+        height: var(--app-content-article-height);
+        overflow-y: hidden;
     }
 
-    article[centerListItem] span {
+    article[centerListItem] span, article[centerImageItem]span  {
         word-break: var(--app-default-text-word-break)
     }
 
     .padding {
-        padding: var(--app-default-padding)
+        padding: var(--app-default-padding);
+        word-break: break-all;
+    }
+
+    .nopad{
+        padding: 0 
+    }
+
+    .paddingSmall {
+        padding: var(--app-default-padding);
+        word-break: break-all;
+    }
+    .paddingSmall h3 {
+        margin-block-start: 7px;
+    }
+    shop-image {
+        height: var(--app-content-nav-padding-left);
     }
 
     .NP {
@@ -181,12 +206,16 @@ $_documentContainer.innerHTML = `
         top: var(--app-content-page-viewertop);
        /* left: var(--app-content-page-viewerleft)*/
     }
-
+    shop-image.bigger{
+        height: var(--app-content-article-height)
+    }
     .navpages {
         display: var(--app-listitem);
        /* padding-left: var(--app-default-min-padding)*/
     }
-
+    .strech{
+        width: 75%
+    }
     </style>
   </template>
 </dom-module>`;

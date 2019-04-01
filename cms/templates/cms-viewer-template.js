@@ -3,7 +3,6 @@ import '@polymer/paper-tabs/paper-tabs';
 import '@polymer/paper-tabs/paper-tab';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-selector/iron-selector';
-
 export class cmsViewerTemplate extends PolymerElement {
     static get template() {
         return html`
