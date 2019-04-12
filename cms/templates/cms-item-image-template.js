@@ -12,23 +12,13 @@ export class cmsItemImageTemplate extends PolymerElement {
                     position: var(--app-default-position);
                 }
                 ${this._getStyles}
-        </style>  
-              
-        <app-location route="{{route}}">
-        </app-location>            
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="[[query]]">
-        </app-route>
+        </style>           
         <main class="flexH">
             <div bottom>    
                 ${this._getMenu}  
             </div>
-            <div table>                       
-                <dom-repeat repeat items="[[content]]" as="item">
-                    <template>
-                        <slot name="item[[index]]"></slot>  
-                        [[_slottItem(item, index)]]
-                    </template>                            
-                </dom-repeat> 
+            <div table>
+            ${this._getItem}   
             </div> 
         <main> `;
     }
@@ -58,85 +48,45 @@ export class cmsItemImageTemplate extends PolymerElement {
             font-size: 9px;
             font-weight: bold; box-sizing: var(--app-default-box-sizing);
             padding: 0px;
-            background: var(--app-secondary-text-color);
+            background-color: #fff;
             overflow: var(--app-images-div-overflow);
             text-overflow: var(--app-images-div-text-overflow);
-            overflow-y: var(--app-images-divnav-overflow-y;
+            overflow-y: var(--app-images-divnav-overflow-y);
+        }
+        #reset{
+            display: none
         }
         `
     }
-
     static get _getMenu() {
         return html`                           
-            <section class="flexchildbotom">
+            <section class="flexchildbotom noFlex">
                 <div class="flexleft">   
-                    <h4>  image   </h4>     
+                    <h4>  data   </h4>     
                 </div>  
             </section>
-
-            <section class="flexchildbotom">
-                <div class="flexleft">   
-                    <h4> 
-                    title    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom">
-                <div class="flexleft">   
-                    <h4> 
-                    date created    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom">
+            <section class="flexchildbotom noFlex">
                 <div class="flexleft">  
                     <h4> 
-                    gallery     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom">
-                <div class="flexleft">  
-                    <h4> 
-                    url      </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom">
-                <div class="flexleft">  
-                    <h4> 
-                    delete      </h4>     
+                    method      </h4>     
                 </div>  
             </section>`
     }
-
+    static get _getItem() {
+        return html` 
+        <dom-repeat repeat items="[[content]]" as="item">
+            <template>
+                <slot name="item[[index]]"></slot>  
+                [[_slottItem(item, index)]]
+            </template>                            
+        </dom-repeat>`
+    }
     _slottItem(item, index) {
-        let template = document.createElement('template')
+        // let template = document.createElement('template')
         let str = `
         <article centerImageItem>
             <div class="paddingSmall">
-                <shop-image
-                    class="bigger"
-                    aria-label="image"
-                    title="${this._getParameter(item.title)}" 
-                    src="${this._getParameter(item.url)}" 
-                    alt=${this._getParameter(item.title)}">
-                </shop-image> 
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.title)}"> 
-                ${this._getParameter(item.title)}
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.dateAdded)}">
-                ${this._getParameter(item.dateAdded)}  
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.gallery)}"> 
-               <h3> ${this._getParameter(item.gallery)} </h3>
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.url)}"> 
-                ${this._getParameter(item.url)} 
+                <span title="">                 
                 </span>  
             </div>
             <div class="paddingSmall">
@@ -146,12 +96,12 @@ export class cmsItemImageTemplate extends PolymerElement {
                 </paper-button>
             </div>
         </article> `
-        template.innerHTML = str
-        template.content.children[0].setAttribute('slot', 'item' + index)
-        var clone = document.importNode(template.content, true);
-        this.appendChild(clone)
-        this.children[index].children[5].setAttribute('value', index)
-        this.children[index].children[5].children[0].addEventListener('click', (this._openConfirm).bind(this))
+        /* template.innerHTML = str
+         template.content.children[0].setAttribute('slot', 'item' + index)
+         var clone = document.importNode(template.content, true);
+         this.appendChild(clone)
+         this.children[index].children[5].setAttribute('value', index)
+         this.children[index].children[5].children[0].addEventListener('click', (this._openConfirm).bind(this))*/
     }
 
     _getParameter(item) {

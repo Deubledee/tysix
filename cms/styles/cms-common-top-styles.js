@@ -43,19 +43,6 @@ $_documentContainer.innerHTML = `
     section {
         font-weight: var(--app-default-font-weight)
     }
-    paper-button{
-        height: var(--app-content-button-height)
-    }
-
-    paper-button[front] {
-        height: var(--app-content-button-height, 40px);
-        border-bottom: unset;
-    }
-
-    main, paper-button[front] {
-        background-color: var(--app-backgound-color)
-    }
-
     main {
         word-break: var(--app-default-word-break);
         height: var(--app-default-height)
@@ -181,15 +168,31 @@ $_documentContainer.innerHTML = `
         margin-left: var(--app-content-button-light-marginleft)
     }
 
+    paper-button{
+        height: var(--app-content-button-height)
+    }
+
+    paper-button[front] {
+        height: var(--app-content-button-height, 40px);
+        border-bottom: unset;
+        top: unset;
+    }
+
+    main, paper-button[front] {
+        background-color: var(--app-backgound-color)
+    }
+
     .button {
         min-width: var(--app-content-paper-button-minwidth);
         border-left: var(--app-content-button-border);
-        border-bottom: var(--app-content-button-border);
+       /* border-bottom: var(--app-content-button-border);*/
         background-color: var(--app-content-paper-button-background-color);
         border-top: var(--app-content-button-border);
         border-right: var(--app-content-button-border);
         margin-right: var(--app-content-paper-button-margin-right);
+        height: 30px;
         border-radius: 0;
+        top: -1px;
     }
 
     paper-tabs {

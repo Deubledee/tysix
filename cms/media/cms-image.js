@@ -1,13 +1,93 @@
 
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { microTask } from '@polymer/polymer/lib/utils/async';
+import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
 class cmsImage extends cmsItemImageTemplate {
 
+    static get _getItem() {
+        return html` 
+        <dom-repeat repeat items="[[content]]" as="item">
+            <template>
+                <cms-image-item  
+                    to-content="[[toContent]]"
+                    add="[[addTo]]" 
+                    lang="[[lang]]" 
+                    image="[[item]]" 
+                    save-button="[[saveButton]]"
+                    reset-button="[[resetButton]]"
+                    delete="[[_deleteImg]]">
+                </cms-image-item>
+            </template>                            
+        </dom-repeat>`
+    }
+    static get _getMenu() {
+        return html`                         
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">   
+                    <h4>  image   </h4>     
+                </div>  
+            </section>
+
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">   
+                    <h4> 
+                    title    </h4>     
+                </div>  
+            </section>
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">   
+                    <h4> 
+                    date created    </h4>     
+                </div>  
+            </section>
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">  
+                    <h4> 
+                    gallery     </h4>     
+                </div>  
+            </section>
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">  
+                    <h4> 
+                    url      </h4>     
+                </div>  
+            </section>
+            <section class="flexchildbotom noFlex">
+                <div class="flexleft">  
+                    <h4> 
+                    [[delete]]   [[add]]     </h4>     
+                </div>  
+            </section>`
+    }
     static get is() { return 'cms-image'; }
 
     static get properties() {
         return {
+            addTo: {
+                type: Boolean,
+                value: false,
+                observer: '_setLabel'
+            },
+            add: {
+                type: String,
+                value: 'add'
+            },
+            delete: {
+                type: String,
+                value: 'delete'
+            },
+            images: {
+                type: Array,
+                notify: true
+            },
+            returnPath: {
+                type: String,
+                notify: true
+            },
+            resetButton: Object,
+            saveButton: {
+                type: Object,
+                observer: '_placeEventMethod'
+            },
             content: {
                 type: Array,
                 notify: true,
@@ -15,16 +95,32 @@ class cmsImage extends cmsItemImageTemplate {
             }
         };
     }
-    galleryView() {
-        return false;
+    _log(data) {
+        console.log(data)
     }
-    addImage() {
-        if (this.childElementCount === 1) {
-            this.children[1].children[0].addMethod = (this.setImage).bind(this);
+    ready() {
+        super.ready()
+    }
+    _setLabel(data) {
+        console.log(data)
+        if (data === true) {
+            this.delete = ''
         }
-        else {
-            this.children[1].removeChild(this.children[1].children[0]);
+        if (data === false) {
+            this.add = ''
         }
+    }
+    _placeEventMethod(data) {
+        data.addEventListener('click', (this.showPage).bind(this))
+    }
+    showPage() {
+        let string = window.btoa(JSON.stringify(this.toContent))
+        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.saveButton.classList.add('diferent')
+        this.resetButton.classList.remove('diferent')
+        this.toContent = Object()
+        this.image = Array()
     }
     _fromAray(data) {
         let url, arr = [], obj2;
@@ -43,61 +139,17 @@ class cmsImage extends cmsItemImageTemplate {
         return arr;
     }
     getImage(data) {
-        let arr = this._fromAray(data.image);
-        return arr;
-    }
-    setImage(data) {
-        if ('url' in data) {
-            let img = new Image(), arr = [];
-            img.src = data.url;
-            if (img.naturalHeight < 600) {
-                if (this.content[0].image instanceof Array === true) {
-                    arr = this.content[0].image;
-                }
-                else {
-                    arr.push(this.content[0].image);
-                }
-                arr.push(data.url);
-                this.content[0].image = arr;
-                this.notifyPath('content[0].image');
-            }
-            if (img.naturalHeight >= 600) {
-                if (this.content[0].largeImage instanceof Array === true) {
-                    arr = this.content[0].largeImage;
-                }
-                else {
-                    arr.push(this.content[0].largeImage);
-                }
-                arr.push(data.url);
-                this.content[0].largeImage = arr;
-                this.notifyPath('content[0].largeImage');
-            }
-            this.addingcancel = this.adding;
-            this.adding = !this.adding;
-            this.$.saveButton.classList.remove('diferent');
-            this.editing = this.editing + 1;
+        console.log('getImage', data)
+        let arr
+        if ('image' in data) {
+            arr = this._fromAray(data.image);
+        } else {
+            arr = this._fromAray([data])
         }
-    }
-    setImages(data) {
-        this.content[0].image = data.url;
-    }
-    cancelImages() {
-        this.cancelState();
-        if (this.addingcancel === false) {
-            this.adding = !this.adding;
-        }
+        return arr || []
     }
     _deleteImg(data) {
         console.log(data)
-    }
-    _openConfirm(event) {
-        let index = event.srcElement.parentElement.parentElement.getAttribute('value')
-        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
-            this.dispatchEvent(new CustomEvent('confirm', {
-                bubbles: true, composed: true,
-                detail: { name: this.content[index].title, method: (this._deleteImg).bind(this), argument: index, headderMsgKind: 'delete', type: 'image' }
-            }));
-        });
     }
 }
 customElements.define(cmsImage.is, cmsImage);

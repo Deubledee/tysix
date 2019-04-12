@@ -1,9 +1,6 @@
 import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { dataBaseworker } from './tools/dataBaseWorker';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import '@polymer/paper-spinner/paper-spinner.js';
-import './styles/cms-common-top-styles';
 const __DEV = true;
 const _DBW = new dataBaseworker();
 const _STYLES = _DBW.getElementAssets('cms-image-viewer', __DEV);
@@ -44,15 +41,31 @@ class cmsMedia extends cmsTopPageTemplate {
   static get viewPages() {
     return html`
       <article name="images">         
-        <cms-gallery-viewer route="[[subroute]]" lang="[[lang]]">
-          <cms-galleries slot="galleries" id="galleries">
+        <cms-gallery-viewer route="{{subroute}}" lang="[[lang]]">
+        
+          <cms-galleries slot="galleries" id="galleries" 
+            route="{{subroute}}" 
+            lang="[[lang]]" 
+            images="{{Imags}}" 
+            add="{{add}}" 
+            contentto="{{contentto}}" 
+            return-path="{{returnPath}}">
           </cms-galleries>
 
-          <cms-images slot="images" id="images">
+          <cms-images slot="images" id="images" 
+            route="{{subroute}}" 
+            lang="[[lang]]" 
+            images="{{Imags}}" 
+            add="[[add]]" 
+            contentto="[[contentto]]" 
+            return-path="[[returnPath]]">
           </cms-images>
+
         </cms-gallery-viewer>
       </article>
-      <article name="videos" route="[[subroute]]" lang="[[lang]]"> 
+      <article name="videos" 
+        route="{{subroute}}" 
+        lang="[[lang]]"> 
             videos
       </article>
   `
@@ -66,6 +79,15 @@ class cmsMedia extends cmsTopPageTemplate {
         notify: true,
         observer: '__changeLang'
       },
+      returnPath: {
+        type: String,
+        notify: true
+      },
+      contentto: {
+        type: Object,
+        notify: true,
+        value: {}
+      },
       langs: {
         type: Object,
         value: {}
@@ -74,6 +96,19 @@ class cmsMedia extends cmsTopPageTemplate {
         type: String,
         reflectToAttribute: true,
         observer: '_pageChanged'
+      },
+      add: {
+        type: Boolean,
+        notify: true
+      },
+      Imags: {
+        type: Array,
+        notify: true,
+        observer: '_log'
+      },
+      add: {
+        type: Boolean,
+        value: false
       },
       search: {
         type: Boolean,
@@ -96,6 +131,10 @@ class cmsMedia extends cmsTopPageTemplate {
     ];
   }
 
+  _log(data) {
+    console.log(data)
+
+  }
   ready() {
     super.ready()
     _STYLES.then((querySnapshot) => {
@@ -105,7 +144,6 @@ class cmsMedia extends cmsTopPageTemplate {
       console.error("Error reteaving assets: ", error);
     });
   }
-
   __changeLang() {
     try {
       if (this.langs[this.lang]) {

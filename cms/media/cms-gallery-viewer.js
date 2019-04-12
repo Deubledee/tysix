@@ -12,11 +12,11 @@ class cmsGalleryViewer extends cmsViewerTemplate {
     }
     static get _getPages() {
         return html`
-        <article name="galleries">  
+        <article name="home">  
             <slot name="galleries"></slot>  
         </article>
 
-        <article name="images">  
+        <article name="view-edit-images">  
             <slot name="images"></slot>  
         </article>`
     }
@@ -25,9 +25,18 @@ class cmsGalleryViewer extends cmsViewerTemplate {
 
     static get properties() {
         return {
-            page: {
+            lang: {
                 type: String,
                 notify: true,
+                observer: '__changeLang'
+            },
+            langs: {
+                type: Object,
+                value: {}
+            },
+            page: {
+                type: String,
+                reflectToAttribute: true,
                 observer: '_pageChanged'
             }
         }
@@ -39,8 +48,68 @@ class cmsGalleryViewer extends cmsViewerTemplate {
 
     static get observers() {
         return [
-            '_routePageChanged(route, routeData)'
+            '_routePageChanged(route, routeData, query)'
         ];
+    }
+    _routePageChanged(route, page, query) {
+        if (route.prefix === '/media/images') {
+            if (page !== undefined && 'page' in page) {
+                if (route.path === "") {
+                    this.routeData.page = ''
+                    page.page = ''
+                }
+                if (!page.page) {
+                    this.page = 'home';
+                } else
+                    if (['galleries'].indexOf(page.page) !== -1) {
+                        this.page = 'home';
+
+                    } else
+                        if (['view-images'].indexOf(page.page) !== -1) {
+                            this.page = 'view-edit-images';
+                        } else
+                            if (['view-images', 'galleries', 'add-gallery', 'edit-gallery'].indexOf(page.page) !== -1) {
+                                this.page = page.page;
+                            } else {
+                                this.page = 'view404';
+                            }
+            }
+            else
+                if (page instanceof Object === true) {
+                    this.page = 'home';
+                }
+        }
+    }
+    __changeLang() {
+        try {
+            if (this.langs[this.lang]) {
+                let obj = this.langs[this.lang];
+                for (let par in obj) {
+                    if (Boolean(this[par]) === true) {
+                        this.set(par, obj[par])
+                    } else {
+                        this.set(par, '');
+                        this.set(par, obj[par]);
+                    }
+                }
+            }
+        }
+        catch (err) {
+            console.error(err)
+        }
+    }
+    _setLangObject(langs) {
+        try {
+            for (let par in langs) {
+                if (par !== 'styles') {
+                    this.langs[par] = langs[par].pop();
+                }
+            }
+            this.__changeLang();
+        }
+        catch (err) {
+            console.error(err)
+        }
     }
     __reset(event) {
         if (['categorypages'].indexOf(event.detail) !== -1) {
@@ -55,40 +124,20 @@ class cmsGalleryViewer extends cmsViewerTemplate {
             }
         }
     }
-    _routePageChanged(route, page) {
-        if (route.prefix === '/media/images') {
-            if (page !== undefined && 'page' in page) {
-                if (!page.page) {
-                    this.page = 'home';
-                }
-                else if (['images', 'galleries', 'add-gallery', 'edit-gallery'].indexOf(page.page) !== -1) {
-                    this.page = page.page;
-                }
-                else {
-                    console.log(page.page);
-                    this.page = 'view404';
-                }
-            }
-            else if (page instanceof Object === true) {
-                this.page = 'galleries';
-            }
-        }
-    }
     _pageChanged(page) {
-        console.log(page)
         if (page !== undefined) {
             if (page === 'home' || page === 'galleries') {
                 import('./cms-galleries').then(item => {
                 });
                 return;
             }
-            if (page === 'images') {
+            if (page === 'view-edit-images') {
                 import('./cms-images').then(item => {
                 });
                 return;
             }
             if (['add-gallery', 'edit-gallery'].indexOf(page)) {
-                import('./cms-images').then(item => {
+                import('./cms-gallery-form').then(item => {
                 });
                 return;
             }

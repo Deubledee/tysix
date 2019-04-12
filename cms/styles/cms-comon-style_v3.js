@@ -47,7 +47,6 @@ $_documentContainer.innerHTML = `
                 box-sizing: border-box;
                 @apply --layout-horizontal;
                 @apply --layout-wrap;
-                height: 65px;
             }
 
             .flexsidecenter {
@@ -65,7 +64,7 @@ $_documentContainer.innerHTML = `
             }
 
             div[table]::-webkit-scrollbar-track {
-                background: var(--app-scrollbar-color)
+                background-color: var(--app-scrollbar-color)
             }
 
             div[table]::-webkit-scrollbar {
@@ -80,15 +79,22 @@ $_documentContainer.innerHTML = `
                 display: var(--app-none)
             }
 
-            .flexchildbotom {
-                height: 141px;
+            .flexchildbotom, .flexchildbotomFull{
                 font-weight: 700;
                 margin-right: 1px;
                 padding: 0;
                 @apply --layout-vertical;
                 @apply --layout-flex-2;
             }
-
+            .flexchildbotom{
+                flex-basis: 30%;
+            } 
+            .flexchildbotomFull{
+                flex-basis: 70%;
+            }
+            .noFlex{
+                flex-basis: 1px 
+            }
             .navbottom,
             .navside {
                 box-sizing: border-box;
@@ -97,7 +103,6 @@ $_documentContainer.innerHTML = `
 
             .flexchildbotom3 {
                 display: block;
-                width: 92%;
                 margin-top: 40px;
                 @apply --layout-self-stretch;
                 @apply --layout-flex-3;
@@ -293,6 +298,106 @@ $_documentContainer.innerHTML = `
                 max-width: 20px;
                 letter-spacing: 2px;
             }
+
+            .contenth4{
+                margin-block-start: 3.33em;
+            }
+
+            .padding {
+                padding: var(--app-default-padding);
+                word-break: break-all;
+            }
+
+            .padding,
+            article,
+            article[centerListItem], article[centerImageItem] {
+                box-sizing: var(--app-default-box-sizing)
+            }
+        
+            article[centerListItem], article[centerImageItem]{
+                @apply --layout-horizontal;
+            }
+        
+            
+            article[centerImageItem], article[centerImageItem]{
+                display: var(--app-flex)
+            }        
+                
+            article[centerListItem],
+            section[title2],
+            article[centerImageItem] {
+                text-align: var(--app-default-text-align)
+            }
+
+            article[centerImageItem]  {
+                letter-spacing: var(--app-content-letter-spacing, 1px);
+                font-size: 10px;
+                box-sizing: border-box;
+            }
+    
+            article[centerListItem] {
+                letter-spacing: 1px;
+                font-size: var(--app-content-font-size);
+            }
+
+            article[centerListItem] div, article[centerImageItem] div{
+                @apply --layout-flex;
+                box-shadow: 1px 1px 2px var(--paper-blue-300);
+                height: auto;
+                overflow: hidden;
+            }
+
+            article[centerListItem] span, article[centerImageItem] span {
+                word-break: break-all
+            }
+            .centerImage{
+                display: block;
+                margin-top: auto;
+                margin-bottom: auto;
+                box-shadow: unset;
+            }
+            paper-button {
+                text-decoration: var(--app-none);
+                color: inherit
+            }
+
+            .padding {
+                padding: var(--app-default-padding);
+                word-break: break-all;
+            }
+
+            .nopad{
+                padding: 0 
+            }
+
+            .paddingSmall {
+                padding: 4px;
+                word-break: break-all;
+            }
+
+            .paddingSmall h3 {
+                margin-block-start: 7px;
+            }
+
+            shop-image {
+                height: 41px;
+                top: 5px;
+            }
+            div[published] {
+                font-size: small;
+            }
+            div[published="NP"] {
+                color: var(--app-not-published-color)
+            }
+
+            div[published="P"] {
+                color: var(--app-published-color)
+            }
+
+            .added {
+                color: #00ff7f
+            }
+
         </style>
     </template>
 </dom-module>`;

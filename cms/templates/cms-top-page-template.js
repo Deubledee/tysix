@@ -90,7 +90,7 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   static get viewPages() {
     return html`
-    <cms-page-viewer name="pages" route="[[subroute]]" lang="[[lang]]">     
+    <cms-page-viewer name="pages" route="[[subroute]]" lang="[[lang]]" >     
 
         <cms-page-sub-cat-content slot="add" id="content" 
           route="[[subroute]]" user="[[user]]">
@@ -127,8 +127,9 @@ export class cmsTopPageTemplate extends PolymerElement {
         </cms-article-sub-cat-type> 
         
         <cms-article-view slot="view" id="view"  lang="[[lang]]" 
-          route="[[subroute]]" user="[[user]]">
+          route="[[subroute]]" user="[[user]]" rootPath="[[rootPath]]">
         </cms-article-view>
+
     </cms-articles-viewer>
     `
   }

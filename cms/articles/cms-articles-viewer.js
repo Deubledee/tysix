@@ -29,7 +29,7 @@ class cmsArticlesViewer extends cmsViewerTemplate {
 
   static get observers() {
     return [
-      '_routePageChanged(route, routeData)'
+      '_routePageChanged(route, routeData, query)'
     ];
   }
 
@@ -39,22 +39,15 @@ class cmsArticlesViewer extends cmsViewerTemplate {
 
   }
 
-  __setEleemnt() {
-    let template = html`<cms-article-view id="view" slot="view">
-                         </cms-article-view>`;
-    let clone = document.importNode(template.content, true);
-    clone.route = this.route;
-    clone.user = this.user;
-    clone.lang = this.lang;
-    setTimeout(() => {
-      // this.appendChild(clone)
-      console.log('elem', this.children[this.childElementCount - 1])
-    }, 500)
-  }
-
   _routePageChanged(route, page) {
     if (route.prefix === '/content/articles') {
+      // console.log(route, page, this.page)
       if (page !== undefined && 'page' in page) {
+        if (route.path === '') {
+          console.log('/content/articles', route, page)
+          //  this.routeData.page = ''
+          page.page = ''
+        }
         if (!page.page) {
           this.page = 'home';
         }

@@ -23,7 +23,8 @@ export class cmsViewerTemplate extends PolymerElement {
           display: none;
         }
     </style>
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}">
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
+    active="{{active}}">
     </app-route>
         ${this._getSilentAnchor}
         <main id="main">

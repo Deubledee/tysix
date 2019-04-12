@@ -1,17 +1,18 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import { dataBaseworker } from '../tools/dataBaseWorker';
-import './cms-gallerie-item';
+import './cms-gallery-item';
 class cmsGalleries extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
-        return html` <a href="[[rootPath]]media/images/add-gallery">
-                        <paper-tab name=" add-category-pages">
-                            [[Galleries]] galleries
-                            <paper-icon-button-light>
-                                <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                            </paper-icon-button-light>
-                        </paper-tab>
-                    </a>`
+        return html` 
+            <a href="[[rootPath]]media/images/add-gallery">
+                <paper-tab name=" add-category-pages">
+                    [[Galleries]] galleries
+                    <paper-icon-button-light>
+                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+                    </paper-icon-button-light>
+                </paper-tab>
+            </a>`
     }
     static get _getSilentAnchor() {
         return html`
@@ -23,18 +24,17 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     }
     static get _getBottom() {
         return html`
-        <section class="flexchildbotom">
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> view </h3>
             </div>
-        </section>                        
-            
-        <section class="flexchildbotom">
+        </section>    
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
-                <h3> add </h3>
+                <h3> view/edit </h3>
             </div>
-        </section>                        
-        <section class="flexchildbotom">
+        </section>                       
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> remove </h3>
             </div>
@@ -43,10 +43,15 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     }
     static get _getTable() {
         return html`
-        <dom-repeat items="[[galleries]]" as="page">
-            <template strip-whitespace>
-                [[putElement(index, page)]]
-                <slot name="item[[index]]"></slot>
+        <dom-repeat items="[[galleries]]" as="gallery">
+            <template>                
+                <cms-gallery-item 
+                    route="{{route}}" 
+                    gallery="[[gallery]]" 
+                    images="{{images}}" 
+                    add-image-to="[[addImageTo]]" 
+                    return-path="{{returnPath}}"> 
+                </cms-gallery-item>
             </template>
         </dom-repeat>
         `}
@@ -120,6 +125,22 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                 },
                 notify: true
             },
+            returnPath: {
+                type: String,
+                notify: true
+            },
+            addImageTo: {
+                type: String,
+                notify: true
+            },
+            contentto: {
+                type: Object,
+                notify: true
+            },
+            add: {
+                type: Boolean,
+                notify: true
+            },
             images: {
                 type: Array,
                 notify: true,
@@ -135,15 +156,53 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         super.ready()
         this.getImageGalleries(true)
     }
-
-    putElement(index, gallerie) {
-        let template = html`
-                <cms-gallerie-item> 
-                </cms-gallerie-item>`;
-        var clone = document.importNode(template.content, true);
-        this.appendChild(clone);
-        this.children[index].setAttribute('slot', `item${index}`);
-        this.children[index].set('gallerie', gallerie);
+    static get observers() {
+        return [
+            '_routePageChanged(routeData, query, active)'
+        ];
+    }
+    _routePageChanged(routeData, query, active) {
+        if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
+            this.addImageTo = query.method
+            this.contentto = JSON.parse(atob(query.content))
+            this.add = true
+        }
+        if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === false) {
+            this.addImageTo = ''
+            this.contentto = {}
+            this.add = false
+        }
+    }
+    __changeLang() {
+        try {
+            if (this.langs[this.lang]) {
+                let obj = this.langs[this.lang];
+                for (let par in obj) {
+                    if (Boolean(this[par]) === true) {
+                        this.set(par, obj[par])
+                    } else {
+                        this.set(par, '');
+                        this.set(par, obj[par]);
+                    }
+                }
+            }
+        }
+        catch (err) {
+            console.error(err)
+        }
+    }
+    _setLangObject(langs) {
+        try {
+            for (let par in langs) {
+                if (par !== 'styles') {
+                    this.langs[par] = langs[par].pop();
+                }
+            }
+            this.__changeLang();
+        }
+        catch (err) {
+            console.error(err)
+        }
     }
 
     eventFunction(event) {
@@ -152,7 +211,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
 
     getImageGalleries(data) {
         if (data === true || data === 'true') {
-            this.DBW.getImageGalleries((done) => {
+            this.DBW.getMediaGalleries((done) => {
                 this.eventFunction(done)
             }, true)
         }

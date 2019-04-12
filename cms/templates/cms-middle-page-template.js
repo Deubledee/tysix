@@ -63,23 +63,23 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     static get _getBottom() {
         return html`
-        <section class="flexchildbotom">
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> [[title]] </h3>
             </div>
         </section>                        
             
-        <section class="flexchildbotom">
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> [[viewedit]] </h3>
             </div>
         </section>                        
-        <section class="flexchildbotom">
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> [[published]] </h3>
             </div>
         </section>                        
-        <section class="flexchildbotom">
+        <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> [[delete]] </h3>
             </div>
@@ -172,11 +172,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             info: {
                 type: Array,
                 notify: true
-            },/*
-            categorie: {-
-                type: Object,
-                notify: true
-            },*/
+            },
             closed: {
                 type: Boolean,
                 notify: true,

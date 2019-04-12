@@ -21,6 +21,7 @@ import '@polymer/iron-icons/social-icons';
 import '@polymer/iron-icons/maps-icons';
 import './styles/cms-common-styles_v2';
 import './styles/cms-common-styles';
+import './media/cms-image-item'
 import { dataBaseworker } from './tools/dataBaseWorker';
 import './tools/cms-confirm';
 const __DEV = true;
@@ -206,6 +207,11 @@ class cmsControler extends PolymerElement {
     </div>
   </nav>
   <iron-pages selected="[[page]]" attr-for-selected="name">
+        <article name="home">
+          <h1> 
+            <b>Home</b>
+          </h1>
+        </article>
     <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
     </cms-user-viewer>
 
@@ -271,7 +277,7 @@ class cmsControler extends PolymerElement {
   }
   static get observers() {
     return [
-      '_routePageChanged(routeData.page, route)'
+      '_routePageChanged(routeData, route)'
     ];
   }
   static connectedCallback() {
@@ -286,7 +292,6 @@ class cmsControler extends PolymerElement {
     }).catch(function (error) {
       console.error("Error reteaving assets: ", error)
     });
-    this.addEventListener('addImage', this.__setMedia)
   }
   /*__changeStyle() {
     this.set('stylesSet', true);
@@ -327,32 +332,27 @@ class cmsControler extends PolymerElement {
       }
     )
   }
-  __setMedia(event) {
-    window.history.pushState({}, null, `${this.rootPath}media/images?${event.detail}`);
-    this.page = 'media';
-    //  this.$.media.href = href
-  }
-
-
   openConfirm(event) {
-    this.$.confirm.openConfirm(event.detail);
+    this.$.confirm.openConfirm(event);
     this.confirm = !this.confirm;
   }
-  _routePageChanged(page) {
-    if (!page) {
-      this.page = '';
-    }
-    else if (['app', 'content', 'users', 'home', 'media'].indexOf(page) !== -1) {
-      this.page = page;
-    }
-    else {
-      this.page = 'view404';
+  _routePageChanged(page, route) {
+    if (this.page !== page.page && page.page !== 'NaN') {
+      if (!page) {
+        this.page = 'home';
+      }
+      else if (['app', 'content', 'users', 'home', 'media'].indexOf(page.page) !== -1) {
+        this.page = page.page;
+      }
+      else {
+        // this.page = 'view404';
+      }
     }
   }
   _pageChanged(page) {
     if (page === 'home') {
-      import('./cms-home-viewer');
-      return;
+      /*- import('./cms-home-viewer');
+       return;*/
     }
     if (page === 'content') {
       import('./cms-content');

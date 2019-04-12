@@ -1,10 +1,10 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icons/editor-icons';
-import '@polymer/paper-input/paper-input';
+
+import { cmsItemTemplate } from '../templates/cms-item-template'
+import { html } from '@polymer/polymer/polymer-element';
 import { dataBaseworker } from '../tools/dataBaseWorker';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-class cmsPageListItem extends PolymerElement {
+class cmsPageListItem extends cmsItemTemplate {
     static get template() {
         return html`
     <style>    
@@ -26,11 +26,6 @@ class cmsPageListItem extends PolymerElement {
                     return new dataBaseworker();
                 },
                 notify: true
-            },
-            page: {
-                type: Object,
-                notify: true,
-                observer: '_putRow'
             }
         };
     }

@@ -255,8 +255,8 @@ export class dataBaseworker {
                 });
         }
     }
-    writeImageContent(done, table, dev) {
-        let teble = { name: "images", doc: table.gallerie, data: { content: table.content } };
+    writeMediaContent(done, table, dev) {
+        let teble = { name: "media", doc: table.gallerie, data: { content: table.content } };
         if (dev === false) {
             Worker.updateContent(done, teble)
                 .then(function () {
@@ -278,8 +278,8 @@ export class dataBaseworker {
                 });
         }
     }
-    getImageGalleries(done, dev) {
-        let obj = { name: 'images' };
+    getMediaGalleries(done, dev) {
+        let obj = { name: 'media' };
         if (dev === false) {
             Worker.getDocList(obj)
                 .then((querySnapshot) => {
@@ -289,7 +289,7 @@ export class dataBaseworker {
                     });
                     done(this.categories);
                 }).catch(function (error) {
-                    console.error("Error getting Image Galleries ", error);
+                    console.error("Error getting Media Galleries ", error);
                     done("error", error);
                 });
         }
@@ -302,16 +302,16 @@ export class dataBaseworker {
                     });
                     done(this.categories);
                 }).catch(function (error) {
-                    console.error("Error getting Image Galleries ", error);
+                    console.error("Error getting Media Galleries ", error);
                     done("error", error);
                 });
         }
     }
-    setImageGalleries(done, table, dev) {
+    setMediaGalleries(done, table, dev) {
         let obj = { name: String, docName: String, doc: Object };
-        obj.name = 'images';
-        obj.docName = table.gallerie;
-        obj.doc = table.content;
+        obj.name = 'media';
+        obj.docName = table.gallery;
+        obj.doc = table;
         if (dev === false) {
             Worker.createDoc(obj)
                 .then(() => {
@@ -331,18 +331,18 @@ export class dataBaseworker {
                 });
         }
     }
-    deleteGallerie(done, gallerie, dev) {
+    deleteMediaGallery(done, gallerie, dev) {
         if (dev === false) {
-            Worker.deleteDoc({ name: 'images', docName: gallerie + '_images' })
+            Worker.deleteDoc({ name: 'media', docName: gallery })
                 .then(function () {
-                    done("Gallerie successfully deleted!", gallerie);
+                    done("Gallerie successfully deleted!", gallery);
                 }).catch(function (error) {
                     console.error("Error deleting gallerie" + error);
                     done("error", error);
                 });
         }
         else {
-            Worker.deleteDocDev({ name: 'images', docName: gallerie + '_images' })
+            Worker.deleteDocDev({ name: 'media', docName: gallerie })
                 .then(function () {
                     done("Gallerie successfully deleted!", gallerie);
                 }).catch(function (error) {

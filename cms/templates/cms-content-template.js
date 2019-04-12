@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
+import '@polymer/paper-input/paper-textarea';
 import '../media/cms-image';
 import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
@@ -35,7 +36,7 @@ export class cmsContentTemplate extends PolymerElement {
     static get _getAnchor() {
         return html`
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a href="[[rootPath]]content/pages/">
+            <a>
                 <paper-icon-button icon="arrow-back" aria-label="Go back">
                 </paper-icon-button>
             </a>
@@ -43,99 +44,57 @@ export class cmsContentTemplate extends PolymerElement {
     }
     static get _getContentItems() {
         return html`
-        <dom-repeat repeat items="[[content]]" as="cat">
-            <template>
                 <div container>
                     <div bottom>
-                        <section class="flexchildbotom">
-                            <div class="flexleft">
-                                <paper-button on-click="editTo">
-                                    [[pagetitle]]
+                        <section class="flexchildbotomFull">
+                            <div class="flexleft" name="title">
+                                <paper-button on-click="editTo" name="title">
+                                    [[title]]
                                 </paper-button>
-
-                                <paper-button  value="title" class="diferent" on-click="Cancel" aria-label="mode-cancel">
+                                <paper-button name="title"  value="title" class="diferent" on-click="Cancel" aria-label="mode-cancel">
                                     [[cancel]]
                                 </paper-button>
-
                             </div>
                             <div class="flexright">
-                                <div>
-                                    <paper-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        [[cat.title]]
+                                <div name="title">
+                                    <paper-button on-click="edit" name="title" icon="editor:mode-edit" aria-label="mode-edit">
+                                        <h4 class="contenth4" title="title">   [[cat.title]]</h4> 
                                     </paper-button>
-                                    <paper-input hidden name="title" aria-label="title" value="{{cat.title}}" on-input="inputing"
-                                     placeholder="[[cat.title]]">
+                                    <paper-input hidden name="contentText" name="title"  value="[[cat.title]]" on-input="inputing"
+                                    placeholder="[[cat.title]]">
                                     </paper-input>
                                 </div>
                             </div>
                         </section>
-                        <section class="flexchildbotom">
-                            <div class="flexleft">
-                                <paper-button on-click="editTo">
-                                    [[pagelang]]
+                        <section class="flexchildbotomFull">
+                            <div class="flexleft" name="contentText">
+                                <paper-button on-click="editTo" name="contentText">
+                                    [[contentText]]
                                 </paper-button>
-                                <paper-button  value="lang" class="diferent" on-click="Cancel" aria-label="mode-cancel">
+                                <paper-button name="contentText"  value="contentText" class="diferent" on-click="Cancel" aria-label="mode-cancel">
                                     [[cancel]]
                                 </paper-button>
                             </div>
                             <div class="flexright">
-                                <div>
-                                    <paper-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        [[cat.lang]]
+                                <div name="contentText">
+                                    <paper-button on-click="edit" name="contentText" icon="editor:mode-edit" aria-label="mode-edit">
+                                        <h4 class="contenth4" title="contentText">   [[cat.contentText]]</h4> 
                                     </paper-button>
-                                    <paper-input hidden name="lang" value="[[cat.lang]]" on-input="inputing" placeholder="[[cat.lang]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="flexchildbotom">
-                            <div class="flexleft">
-                                <paper-button on-click="editTo">
-                                    [[pageType]]
-                                </paper-button>
-                                <paper-button  value="type" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div>
-                                    <paper-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        [[cat.type]]
-                                    </paper-button>
-                                    <paper-input hidden name="type" value="[[cat.type]]" on-input="inputing" placeholder="[[cat.type]]">
+                                    <paper-input hidden name="contentText" name="contentText"  value="[[cat.contentText]]" on-input="inputing"
+                                    placeholder="[[cat.contentText]]">
                                     </paper-input>
                                 </div>
                             </div>
                         </section>
                     </div>
                     <section class="flexchildbotom3">
-                        <section class="flexchildbotom">
-                            <div class="flexleft">
-                                <paper-button on-click="editTo">
-                                    [[contentText]]
-                                </paper-button>
-                                <paper-button  value="contentText" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div>
-                                    <paper-button on-click="edit" icon="editor:mode-edit" aria-label="mode-edit">
-                                        [[cat.contentText]]
-                                    </paper-button>
-                                    <paper-input hidden name="contentText" value="[[cat.contentText]]" on-input="inputing"
-                                    placeholder="[[cat.contentText]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>
-                        <div left>
-                            <paper-button>
+                        <div left name="image">
+                            <paper-button >
                                 images
                             </paper-button>
-                            <paper-icon-button icon="image:loupe" on-click="addImage" aria-label="mode-edit">
+                            <paper-icon-button  name="image" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
                             </paper-icon-button> 
-                            <paper-button id="cancel" class="diferent" aria-label="mode-cancel">
+                            <paper-button id="cancel" name="image" class="diferent" aria-label="mode-cancel">
                                 cancel
                             </paper-button>            
                         </div>
@@ -143,9 +102,7 @@ export class cmsContentTemplate extends PolymerElement {
                         <slot name="image">
                         </slot>
                     </section>
-                </div>
-            </template>
-        </dom-repeat>`
+                </div>`
     }
     static get _getSideInfo() {
         return html`
@@ -299,6 +256,14 @@ export class cmsContentTemplate extends PolymerElement {
                 type: Array,
                 value: new Array(),
             },
+            cancelElemenObject: {
+                type: Object,
+                value: {}
+            },
+            inputObject: {
+                type: Object,
+                value: {}
+            },
             cancelButton: {
                 type: Object,
             },
@@ -319,125 +284,151 @@ export class cmsContentTemplate extends PolymerElement {
     ready() {
         super.ready();
     }
-
     slotImageElement(cat) {
-        if (this.imageElement instanceof HTMLElement === true) {
-            this.removeChild(this.children[0])
-            this.set('imageElement', undefined)
-        }
-        if (this.imageElement === undefined && 'image' in cat && cat.image.length > 0) {
+        let data = cat instanceof Array === true ? cat.pop() : cat
+        if ('image' in data && data.image.length > 0) {
             let template = html`<cms-image slot="image">
                                 </cms-image>`,
                 clone = document.importNode(template.content, true);
             this.appendChild(clone);
             this.imageElement = this.children[0];
-            this.imageElement.set('images', cat);
-            this.cancelButton = this.imageElement.$.cancel;
-            if ('deleted' in this.query && this.query.deleted === true || this.query.deleted === 'true') {
-                this.cancelButton.classList.remove('diferent');
-            }
-            this.imageElement.deleteImg = (this.deleteImg).bind(this);
+            this.imageElement._deleteImg = (this.deleteImg).bind(this);
+            this.imageElement.images = data
         }
     }
     editTo(event) {
-        let inpt, buttn, par, cancel, mainElem = event.srcElement.parentElement.parentElement.children[1].children[0];
-        buttn = mainElem.children[0];
-        inpt = mainElem.children[1];
-        par = event.srcElement.innerText.split(' ').pop().toLowerCase();
-        cancel = event.srcElement.nextElementSibling;
+        let inpt, buttn, par, cancel,
+            mainElem = event.srcElement.parentElement.parentElement
+        cancel = mainElem.children[0].children[1];
+        buttn = mainElem.children[1].children[0].children[0]
+        inpt = mainElem.children[1].children[0].children[1];
+        par = event.srcElement.getAttribute('name')
         this.edit(event, inpt, buttn, par, cancel);
+        console.log(this.temp[this.par].data)
     }
-
     edit(event, inpt, buttn, par, cancel) {
-        this.input = Number.isInteger(inpt) === true ? event.srcElement.parentElement.children[1] : inpt;
-        let button = buttn || event.srcElement;
-        this.cancelButton = cancel || event.srcElement.parentElement.parentElement.previousElementSibling.children[1];
-        this.modelCat = event.model.__data.cat;
-        if (this.input.hidden === true) {
-            this.input.hidden = false;
-            button.classList.add('diferent');
-            this.input.onkeydown = (this.__keyDownHandler).bind(this);
+        this._setObjects(event, inpt, buttn, par, cancel)
+        this._setButtons()
+    }
+    _setObjects(event, inpt, buttn, par, cancel) {
+        if (cancel !== undefined) {
+            this.button = buttn
+            this.set('par', par)
+            this._setSomething(this.cancelElemenObject, par, cancel)
+            this._setSomething(this.inputObject, par, inpt)
+        } else if (event.srcElement.parentElement.parentElement.previousElementSibling === null
+            && event.srcElement.title !== undefined) {
+            this.set('par', event.srcElement.parentElement.parentElement.getAttribute('name'))
+            this.button = event.srcElement.parentElement;
+            this._setSomething(this.cancelElemenObject, this.par, event.srcElement.parentElement.parentElement.parentElement.previousElementSibling.children[1])
+            this._setSomething(this.inputObject, this.par, event.srcElement.parentElement.parentElement.children[1])
+        } else if (event.srcElement.parentElement.parentElement.previousElementSibling !== null
+            && event.srcElement.title !== undefined) {
+            this.set('par', event.srcElement.parentElement.getAttribute('name'))
+            this.button = event.srcElement;
+            this._setSomething(this.cancelElemenObject, this.par, event.srcElement.parentElement.parentElement.previousElementSibling.children[1])
+            this._setSomething(this.inputObject, this.par, event.srcElement.parentElement.parentElement.previousElementSibling.children[1])
+        }
+        console.log(this.par)
+    }
+    _setTemp() {
+        console.log(this.par)
+        this.temp[this.par] = { data: '', canceled: '', inputing: false }
+        this.temp[this.par].data = this.content[0][this.par] === undefined ? '' : this.content[0][this.par]
+        this.temp[this.par].canceled = false
+    }
+    _setButtons() {
+        if (this.button.classList.contains('diferent') === false) {
+            this.inputObject[this.par].hidden = false;
+            this.inputObject[this.par].onkeydown = (this.__keyDownHandler).bind(this);
+            this.button.classList.add('diferent');
+            this._setTemp()
             window.onbeforeunload = function () {
                 return "not without saving first :)";
             };
         }
         else {
-            this.input.hidden = true;
-            button.classList.remove('diferent');
+            this.inputObject[this.par].hidden = true;
+            this.button.classList.remove('diferent');
+            this.temp[this.par].inputing = false
             if (this.editing === 0) {
-                this.input.onkeydown = function () { };
-                window.onbeforeunload = function () { };
+                this.inputObject[this.par].onkeydown = function () { };
+                //  window.onbeforeunload = function () { };
             }
         }
+    }
+    _setSomething(obj, par, value) {
+        if ((par in obj) === false && par !== undefined) {
+            obj[par] = value
+        }
+    }
+    __setTrue(elem) {
+        elem.hidden = true
     }
     __keyDownHandler(event) {
         if (event.code === "Backspace" || event.code === "Delete") {
-            this.set('par', event.srcElement.name);
-            if (this.temp[event.srcElement.name] === '') {
-                this.temp[event.srcElement.name] = this.modelCat[this.par];
-                this.inputing(event);
+            this.set('par', event.srcElement.getAttribute('name'));
+            if (this.temp[this.par] === '') {
+                this.temp[this.par] = this.content[this.par];
+                this.Cancel(event)
             }
-
+            this.inputing(event);
         }
     }
-
     inputing(event) {
-        this.set('par', event.srcElement.name);
-        let value = event.srcElement.value;
-        let string = "cat." + this.par;
-        console.log(this.par, this.input.value, event)
-        if (this.par in this.temp === false) {
-            this._setTemp()
-        } else
-            if (this.temp[this.par].canceled === true) {
-                this._setTemp()
-            }
-        event.model.set(string, value);
-    }
-
-    _setTemp() {
-        this.temp[this.par] = new Object()
-        this.temp[this.par].data = this.add !== true ? this.modelCat[this.par] : undefined
-        this.temp[this.par].canceled = false
+        this.set('par', event.srcElement.getAttribute('name'));
+        this.string = "cat." + this.par;
+        let value = event.srcElement.value
+        event.model.set(this.string, value);
         this._inputState();
     }
-
     _inputState() {
-        console.log('in state')
-        if (Boolean(this.input.value) === true) {
-            this.cancelButton.classList.remove('diferent');
+        if (this.temp[this.par].inputing === false) {
+            this.cancelElemenObject[this.par].classList.remove('diferent');
             this.$.saveButton.classList.remove('diferent');
+            this.$.anchor.classList.add('diferent');
+            this.temp[this.par].inputing = true
+            this.temp[this.par].canceled = false;
             this.editing = this.editing + 1;
             this.canceled = false;
         }
     }
-
     Cancel(event) {
-        let input = event.srcElement.parentElement.nextElementSibling.children[0].children[1]
-        this.set('par', input.name)
-        this.set('input', input)
-        let string = "cat." + this.par;
-        this.input.value = this.temp[this.par].data === undefined ? '' : this.temp[this.par].data;
+        this.set('par', event.srcElement.getAttribute('name'))
+        this.string = "cat." + this.par;
+        event.model.set(this.string, this.temp[this.par].data);
         if (this.temp[this.par].canceled === false) {
             this.cancelState(event.srcElement);
-            event.model.set(string, this.input.value);
-            this.set('par', '');
-            this.input.onkeydown = function () { };
         }
     }
-
-    cancelState(srcElemen) {
+    cancelState() {
         this.temp[this.par].data = '';
         this.temp[this.par].canceled = true;
-        srcElemen.classList.add('diferent');
+        this.temp[this.par].inputing = false
+        this.cancelElemenObject[this.par].classList.add('diferent');
+        this.inputObject[this.par].onkeydown = function () { };
         if (this.editing <= 1) {
-            this.$.saveButton.classList.add('diferent');
-            this.editing = 0;
-            window.onbeforeunload = function () { };
+            this._reset('simple')
         }
         else {
+            this.set('par', {});
             this.editing = this.editing - 1;
         }
+    }
+    _reset(type) {
+        this.editing = 0;
+        window.onbeforeunload = function () { };
+        this.$.saveButton.classList.add('diferent');
+        this.$.anchor.classList.remove('diferent');
+        if (type === "simple") {
+            this.cancelElemenObject[this.par].classList.add('diferent');
+        }
+        if (type === undefined) {
+            this.set('cancelElemenObject', {})
+            this.set('inputObject', {})
+            this.set('content', []);
+        }
+        this.set('par', {});
     }
 }
 customElements.define(cmsContentTemplate.is, cmsContentTemplate);

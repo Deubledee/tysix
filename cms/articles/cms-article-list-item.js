@@ -1,11 +1,10 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icons/editor-icons';
-import '@polymer/paper-input/paper-input';
+import { cmsItemTemplate } from '../templates/cms-item-template'
+import { html } from '@polymer/polymer/polymer-element';
 import { dataBaseworker } from '../tools/dataBaseWorker';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 const __DEV = true;
-class cmsArticleListItem extends PolymerElement {
+class cmsArticleListItem extends cmsItemTemplate {
     static get template() {
         return html`
     <style>    
@@ -15,8 +14,7 @@ class cmsArticleListItem extends PolymerElement {
     } 
             /* styles reside in cms-content*/
     </style>        
-    <slot name="table"></slot> 
-        `;
+    <slot name="table"></slot>`;
     }
     static get is() { return 'cms-article-list-item'; }
     static get properties() {
@@ -27,11 +25,6 @@ class cmsArticleListItem extends PolymerElement {
                     return new dataBaseworker();
                 },
                 notify: true
-            },
-            page: {
-                type: Object,
-                notify: true,
-                observer: '_putRow'
             },
             noItem: {
                 type: Array,
@@ -47,17 +40,16 @@ class cmsArticleListItem extends PolymerElement {
     log(data) {
         console.log('log from cms-article-viewer', data);
     }
-
     _putRow(data) {
         let template = document.createElement('template')
         let str = `
         <article centerListItem slot="table">
-            <div class="">
+            <div class="padding">
                 <span> 
                     ${this._getPagename(data)}
                 </span>
             </div>
-            <div>
+            <div class="">
                 <paper-button>
                     <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
                     <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
@@ -82,9 +74,8 @@ class cmsArticleListItem extends PolymerElement {
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
     }
-
     _getPagename(cats) {
-        return cats.parent.split('_').join(' ')
+        return cats.id.split('_').join(' ')
     }
     _getPublished(cats) {
         return cats;
@@ -97,7 +88,7 @@ class cmsArticleListItem extends PolymerElement {
     }
     showPage() {
         let string = this.page.items > 0 ? window.btoa(`${JSON.stringify(this.page.content)}`) : window.btoa(`${JSON.stringify(this.noItem)}`)
-        window.history.pushState({}, null, `content/articles/view-articles?content=${string}`);
+        window.history.pushState({}, null, `${this.rootPath}content/articles/view-articles?content=${string}&type=${this.page.type}&category=${this.page.id}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {

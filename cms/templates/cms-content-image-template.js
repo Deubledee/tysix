@@ -14,6 +14,10 @@ export class cmsContentImageTemplate extends PolymerElement {
             position: var(--app-default-position);
             display: var(--app-block);
         }
+        nav {
+            display: flex;
+            height: 50px;
+        }
         </style>
         <app-route  
             route="{{route}}" pattern="/:page" 
@@ -25,18 +29,19 @@ export class cmsContentImageTemplate extends PolymerElement {
             <nav>
            ${this._getContentAnchor}
             </nav>  
-            <article>               
-                <dom-repeat id="repeat" items="[[contents]]" as="item">
-                    <template>
-                        [[_slotElement(item, index)]]
-                        <slot name='article[[index]]'>
-                    </template>
-                </dom-repeat>
+            <article>   
+                ${this._slotElement}              
             </article>
         </main>    
         `
     }
-
+    static get _slotElement() {
+        return html`
+            <dom-repeat>
+                <template>
+                </template>
+            </dom-repeat>`
+    }
     static get _getAnchor() {
         let template = document.createElement('template')
         template.innerHTML = `              
@@ -76,6 +81,10 @@ export class cmsContentImageTemplate extends PolymerElement {
             },
             loading: {
                 type: String
+            },
+            slashed: {
+                type: Boolean,
+                value: false
             }
         }
     }
@@ -83,21 +92,14 @@ export class cmsContentImageTemplate extends PolymerElement {
     ready() {
         super.ready()
     }
+
     _slotElement(item, index) {
-        let template = html`
-         <cms-image>
-         </cms-image>`
-        template.content.children[0].slot = 'item' + index
-        template.content.children[0].src = item.url
-        template.content.children[0].alt = item.title
-        let clone = document.importNode(template)
-        this.appendChild(clone)
-    }
-    _cashlast(data) {
-        //  console.log(data)
-    }
-    _log(data) {
-        //  console.log(data)
+        if (this.childElementCount === 0) {
+            let template = html`*`
+            /*   template.content.children[0].setAttribute('slot', 'article' + index)
+               let clone = document.importNode(template.content, true)
+               this.appendChild(clone)*/
+        }
     }
 
     _getContent() {

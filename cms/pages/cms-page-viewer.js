@@ -30,6 +30,10 @@ class cmsPageViewer extends cmsViewerTemplate {
     _routePageChanged(route, page) {
         if (route.prefix === '/content/pages') {
             if (page !== undefined && 'page' in page) {
+                if (route.path === '') {
+                    this.routeData.page = ''
+                    page.page = ''
+                }
                 if (!page.page) {
                     this.page = 'home';
                 }
@@ -37,7 +41,6 @@ class cmsPageViewer extends cmsViewerTemplate {
                     this.page = 'add-category-pages';
                 }
                 else {
-                    console.log(page.page);
                     this.page = 'view404';
                 }
             }

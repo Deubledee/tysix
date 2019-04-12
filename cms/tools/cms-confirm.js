@@ -185,12 +185,12 @@ class cmsConfirm extends PolymerElement {
     }
     openConfirm(event) {
         if (this.confirm === false) {
-            this.title = this._cleanUnderscore(event.name)
-            this.method = event.method;
-            this.argument = event.argument
-            this.headderMsg = this[event.headderMsgKind] || event.headderMsgKind
-            this.headderMsgKind = event.headderMsgKind
-            this.type = this[event.type] || event.type
+            this.title = this._cleanUnderscore(event.detail.name)
+            this.method = event.detail.method;
+            this.argument = event.detail.argument || event
+            this.headderMsg = this[event.detail.headderMsgKind] || event.detail.headderMsgKind
+            this.headderMsgKind = event.detail.headderMsgKind
+            this.type = this[event.detail.type] || event.detail.type
             this.confirm = true
         } else {
             this.open = false

@@ -26,23 +26,23 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
     }
     static get _getBottom() {
         return html`
-           <section class="flexchildbotom">
+           <section class="flexchildbotom noFlex">
                <div class="flexleft">
                    <h3> [[title]] </h3>
                </div>
            </section>                        
                
-           <section class="flexchildbotom">
+           <section class="flexchildbotom noFlex">
                <div class="flexleft">
                    <h3> [[viewedit]] </h3>
                </div>
            </section>                        
-           <section class="flexchildbotom">
+           <section class="flexchildbotom noFlex">
                <div class="flexleft">
                    <h3> [[items]] #</h3>
                </div>
            </section>                         
-           <section class="flexchildbotom">
+           <section class="flexchildbotom noFlex">
                <div class="flexleft">
                    <h3> [[publishedCount]] #</h3>
                </div>
