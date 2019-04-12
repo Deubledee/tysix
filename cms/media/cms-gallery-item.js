@@ -38,6 +38,7 @@ class cmsGalleryItem extends cmsItemTemplate {
                 type: Array,
                 notify: true
             },
+            query: String,
             returnPath: {
                 type: String,
                 notify: true
@@ -106,7 +107,7 @@ class cmsGalleryItem extends cmsItemTemplate {
         }
     }
     default() {
-        window.history.pushState({}, null, `/media/images/view-images`);
+        window.history.pushState({}, null, `/media/images/view-images${location.search}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     editArticles() {

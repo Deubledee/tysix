@@ -10,7 +10,7 @@ class cmsImages extends cmsContentImageTemplate {
         let template = document.createElement('template')
         template.innerHTML = `
             <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-                <a id="reset" href="[[rootPath]]media/images">
+                <a id="reset" href="[[rootPath]]media/images[[Search]]">
                     <paper-icon-button  icon="arrow-back" aria-label="Go back">
                     </paper-icon-button>
                 </a>
@@ -48,6 +48,7 @@ class cmsImages extends cmsContentImageTemplate {
                             save-button="[[saveButton]]" 
                             reset-button="[[resetButton]]"
                             lang="[[lang]]" 
+                            query="[[query]]"
                             images="[[item]]">
                         </cms-image>
                     </template>
@@ -65,6 +66,11 @@ class cmsImages extends cmsContentImageTemplate {
             langs: {
                 type: Object,
                 value: {}
+            },
+            Search: {
+                type: String,
+                notify: true,
+                observer: '_log'
             },
             route: {
                 type: Object,
@@ -124,6 +130,7 @@ class cmsImages extends cmsContentImageTemplate {
         // console.log(query)
         if (Boolean(active) === true && Boolean(routeData.page) === true && routeData.page === "view-images") {
             this.slashed = false;
+            this.set('Search', location.search)
         }
         if (Boolean(active) === false && routeData.page === "view-images") {
             this.reset()
@@ -141,7 +148,6 @@ class cmsImages extends cmsContentImageTemplate {
     reset(event) {
         this.routeData.page = ''
         this.set('images', [{}]);
-        this.set('add', false);
         this.slashed = true;
         window.onbeforeunload = function () { };
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {

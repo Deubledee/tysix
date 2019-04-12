@@ -49,7 +49,8 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                     route="{{route}}" 
                     gallery="[[gallery]]" 
                     images="{{images}}" 
-                    add-image-to="[[addImageTo]]" 
+                    add-image-to="[[addImageTo]]"
+                    query="[[query]]"
                     return-path="{{returnPath}}"> 
                 </cms-gallery-item>
             </template>
