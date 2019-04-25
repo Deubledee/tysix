@@ -5,24 +5,6 @@ import '@polymer/paper-input/paper-input';
 import '../styles/cms-comon-style_v3';
 import '../../src/shop-image';
 export class cmsItemImageTemplate extends PolymerElement {
-    static get template() {
-        return html`  
-        <style include="cms-comon-style_v3">
-                :host {
-                    position: var(--app-default-position);
-                }
-                ${this._getStyles}
-        </style>           
-        <main class="flexH">
-            <div bottom>    
-                ${this._getMenu}  
-            </div>
-            <div table>
-            ${this._getItem}   
-            </div> 
-        <main> `;
-    }
-
     static get _getStyles() {
         return html`
         article[centerListItem]{
@@ -33,8 +15,9 @@ export class cmsItemImageTemplate extends PolymerElement {
         }
 
         div[table] , div[bottom]{
-            max-width: 75%;
+            max-width: 100%;
         } 
+
         div[bottom]{
             height: 35px;
             background-color: var(--app-tabs-color);
@@ -56,8 +39,30 @@ export class cmsItemImageTemplate extends PolymerElement {
         #reset{
             display: none
         }
-        `
+        div[bottom][size],
+        div[table][size]{
+            max-width: 75%; 
+        }`
     }
+    static get template() {
+        return html`  
+        <style include="cms-comon-style_v3">
+                :host {
+                    position: var(--app-default-position);
+                }
+            
+                ${this._getStyles}
+        </style>           
+        <main class="flexH">
+            <div bottom size$="[[size]]">    
+                ${this._getMenu}  
+            </div>
+            <div table size$="[[size]]" class="scroll">
+            ${this._getItem}   
+            </div> 
+        <main> `;
+    }
+
     static get _getMenu() {
         return html`                           
             <section class="flexchildbotom noFlex">
@@ -114,6 +119,11 @@ export class cmsItemImageTemplate extends PolymerElement {
             images: {
                 type: Object,
                 notify: true
+            },
+            size: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
             }
         };
     }

@@ -44,7 +44,6 @@ $_documentContainer.innerHTML = `
         font-weight: var(--app-default-font-weight)
     }
     main {
-        word-break: var(--app-default-word-break);
         height: var(--app-default-height)
     }
 

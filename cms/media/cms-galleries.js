@@ -1,13 +1,17 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
-import { dataBaseworker } from '../tools/dataBaseWorker';
+import { Setter } from '../tools/cms-element-set';
 import './cms-gallery-item';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-galleries')
+Consts.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+    </paper-spinner-lite>`
 class cmsGalleries extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html` 
             <a href="[[rootPath]]media/images/add-gallery">
                 <paper-tab name=" add-category-pages">
-                    [[Galleries]] galleries
+                    [[Galleries]]
                     <paper-icon-button-light>
                         <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
                     </paper-icon-button-light>
@@ -26,17 +30,17 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         return html`
         <section class="flexchildbotom noFlex">
             <div class="flexleft">
-                <h3> view </h3>
+                <h3> [[Gallery]] </h3>
             </div>
         </section>    
         <section class="flexchildbotom noFlex">
             <div class="flexleft">
-                <h3> view/edit </h3>
+                <h3> [[viewEdit]] </h3>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
             <div class="flexleft">
-                <h3> remove </h3>
+                <h3> [[remove]] </h3>
             </div>
         </section>  
         `
@@ -58,44 +62,44 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         `}
     static get _getNavside() {
         return html`
-        <!--dom-repeat repeat items="[[info]]" as="detail">
-            <template-->
+        <dom-repeat repeat items="[[galleries]]" as="detail">
+            <template>
                 <div class="flexsidecenter">
                     <aside>
                         <span>
-                            Info
+                            [[info]]
                         </span>
                     </aside>
                 </div>
                 <div class="navsideleft">
                     <aside>
                         <span>
-                        categorycount
+                        [[datecreated]]
                         </span>
                     </aside>
                 </div>
                 <div class="navsideright">
                     <aside>
                         <span>
-                        <b> detail.categoryCount </b>
+                        <b> detail.datecreated </b>
                         </span>
                     </aside>
                 </div>
                 <div class="navsideleft">
                     <aside>
                         <span>
-                        Published
+                        [[Published]]
                         </span>
                     </aside>
                     <aside>
                         <span>
-                        categorypages
+                        [[categorypages]]
                         </span>
                     </aside>
                 </div>
                 <div rightSide>                            
-                    <!--dom-repeat repeat items="[[detail.published]]" as="published">
-                        <template-->
+                    <dom-repeat repeat items="[[detail.published]]" as="published">
+                        <template>
                             <section>
                                 <aside>
                                     <span>
@@ -108,23 +112,24 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                                     </span>
                                 </aside>
                             </section>
-                        <!--/template>
-                    </dom-repeat-->
+                        </template>
+                    </dom-repeat>
                 </div>
-            <!--/template>
-        </dom-repeat-->
+            </template>
+        </dom-repeat>
         `
     }
     static get is() { return 'cms-galleries'; }
 
     static get properties() {
         return {
-            DBW: {
+            lang: {
+                type: String,
+                observer: '__changeLang'
+            },
+            langs: {
                 type: Object,
-                value: function () {
-                    return new dataBaseworker()
-                },
-                notify: true
+                value: {}
             },
             returnPath: {
                 type: String,
@@ -152,15 +157,24 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             }
         }
     }
-
-    ready() {
-        super.ready()
-        this.getImageGalleries(true)
-    }
     static get observers() {
         return [
             '_routePageChanged(routeData, query, active)'
         ];
+    }
+    ready() {
+        super.ready()
+        Consts.clone(this)
+        Consts.assets.then((querySnapshot) => {
+            let style = querySnapshot.data();
+            Consts.setLangObject.call(this, style);
+        }).catch(function (error) {
+            console.error("Error reteaving assets: ", error);
+        });
+        this.getImageGalleries(true)
+    }
+    __changeLang() {
+        Consts.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
@@ -174,48 +188,16 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             this.add = false
         }
     }
-    __changeLang() {
-        try {
-            if (this.langs[this.lang]) {
-                let obj = this.langs[this.lang];
-                for (let par in obj) {
-                    if (Boolean(this[par]) === true) {
-                        this.set(par, obj[par])
-                    } else {
-                        this.set(par, '');
-                        this.set(par, obj[par]);
-                    }
-                }
-            }
-        }
-        catch (err) {
-            console.error(err)
-        }
-    }
-    _setLangObject(langs) {
-        try {
-            for (let par in langs) {
-                if (par !== 'styles') {
-                    this.langs[par] = langs[par].pop();
-                }
-            }
-            this.__changeLang();
-        }
-        catch (err) {
-            console.error(err)
-        }
-    }
-
     eventFunction(event) {
         this.set('galleries', event)
     }
-
     getImageGalleries(data) {
         if (data === true || data === 'true') {
-            this.DBW.getMediaGalleries((done) => {
+            Consts._DBW.getMediaGalleries((done) => {
                 this.eventFunction(done)
             }, true)
         }
+        this.removeChild(this.children[0])
     }
     log(data) {
         console.log(data)

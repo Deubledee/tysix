@@ -1,6 +1,6 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template.js';
-import '@polymer/paper-spinner/paper-spinner.js';
+import { dataBaseworker } from '../tools/dataBaseWorker';
 class cmsArticlesViewer extends cmsViewerTemplate {
   static get _getSilentAnchor() {
     return html`  
@@ -32,41 +32,36 @@ class cmsArticlesViewer extends cmsViewerTemplate {
       '_routePageChanged(route, routeData, query)'
     ];
   }
-
   ready() {
     super.ready();
     this._routePageChanged(this.routeData);
 
   }
-
   _routePageChanged(route, page) {
     if (route.prefix === '/content/articles') {
-      // console.log(route, page, this.page)
       if (page !== undefined && 'page' in page) {
         if (route.path === '') {
-          console.log('/content/articles', route, page)
-          //  this.routeData.page = ''
+          this.routeData.page = ''
           page.page = ''
         }
         if (!page.page) {
           this.page = 'home';
+        } else
+          if (['add-articles', 'edit-articles'].indexOf(page.page) !== -1) {
+            this.page = 'add-edit-articles';
+          } else
+            if (['view-articles'].indexOf(page.page) !== -1) {
+              this.page = page.page;
+            }
+            else {
+              this.page = 'view404';
+            }
+      } else
+        if (page instanceof Object === true) {
+          this.page = 'home';
         }
-        else if (['add-articles', 'edit-articles'].indexOf(page.page) !== -1) {
-          this.page = 'add-edit-articles';
-        }
-        else if (['view-articles'].indexOf(page.page) !== -1) {
-          this.page = page.page;
-        }
-        else {
-          this.page = 'view404';
-        }
-      }
-      else if (page instanceof Object === true) {
-        this.page = 'home';
-      }
     }
   }
-
   _pageChanged(page) {
     if (page !== undefined) {
       if (page === 'home') {

@@ -99,7 +99,7 @@ class cmsGalleryItem extends cmsItemTemplate {
         return gall.gallery;
     }
     _showImages() {
-        this.set('images', []);
+        this.set('images', [])
         this.set('images', this.gallery)
         this.default()
         if (this[this.addImageTo] !== undefined) {

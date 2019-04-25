@@ -1,8 +1,12 @@
 
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Setter } from '../tools/cms-element-set';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-image')
 class cmsImage extends cmsItemImageTemplate {
-
     static get _getItem() {
         return html` 
         <dom-repeat repeat items="[[content]]" as="item">
@@ -23,32 +27,32 @@ class cmsImage extends cmsItemImageTemplate {
         return html`                         
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">   
-                    <h4>  image   </h4>     
+                    <h4>  [[image]]   </h4>     
                 </div>  
             </section>
 
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">   
                     <h4> 
-                    title    </h4>     
+                    [[title]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">   
                     <h4> 
-                    date created    </h4>     
+                    [[dateCreated]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">  
                     <h4> 
-                    gallery     </h4>     
+                    [[Gallery]]     </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">  
                     <h4> 
-                    url      </h4>     
+                    [[url]]      </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
@@ -62,10 +66,18 @@ class cmsImage extends cmsItemImageTemplate {
 
     static get properties() {
         return {
+            lang: {
+                type: String,
+                notify: true,
+                observer: '__changeLang'
+            },
+            langs: {
+                type: Object,
+                value: {}
+            },
             addTo: {
                 type: Boolean,
-                value: false,
-                observer: '_setLabel'
+                value: false
             },
             add: {
                 type: String,
@@ -78,6 +90,12 @@ class cmsImage extends cmsItemImageTemplate {
             images: {
                 type: Array,
                 notify: true
+            },
+            toggleSize: {
+                type: Boolean,
+                notify: true,
+                value: false,
+                observer: 'toggle',
             },
             returnPath: {
                 type: String,
@@ -100,14 +118,26 @@ class cmsImage extends cmsItemImageTemplate {
     }
     ready() {
         super.ready()
+        Consts.assets.then((querySnapshot) => {
+            let style = querySnapshot.data();
+            Consts.setLangObject.call(this, style);
+        }).catch(function (error) {
+            console.error("Error reteaving assets: ", error);
+        });
+    }
+    toggle(data) {
+        this.size = data
+    }
+    __changeLang() {
+        Consts.changeLang.call(this)
+        this._setLabel(this.addTo)
     }
     _setLabel(data) {
-        console.log(data)
         if (data === true) {
-            this.delete = ''
+            this.set('delete', '')
         }
         if (data === false) {
-            this.add = ''
+            this.set('add', '')
         }
     }
     _placeEventMethod(data) {
@@ -115,6 +145,7 @@ class cmsImage extends cmsItemImageTemplate {
     }
     showPage() {
         let string = window.btoa(JSON.stringify(this.toContent))
+        this.resetButton.click()
         window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
         window.dispatchEvent(new CustomEvent('location-changed'));
         this.saveButton.classList.add('diferent')
@@ -123,7 +154,7 @@ class cmsImage extends cmsItemImageTemplate {
         this.image = Array()
     }
     _fromAray(data) {
-        let url, arr = [], obj2;
+        let arr = [], obj2;
         if (data instanceof Array === true && data.length >= 1) {
             let t = new Date();
             for (let i = 0; i < data.length; i++) {
@@ -131,22 +162,20 @@ class cmsImage extends cmsItemImageTemplate {
                 arr.push(obj2);
             }
         }
-        else {
-            url = '';
-            obj2 = { url: url, title: '' };
-            arr.push(obj2);
-        }
         return arr;
     }
     getImage(data) {
-        console.log('getImage', data)
         let arr
-        if ('image' in data) {
-            arr = this._fromAray(data.image);
-        } else {
-            arr = this._fromAray([data])
+        if (data !== undefined) {
+            if (data['image']) {
+                arr = this._fromAray(data.image);
+            } else if (data instanceof Array) {
+                arr = this._fromAray(data)
+            } else {
+                arr = this._fromAray([data])
+            }
+            return arr
         }
-        return arr || []
     }
     _deleteImg(data) {
         console.log(data)

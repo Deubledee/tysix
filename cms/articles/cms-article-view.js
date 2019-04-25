@@ -1,31 +1,134 @@
 
 import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsContentImageTemplate } from '../templates/cms-content-image-template';
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import './cms-article';
-import './cms-article-item'
-class cmsArticleView extends cmsContentImageTemplate {
+import './cms-article-item';
+import { Setter } from '../tools/cms-element-set';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-article-view')
+class cmsArticleView extends cmsMiddlePageTemplate {
 
-    static get _getAnchor() {
-        let template = document.createElement('template')
-        template.innerHTML = `
+    static get _getShoutAnchor() {
+        return html`        
             <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
                 <a id="reset" href="[[rootPath]]content/articles">
                     <paper-icon-button  icon="arrow-back" aria-label="Go back">
                     </paper-icon-button>
                 </a>
             </iron-selector>`
-        return template
     }
-    static get _getContentAnchor() {
+    static get _getSilentAnchor() {
         return html`
-        <a href="[[rootPath]][[url]]">
-            <paper-tab name=" add-category-pages">
-                [[articles]] <span class="spanpadding"> articles </span>
-                <paper-icon-button-light>
-                    <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button-light>
-            </paper-tab>
-        </a>
+        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
+            <a href="[[rootPath]][[url]]">
+                <paper-tab name=" add-category-pages">
+                    <span class="spanpadding"> 
+                        [[articles]] 
+                    </span>
+                    <paper-icon-button-light>
+                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+                    </paper-icon-button-light>
+                </paper-tab>
+            </a>
+        </iron-selector>
+        `
+    }
+
+    static get _getBottom() {
+        return html` `
+    }
+
+    static get _getTable() {
+        return html`
+        <div table> 
+            <dom-repeat items="[[contents]]" as="item">
+                <template>
+                    <cms-article article="[[item]]" route="[[routeData]]" lang="[[lang]]">
+                    </cms-article>
+                </template>
+            </dom-repeat>
+        </div>    `
+    }
+
+    static get _getNavside() {
+        return html`
+        <dom-repeat repeat items="[[info]]" as="detail">
+            <template>
+                <div class="flexsidecenter">
+                    <aside>
+                        <span>
+                            [[Info]]
+                        </span>
+                    </aside>
+                </div>
+                <div class="navsideleft">
+                    <aside>
+                        <span>
+                        [[Category]]
+                        </span>
+                    </aside>
+                    <aside>
+                        <span>
+                        [[articlecount]]
+                        </span>
+                    </aside>
+                    <aside>
+                        <span>
+                        [[Type]]
+                        </span>
+                    </aside>
+                </div>
+                <div class="navsideright">
+                    <aside>
+                        <span>
+                        <b> [[detail.id]]</b>
+                        </span>
+                    </aside>
+                    <aside>
+                        <span>
+                        <b> [[detail.items]]</b>
+                        </span>
+                    </aside>
+                    <aside>
+                        <span>
+                        <b> [[detail.type]]</b>
+                        </span>
+                    </aside>
+                </div>
+                <div class="navsideleft">
+                    <aside>
+                        <span>
+                        [[Published]]
+                        </span>
+                    </aside>
+                </div>
+                <div class="navsideright">
+                    <aside>
+                        <span>
+                        <b> [[detail.publishedCount]] </b>
+                        </span>
+                    </aside>
+                </div>
+                <div rightSide>                            
+                    <dom-repeat repeat items="[[detail.published]]" as="published">
+                        <template>
+                            <section>
+                                <aside>
+                                    <span>
+                                        [[published.article]]
+                                    </span>
+                                </aside>
+                                <aside>
+                                    <span>
+                                        [[published.datePublished]]
+                                    </span>
+                                </aside>
+                            </section>
+                        </template>
+                    </dom-repeat>
+                </div>
+            </template>
+        </dom-repeat>
         `
     }
     static get is() { return 'cms-article-view'; }
@@ -34,7 +137,7 @@ class cmsArticleView extends cmsContentImageTemplate {
             lang: {
                 type: String,
                 notify: true,
-                // observer: '__changeLang'
+                observer: '__changeLang'
             },
             langs: {
                 type: Object,
@@ -44,17 +147,15 @@ class cmsArticleView extends cmsContentImageTemplate {
                 type: Object,
                 notify: true
             },
-            lang: {
-                type: Object,
-                notify: true,
-            },
             user: {
                 type: Object,
                 notify: true,
             },
-            removed: {
-                type: Boolean,
-                value: false
+            contents: {
+                type: Array,
+                notify: true,
+                value: new Array(),
+                observer: '_killSpinner'
             },
             url: {
                 type: String,
@@ -64,33 +165,32 @@ class cmsArticleView extends cmsContentImageTemplate {
                 type: Object,
                 notify: true,
                 value: {
-                    author: "",
-                    brand: "",
-                    category: "",
-                    dateAdded: "",
-                    description: "",
+                    contentText:
+                        [{ description: "" }],
                     image: [],
-                    lang: "",
-                    name: "",
-                    type: "",
-                    price: "",
-                    published: "NP",
-                    publishedBy: [{
+                    info: [{
                         author: "",
-                        date: "", "uid": ""
-                    }], stock: "",
-                    title: "",
-                    nPublishedBy: [{
-                        author: "",
-                        date: "", "uid": ""
+                        dateAdded: "", publishedBy: [{
+                            author: "",
+                            date: "",
+                            uid: ""
+                        }],
+                        unPublishedBy: [{
+                            author: "",
+                            date: "",
+                            uid: ""
+                        }]
+                    }],
+                    items: [{
+                        brand: "",
+                        category: "",
+                        lang: "",
+                        price: "",
+                        stock: "",
+                        title: "",
+                        type: ""
                     }]
                 }
-            },
-            contents: {
-                type: Array,
-                notify: true,
-                value: new Array()
-                // observer: '_cashlast'
             }
         }
     }
@@ -99,61 +199,56 @@ class cmsArticleView extends cmsContentImageTemplate {
             '_routePageChanged(routeData, query, active)'
         ];
     }
-
     ready() {
         super.ready()
+        Consts.assets.then((querySnapshot) => {
+            let langs = querySnapshot.data();
+            Consts.setLangObject.call(this, langs);
+        }).catch(function (error) {
+            console.error("Error reteaving assets: ", error);
+        });
         this.$.reset.addEventListener('click', (this._removeInnerHTML).bind(this))
         window.addEventListener('reset', (this._removeInnerHTML).bind(this))
-
     }
-
+    __changeLang() {
+        Consts.changeLang.call(this)
+    }
     _routePageChanged(routeData, query, active) {
         if (Boolean(active) === true && Boolean(routeData.page) === true && routeData.page === "view-articles") {
             if ('content' in query) {
                 this._setContent(query.content, query)
+                console.log
             }
-        }
-        if (Boolean(active) === false && routeData.page === "edit-articles") {
-            console.log("no view-articles")
         }
     }
     _setContent(cont, query) {
-        let content = JSON.parse(atob(cont))
+        let content = JSON.parse(atob(cont)), info
+        info = content.info
+        content = content.content
         if (content instanceof Array === true) {
-            this.obj.type = query.type
-            this.obj.category = query.category
-            let obj = btoa(JSON.stringify([this.obj]))
+            this.obj.items[0].type = query.type
+            this.obj.items[0].category = query.category
+            this.obj.info[0].author = this.user.displayName
+            let obj = btoa(JSON.stringify(this.obj))
             this.url = `content/articles/add-articles?content=${obj}&add=true`
             this.set('contents', [])
             this.set('contents', content)
+            this.set('info', [])
+            this.set('info', info)
         }
         this.set('add', (query.add === 'true'));
         this.slashed = false;
-        this.removed = false;
     }
-    _slotElement(item, index) {
-        if (this.childElementCount === 0) {
-            let template = html``
-            template.content.children[0].setAttribute('slot', 'article' + index)
-            let clone = document.importNode(template.content, true)
-            this.appendChild(clone)
+    _killSpinner(data) {
+        if (data.length > 0 && this.childElementCount > 0 && this.children[0].getAttribute('slot') === 'spinner') {
+            this.removeChild(this.children[0])
         }
-    }
-
-    static get _slotElement() {
-        return html`
-            <dom-repeat items="[[contents]]" as="item">
-                <template>
-                    <cms-article article="[[item]]" route="[[routeData]]" lang="[[lang]]">
-                    </cms-article>
-                </template>
-            </dom-repeat>`
     }
     _removeInnerHTML() {
         this.set('contents', []);
+        this.set('info', [])
         this.set('add', false);
         this.slashed = true
-        //this.innerHTML = ''
         window.onbeforeunload = function () { };
     }
 

@@ -38,53 +38,49 @@ export class cmsImageItem extends cmsItemTemplate {
     }
     ready() {
         super.ready();
-        this.addEventListener('reset-html', (this.reset).bind(this))
+        window.addEventListener('reset', (this.reset).bind(this))
+        window.addEventListener('reset-html', (this.reset).bind(this))
     }
-    log(data) {
-        console.log('log from cms-article-viewer', data);
-    }
-
     _putRow(item) {
-        console.log(item)
         if (item.hasOwnProperty('title')) {
             let template = document.createElement('template')
             let str = `
-        <article centerImageItem>
-            <div class="paddingSmall">
-                <shop-image
-                    class="bigger"
-                    aria-label="image"
-                    title="${this._getParameter(item.title)}" 
-                    src="${this._getParameter(item.url)}" 
-                    alt="${this._getParameter(item.title)}">
-                </shop-image> 
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.title)}"> 
-                ${this._getParameter(item.title)}
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.dateAdded)}">
-                ${this._getParameter(item.dateAdded)}  
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.gallery)}"> 
-               <h3> ${this._getParameter(item.gallery)} </h3>
-                </span>
-            </div>
-            <div class="paddingSmall">
-                <span title="${this._getParameter(item.url)}"> 
-                ${this._getParameter(item.url)} 
-                </span>  
-            </div>
-            <div class="paddingSmall">
-                <paper-button title="${this._getTitle(this.add)}">
-                ${this._getIcon(this.add)}
-                </paper-button>
-            </div>
-        </article> `
+         <article centerImageItem>
+             <div>
+                 <shop-image
+                     class="bigger"
+                     aria-label="image"
+                     title="${this._getParameter(item.title)}" 
+                     src="${this._getParameter(item.url)}" 
+                     alt="${this._getParameter(item.title)}">
+                 </shop-image> 
+             </div>
+             <div>
+                 <paper-button title="${this._getParameter(item.title)}"> 
+                 ${this._getParameter(item.title)}
+                 </paper-button>
+             </div>
+             <div>
+                 <paper-button title="${this._getParameter(item.dateAdded)}">
+                 ${this._getParameter(item.dateAdded)}  
+                 </paper-button>
+             </div>
+             <div class="paddingSmall">
+                 <h3 title="${this._getParameter(item.gallery)}"> 
+                     ${this._getParameter(item.gallery)} 
+                 </h3>
+             </div>
+             <div>
+                 <paper-button title="${this._getParameter(item.url)}"> 
+                 ${this._getParameter(item.url)} 
+                 </paper-button>  
+             </div>
+             <div>
+                 <paper-button title="${this._getTitle(this.add)}">
+                 ${this._getIcon(this.add)}
+                 </paper-button>
+             </div>
+         </article> `
             template.innerHTML = str
             template.content.children[0].setAttribute('slot', 'table')
             var clone = document.importNode(template.content, true);
@@ -100,10 +96,7 @@ export class cmsImageItem extends cmsItemTemplate {
         }
     }
     reset() {
-        for (let i = 0; i < this.childElementCount; i++) {
-            this.removeChild(this.children[i])
-        }
-        console.log(this.children)
+        this.innerHTML = ''
     }
     _getIcon(add) {
         if (add === true) {
@@ -118,9 +111,9 @@ export class cmsImageItem extends cmsItemTemplate {
         }
     }
     _addImage(image) {
-        console.log(image, this.toContent)
+        console.log(this.toContent)
         if (this.toContent instanceof Array) {
-            this.toContent[0].image.push(image)
+            this.toContent.image.push(image)
         } else {
             this.toContent.image.push(image)
         }

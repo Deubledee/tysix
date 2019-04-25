@@ -1,13 +1,13 @@
-import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
-import { dataBaseworker } from '../tools/dataBaseWorker';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { Setter } from '../tools/cms-element-set';
 import './cms-article-list-item';
-
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-page-list-type', __DEV);
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-page-list-type')
+Consts.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+    </paper-spinner-lite>`
 class cmsArticleListType extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`        
@@ -51,18 +51,20 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
     }
     static get _getTable() {
         return html`
+        <div table class="scroll"> 
              <dom-repeat items="[[pages]]" as="page">
                  <template strip-whitespace>
                      [[putElement(index, page)]]
                      <slot name="item[[index]]"></slot>
                  </template>
              </dom-repeat>
+        </div>     
              `}
 
     static get _getNavside() {
         return html`
-           <!--dom-repeat repeat items="[[info]]" as="detail">
-               <template-->
+           <dom-repeat repeat items="[[inForm]]" as="detail">
+               <template>
                    <div class="flexsidecenter">
                        <aside>
                            <span>
@@ -87,23 +89,23 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
                    <div class="navsideleft">
                        <aside>
                            <span>
-                           [[Published]]
+                           [[publishedarticle]]
                            </span>
                        </aside>
                        <aside>
                            <span>
-                           [[categorypages]]
+                           [[datepublished]]
                            </span>
                        </aside>
                    </div>
                    <div rightSide>                            
-                       <!--dom-repeat repeat items="[[detail.published]]" as="published">
-                           <template-->
+                       <dom-repeat repeat items="[[detail.published]]" as="published">
+                           <template>
                                <section>
                                    <aside>
-                                       <span>
+                                       <div published$="[[_getPublished(published.page)]]">
                                            [[published.page]]
-                                       </span>
+                                       </div>
                                    </aside>
                                    <aside>
                                        <span>
@@ -111,66 +113,52 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
                                        </span>
                                    </aside>
                                </section>
-                           <!--/template>
-                       </dom-repeat-->
+                           </template>
+                       </dom-repeat>
                    </div>
-               <!--/template>
-           </dom-repeat-->
+               </template>
+           </dom-repeat>
            `
     } /**/
     static get is() { return 'cms-article-list-type'; }
     static get properties() {
         return {
-            DBW: {
+            lang: {
+                type: String,
+                observer: '__changeLang'
+            },
+            langs: {
                 type: Object,
-                value: function () {
-                    return new dataBaseworker();
-                },
-                notify: true
-            }
+                value: {}
+            },
         }
     }
     ready() {
         super.ready();
-        _STYLES.then((querySnapshot) => {
+        Consts.clone(this)
+        Consts.assets.then((querySnapshot) => {
             let style = querySnapshot.data();
-            this._setLangObject(style);
+            Consts.setLangObject.call(this, style);
         }).catch(function (error) {
             console.error("Error reteaving assets: ", error);
         });
         this._getArticles()
         window.addEventListener('reset-artlist-type', (this._contentChanged.bind(this)));
     }
-
     __changeLang() {
-        if (this.langs[this.lang]) {
-            let obj = this.langs[this.lang];
-            for (let par in obj) {
-                this.set(par, obj[par]);
-            }
-        }
-    }
-    _setLangObject(langs) {
-        for (let par in langs) {
-            if (par !== 'styles') {
-                this.langs[par] = langs[par].pop();
-            }
-        }
-        this.__changeLang();
+        Consts.changeLang.call(this)
     }
     _contentChanged() {
         this.set('pages', [])
         this.innerHTML = ''
     }
     _getArticles() {
-        this.DBW.askAllArticles((data) => {
+        Consts._DBW.askAllArticles((data) => {
             this._setAll(data);
-        })
+        }, Consts.__DEV)
     }
     _setAll(data) {
-        let arr = [], arr2 = [];
-        this.set('info', arr);
-        this.pages = '';
+        let arr = [], arr2 = []
         for (let i = 0; i < data.length; i++) {
             if ('categoryCount' in data[i]) {
                 arr.push(data[i]);
@@ -179,8 +167,11 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
                 arr2.push(data[i]);
             }
         }
-        this.set('info', arr);
+        this.inForm = []
+        this.set('inForm', arr);
+        this.pages = ''
         this.set('pages', arr2);
+        this.removeChild(this.children[0])
     }
     putElement(index, page) {
         let template = html`

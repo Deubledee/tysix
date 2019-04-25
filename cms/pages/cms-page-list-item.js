@@ -20,13 +20,6 @@ class cmsPageListItem extends cmsItemTemplate {
     static get is() { return 'cms-page-list-item'; }
     static get properties() {
         return {
-            DBW: {
-                type: Object,
-                value: function () {
-                    return new dataBaseworker();
-                },
-                notify: true
-            }
         };
     }
     ready() {
@@ -50,33 +43,32 @@ class cmsPageListItem extends cmsItemTemplate {
     }
     _putRow(data) {
         let template = html`
-        <article centerListItem slot="table">
-            <div class="padding">
-
-            </div>
-            <div>
-                <paper-button>
-                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                </paper-button> 
-            </div>  
-            <div class="padding">
-                
-            </div>  
-            <div>
-                <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>        
-            </div>
-        </article>`;
+           <article centerListItem slot="table">
+               <div class="padding">   
+               </div>
+               <div>
+                   <paper-button>
+                       <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                       <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                   </paper-button> 
+               </div>  
+               <div class="padding">
+                   
+               </div>  
+               <div>
+                   <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>        
+               </div>
+           </article>`;
         template.content.children[0].
             children[0].innerHTML = `
-            <span> 
-                ${this._getPagename(data.title)}
-            </span>`;
+               <span> 
+                   ${data.items[0].title}
+               </span>`;
         template.content.children[0].
             children[2].innerHTML += `
-                <span class="${this._getPagename(data.published)}"> 
-                   <paper-button> ${this._getPagename(data.published)} </paper-button>
-                </span>`;
+                   <span class="${data.items[0].published}"> 
+                      <paper-button> ${data.items[0].published} </paper-button>
+                   </span>`;
         let clone = document.importNode(template.content, true);
         this.append(clone);
         this.children[0].children[1].

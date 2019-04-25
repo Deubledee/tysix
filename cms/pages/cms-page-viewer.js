@@ -1,9 +1,7 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template';
 class cmsPageViewer extends cmsViewerTemplate {
-
     static get is() { return 'cms-page-viewer'; }
-
     static get observers() {
         return [
             '_routePageChanged(route, routeData, query)'
@@ -36,13 +34,12 @@ class cmsPageViewer extends cmsViewerTemplate {
                 }
                 if (!page.page) {
                     this.page = 'home';
-                }
-                else if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
-                    this.page = 'add-category-pages';
-                }
-                else {
-                    this.page = 'view404';
-                }
+                } else
+                    if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
+                        this.page = 'add-category-pages';
+                    } else {
+                        this.page = 'view404';
+                    }
             }
             else if (page instanceof Object === true) {
                 this.page = 'home';

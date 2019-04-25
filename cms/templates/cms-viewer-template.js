@@ -1,8 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/paper-tabs/paper-tabs';
-import '@polymer/paper-tabs/paper-tab';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-selector/iron-selector';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 export class cmsViewerTemplate extends PolymerElement {
     static get template() {
         return html`

@@ -55,7 +55,7 @@ class cmsMedia extends cmsTopPageTemplate {
           <cms-images slot="images" id="images" 
             route="{{subroute}}" 
             lang="[[lang]]" 
-            images="{{Imags}}" 
+            image-data="{{Imags}}" 
             add="[[add]]" 
             contentto="[[contentto]]" 
             return-path="[[returnPath]]">
@@ -103,8 +103,7 @@ class cmsMedia extends cmsTopPageTemplate {
       },
       Imags: {
         type: Array,
-        notify: true,
-        observer: '_log'
+        notify: true
       },
       add: {
         type: Boolean,

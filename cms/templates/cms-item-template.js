@@ -23,12 +23,6 @@ export class cmsItemTemplate extends PolymerElement {
                 type: Object,
                 notify: true,
                 observer: '_putRow'
-            },
-            noItem: {
-                type: Array,
-                value: [{
-                    "image": [],
-                }]
             }
         };
     }

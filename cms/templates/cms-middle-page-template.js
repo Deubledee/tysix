@@ -13,6 +13,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             active="{{active}}">
         </app-route>
             ${this._getSilentAnchor}
+           <slot name="spinner"></slot>
         <main class="flex">
             <div class="navbottom">
                 <nav top>
@@ -27,12 +28,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 <div bottom>
                     ${this._getBottom}
                 </div>
-                <div table>
                     ${this._getTable}
-                </div>                
-                <div content id="content">
-                    <slot name="content"></slot>
-                </div>
             </div>
             <nav class="navside">
              ${this._getNavside}
@@ -41,9 +37,20 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         `;
     }
     static get is() { return 'cms-middle-page-template'; }
+    static get _getTable() {
+        return html`
+            <div table class="scroll"> 
+                <dom-repeat items="[[pages]]" as="page">
+                    <template strip-whitespace>
+                        [[putElement(index, page)]]
+                        <slot name="item[[index]]"></slot>
+                    </template>
+                </dom-repeat>
+            </div>
+        `}
     static get _getShoutAnchor() {
         return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=eyJhdXRob3IiOiIiLCJkYXRlQ3JlYXRlZCI6IiIsImRhdGVQdWJsaXNoZWQiOiIiLCJpZCI6IiIsImltYWdlIjpbXSwibGFuZyI6IiIsImxhc3RNb2RpZmllZCI6W10sIm5hbWUiOiIiLCJwbGFjZWhvbGRlciI6IiIsInB1Ymxpc2hlZCI6IiIsInB1Ymxpc2hlZEJ5IjpbXSwidGl0bGUiOiIiLCJ0eXBlIjoiIiwidWlkIjoiIiwidW5QdWJsaXNoZWRCeSI6W119&add=true">
+        <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">
             <paper-tab name=" add-category-pages">
                 [[categorypages]]
                 <paper-icon-button-light>
@@ -86,19 +93,10 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         </section>
         `
     }
-    static get _getTable() {
-        return html`
-        <dom-repeat items="[[pages]]" as="page">
-            <template strip-whitespace>
-                [[putElement(index, page)]]
-                <slot name="item[[index]]"></slot>
-            </template>
-        </dom-repeat>
-        `}
 
     static get _getNavside() {
         return html`
-        <dom-repeat repeat items="[[info]]" as="detail">
+        <dom-repeat repeat items="[[inForm]]" as="detail">
             <template>
                 <div class="flexsidecenter">
                     <aside>
@@ -124,12 +122,12 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 <div class="navsideleft">
                     <aside>
                         <span>
-                        [[Published]]
+                        [[publishedpage]]
                         </span>
                     </aside>
                     <aside>
                         <span>
-                        [[categorypages]]
+                        [[datepublished]]
                         </span>
                     </aside>
                 </div>
@@ -138,9 +136,9 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                         <template>
                             <section>
                                 <aside>
-                                    <span>
+                                    <div published$="[[_getPublished(published.page)]]">
                                         [[published.page]]
-                                    </span>
+                                    </div>
                                 </aside>
                                 <aside>
                                     <span>
@@ -157,19 +155,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     static get properties() {
         return {
-            lang: {
-                type: String,
-                observer: '__changeLang'
-            },
-            langs: {
-                type: Object,
-                value: {}
-            },
             pages: {
-                type: Array,
-                notify: true
-            },
-            info: {
                 type: Array,
                 notify: true
             },
@@ -186,6 +172,9 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     ready() {
         super.ready();
+    }
+    _getPublished(data) {
+        return (data === 'NPP' || data === 'NPA') ? 'NP' : 'p'
     }
 }
 customElements.define(cmsMiddlePageTemplate.is, cmsMiddlePageTemplate);

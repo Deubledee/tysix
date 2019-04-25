@@ -56,13 +56,13 @@ class cmsArticleListItem extends cmsItemTemplate {
                 </paper-button> 
             </div>  
             <div class="padding">                
-                <span class="${this._getPublished(data)}"> 
-                    <paper-button> ${this._getPublished(data.items)} </paper-button>
+                <span> 
+                    <paper-button> ${this._getPublished(data.info[0].items)} </paper-button>
                 </span>
             </div>   
             <div class="padding">                
                 <span class="${this._getPublished(data)}"> 
-                    <paper-button> ${this._getPublished(data.publishedCount)} </paper-button>
+                    <paper-button> ${this._getPublished(data.info[0].publishedCount)} </paper-button>
                 </span>
             </div> 
         </article>`;
@@ -75,7 +75,7 @@ class cmsArticleListItem extends cmsItemTemplate {
                 bind(this));
     }
     _getPagename(cats) {
-        return cats.id.split('_').join(' ')
+        return cats.info[0].id.split('_').join(' ')
     }
     _getPublished(cats) {
         return cats;
@@ -87,8 +87,8 @@ class cmsArticleListItem extends cmsItemTemplate {
         this.$.spinner.active = !this.$.spinner.active;
     }
     showPage() {
-        let string = this.page.items > 0 ? window.btoa(`${JSON.stringify(this.page.content)}`) : window.btoa(`${JSON.stringify(this.noItem)}`)
-        window.history.pushState({}, null, `${this.rootPath}content/articles/view-articles?content=${string}&type=${this.page.type}&category=${this.page.id}`);
+        let string = window.btoa(`${JSON.stringify(this.page)}`)
+        window.history.pushState({}, null, `${this.rootPath}content/articles/view-articles?content=${string}&type=${this.page.info[0].type}&category=${this.page.info[0].id}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {

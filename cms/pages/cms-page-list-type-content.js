@@ -1,15 +1,14 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { dataBaseworker } from '../tools/dataBaseWorker';
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-page-list-type-content', true);
+import { Setter } from '../tools/cms-element-set';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-page-list-type-content')
 class cmsPageListTypeContent extends cmsContentTemplate {
 
     static get _getAnchor() {
         return html`
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a id="anchor" on-click="_reset">
+        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
+            <a id="anchor" on-click="reset">
                 <paper-icon-button icon="arrow-back" aria-label="Go back">
                 </paper-icon-button>
             </a>
@@ -17,111 +16,83 @@ class cmsPageListTypeContent extends cmsContentTemplate {
     }
     static get _getContentItems() {
         return html`
-        <dom-repeat repeat items="[[content]]" as="cat">
-            <template>
-                <div container>
-                    <div bottom>
-                        <section class="flexchildbotom">
-                            <div class="flexleft" name="title">
-                                <paper-button on-click="editTo" name="title">
-                                    [[pagetitle]]
-                                </paper-button>
-                                <paper-button name="title"  value="title" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div name="title">
-                                    <paper-button on-click="edit" name="title" icon="editor:mode-edit" aria-label="mode-edit">
-                                        <h4 class="contenth4" title="title"> [[cat.title]]</h4> 
-                                    </paper-button>
-                                    <paper-input hidden name="title" aria-label="title" value="{{cat.title}}" on-input="inputing"
-                                     placeholder="[[cat.title]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>                        
-                        <section class="flexchildbotom">
-                            <div class="flexleft" name="lang">
-                                <paper-button on-click="editTo" name="lang">
-                                    [[pagelang]]
-                                </paper-button>
-                                <paper-button name="lang"  value="lang" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div name="lang">
-                                    <paper-button on-click="edit" name="lang" icon="editor:mode-edit" aria-label="mode-edit">
-                                        <h4 class="contenth4" title="lang"> [[cat.lang]]</h4> 
-                                    </paper-button>
-                                    <paper-input hidden name="lang" aria-label="lang" value="{{cat.lang}}" on-input="inputing"
-                                     placeholder="[[cat.lang]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="flexchildbotom">
-                            <div class="flexleft" name="type">
-                                <paper-button on-click="editTo" name="type">
-                                    [[pageType]]
-                                </paper-button>
-                                <paper-button  name="type" value="type" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div name="type">
-                                    <paper-button on-click="edit" name="type" icon="editor:mode-edit" aria-label="mode-edit">
-                                        <h4 class="contenth4" title="type">     [[cat.type]]</h4> 
-                                    </paper-button>
-                                    <paper-input hidden name="type" value="[[cat.type]]" on-input="inputing" placeholder="[[cat.type]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>
-                        <section class="flexchildbotomFull">
-                            <div class="flexleft" name="contentText">
-                                <paper-button on-click="editTo" name="contentText">
-                                    [[contentText]]
-                                </paper-button>
-                                <paper-button name="contentText"  value="contentText" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                                    [[cancel]]
-                                </paper-button>
-                            </div>
-                            <div class="flexright">
-                                <div name="contentText">
-                                    <paper-button on-click="edit" name="contentText" icon="editor:mode-edit" aria-label="mode-edit">
-                                        <h4 class="contenth4" title="contentText">   [[cat.contentText]]</h4> 
-                                    </paper-button>
-                                    <paper-input hidden name="contentText" name="contentText"  value="[[cat.contentText]]" on-input="inputing"
-                                    placeholder="[[cat.contentText]]">
-                                    </paper-input>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <section class="flexchildbotom3">
-                        <div left name="image">
-                            <paper-button >
-                                images
-                            </paper-button>
-                            <paper-icon-button  name="image" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
-                            </paper-icon-button> 
-                            <paper-button id="cancel" name="image" class="diferent" aria-label="mode-cancel">
-                                cancel
-                            </paper-button>            
-                        </div>
-                            [[slotImageElement(cat)]]
-                        <slot name="image">
-                        </slot>
+        <div container>
+        <div bottom>                   
+            <dom-repeat repeat items="[[inputVal]]" as="item">
+                <template>
+                    <section class="flexchildbotom">
+                        <cms-content-item item-input="true"
+                            item="[[item]]" 
+                            anchor="[[anchor]]" 
+                            save-button="[[saveButton]]" 
+                            lang="[[lang]]"  
+                            editing="{{editing}}" 
+                            res="{{inputResponse}}">
+                        </cms-content-item>                                    
+                    </section>   
+                </template>
+            </dom-repeat>         
+            <dom-repeat repeat items="[[textareaVal]]" as="item">
+                <template>
+                    <section class="flexchildbotomFull">
+                        <cms-content-item item-text-area="true"
+                            item="[[item]]" 
+                            anchor="[[anchor]]" 
+                            save-button="[[saveButton]]"  
+                            lang="[[lang]]"  
+                            editing="{{editing}}" 
+                            res="{{textAreaResponse}}">
+                        </cms-content-item>            
                     </section>
-                </div>
-            </template>
-        </dom-repeat>`
+                </template>
+            </dom-repeat>                          
+            <section class="childbotom">      
+                <cms-content-image  id="image"
+                    item-label="[[imageLabel]]"
+                    images="[[imageArr]]" 
+                    editing="{{editing}}" 
+                    anchor="[[anchor]]" 
+                    save-button="[[saveButton]]" 
+                    _deleteImg="[[deleteImg]]"  
+                    lang="[[lang]]" res="">
+                </cms-content-image>
+            </section>
+            </div>
+        </div>`
     }
-
     static get is() { return 'cms-page-list-type-content'; }
+    static get properties() {
+        return {
+            inputVal: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            textareaVal: {
+                type: String,
+                notify: true,
+                value: ''
+            },
+            editing: {
+                type: Number,
+                notify: true,
+            },
+            imageArr: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            lang: {
+                type: String,
+                notify: true,
+                observer: '__changeLang'
+            },
+            langs: {
+                type: Object,
+                value: {}
+            }
+        }
+    }
     static get observers() {
         return [
             '_routePageChanged(routeData, query, active)'
@@ -129,29 +100,19 @@ class cmsPageListTypeContent extends cmsContentTemplate {
     }
     ready() {
         super.ready();
-        _STYLES.then((querySnapshot) => {
+        Consts.assets.then((querySnapshot) => {
             let langs = querySnapshot.data();
-            this._setLangObject(langs);
+            Consts.setLangObject.call(this, langs);
         }).catch(function (error) {
             console.error("Error reteaving assets: ", error);
         });
         window.addEventListener('reset', (this._reset).bind(this))
+        this.set('saveButton', this.$.saveButton)
+        this.set('anchor', this.$.anchor)
+        this.$.image.addImage = (this.addImage).bind(this)
     }
     __changeLang() {
-        if (this.langs[this.lang]) {
-            let obj = this.langs[this.lang];
-            for (let par in obj) {
-                this.set(par, obj[par]);
-            }
-        }
-    }
-    _setLangObject(langs) {
-        for (let par in langs) {
-            if (par !== 'styles') {
-                this.langs[par] = langs[par].pop();
-            }
-        }
-        this.__changeLang();
+        Consts.changeLang.call(this)
     }
     _getPublishedBy(publishedBy) {
         if (publishedBy !== undefined && publishedBy.length > 0) {
@@ -163,12 +124,12 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         this.cancelElemenObject = {}
         this.inputObject = {}
         if (Boolean(this.slashed) === false) {
-            this.set('content', []);
-            this.set('add', false);
             this.slashed = true
-            this._removeInnerHTML()
+            this.set('content', []);
+            this.set('imageArr', [])
+            this.set('inform', [])
         }
-        if (Boolean(active) === true && routeData.page === 'edit-category-pages' || routeData.page === 'add-category-pages') {
+        if (active === true && routeData.page === 'edit-category-pages' || routeData.page === 'add-category-pages') {
             this.set('content', []);
             this.add = true
             if ('added' in query) {
@@ -192,22 +153,38 @@ class cmsPageListTypeContent extends cmsContentTemplate {
     }
 
     _setContent(content, query) {
-        this.$.anchor.href = `${this.rootPath}content/pages`
-        this.set('content', [JSON.parse(window.atob(content))]);
+        this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
+        this.set('content', JSON.parse(window.atob(content)));
+        let obj = this.content.image.pop()
+        this.set('imageArr', obj)
+        this.imageLabel = 'images'
+        this.set('inputVal', this._getObjArr(this.content.items))
+        this.set('textareaVal', this.content.contentText)
+        this.set('inform', this.content.info)
         this.set('add', (query.add === 'true') || (query.added === 'true'));
-        this.slashed = false;
+        this.set('slashed', false)
+    }
+    addImage() {
+        let string = 'editPages&content=' + btoa(JSON.stringify(this.content))
+        this.set('slashed', true)
+        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?addimageto=pages&method=${string}`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        window.onbeforeunload = function (e) {
+            return "you might have changes to be saved, are you sure you whant to leave?";
+        };
     }
 
     _removeInnerHTML() {
         this.innerHTML = ''
     }
     save() {
-        let content = this.content.pop(), data = new Date(), lastModified;
-        let author = ('author' in content === true && content.author.split('').length > 0) ?
+        let content = this.content.pop(), data = new Date(), lastModified, author, date
+        author = ('author' in content === true && content.author.split('').length > 0) ?
             content.author : this.user.displayName;
-        let date = ('dateCreated' in content === true && content.dateCreated.split('').length > 0) ?
+        date = ('dateCreated' in content === true && content.dateCreated.split('').length > 0) ?
             content.dateCreated : data.toLocaleString().replace(',', '');
         lastModified = ('lastModified' in content === true && content.lastModified.length > 0) ? content.lastModified : [];
+
         if (this.add === true) {
             content.name = content.title.toLocaleLowerCase();
             content.name = content.name.split(' ').join('_');
@@ -223,18 +200,19 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             });
             content.lastModified = lastModified;
             let obj2 = {
-                id: content.name,
-                uid: this.user.uid,
                 author: author,
-                dateCreated: date,
-                lastModified: lastModified,
-                parent: content.name,
                 content: new Array(),
-                type: content.type
+                dateCreated: date,
+                id: content.name,
+                items: 0,
+                lastModified: lastModified,
+                publishedCount: 0,
+                type: content.type,
+                uid: this.user.uid,
             };
-            _DBW.setPages((done, err) => {
+            Consts._DBW.setPages((done, err) => {
                 if (done !== 'error') {
-                    this.DBW.setArticles((done, msg) => {
+                    Consts._DBW.setArticles((done, msg) => {
                         console.log(done, msg);
                     }, obj2, __DEV);
                     window.onbeforeunload = function () { };
@@ -248,7 +226,7 @@ class cmsPageListTypeContent extends cmsContentTemplate {
                 else {
                     console.log(err);
                 }
-            }, content, __DEV);
+            }, content, Consts.__DEV);
         }
         else {
             lastModified.push({
@@ -261,7 +239,7 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             content.author = author;
             content.dateCreated = date;
             content.lastModified = lastModified;
-            this.DBW.writePagesContent((done, err) => {
+            Consts._DBW.writePagesContent((done, err) => {
                 if (done !== 'error') {
                     window.onbeforeunload = function () { };
                     this.editing = 0;
@@ -274,18 +252,10 @@ class cmsPageListTypeContent extends cmsContentTemplate {
                 else {
                     console.log(err);
                 }
-            }, content, __DEV);
+            }, content, Consts.__DEV);
         }
     }
-    addImage() {
-        let string = 'editPages&content=' + this.query.content
-        this.set('slashed', true)
-        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?addimageto=pages&method=${string}`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-        window.onbeforeunload = function (e) {
-            return "you might have changes to be saved, are you sure you whant to leave?";
-        };
-    }
+
     del(data) {
         if (this.content[0].image instanceof Array === true) {
             console.log(data, this.content[0], index)
@@ -310,5 +280,21 @@ class cmsPageListTypeContent extends cmsContentTemplate {
               this.remove = undefined;*/
         }
     }
+    _reset() {
+        this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
+        this.$.saveButton.classList.add('diferent')
+        this.$.anchor.classList.remove('diferent')
+        this.query = {}
+        this.routeData = {}
+        this.imageLabel = ''
+        this.set('content', '');
+        this.set('imageArr', '')
+        this.set('inputVal', '')
+        this.set('textareaVal', '')
+        this.set('inform', [0])
+        this.set('add', 0);
+        this.set('slashed', true);
+    }
+
 }
 customElements.define(cmsPageListTypeContent.is, cmsPageListTypeContent);

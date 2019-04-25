@@ -1,53 +1,52 @@
 import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
-import { dataBaseworker } from '../tools/dataBaseWorker';
+import { Setter } from '../tools/cms-element-set';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-const __DEV = true;
+const Consts = new Setter()
 export class cmsArticleItem extends cmsItemTemplate {
     static get _getElement() {
         return html`
         <dom-repeat repeat items="[[content]]" as="item">
             <template>                
                 <article centerlistitem>
-                    <div class="paddingSmall">
-                        <shop-image class="bigger" title="[[item.title]]" aria-label="image" src="[[_getImage(item)]]" 
+                    <div>
+                        <shop-image class="bigger" title="[[item.title]]" aria-label="image" src="[[_getImage()]]"
                             alt="[[item.title]]">
-                        </shop-image> 
+                        </shop-image>
                     </div>
-                    <div class="paddingSmall" title="[[item.title]]">
-                        <paper-button title="[[item.title]]"> 
-                            [[item.title]]   
-                        </paper-button> 
+                    <div title="[[item.title]]">
+                        <paper-button title="[[item.title]]">
+                            [[item.title]]
+                        </paper-button>
                     </div>
-                    <div class="paddingSmall">
-                        <iron-selector selected="[[papgePath]]" attr-for-selected="id" class="drawer-list" role="navigation">
-                            <a id="edit-articles" href="[[rootPath]]content/articles/edit-articles[[hrefe]]">
-                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                                <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                            </a>                             
-                        </iron-selector> 
-                    </div>  
+                    <div>
+                        <paper-button on-click="_showPage">
+                            <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
+                            <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                        </paper-button>
+                    </div>
                     <div class="paddingSmall" title="[[item.stock]]">
-                        <h3 title="[[item.stock]]"> 
-                        [[item.stock]]
+                        <h3 title="[[item.stock]]">
+                            [[item.stock]]
                         </h3>
                     </div>
-                    <div class="paddingSmall" title="[[item.page]]">
-                        <paper-button title="[[item.page]]"> 
-                            [[item.type]] 
+                    <div title="[[item.page]]">
+                        <paper-button title="[[item.page]]">
+                            [[item.type]]
                         </paper-button>
                     </div>
-                    <div class="paddingSmall" published$="[[item.published]]" title="[[item.published]]" on-click="_confirmPublish">
-                        <paper-button title="[[item.published]]"> 
-                            [[item.published]] 
+                    <div published$="[[_getPublished()]]" title="[[_getPublished()]]" on-click="_confirmPublish">
+                        <paper-button title="[[_getPublished()]]">
+                            [[_getPublished()]]
                         </paper-button>
                     </div>
-                    <div class="paddingSmall"> 
-                        <paper-icon-button icon="av:not-interested" aria-label="delete"  on-click="_openConfirm">
+                    <div>
+                        <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
                         </paper-icon-button>
                     </div>
-                </article> 
+                
+                </article>
             </template>                            
         </dom-repeat>
         `;
@@ -55,12 +54,10 @@ export class cmsArticleItem extends cmsItemTemplate {
     static get is() { return 'cms-article-item'; }
     static get properties() {
         return {
-            DBW: {
+            article: {
                 type: Object,
-                value: function () {
-                    return new dataBaseworker();
-                },
-                notify: true
+                notify: true,
+                observer: '_putRow'
             },
             published: {
                 type: String,
@@ -69,36 +66,32 @@ export class cmsArticleItem extends cmsItemTemplate {
             papgePath: {
                 type: String,
                 value: 'edit-articles'
-            },
-            noItem: {
-                type: Array,
-                value: [{
-                    "image": [],
-                }]
             }
         };
     }
     ready() {
         super.ready();
     }
-    log(data) {
-        console.log('log from cms-article-viewer', data);
-    }
     _putRow(item) {
-        if (item.image[0] !== undefined) {
-            this.set('content', [item])
-            this.set('hrefe', this._showPage(item))
+        if (item['image']) {
+            this.set('content', item.items)
+            this.set('images', item.image)
+            this.set('info', item.info)
         }
     }
-    _showPage(item) {
-        let string = window.btoa(`${JSON.stringify([item])}`);
-        return `?content=${string}&add=false`
+    _showPage() {
+        let string = window.btoa(`${JSON.stringify(this.article)}`);
+        window.history.pushState({}, null, `${this.rootPath}content/articles/edit-articles?content=${string}&add=false`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
     }
     _getParameter(item) {
         return item
     }
-    _getImage(data) {
-        return data.image[0].url
+    _getImage() {
+        return this.images[0].url
+    }
+    _getPublished() {
+        return this.info[0].published
     }
     _openConfirm(event) {
         let index = event.srcElement.parentElement.getAttribute('value')
@@ -120,14 +113,14 @@ export class cmsArticleItem extends cmsItemTemplate {
     }
     __delete(data) {
         let page = data;
-        this.DBW.deletePage((msg) => {
+        Consts._DBW.deletePage((msg) => {
             if (msg !== 'error') {
                 this.log(msg);
             }
             else {
                 this.error(msg);
             }
-        }, page, __DEV);
+        }, page, Consts.__DEV);
     }
     __publish() {
         console.log('!!to be done!!')

@@ -1,9 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';;
-import '@polymer/paper-tabs/paper-tabs';
-import '@polymer/paper-tabs/paper-tab';
+import '@polymer/paper-spinner/paper-spinner-lite';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/iron-selector/iron-selector';
 import '../styles/cms-common-top-styles';
@@ -96,12 +94,17 @@ export class cmsTopPageTemplate extends PolymerElement {
           route="[[subroute]]" user="[[user]]">
         </cms-page-sub-cat-content>  
 
-        <cms-page-list-type-content slot="add" id="content" 
-          lang="[[lang]]" route="[[subroute]]" user="[[user]]">
+        <cms-page-list-type-content 
+          slot="add" id="content" 
+          lang="[[lang]]" 
+          route="[[subroute]]" 
+          user="[[user]]">
         </cms-page-list-type-content>   
 
-        <cms-page-list-type slot="categories" lang="[[lang]]" 
-          route="[[subroute]]" >
+        <cms-page-list-type 
+          slot="categories" 
+          lang="[[lang]]" 
+          route="[[subroute]]">
         </cms-page-list-type>  
 
         <cms-page-sub-cat-type slot="suCategories" route="[[subroute]]" >
@@ -120,7 +123,7 @@ export class cmsTopPageTemplate extends PolymerElement {
         </cms-article-content>  
 
         <cms-article-list-type slot="categories" lang="[[lang]]" 
-          route="[[subroute]]" >
+          route="[[subroute]]">
         </cms-article-list-type>  
 
         <cms-article-sub-cat-type slot="suCategories" route="[[subroute]]" >

@@ -1,39 +1,55 @@
-import { html } from '@polymer/polymer/polymer-element';
-import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
-import { dataBaseworker } from '../tools/dataBaseWorker';
 import '@polymer/iron-selector/iron-selector';
-import './cms-page-list-item';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-page-list-type', __DEV);
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { html } from '@polymer/polymer/polymer-element';
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { Setter } from '../tools/cms-element-set';
+import './cms-page-list-item';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-page-list-type')
+Consts.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+    </paper-spinner-lite>`
 class cmsPageListType extends cmsMiddlePageTemplate {
+    static get _getShoutAnchor() {
+        return html`
+        <a href="[[rootPath]]content/pages/add-category-pages?content=eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGVkIjoiIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInVuUHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV19XSwiaXRlbXMiOlt7ImNhdGVnb3J5IjoiIiwibGFuZyI6IiIsInRpdGxlIjoiIiwidHlwZSI6IiIsInB1Ymxpc2hlZCI6Ik5QIn1dfQ==&add=true">
+            <paper-tab name=" add-category-pages">
+                [[categorypages]]
+                <paper-icon-button-light>
+                    <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+                </paper-icon-button-light>
+            </paper-tab>
+        </a>
+        `
+    }
     static get is() { return 'cms-page-list-type'; }
     static get properties() {
         return {
-            DBW: {
+            lang: {
+                type: String,
+                observer: '__changeLang'
+            },
+            langs: {
                 type: Object,
-                value: function () {
-                    return new dataBaseworker();
-                },
-                notify: true
-            }
+                value: {}
+            },
         }
     }
-
     ready() {
         super.ready();
-        _STYLES.then((querySnapshot) => {
+        Consts.clone(this)
+        Consts.assets.then((querySnapshot) => {
             let style = querySnapshot.data();
-            this._setLangObject(style);
+            Consts.setLangObject.call(this, style);
         }).catch(function (error) {
             console.error("Error reteaving assets: ", error);
         });
         this._askPages();
         window.addEventListener('reset-list-type', (this._contentChanged.bind(this)));
     }
-
+    __changeLang() {
+        Consts.changeLang.call(this)
+    }
     _contentChanged() {
         this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
             window.dispatchEvent(new CustomEvent('reset-list-type-content', {
@@ -44,36 +60,15 @@ class cmsPageListType extends cmsMiddlePageTemplate {
             this.parentElement.removeChild(this);
         }
     }
-    //to review
-    /* __changeStyle(style) {
-         this.shadowRoot.firstElementChild.innerText += style;
-     }*/
-    __changeLang() {
-        if (this.langs[this.lang]) {
-            let obj = this.langs[this.lang];
-            for (let par in obj) {
-                this.set(par, obj[par]);
-            }
-        }
-    }
-    _setLangObject(langs) {
-        for (let par in langs) {
-            if (par !== 'styles') {
-                this.langs[par] = langs[par].pop();
-            }
-        }
-        this.__changeLang();
-    }
-
     _askPages() {
-        this.DBW.askAllPages((done) => {
+        Consts._DBW.askAllPages((done) => {
             this._setAll(done);
-        }, __DEV);
+        }, Consts.__DEV);
     }
 
     _setAll(data) {
         let arr = [], arr2 = [];
-        this.set('info', arr);
+        this.set('inForm', arr);
         this.pages = '';
         for (let i = 0; i < data.length; i++) {
             if ('categoryCount' in data[i]) {
@@ -83,10 +78,10 @@ class cmsPageListType extends cmsMiddlePageTemplate {
                 arr2.push(data[i]);
             }
         }
-        this.set('info', arr);
+        this.set('inForm', arr);
         this.set('pages', arr2);
+        this.removeChild(this.children[0])
     }
-
     putElement(index, page) {
         let template = html`
         <cms-page-list-item>

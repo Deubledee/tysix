@@ -1,11 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js'
+import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
 import '@polymer/paper-input/paper-input.js';
-import { dataBaseworker } from '../tools/dataBaseWorker.js';
 import '@polymer/paper-spinner/paper-spinner.js';
 import '../articles/cms-article';
 import '../media/cms-image';
-
 export class cmsContentImageTemplate extends PolymerElement {
     static get template() {
         return html` 
@@ -24,14 +22,16 @@ export class cmsContentImageTemplate extends PolymerElement {
             data="{{routeData}}" tail="{{subroute}}" 
             query-params="{{query}}" active="{{active}}">
         </app-route>
-        <main>
+            <slot name="spinner"></slot>
+        <main class="flex">
+        <div class="navbottom">
         ${this._getAnchor}
-            <nav>
-           ${this._getContentAnchor}
+            <nav top>
+                ${this._getContentAnchor}
             </nav>  
-            <article>   
-                ${this._slotElement}              
-            </article>
+            <div table>  
+                ${this._slotElement}
+            </div>
         </main>    
         `
     }
@@ -55,7 +55,6 @@ export class cmsContentImageTemplate extends PolymerElement {
         //template.content.children[0].children[0].addEventListener('click', (this._removeThis).bind(this))
         return template
     }
-
     static get _getContentAnchor() {
         return html`
         <a href="[[rootPath]]content/articles/add-articles?content=W3siYXV0aG9yIjoiIiwiYnJhbmQiOiIiLCJjYXRlZ29yeSI6IiIsImRhdGVBZGRlZCI6IiIsImRlc2NyaXB0aW9uIjoiIiwiaW1hZ2UiOltdLCJsYW5nIjoiIiwibmFtZSI6IiIsInBhZ2UiOiIiLCJwcmljZSI6IiIsInB1Ymxpc2hlZCI6Ik5QIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInN0b2NrIjoiIiwidGl0bGUiOiIiLCJ1blB1Ymxpc2hlZEJ5IjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dfV0=&add=true">
@@ -68,17 +67,17 @@ export class cmsContentImageTemplate extends PolymerElement {
         </a>
         `
     }
+    static get _getSideContent() {
+        return html`
+            <h1>
+                side content
+            </h1>
+        `
+    }
     static get is() { return 'cms-content-image-template'; }
 
     static get properties() {
         return {
-            DBW: {
-                type: Object,
-                value: function () {
-                    return new dataBaseworker()
-                },
-                notify: true
-            },
             loading: {
                 type: String
             },
