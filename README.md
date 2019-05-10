@@ -35,4 +35,4 @@ $ npm run serve:static
 
 ## Deploying
 
-Our [production deployment of TYSix](https://tobe-available.soon/) is hosted on Heroku with Node.js. It can be deployed with [the same steps as PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/building-and-deploying/#deploying-prpl-server).
+Our [production deployment of TySix](https://tobe-available.soon/) is hosted on Heroku with Node.js. It can be deployed with [the same steps as PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/building-and-deploying/#deploying-prpl-server).
