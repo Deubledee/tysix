@@ -13,7 +13,7 @@ Shop is a sample e-commerce [Progressive Web App CMS](https://developers.google.
 ## Setup
 ```bash
 $ git clone https://github.com/Deubledee/tysix.git
-$ cd shop
+$ cd tyxix
 $ npm i
 $ npm start
 ```
