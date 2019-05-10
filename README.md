@@ -6,7 +6,7 @@ Shop is a sample e-commerce [Progressive Web App CMS](https://developers.google.
 
 ## Features/highlights
 
-- a e-commerce shopping CMS
+- an e-commerce shopping CMS
 - pattern for a real-life shopping cart and store checkout flow
 - pattern for using custom announcers for accessibility
 
