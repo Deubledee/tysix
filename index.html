@@ -19,6 +19,8 @@
     <script src="https://www.gstatic.com/firebasejs/5.8.5/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -26,7 +28,8 @@
             font-size: 13px;
             line-height: 1.5;
             min-height: 100vh;
-            background-color: #f2f2f2
+            background-color: #ffffff;
+            background-color: var(--app-backgound-color)
         }
 
         paper-button.diferent {
@@ -104,6 +107,9 @@
 
 <body>
     <script>
+        window.MyAppGlobals = { rootPath: '/', translator: {} };
+        import('./cms/tools/expresso/expresso.js').then(() => {
+        });
         function fsd(urlo, call, method, formData) {
             let url = urlo, json = [], str = ''
             let xhr = new XMLHttpRequest();
@@ -129,9 +135,7 @@
                 console.log(e)
             }
             return xhr
-        }
-        window.MyAppGlobals = { rootPath: '/' };
-
+        }                
     </script>
 
     <cms-login>
@@ -148,9 +152,6 @@
             <span class="spanfour"> Deubledee </span>
         </nav>
     </cms-login>
-
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
-    <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
     <script type="module" src="cms/cms-login.js"></script>
 
     <script>

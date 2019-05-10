@@ -5,7 +5,6 @@ import './cms-article-item'
 const Consts = new Setter()
 Consts.assets = Consts.getAssets('cms-articles')
 class cmsArticle extends cmsItemImageTemplate {
-
     static get _getStyles() {
         return html`        
         div[bottom]{
@@ -78,11 +77,18 @@ class cmsArticle extends cmsItemImageTemplate {
             lang: {
                 type: String,
                 notify: true,
-                observer: '__changeLang'
+                //observer: '__changeLang'
             },
             langs: {
                 type: Object,
                 value: {}
+            },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
             },
             article: {
                 type: Array,
@@ -98,17 +104,24 @@ class cmsArticle extends cmsItemImageTemplate {
 
     ready() {
         super.ready()
-        Consts.assets.then((querySnapshot) => {
-            let langs = querySnapshot.data();
-            Consts.setLangObject.call(this, langs);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.target('cms-articles', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-articles', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-articles', 'setLangObject')
+    }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
     }
     __changeLang() {
-        Consts.changeLang.call(this)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
-
     __publish(data) {
         console.log(data)
     }

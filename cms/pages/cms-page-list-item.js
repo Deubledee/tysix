@@ -1,9 +1,9 @@
 
 import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
-import { dataBaseworker } from '../tools/dataBaseWorker';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Setter } from '../tools/cms-element-set';
 class cmsPageListItem extends cmsItemTemplate {
     static get template() {
         return html`
@@ -20,31 +20,23 @@ class cmsPageListItem extends cmsItemTemplate {
     static get is() { return 'cms-page-list-item'; }
     static get properties() {
         return {
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
         };
     }
     ready() {
         super.ready();
     }
-    __changeLang() {
-        if (this.langs[this.lang]) {
-            let obj = this.langs[this.lang];
-            for (let par in obj) {
-                this.set(par, obj[par]);
-            }
-        }
-    }
-    _setLangObject(langs) {
-        for (let par in langs) {
-            if (par !== 'styles') {
-                this.langs[par] = langs[par].pop();
-            }
-        }
-        this.__changeLang();
-    }
     _putRow(data) {
         let template = html`
            <article centerListItem slot="table">
                <div class="padding">   
+
                </div>
                <div>
                    <paper-button>
@@ -54,30 +46,35 @@ class cmsPageListItem extends cmsItemTemplate {
                </div>  
                <div class="padding">
                    
-               </div>  
+               </div>   
+               <div class="padding">
+                   
+               </div>   
                <div>
                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>        
                </div>
            </article>`;
-        template.content.children[0].
-            children[0].innerHTML = `
-               <span> 
-                   ${data.items[0].title}
-               </span>`;
-        template.content.children[0].
-            children[2].innerHTML += `
-                   <span class="${data.items[0].published}"> 
-                      <paper-button> ${data.items[0].published} </paper-button>
-                   </span>`;
+        template.content.children[0].children[0].innerHTML = `
+                <span> 
+                   <paper-button> ${data.items[0].categoryName}</paper-button>
+                </span>`;
+        template.content.children[0].children[2].innerHTML = `
+                <span> 
+                    <paper-button> ${data.items[0].type} </paper-button>
+                </span>`;
+        template.content.children[0].children[3].innerHTML += `
+                <span class="${data.info[0].published}"> 
+                    <paper-button> ${data.info[0].published} </paper-button>
+                </span>`;
         let clone = document.importNode(template.content, true);
         this.append(clone);
         this.children[0].children[1].
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
-        this.children[0].children[2].
+        this.children[0].children[3].
             children[0].addEventListener('click', (this._confirmPublish).
                 bind(this));
-        this.children[0].children[3].
+        this.children[0].children[4].
             children[0].addEventListener('click', (this._openConfirm).
                 bind(this));
     }
@@ -96,15 +93,15 @@ class cmsPageListItem extends cmsItemTemplate {
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {
-        let page = data;
-        this.DBW.deletePage((msg) => {
+        this.translator._DBW.deletePage((msg) => {
             if (msg !== 'error') {
-                this.log(msg);
+                console.log(msg);
+                this.__reset()
             }
             else {
-                this.error(msg);
+                console.error(msg);
             }
-        }, page, __DEV);
+        }, data, this.translator.__DEV);
     }
     __publish(data) {
         console.log(data)
@@ -114,8 +111,8 @@ class cmsPageListItem extends cmsItemTemplate {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: this.page.name, method: (this.__delete).bind(this),
-                    argument: '!!to be done!!', headderMsgKind: 'delete', type: 'categoryPage'
+                    name: this.page.items[0].categoryName, method: (this.__delete).bind(this),
+                    argument: this.page.items[0].categoryName, headderMsgKind: 'delete', type: 'categoryPage'
                 }
             }));
         });
@@ -128,6 +125,13 @@ class cmsPageListItem extends cmsItemTemplate {
                     name: this.page.name, method: (this.__publish).bind(this),
                     argument: '!!to be done!!', headderMsgKind: 'publish', type: 'categoryPage'
                 }
+            }));
+        });
+    }
+    __reset() {
+        this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+            window.dispatchEvent(new CustomEvent('reset-list-type', {
+                bubbles: true, composed: true
             }));
         });
     }

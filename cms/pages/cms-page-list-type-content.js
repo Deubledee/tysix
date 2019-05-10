@@ -1,6 +1,11 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { Setter } from '../tools/cms-element-set';
+import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import '../sub-categories/cms-content-subcats'
+import '../elements/cms-content-item'
+import '../elements/cms-content-image'
 const Consts = new Setter()
 Consts.assets = Consts.getAssets('cms-page-list-type-content')
 class cmsPageListTypeContent extends cmsContentTemplate {
@@ -17,52 +22,75 @@ class cmsPageListTypeContent extends cmsContentTemplate {
     static get _getContentItems() {
         return html`
         <div container>
-        <div bottom>                   
-            <dom-repeat repeat items="[[inputVal]]" as="item">
-                <template>
-                    <section class="flexchildbotom">
-                        <cms-content-item item-input="true"
-                            item="[[item]]" 
-                            anchor="[[anchor]]" 
-                            save-button="[[saveButton]]" 
-                            lang="[[lang]]"  
-                            editing="{{editing}}" 
-                            res="{{inputResponse}}">
-                        </cms-content-item>                                    
-                    </section>   
-                </template>
-            </dom-repeat>         
-            <dom-repeat repeat items="[[textareaVal]]" as="item">
-                <template>
-                    <section class="flexchildbotomFull">
-                        <cms-content-item item-text-area="true"
-                            item="[[item]]" 
-                            anchor="[[anchor]]" 
-                            save-button="[[saveButton]]"  
-                            lang="[[lang]]"  
-                            editing="{{editing}}" 
-                            res="{{textAreaResponse}}">
-                        </cms-content-item>            
-                    </section>
-                </template>
-            </dom-repeat>                          
-            <section class="childbotom">      
-                <cms-content-image  id="image"
-                    item-label="[[imageLabel]]"
-                    images="[[imageArr]]" 
-                    editing="{{editing}}" 
-                    anchor="[[anchor]]" 
-                    save-button="[[saveButton]]" 
-                    _deleteImg="[[deleteImg]]"  
-                    lang="[[lang]]" res="">
-                </cms-content-image>
-            </section>
+            <div bottom>                   
+                <dom-repeat repeat items="[[inputVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotom">
+                            <cms-content-item item-input="true"
+                                item="[[item]]" 
+                                anchor="[[anchor]]" 
+                                save-button="[[saveButton]]" 
+                                lang="[[lang]]"  
+                                editing="{{editing}}"
+                                lang="[[lang]]" 
+                                res="{{inputResponse}}">
+                            </cms-content-item>                                    
+                        </section>   
+                    </template>
+                </dom-repeat>         
+                <dom-repeat repeat items="[[textareaVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotomFull">
+                            <cms-content-item item-text-area="true"
+                                item="[[item]]" 
+                                anchor="[[anchor]]" 
+                                save-button="[[saveButton]]"  
+                                lang="[[lang]]"  
+                                editing="{{editing}}" 
+                                lang="[[lang]]"
+                                res="{{textAreaResponse}}">
+                            </cms-content-item>            
+                        </section>
+                    </template>
+                </dom-repeat>                         
+                <section class="flexchildbotom">      
+                    <cms-content-image  id="image"
+                        item-label="[[imageLabel]]"
+                        images="[[imageArr]]" 
+                        editing="{{editing}}" 
+                        anchor="[[anchor]]" 
+                        save-button="[[saveButton]]" 
+                        _deleteImg="[[deleteImg]]"  
+                        lang="[[lang]]">
+                    </cms-content-image>
+                </section>
+                <dom-if if="[[CaTeGoRy]]">
+                    <template>
+                        <section class="flexchildbotomFull">
+                            <cms-content-subcats 
+                                route="{{route}}" 
+                                sub-sub-cats="[[subSubCats]]" 
+                                content="[[content]]"
+                                lang="[[lang]]"
+                                res="{{subcatsResponse}}">
+                            </cms-content-subcats>
+                        </section>  
+                    </template> 
+                </dom-if> 
             </div>
-        </div>`
+        </div>  `
     }
     static get is() { return 'cms-page-list-type-content'; }
     static get properties() {
         return {
+            user: {
+                type: Object
+            },
+            CaTeGoRy: {
+                type: Boolean,
+                value: true,
+                notify: true
+            },
             inputVal: {
                 type: Array,
                 notify: true,
@@ -82,14 +110,60 @@ class cmsPageListTypeContent extends cmsContentTemplate {
                 notify: true,
                 value: []
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             lang: {
                 type: String,
                 notify: true,
-                observer: '__changeLang'
+                value: ''
             },
             langs: {
                 type: Object,
-                value: {}
+                value: {},
+                // observer: '_setLang'
+            },
+            subSubCats: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            inputResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setItemsValue'
+            },
+            textAreaResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setContentTextValue'
+            },
+            subcatsResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setsubcatsValue'
+            },
+            content: {
+                type: Object,
+                notify: true,
+                value: {},
+            },
+            tocontent: {
+                type: Object,
+                notify: true,
+                value: {},
+            },
+            Model: {
+                type: Object,
+                value: {
+                }
             }
         }
     }
@@ -100,25 +174,27 @@ class cmsPageListTypeContent extends cmsContentTemplate {
     }
     ready() {
         super.ready();
-        Consts.assets.then((querySnapshot) => {
-            let langs = querySnapshot.data();
-            Consts.setLangObject.call(this, langs);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-page-list-type-content', 'setLangObject')
         window.addEventListener('reset', (this._reset).bind(this))
         this.set('saveButton', this.$.saveButton)
         this.set('anchor', this.$.anchor)
         this.$.image.addImage = (this.addImage).bind(this)
     }
-    __changeLang() {
-        Consts.changeLang.call(this)
-    }
-    _getPublishedBy(publishedBy) {
-        if (publishedBy !== undefined && publishedBy.length > 0) {
-            let pubuser = publishedBy[0].name;
-            return pubuser;
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
         }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
+    }
+    __changeLang() {
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
         this.cancelElemenObject = {}
@@ -128,39 +204,48 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             this.set('content', []);
             this.set('imageArr', [])
             this.set('inform', [])
+            this.set('subCats', [])
         }
-        if (active === true && routeData.page === 'edit-category-pages' || routeData.page === 'add-category-pages') {
+        if (active === true &&
+            routeData.page === 'edit-category-pages' ||
+            routeData.page === 'add-category-pages' ||
+            routeData.page === 'edit-subcategory-pages' ||
+            routeData.page === 'add-subcategory-pages') {
             this.set('content', []);
             this.add = true
             if ('added' in query) {
                 this.$.saveButton.classList.remove('diferent')
                 this.$.anchor.classList.add('diferent');
                 this.imageElemen = ''
-                this._removeInnerHTML()
             }
             if ('content' in query) {
                 if ('added' in query) {
                     this.add = false
+                    this.CaTeGoRy = true
                 }
 
                 if ('add' in query) {
                     this.add = true
+                    this.CaTeGoRy = true
+                }
+                if ('indexarray' in query) {
+                    this.CaTeGoRy = false
                 }
                 this._setContent(query.content, query)
             }
             this.slashed = false;
         }
     }
-
     _setContent(content, query) {
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
         this.set('content', JSON.parse(window.atob(content)));
-        let obj = this.content.image.pop()
-        this.set('imageArr', obj)
+        let obj = this.content.image
         this.imageLabel = 'images'
+        this.set('imageArr', obj)
         this.set('inputVal', this._getObjArr(this.content.items))
         this.set('textareaVal', this.content.contentText)
         this.set('inform', this.content.info)
+        this.set('subSubCats', this.content.subCategories)
         this.set('add', (query.add === 'true') || (query.added === 'true'));
         this.set('slashed', false)
     }
@@ -173,112 +258,82 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             return "you might have changes to be saved, are you sure you whant to leave?";
         };
     }
-
-    _removeInnerHTML() {
-        this.innerHTML = ''
+    _setItemsValue(data) {
+        if (this.content['items']) {
+            for (let par in data) {
+                this.content.items[0][par] = data[par]
+                console.log(this.content, par)
+            }
+        }
+    }
+    _setContentTextValue(data) {
+        if (this.content['contentText']) {
+            for (let par in data) {
+                this.content.contentText[0][par] = data[par]
+                console.log(this.content.contentText[0][par], par, data)
+            }
+        }
+    }
+    _setsubcatsValue() {
+        if (this.content['contentText']) {
+            for (let par in data) {
+                this.content.subCategories[0][par] = data[par]
+                console.log(this.content.subCategories[0][par], par, data)
+            }
+        }
+    }
+    _getPublishedBy(publishedBy) {
+        if (publishedBy !== undefined && publishedBy.length > 0) {
+            let pubuser = publishedBy[0].name;
+            return pubuser;
+        }
     }
     save() {
-        let content = this.content.pop(), data = new Date(), lastModified, author, date
-        author = ('author' in content === true && content.author.split('').length > 0) ?
-            content.author : this.user.displayName;
-        date = ('dateCreated' in content === true && content.dateCreated.split('').length > 0) ?
-            content.dateCreated : data.toLocaleString().replace(',', '');
-        lastModified = ('lastModified' in content === true && content.lastModified.length > 0) ? content.lastModified : [];
-
+        let data = new Date()
+        this.content.info[0].lastModified.push({
+            uid: this.user.uid,
+            author: this.user.displayName,
+            date: data.toLocaleString().replace(',', '')
+        });
         if (this.add === true) {
-            content.name = content.title.toLocaleLowerCase();
-            content.name = content.name.split(' ').join('_');
-            content.id = content.name;
-            content.uid = this.user.uid;
-            content.author = author;
-            content.dateCreated = date;
-            content.published = 'NP'
-            lastModified.push({
-                uid: this.user.uid,
-                author: this.user.displayName,
-                date: data.toLocaleString().replace(',', '')
-            });
-            content.lastModified = lastModified;
-            let obj2 = {
-                author: author,
-                content: new Array(),
-                dateCreated: date,
-                id: content.name,
-                items: 0,
-                lastModified: lastModified,
-                publishedCount: 0,
-                type: content.type,
-                uid: this.user.uid,
-            };
-            Consts._DBW.setPages((done, err) => {
-                if (done !== 'error') {
-                    Consts._DBW.setArticles((done, msg) => {
-                        console.log(done, msg);
-                    }, obj2, __DEV);
-                    window.onbeforeunload = function () { };
-                    this.editing = 0;
-                    this.temp = '';
-                    this.cancelButton.classList.add('diferent');
-                    this.$.saveButton.classList.add('diferent');
-                    this.$.anchor.classList.remove('diferent');
-                    this.__reset();
-                }
-                else {
-                    console.log(err);
-                }
-            }, content, Consts.__DEV);
+            this.saveAdded(data)
         }
         else {
-            lastModified.push({
-                uid: this.user.uid,
-                author: this.user.displayName,
-                date: data.toLocaleString().replace(',', '')
-            });
-            content.id = content.name;
-            content.uid = this.user.uid;
-            content.author = author;
-            content.dateCreated = date;
-            content.lastModified = lastModified;
-            Consts._DBW.writePagesContent((done, err) => {
-                if (done !== 'error') {
-                    window.onbeforeunload = function () { };
-                    this.editing = 0;
-                    this.temp = '';
-                    this.cancelButton.classList.add('diferent');
-                    this.$.saveButton.classList.add('diferent');
-                    this.$.anchor.classList.remove('diferent');
-                    this.__reset();
-                }
-                else {
-                    console.log(err);
-                }
-            }, content, Consts.__DEV);
+            this.saveChanged(data)
         }
     }
-
-    del(data) {
-        if (this.content[0].image instanceof Array === true) {
-            console.log(data, this.content[0], index)
-            this.set('tempArray', this.content[0].image[index]);
-            /*  if (index > 0) {
-                  this.content[0].image.splice(index, index);
-              }
-              else {
-                  this.content[0].image.splice(0, 1);
-              }*/
-        }
-        /*  let string = window.btoa(`${JSON.stringify(this.content[index])}`);
-          window.history.pushState({}, null, `content/pages/edit-category-pages?content=${string}&deleted=true`);
-          window.dispatchEvent(new CustomEvent('location-changed'));
-          this.removeChild(this.children[0]);*/
+    saveAdded(data) {
+        this.content.info[0].author = this.user.displayName;
+        this.content.info[0].dateAdded = data.toLocaleString().replace(',', '');
+        this.content.info[0].uid = this.user.uid;
+        Consts._DBW.setPages((done, err) => {
+            if (done !== 'error') {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                this.__reset();
+            }
+            else {
+                console.log(err);
+            }
+        }, this.content, Consts.__DEV);
     }
-    deleteImg(data) {
-        if (data !== undefined) {
-            this.del(data, data.model.__data.index);
-            /*   this.$.saveButton.classList.remove('diferent');
-              this.editing = this.editing + 1;
-              this.remove = undefined;*/
-        }
+    saveChanged() {
+        Consts._DBW.writePagesContent((done, err) => {
+            if (done !== 'error') {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                this.__reset();
+            }
+            else {
+                console.log(err);
+            }
+        }, this.content, Consts.__DEV);
     }
     _reset() {
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
@@ -295,6 +350,13 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         this.set('add', 0);
         this.set('slashed', true);
     }
-
+    __reset() {
+        this.$.anchor.click()
+        this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+            window.dispatchEvent(new CustomEvent('reset-list-type', {
+                bubbles: true, composed: true
+            }));
+        });
+    }
 }
 customElements.define(cmsPageListTypeContent.is, cmsPageListTypeContent);

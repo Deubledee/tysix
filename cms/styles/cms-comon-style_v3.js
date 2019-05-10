@@ -91,8 +91,10 @@ $_documentContainer.innerHTML = `
             }
             .flexchildbotom{
                 flex-basis: 30%;
-                margin-bottom: 50px
-            } 
+                margin-bottom: 50px;
+                max-width: 75%;
+                max-height: 225px
+            }
             .childbotom{
                 flex-basis: 100%;
                 max-width: 75%
@@ -108,28 +110,22 @@ $_documentContainer.innerHTML = `
                 box-sizing: border-box;
                 padding: 8px
             }
-
             .flexchildbotom3 {
-                display: block;
-                margin-top: 40px;
                 @apply --layout-self-stretch;
                 @apply --layout-flex-3;
             }
-
             .flexleft,
             .flexright {
                 cursor: pointer;
                 max-height: 42px;
                 @apply --layout-flex;
             }
-
             .flexright {
                 color: var(--paper-grey-700);
                 max-height: 50px;
                 background-color: #fff;
                 @apply --layout-flex;
             }
-
             .navbottom {
                 max-width: 82%;
                 @apply --layout-flex;
@@ -138,7 +134,6 @@ $_documentContainer.innerHTML = `
                 transition-property: height, opacity;
                 transition-duration: .5s, 1s
             }
-
             .navside {
                 @apply --layout-vertical;
                 @apply --layout-self-stretch;
@@ -148,13 +143,11 @@ $_documentContainer.innerHTML = `
                 max-width: 340px;
                 border-left: 1px solid;
             }
-
             .navside div {
                 @apply --layout-horizontal;
                 cursor: pointer;
                 height: 30px;
             }
-
             .navside aside {
                 @apply --layout-flex;
             }
@@ -162,13 +155,11 @@ $_documentContainer.innerHTML = `
             .navside div[left] aside {
                 box-shadow: 1px 1px 1px
             }
-
             .flexsidecenter {
                 color: #7087b4;
                 font-weight: 700;
                 width: 100%;
             }
-
             .flexleft {
                 color: var(--google-blue-700)
             }
@@ -349,14 +340,13 @@ $_documentContainer.innerHTML = `
                 letter-spacing: var(--app-content-letter-spacing, 1px);
                 font-size: 10px;
                 box-sizing: border-box;
-
             }
 
             article[centerListItem] div, article[centerImageItem] div{
                 @apply --layout-flex;
                 box-shadow: 1px 1px 2px var(--paper-blue-300);
-                height: auto;
                 overflow: hidden;
+                max-height: 50px;
             }
 
             article[centerListItem] span, article[centerImageItem] span {
@@ -374,7 +364,7 @@ $_documentContainer.innerHTML = `
                 height: 50px;
                 word-break: break-word;
                 text-overflow: ellipsis;
-                font-size: 0.95em;
+                font-size: 9px;
             }
 
             .padding {
@@ -394,7 +384,27 @@ $_documentContainer.innerHTML = `
             .paddingSmall h3 {
                 margin-block-start: 7px;
             }
-
+            .plussubcat{
+                box-sizing: content-box;
+                max-width: 30px;
+                height: auto;
+                box-shadow: 1px 1px 2px var(--paper-blue-200)
+               /* border-right: -1px dashed var(--paper-light-blue-a100);*/
+            }
+            .plus{
+                display: flex;
+                width: 100%;                
+            }
+            .center{
+                margin-left: auto;
+                margin-right: auto; 
+               /* box-shadow: 1px 1px 2px var(--paper-blue-200)
+                border-bottom: 1px dashed var(--paper-light-blue-a100);*/
+            }
+            .subcat{
+                flex-grow: 1;
+                max-width: 480px;
+            }
             shop-image {
                 height: 41px;
                 top: 5px;

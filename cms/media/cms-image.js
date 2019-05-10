@@ -3,9 +3,6 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { Setter } from '../tools/cms-element-set';
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-image')
 class cmsImage extends cmsItemImageTemplate {
     static get _getItem() {
         return html` 
@@ -18,7 +15,8 @@ class cmsImage extends cmsItemImageTemplate {
                     image="[[item]]" 
                     save-button="[[saveButton]]"
                     reset-button="[[resetButton]]"
-                    delete="[[_deleteImg]]">
+                    delete="[[_deleteImg()]]"
+                    idx="[[index]]">
                 </cms-image-item>
             </template>                            
         </dom-repeat>`
@@ -27,7 +25,7 @@ class cmsImage extends cmsItemImageTemplate {
         return html`                         
             <section class="flexchildbotom noFlex">
                 <div class="flexleft">   
-                    <h4>  [[image]]   </h4>     
+                    <h4>  [[Imag]]   </h4>     
                 </div>  
             </section>
 
@@ -66,10 +64,16 @@ class cmsImage extends cmsItemImageTemplate {
 
     static get properties() {
         return {
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             lang: {
                 type: String,
-                notify: true,
-                observer: '__changeLang'
+                notify: true
             },
             langs: {
                 type: Object,
@@ -118,19 +122,26 @@ class cmsImage extends cmsItemImageTemplate {
     }
     ready() {
         super.ready()
-        Consts.assets.then((querySnapshot) => {
-            let style = querySnapshot.data();
-            Consts.setLangObject.call(this, style);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.target('cms-image', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-image', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-image', 'setLangObject')
     }
     toggle(data) {
         this.size = data
     }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
+    }
     __changeLang() {
-        Consts.changeLang.call(this)
-        this._setLabel(this.addTo)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _setLabel(data) {
         if (data === true) {
@@ -177,8 +188,32 @@ class cmsImage extends cmsItemImageTemplate {
             return arr
         }
     }
-    _deleteImg(data) {
-        console.log(data)
+    deleteImage(data) {
+        let arr = []
+        for (let i = 0; i < this.content.length; i++) {
+            if (i !== parseInt(data)) {
+                arr.push(this.content[i])
+            }
+        }
+        this.set('images', arr)
+    }
+    _openConfirm(event) {
+        let index = event.srcElement.parentElement.getAttribute('value').split('-').pop()
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true,
+                detail: {
+                    name: this.content[index].title,
+                    method: (this.deleteImage).bind(this),
+                    argument: index,
+                    headderMsgKind: 'delete',
+                    type: 'image'
+                }
+            }));
+        });
+    }
+    _deleteImg() {
+        return (this._openConfirm).bind(this)
     }
 }
 customElements.define(cmsImage.is, cmsImage);

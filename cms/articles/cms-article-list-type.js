@@ -2,12 +2,7 @@ import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
-import { Setter } from '../tools/cms-element-set';
 import './cms-article-list-item';
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-page-list-type')
-Consts.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-    </paper-spinner-lite>`
 class cmsArticleListType extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`        
@@ -131,31 +126,48 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
                 type: Object,
                 value: {}
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
         }
     }
     ready() {
         super.ready();
-        Consts.clone(this)
-        Consts.assets.then((querySnapshot) => {
-            let style = querySnapshot.data();
-            Consts.setLangObject.call(this, style);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+            </paper-spinner-lite>`
+        this.translator.clone(this)
+        this.translator.target('cms-page-list-type', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-page-list-type', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-page-list-type', 'setLangObject')
         this._getArticles()
         window.addEventListener('reset-artlist-type', (this._contentChanged.bind(this)));
     }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
+    }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
     __changeLang() {
-        Consts.changeLang.call(this)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _contentChanged() {
         this.set('pages', [])
         this.innerHTML = ''
     }
     _getArticles() {
-        Consts._DBW.askAllArticles((data) => {
+        this.translator._DBW.askAllArticles((data) => {
             this._setAll(data);
-        }, Consts.__DEV)
+        }, this.translator.__DEV)
     }
     _setAll(data) {
         let arr = [], arr2 = []

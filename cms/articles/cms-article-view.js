@@ -3,9 +3,6 @@ import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import './cms-article';
 import './cms-article-item';
-import { Setter } from '../tools/cms-element-set';
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-article-view')
 class cmsArticleView extends cmsMiddlePageTemplate {
 
     static get _getShoutAnchor() {
@@ -23,7 +20,7 @@ class cmsArticleView extends cmsMiddlePageTemplate {
             <a href="[[rootPath]][[url]]">
                 <paper-tab name=" add-category-pages">
                     <span class="spanpadding"> 
-                        [[articles]] 
+                    [[ADD]] [[articles]] 
                     </span>
                     <paper-icon-button-light>
                         <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
@@ -143,6 +140,13 @@ class cmsArticleView extends cmsMiddlePageTemplate {
                 type: Object,
                 value: {}
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             route: {
                 type: Object,
                 notify: true
@@ -201,17 +205,25 @@ class cmsArticleView extends cmsMiddlePageTemplate {
     }
     ready() {
         super.ready()
-        Consts.assets.then((querySnapshot) => {
-            let langs = querySnapshot.data();
-            Consts.setLangObject.call(this, langs);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.target('cms-article-view', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-article-view', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-article-view', 'setLangObject')
         this.$.reset.addEventListener('click', (this._removeInnerHTML).bind(this))
         window.addEventListener('reset', (this._removeInnerHTML).bind(this))
     }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
+    }
     __changeLang() {
-        Consts.changeLang.call(this)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
         if (Boolean(active) === true && Boolean(routeData.page) === true && routeData.page === "view-articles") {

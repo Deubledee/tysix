@@ -11,8 +11,8 @@ import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
 import './tools/cms-input-sellector';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { dataBaseworker } from './tools/dataBaseWorker';
 import { reuest } from './tools/http-handler';
+
 class cmsLogin extends PolymerElement {
     static get template() {
         return html`
@@ -137,11 +137,12 @@ class cmsLogin extends PolymerElement {
     static get is() { return 'cms-login'; }
     static get properties() {
         return {
-            DBW: {
+            translator: {
                 type: Object,
+                notify: true,
                 value: function () {
-                    return new dataBaseworker();
-                },
+                    return MyAppGlobals.translator
+                }
             },
             closed: {
                 type: Boolean,
@@ -180,7 +181,7 @@ class cmsLogin extends PolymerElement {
     }
     ready() {
         super.ready();
-        this.DBW.authStateChanged((user, err) => {
+        this.translator._DBW.authStateChanged((user, err) => {
             if (user !== 0) {
                 this.closed = !this.closed;
                 this._userAccepted(user);
@@ -224,6 +225,19 @@ class cmsLogin extends PolymerElement {
             }, 'POST', '');
         }).bind(this));
     }
+    _getUid() {
+        let user = this._getProperty('user');
+        return user.uid;
+    }
+    setValues() {
+        let obj = {
+            'email': this.email,
+            'pwd': this.pwd
+        };
+        this.translator._DBW.loginFire(obj);
+        this.email = '';
+        this.pwd = '';
+    };
     _userAccepted(user) {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             if (['admin', 'dev', 'manager', 'advUser'].indexOf(user.role) > -1) {
@@ -246,18 +260,5 @@ class cmsLogin extends PolymerElement {
         }
         return finalString;
     }
-    _getUid() {
-        let user = this._getProperty('user');
-        return user.uid;
-    }
-    setValues() {
-        let obj = {
-            'email': this.email,
-            'pwd': this.pwd
-        };
-        this.DBW.loginFire(obj);
-        this.email = '';
-        this.pwd = '';
-    };
 }
 customElements.define(cmsLogin.is, cmsLogin);

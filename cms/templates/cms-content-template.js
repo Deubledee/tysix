@@ -132,7 +132,7 @@ export class cmsContentTemplate extends PolymerElement {
                     </aside>
                     <aside>
                         <span>
-                            [[cat.dateCreated]]
+                            [[cat.dateAdded]]
                         </span>
                     </aside>
                 </div>

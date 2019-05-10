@@ -1,6 +1,5 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template.js';
-import { dataBaseworker } from '../tools/dataBaseWorker';
 class cmsArticlesViewer extends cmsViewerTemplate {
   static get _getSilentAnchor() {
     return html`  
@@ -11,15 +10,11 @@ class cmsArticlesViewer extends cmsViewerTemplate {
   }
   static get _getPages() {
     return html`
-        <article name="add-category-pages">  
-            <slot name="add"></slot>  
-        </article>
         <article name="add-edit-articles">  
             <slot name="addart"></slot>  
         </article>
         <article name="home">           
             <slot name="categories"></slot>
-            <slot name="suCategories"></slot>
         </article>
         <article name="view-articles"> 
             <slot name="view"></slot>

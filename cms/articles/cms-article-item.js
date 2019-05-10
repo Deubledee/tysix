@@ -1,9 +1,7 @@
 import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
-import { Setter } from '../tools/cms-element-set';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-const Consts = new Setter()
 export class cmsArticleItem extends cmsItemTemplate {
     static get _getElement() {
         return html`
@@ -63,6 +61,13 @@ export class cmsArticleItem extends cmsItemTemplate {
                 type: String,
                 reflectToAttribute: true
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             papgePath: {
                 type: String,
                 value: 'edit-articles'
@@ -113,14 +118,14 @@ export class cmsArticleItem extends cmsItemTemplate {
     }
     __delete(data) {
         let page = data;
-        Consts._DBW.deletePage((msg) => {
+        this.translator._DBW.deletePage((msg) => {
             if (msg !== 'error') {
                 this.log(msg);
             }
             else {
                 this.error(msg);
             }
-        }, page, Consts.__DEV);
+        }, page, this.translator.__DEV);
     }
     __publish() {
         console.log('!!to be done!!')

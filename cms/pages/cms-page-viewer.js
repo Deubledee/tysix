@@ -1,4 +1,3 @@
-import { html } from '@polymer/polymer/polymer-element';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template';
 class cmsPageViewer extends cmsViewerTemplate {
     static get is() { return 'cms-page-viewer'; }
@@ -10,20 +9,6 @@ class cmsPageViewer extends cmsViewerTemplate {
     ready() {
         super.ready();
         this._routePageChanged(this.routeData);
-        window.addEventListener('reset-list-type-content', (this.__reset).bind(this));
-    }
-    __reset(event) {
-        if (['categorypages'].indexOf(event.detail) !== -1) {
-            let template = html`<cms-page-list-type slot="categories">
-                          </cms-page-list-type>`;
-            let clone = document.importNode(template.content, true);
-            clone.route = this.route;
-            clone.lang = this.lang;
-            if (this.childElementCount < 5) {
-                this.appendChild(clone);
-                this.$.reset.click();
-            }
-        }
     }
     _routePageChanged(route, page) {
         if (route.prefix === '/content/pages') {
@@ -35,7 +20,7 @@ class cmsPageViewer extends cmsViewerTemplate {
                 if (!page.page) {
                     this.page = 'home';
                 } else
-                    if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
+                    if (['add-category-pages', 'edit-category-pages', 'edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page.page) !== -1) {
                         this.page = 'add-category-pages';
                     } else {
                         this.page = 'view404';

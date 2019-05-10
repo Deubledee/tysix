@@ -1,25 +1,25 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';
+import { Setter } from '../tools/cms-element-set';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-input/paper-textarea';
 import '../media/cms-image';
 import '../styles/cms-comon-style_v3';
+const Consts = new Setter()
+Consts.assets = Consts.getAssets('cms-content-item')
 export class cmsContentItem extends PolymerElement {
     static get template() {
         return html`<style include="cms-comon-style_v3">
         :host {
             position: relative;
         }
-        </style>
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>        
+        </style>      
             <div class="flexleft" name="itemLabel">
                 <paper-button id="label" on-click="edit" name="[[itemLabel]]">
-                    [[itemLabel]]
+                    [[title]]
                 </paper-button>
                 <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                    [[cancel]]cancel
+                    [[cancel]]
                 </paper-button>
             </div>
             <div class="flexright" id="inpt1">
@@ -68,6 +68,15 @@ export class cmsContentItem extends PolymerElement {
                 type: Boolean,
                 notify: true
             },
+            lang: {
+                type: String,
+                notify: true,
+                // observer: '__changeLang'
+            },
+            langs: {
+                type: Object,
+                value: {}
+            },
             tempArray: {
                 type: Array,
                 value: new Array(),
@@ -91,6 +100,18 @@ export class cmsContentItem extends PolymerElement {
                 type: Object,
                 value: {}
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
+            res: {
+                type: Object,
+                notify: true,
+                value: {}
+            },
             temp: {
                 type: Object,
                 value: new Object(),
@@ -111,6 +132,24 @@ export class cmsContentItem extends PolymerElement {
     }
     ready() {
         super.ready();
+        this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
+        this.translator.shoot('cms-content-item', 'setLangObject')
+    }
+
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this, this.itemLabel, 'title');
+    }
+    __changeLang() {
+        this.lang = this.translator.lang
+        this.translator.changeItemTitleLang.call(this, this.itemLabel, 'title')
     }
     _setValues(data) {
         for (let par in data) {
@@ -194,7 +233,10 @@ export class cmsContentItem extends PolymerElement {
         }
     }
     Cancel() {
+        let obj = {};
+        obj[this.itemLabel] = this.temp.data
         this.set('itemText', this.temp.data);
+        this.set('res', obj);
         if (this.temp.canceled === false) {
             this.cancelState();
         }

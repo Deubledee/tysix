@@ -56,8 +56,6 @@ $_documentContainer.innerHTML = `
     }
 
     article[centerListItem] {
-        letter-spacing: var(--app-content-letter-spacing);
-        font-size: var(--app-content-font-size);
         word-break: keep-all;
     }
 
@@ -177,7 +175,7 @@ $_documentContainer.innerHTML = `
         top: unset;
     }
 
-    main, paper-button[front] {
+    paper-button[front] {
         background-color: var(--app-backgound-color)
     }
 

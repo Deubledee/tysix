@@ -1,9 +1,11 @@
-import { cmsItemTemplate } from '../templates/cms-item-template'
-import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/paper-input/paper-input.js';
-import { dataBaseworker } from '../tools/dataBaseWorker';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { microTask } from '@polymer/polymer/lib/utils/async.js';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import { cmsItemTemplate } from '../templates/cms-item-template';
+import { Setter } from '../tools/cms-element-set';
+import './cms-gallery-item';
+const Consts = new Setter()
 
 class cmsGalleryItem extends cmsItemTemplate {
     static get template() {
@@ -23,13 +25,6 @@ class cmsGalleryItem extends cmsItemTemplate {
 
     static get properties() {
         return {
-            DBW: {
-                type: Object,
-                value: function () {
-                    return new dataBaseworker()
-                },
-                notify: true
-            },
             add: {
                 type: Boolean,
                 notify: true
@@ -67,26 +62,26 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     _putRow(data) {
         let template = html`
-        <article centerListItem slot="table">
-            <div class="padding">
-
-            </div>
-            <div>
-                <paper-button>
-                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                </paper-button>
-            </div> 
-            <div>
-                <paper-icon-button on-click="openConfirm" icon="av:not-interested" aria-label="mode-delete">
-                </paper-icon-button>      
-            </div>
-        </article>`;
+            <article centerListItem slot="table">
+                <div class="padding">
+    
+                </div>
+                <div>
+                    <paper-button>
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                    </paper-button>
+                </div> 
+                <div>
+                    <paper-icon-button on-click="openConfirm" icon="av:not-interested" aria-label="mode-delete">
+                    </paper-icon-button>      
+                </div>
+            </article>`;
         template.content.children[0].
             children[0].innerHTML = `
-            <span> 
-                ${this._getGalleryName(data)}
-            </span>`;
+                <span> 
+                    ${this._getGalleryName(data.content[0])}
+                </span>`;
         let clone = document.importNode(template.content, true);
         this.append(clone);
         this.children[0].children[1].
@@ -94,6 +89,8 @@ class cmsGalleryItem extends cmsItemTemplate {
                 bind(this));
         this.children[0].children[2].
             children[0].addEventListener('click', (this._openConfirm).bind(this));
+        this.children[0].children[2].
+            children[0].setAttribute('id', "item-" + (this.childElementCount - 1))
     }
     _getGalleryName(gall) {
         return gall.gallery;
@@ -117,22 +114,24 @@ class cmsGalleryItem extends cmsItemTemplate {
         this.set('returnPath', 'content/pages/add-category-pages')
     }
     deleteGallerie(data) {
-        this.DBW.deleteMediaGallery((done, err) => {
-            if (done !== 'error') {
-                this.setter = true
-            } else {
-                console.error(err)
-            }
-        }, data)
+        console.log(this.gallery.content[data])
+        /* Consts._DBW.deleteMediaGallery((done, err) => {
+             if (done !== 'error') {
+                 this.setter = true
+             } else {
+                 console.error(err)
+             }
+         }, data)*/
     }
     _openConfirm(event) {
+        let index = event.srcElement.id.split('-').pop()
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
             microTask, () => {
                 this.dispatchEvent(new CustomEvent('confirm', {
                     bubbles: true, composed: true,
                     detail: {
-                        name: this.gallery, method: (this.deleteGallerie).bind(this),
-                        argument: this.gallery, headderMsgKind: 'delete', type: 'gallery'
+                        name: this._getGalleryName(this.gallery.content[0]), method: (this.deleteGallerie).bind(this),
+                        argument: index, headderMsgKind: 'delete', type: 'gallery'
                     }
                 }))
             }

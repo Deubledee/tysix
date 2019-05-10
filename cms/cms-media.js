@@ -45,7 +45,6 @@ class cmsMedia extends cmsTopPageTemplate {
         
           <cms-galleries slot="galleries" id="galleries" 
             route="{{subroute}}" 
-            lang="[[lang]]" 
             images="{{Imags}}" 
             add="{{add}}" 
             contentto="{{contentto}}" 
@@ -54,7 +53,6 @@ class cmsMedia extends cmsTopPageTemplate {
 
           <cms-images slot="images" id="images" 
             route="{{subroute}}" 
-            lang="[[lang]]" 
             image-data="{{Imags}}" 
             add="[[add]]" 
             contentto="[[contentto]]" 
@@ -63,9 +61,7 @@ class cmsMedia extends cmsTopPageTemplate {
 
         </cms-gallery-viewer>
       </article>
-      <article name="videos" 
-        route="{{subroute}}" 
-        lang="[[lang]]"> 
+      <article name="videos" route="{{subroute}}"> 
             videos
       </article>
   `
@@ -76,8 +72,18 @@ class cmsMedia extends cmsTopPageTemplate {
     return {
       lang: {
         type: String,
+        notify: true
+      },
+      langs: {
+        type: Object,
+        value: {}
+      },
+      translator: {
+        type: Object,
         notify: true,
-        observer: '__changeLang'
+        value: function () {
+          return MyAppGlobals.translator
+        }
       },
       returnPath: {
         type: String,
@@ -86,10 +92,6 @@ class cmsMedia extends cmsTopPageTemplate {
       contentto: {
         type: Object,
         notify: true,
-        value: {}
-      },
-      langs: {
-        type: Object,
         value: {}
       },
       page: {
@@ -129,53 +131,26 @@ class cmsMedia extends cmsTopPageTemplate {
       '_routePageChanged(routeData, query, active)'
     ];
   }
-
-  _log(data) {
-    console.log(data)
-
-  }
   ready() {
     super.ready()
-    _STYLES.then((querySnapshot) => {
-      let style = querySnapshot.data();
-      this._setLangObject(style);
-    }).catch(function (error) {
-      console.error("Error reteaving assets: ", error);
-    });
+    this.translator.target('cms-image-viewer', 'setLangObject', (this._setLObj).bind(this))
+    this.translator.target('cms-image-viewer', 'changeLang', (this._setLang).bind(this), false)
+    this.translator.shoot('cms-image-viewer', 'setLangObject')
+  }
+  _setLObj(res, querySnapshot) {
+    if ('data' in querySnapshot) {
+      let langs = querySnapshot.data()
+      res.call(this, langs);
+    }
+  }
+  _setLang(res, lang) {
+    this.lang = lang
+    res.call(this);
   }
   __changeLang() {
-    try {
-      if (this.langs[this.lang]) {
-        let obj = this.langs[this.lang];
-        for (let par in obj) {
-          if (Boolean(this[par]) === true) {
-            this.set(par, obj[par])
-          } else {
-            this.set(par, '');
-            this.set(par, obj[par]);
-          }
-        }
-      }
-    }
-    catch (err) {
-      console.error(err)
-    }
+    this.lang = this.translator.lang
+    this.translator.changeLang.call(this)
   }
-
-  _setLangObject(langs) {
-    try {
-      for (let par in langs) {
-        if (par !== 'styles') {
-          this.langs[par] = langs[par].pop();
-        }
-      }
-      this.__changeLang();
-    }
-    catch (err) {
-      console.error(err)
-    }
-  }
-
   _routePageChanged(page, query) {
     if (this.route.prefix === '/media') {
       if (page !== undefined && 'page' in page) {

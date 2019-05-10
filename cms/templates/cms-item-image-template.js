@@ -24,6 +24,13 @@ export class cmsItemImageTemplate extends PolymerElement {
             font-size: var(--app-images-article-font-size);
             box-shadow: 1px 1px 4px var(--disabled-text-color);
         }
+        main[small]{
+            width: 342px; 
+        }
+        div[bottom] div[small]{
+            height: 23px;
+            font-size: 9px; 
+        }
         div[bottom] h4{
             margin-block-start: 8px;
         }
@@ -49,16 +56,15 @@ export class cmsItemImageTemplate extends PolymerElement {
         <style include="cms-comon-style_v3">
                 :host {
                     position: var(--app-default-position);
-                }
-            
+                }            
                 ${this._getStyles}
         </style>           
-        <main class="flexH">
-            <div bottom size$="[[size]]">    
+        <main class="flexH" small$="[[small]]">
+            <div bottom size$="[[size]]" small$="[[small]]">    
                 ${this._getMenu}  
             </div>
             <div table size$="[[size]]" class="scroll">
-            ${this._getItem}   
+                ${this._getItem}   
             </div> 
         <main> `;
     }
@@ -121,6 +127,11 @@ export class cmsItemImageTemplate extends PolymerElement {
                 notify: true
             },
             size: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
+            },
+            small: {
                 type: Boolean,
                 value: false,
                 reflectToAttribute: true,

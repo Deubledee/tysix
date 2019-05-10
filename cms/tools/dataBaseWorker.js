@@ -80,7 +80,7 @@ export class dataBaseworker {
             Worker.getDoc(obj)
                 .then((querySnapshot) => {
                     let content = querySnapshot.data().content;
-                    done("categorie", content);
+                    done("article", content);
                 }).catch(function (error) {
                     console.error("Error reteaving article: ", error);
                     done("error", error);
@@ -90,7 +90,7 @@ export class dataBaseworker {
             Worker.getDocDev(obj)
                 .then((querySnapshot) => {
                     let content = querySnapshot.data().content;
-                    done("categorie", content);
+                    done("article", content);
                 }).catch(function (error) {
                     console.error("Error reteaving article: ", error);
                     done("error", error);
@@ -127,8 +127,7 @@ export class dataBaseworker {
         }
     }
     writePagesContent(done, table, dev) {
-        let teble = { name: 'pages', doc: table.name, data: table };
-        console.log(teble)
+        let teble = { name: 'pages', doc: table.items[0].categoryName, data: table };
         if (dev === false) {
             Worker.updateContent(done, teble)
                 .then(function () {
@@ -151,16 +150,12 @@ export class dataBaseworker {
         }
     }
     setPages(done, parsed, dev) {
-        console.log(parsed);
-        let obj = parsed.name !== undefined ? { name: 'pages', docName: parsed.name, doc: parsed } : false;
-        if (obj === false) {
-            done(false, false);
-            return;
-        }
+        let obj = { name: 'pages', docName: parsed.items[0].categoryName, doc: parsed }
+        console.log(obj);
         if (dev === false) {
             Worker.createDoc(obj)
                 .then(function () {
-                    done('newPage');
+                    done('page successfully created');
                 })
                 .catch((error) => {
                     done('error', error);
@@ -170,7 +165,7 @@ export class dataBaseworker {
         else {
             Worker.createDocDev(obj)
                 .then(function () {
-                    done('newPage');
+                    done('page successfully created');
                 })
                 .catch((error) => {
                     done('error', error);
@@ -278,29 +273,23 @@ export class dataBaseworker {
                 });
         }
     }
-    getMediaGalleries(done, dev) {
-        let obj = { name: 'media' };
+    getMediaContent(done, categoryObj, dev) {
+        let obj = { name: 'media', doc: categoryObj.name };
         if (dev === false) {
-            Worker.getDocList(obj)
+            Worker.getDoc(obj)
                 .then((querySnapshot) => {
                     this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done(this.categories);
+                    done(querySnapshot.data());
                 }).catch(function (error) {
                     console.error("Error getting Media Galleries ", error);
                     done("error", error);
                 });
         }
         else {
-            Worker.getDocListDev(obj)
+            Worker.getDocDev(obj)
                 .then((querySnapshot) => {
                     this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done(this.categories);
+                    done(querySnapshot.data());
                 }).catch(function (error) {
                     console.error("Error getting Media Galleries ", error);
                     done("error", error);

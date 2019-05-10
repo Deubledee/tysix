@@ -1,8 +1,5 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { Setter } from '../tools/cms-element-set';
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-page-list-type-content')
 class cmsArticleContent extends cmsContentTemplate {
     static get _getAnchor() {
         return html`
@@ -196,10 +193,16 @@ class cmsArticleContent extends cmsContentTemplate {
                 notify: true,
                 value: []
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             lang: {
                 type: String,
-                notify: true,
-                observer: '__changeLang'
+                notify: true
             },
             langs: {
                 type: Object,
@@ -214,17 +217,25 @@ class cmsArticleContent extends cmsContentTemplate {
     }
     ready() {
         super.ready();
-        Consts.assets.then((querySnapshot) => {
-            let langs = querySnapshot.data();
-            Consts.setLangObject.call(this, langs);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
+        this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-page-list-type-content', 'setLangObject')
         window.addEventListener('reset', (this.reset).bind(this))
         this.$.imagea.addImage = (this.addImage).bind(this)
     }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
+    }
     __changeLang() {
-        Consts.changeLang.call(this)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _getPublishedBy(data) {
         if (data !== undefined)
@@ -267,7 +278,7 @@ class cmsArticleContent extends cmsContentTemplate {
         window.onbeforeunload = function (e) {
             return "you might have changes to be saved, are you sure you whant to leave?";
         };
-        this.reset()
+        // this.reset()
     }
     _reset() {
         this.$.saveButton.classList.add('diferent')

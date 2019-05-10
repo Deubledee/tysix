@@ -1,9 +1,7 @@
 import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
-import { dataBaseworker } from '../tools/dataBaseWorker';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-const __DEV = true;
 class cmsArticleListItem extends cmsItemTemplate {
     static get template() {
         return html`
@@ -19,19 +17,19 @@ class cmsArticleListItem extends cmsItemTemplate {
     static get is() { return 'cms-article-list-item'; }
     static get properties() {
         return {
-            DBW: {
-                type: Object,
-                value: function () {
-                    return new dataBaseworker();
-                },
-                notify: true
-            },
             noItem: {
                 type: Array,
                 value: [{
                     "image": [],
                 }]
-            }
+            },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
         };
     }
     ready() {
@@ -41,8 +39,7 @@ class cmsArticleListItem extends cmsItemTemplate {
         console.log('log from cms-article-viewer', data);
     }
     _putRow(data) {
-        let template = document.createElement('template')
-        let str = `
+        this.translator.template.innerHTML = `
         <article centerListItem slot="table">
             <div class="padding">
                 <span> 
@@ -66,10 +63,7 @@ class cmsArticleListItem extends cmsItemTemplate {
                 </span>
             </div> 
         </article>`;
-        template.innerHTML = str
-        let clone = document.importNode(template.content, true);
-        this.appendChild(clone)
-
+        this.translator.clone(this)
         this.children[0].children[1].
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
@@ -93,14 +87,14 @@ class cmsArticleListItem extends cmsItemTemplate {
     }
     __delete(data) {
         let page = data;
-        this.DBW.deletePage((msg) => {
+        this.translator._DBW.deletePage((msg) => {
             if (msg !== 'error') {
                 this.log(msg);
             }
             else {
                 this.error(msg);
             }
-        }, page, __DEV);
+        }, page, this.translator.__DEV);
     }
     __publish() {
         console.log('!!to be done!!')

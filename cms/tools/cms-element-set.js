@@ -1,10 +1,9 @@
-
 import { dataBaseworker } from './dataBaseWorker';
-export class Setter {
+export { Setter }
+class Setter {
     constructor() {
         this.__DEV = true
         this._DBW = new dataBaseworker()
-        this.assets = Object()
         this.template = document.createElement('template')
     }
     getAssets(elem) {
@@ -19,6 +18,19 @@ export class Setter {
             let obj = this.langs[this.lang];
             for (let par in obj) {
                 this.set(par, obj[par]);
+            }
+        }
+    }
+    changeItemTitleLang(item, title) {
+        if (this.langs[this.lang]) {
+            let obj = this.langs[this.lang];
+            this.set(title, obj[item]);
+        }
+    }
+    setChildrenLang(data) {
+        if (this.childElementCount > 0) {
+            for (let i = 0; i < this.childElementCount; i++) {
+                this.children[i].children[0].lang = data
             }
         }
     }

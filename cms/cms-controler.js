@@ -2,6 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
+//import { expresso } from './tools/expresso/expresso';
 import '@polymer/app-route/app-location';
 import '@polymer/app-route/app-route';
 import '@polymer/iron-icon/iron-icon';
@@ -22,11 +23,7 @@ import '@polymer/iron-icons/maps-icons';
 import './styles/cms-common-styles_v2';
 import './styles/cms-common-styles';
 import './media/cms-image-item'
-import { dataBaseworker } from './tools/dataBaseWorker';
 import './tools/cms-confirm';
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-controler', __DEV);
 setPassiveTouchGestures(true);
 setRootPath('/');
 class cmsControler extends PolymerElement {
@@ -215,7 +212,7 @@ class cmsControler extends PolymerElement {
     <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
     </cms-user-viewer>
 
-    <cms-content route="[[subroute]]" name="content" user="[[user]]" lang="[[lang]]">
+    <cms-content route="[[subroute]]" name="content" user="[[user]]">
     </cms-content>
 
     <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
@@ -234,6 +231,13 @@ class cmsControler extends PolymerElement {
         type: Object,
         notify: true
       },
+      translator: {
+        type: Object,
+        notify: true,
+        value: function () {
+          return MyAppGlobals.translator
+        }
+      },
       stylesSet: {
         type: Boolean,
         notify: true,
@@ -247,6 +251,7 @@ class cmsControler extends PolymerElement {
       langs: {
         type: Object,
         notify: true,
+        value: {},
         observer: '_setLang'
       },
       openMain: {
@@ -286,33 +291,23 @@ class cmsControler extends PolymerElement {
   ready() {
     super.ready();
     this.addEventListener('confirm', this.openConfirm);
-    _STYLES.then((querySnapshot) => {
-      let style = querySnapshot.data()
-      this._setLangObject(style)
-    }).catch(function (error) {
-      console.error("Error reteaving assets: ", error)
-    });
+    this.translator.target('cms-controler', 'setLangObject', (this._setLObj).bind(this))
+    this.translator.target('cms-controler', 'changeLang', (this.__setLang).bind(this), false)
+    this.translator.shoot('cms-controler', 'setLangObject')
   }
-  /*__changeStyle() {
-    this.set('stylesSet', true);
-  }*/
+  _setLObj(res, querySnapshot) {
+    if ('data' in querySnapshot) {
+      let langs = querySnapshot.data()
+      res.call(this, langs)
+    };
+  }
+  __setLang(res, lang) {
+    this.lang = lang
+    res.call(this);
+  }
   __changeLang() {
-    if (this.langs[this.lang]) {
-      window.localStorage.setItem('lang', this.lang);
-      let obj = this.langs[this.lang];
-      for (let par in obj) {
-        this.set(par, obj[par]);
-      }
-    }
-  }
-  _setLangObject(langs) {
-    let obj = {};
-    for (let par in langs) {
-      if (par !== 'styles') {
-        obj[par] = langs[par].pop();
-      }
-    }
-    this.set('langs', obj);
+    this.translator.shoot(undefined, 'changeLang', this.lang)
+    window.localStorage.setItem('lang', this.lang)
   }
   _setLang() {
     let lang = window.localStorage.getItem('lang');
@@ -325,6 +320,7 @@ class cmsControler extends PolymerElement {
       this.set('lang', 'en');
     }
   }
+
   _resetEvent() {
     this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
       microTask, () => {

@@ -2,19 +2,27 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import '../styles/cms-comon-style_v3';
-const __DEV = true;
 export class cmsItemTemplate extends PolymerElement {
     static get template() {
-        return html`
-    <style include="cms-comon-style_v3">    
-    :host {
-        position: relative;
-        display: block;
-    } 
-            /* styles reside in cms-content*/
-    </style>     
+        return html`   
+    ${this._getStyles}      
+       
     ${this._getElement}
         `;
+    }
+    static get _getStyles() {
+        return html`<style include="cms-comon-style_v3">    
+        :host {
+            position: relative;
+            display: block;
+        } 
+                /* styles reside in cms-content*/
+        </style> `
+    }
+    static get _getElement() {
+        return html`
+        <slot name="table"></slot>
+        `
     }
     static get is() { return 'cms-item-template'; }
     static get properties() {
@@ -31,11 +39,6 @@ export class cmsItemTemplate extends PolymerElement {
     }
     log(data) {
         console.log('log from cms-article-viewer', data);
-    }
-    static get _getElement() {
-        return html`
-        <slot name="table"></slot>
-        `
     }
     _getParameter(item) {
         return item

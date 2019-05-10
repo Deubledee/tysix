@@ -1,9 +1,4 @@
 import { cmsTopPageTemplate } from './templates/cms-top-page-template';
-import { dataBaseworker } from './tools/dataBaseWorker';
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-content', __DEV);
-
 class cmsContent extends cmsTopPageTemplate {
   static get is() { return 'cms-content'; }
   static get properties() {
@@ -16,6 +11,13 @@ class cmsContent extends cmsTopPageTemplate {
         type: String,
         reflectToAttribute: true,
         observer: '_pageChanged'
+      },
+      translator: {
+        type: Object,
+        notify: true,
+        value: function () {
+          return MyAppGlobals.translator
+        }
       },
       lang: {
         type: String,
@@ -45,46 +47,25 @@ class cmsContent extends cmsTopPageTemplate {
       '_routePageChanged(routeData, query, route)'
     ];
   }
-
   ready() {
     super.ready();
-    _STYLES.then((querySnapshot) => {
-      let style = querySnapshot.data();
-      this._setLangObject(style);
-    }).catch(function (error) {
-      console.error("Error reteaving assets: ", error);
-    });
+    this.translator.target('cms-content', 'setLangObject', (this._setLObj).bind(this))
+    this.translator.target('cms-content', 'changeLang', (this._setLang).bind(this), false)
+    this.translator.shoot('cms-content', 'setLangObject')
+  }
+  _setLObj(res, querySnapshot) {
+    if ('data' in querySnapshot) {
+      let langs = querySnapshot.data()
+      res.call(this, langs);
+    }
+  }
+  _setLang(res, lang) {
+    this.lang = lang
+    res.call(this);
   }
   __changeLang() {
-    try {
-      if (this.langs[this.lang]) {
-        let obj = this.langs[this.lang];
-        for (let par in obj) {
-          if (Boolean(this[par]) === true) {
-            this.set(par, obj[par])
-          } else {
-            this.set(par, '');
-            this.set(par, obj[par]);
-          }
-        }
-      }
-    }
-    catch (err) {
-      console.error(err)
-    }
-  }
-  _setLangObject(langs) {
-    try {
-      for (let par in langs) {
-        if (par !== 'styles') {
-          this.langs[par] = langs[par].pop();
-        }
-      }
-      this.__changeLang();
-    }
-    catch (err) {
-      console.error(err)
-    }
+    this.lang = this.translator.lang
+    this.translator.changeLang.call(this)
   }
   _routePageChanged(page, query, route) {
     if (this.route.prefix === '/content') {

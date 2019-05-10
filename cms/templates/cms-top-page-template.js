@@ -88,51 +88,29 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   static get viewPages() {
     return html`
-    <cms-page-viewer name="pages" route="[[subroute]]" lang="[[lang]]" >     
-
-        <cms-page-sub-cat-content slot="add" id="content" 
-          route="[[subroute]]" user="[[user]]">
-        </cms-page-sub-cat-content>  
-
+    <cms-page-viewer name="pages" route="[[subroute]]">      
         <cms-page-list-type-content 
-          slot="add" id="content" 
-          lang="[[lang]]" 
+          slot="add" id="content"           
           route="[[subroute]]" 
           user="[[user]]">
         </cms-page-list-type-content>   
-
         <cms-page-list-type 
           slot="categories" 
-          lang="[[lang]]" 
           route="[[subroute]]">
         </cms-page-list-type>  
-
         <cms-page-sub-cat-type slot="suCategories" route="[[subroute]]" >
         </cms-page-sub-cat-type>  
-
     </cms-page-viewer>
-
-    <cms-articles-viewer  name="articles" route="[[subroute]]" lang="[[lang]]">
-    
-        <cms-article-sub-cat-content slot="add" id="addeditsubcat" 
-          route="[[subroute]]" user="[[user]]">
-        </cms-article-sub-cat-content>  
-
+    <cms-articles-viewer  name="articles" route="[[subroute]]" >
         <cms-article-content slot="addart" id="addeditart" 
-          lang="[[lang]]" route="[[subroute]]" user="[[user]]">
+          route="[[subroute]]" user="[[user]]">
         </cms-article-content>  
-
-        <cms-article-list-type slot="categories" lang="[[lang]]" 
+        <cms-article-list-type slot="categories"  
           route="[[subroute]]">
-        </cms-article-list-type>  
-
-        <cms-article-sub-cat-type slot="suCategories" route="[[subroute]]" >
-        </cms-article-sub-cat-type> 
-        
-        <cms-article-view slot="view" id="view"  lang="[[lang]]" 
+        </cms-article-list-type>       
+        <cms-article-view slot="view" id="view"   
           route="[[subroute]]" user="[[user]]" rootPath="[[rootPath]]">
         </cms-article-view>
-
     </cms-articles-viewer>
     `
   }

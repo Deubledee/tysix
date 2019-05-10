@@ -1,17 +1,12 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
-import { Setter } from '../tools/cms-element-set';
 import './cms-gallery-item';
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-galleries')
-Consts.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-    </paper-spinner-lite>`
 class cmsGalleries extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html` 
             <a href="[[rootPath]]media/images/add-gallery">
                 <paper-tab name=" add-category-pages">
-                    [[Galleries]]
+                [[ADD]] [[Galleries]]
                     <paper-icon-button-light>
                         <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
                     </paper-icon-button-light>
@@ -62,7 +57,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         `}
     static get _getNavside() {
         return html`
-        <dom-repeat repeat items="[[galleries]]" as="detail">
+        <dom-repeat repeat items="[[inform]]" as="detail">
             <template>
                 <div class="flexsidecenter">
                     <aside>
@@ -74,46 +69,26 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                 <div class="navsideleft">
                     <aside>
                         <span>
-                        [[datecreated]]
+                        [[GalleryCount]]
+                        </span>
+                    </aside>
+                    <aside>
+                        <span>
+                        [[imageCount]]
                         </span>
                     </aside>
                 </div>
                 <div class="navsideright">
                     <aside>
                         <span>
-                        <b> detail.datecreated </b>
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[Published]]
+                        <b> [[detail.GalleryCount]] </b>
                         </span>
                     </aside>
                     <aside>
                         <span>
-                        [[categorypages]]
+                        <b> [[detail.imageCount]] </b>
                         </span>
                     </aside>
-                </div>
-                <div rightSide>                            
-                    <dom-repeat repeat items="[[detail.published]]" as="published">
-                        <template>
-                            <section>
-                                <aside>
-                                    <span>
-                                        published.page
-                                    </span>
-                                </aside>
-                                <aside>
-                                    <span>
-                                        published.datePublished
-                                    </span>
-                                </aside>
-                            </section>
-                        </template>
-                    </dom-repeat>
                 </div>
             </template>
         </dom-repeat>
@@ -154,7 +129,14 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             galleries: {
                 type: Array,
                 notify: true
-            }
+            },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
         }
     }
     static get observers() {
@@ -164,17 +146,27 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     }
     ready() {
         super.ready()
-        Consts.clone(this)
-        Consts.assets.then((querySnapshot) => {
-            let style = querySnapshot.data();
-            Consts.setLangObject.call(this, style);
-        }).catch(function (error) {
-            console.error("Error reteaving assets: ", error);
-        });
-        this.getImageGalleries(true)
+        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+    </paper-spinner-lite>`
+        this.translator.clone(this)
+        this.translator.target('cms-galleries', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-galleries', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-galleries', 'setLangObject')
+        this._getGalleries(true)
+    }
+    _setLObj(res, querySnapshot) {
+        if ('data' in querySnapshot) {
+            let langs = querySnapshot.data()
+            res.call(this, langs);
+        }
+    }
+    _setLang(res, lang) {
+        this.lang = lang
+        res.call(this);
     }
     __changeLang() {
-        Consts.changeLang.call(this)
+        this.lang = this.translator.lang
+        this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
@@ -188,14 +180,20 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             this.add = false
         }
     }
-    eventFunction(event) {
-        this.set('galleries', event)
+    _setGalleries(event) {
+        for (let par in event) {
+            if (par !== 'Info') {
+                this.set('galleries', event[par])
+            } else {
+                this.set('inform', event[par])
+            }
+        }
     }
-    getImageGalleries(data) {
+    _getGalleries(data) {
         if (data === true || data === 'true') {
-            Consts._DBW.getMediaGalleries((done) => {
-                this.eventFunction(done)
-            }, true)
+            this.translator._DBW.getMediaContent((done) => {
+                this._setGalleries(done)
+            }, { name: 'galleries' }, true)
         }
         this.removeChild(this.children[0])
     }

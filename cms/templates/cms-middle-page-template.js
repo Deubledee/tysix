@@ -51,8 +51,8 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     static get _getShoutAnchor() {
         return html`
         <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">
-            <paper-tab name=" add-category-pages">
-                [[categorypages]]
+            <paper-tab name="add-category-pages">
+                
                 <paper-icon-button-light>
                     <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
                 </paper-icon-button-light>
@@ -79,6 +79,11 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         <section class="flexchildbotom noFlex">
             <div class="flexleft">
                 <h3> [[viewedit]] </h3>
+            </div>
+        </section>                        
+        <section class="flexchildbotom noFlex">
+            <div class="flexleft">
+                <h3> [[type]] </h3>
             </div>
         </section>                        
         <section class="flexchildbotom noFlex">
