@@ -6,7 +6,7 @@ Shop is a sample e-commerce [Progressive Web App CMS](https://developers.google.
 
 ## Features/highlights
 
-- a sample e-commerce shopping site
+- a e-commerce shopping CMS
 - pattern for a real-life shopping cart and store checkout flow
 - pattern for using custom announcers for accessibility
 
@@ -35,4 +35,4 @@ $ npm run serve:static
 
 ## Deploying
 
-Our [production deployment of SHOP](https://shop.polymer-project.org/) is hosted on App Engine with Node.js. It can be deployed with [the same steps as PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/building-and-deploying/#deploying-prpl-server).
+Our [production deployment of TYSix](https://tobe-available.soon/) is hosted on Heroku with Node.js. It can be deployed with [the same steps as PWA Starter Kit](https://polymer.github.io/pwa-starter-kit/building-and-deploying/#deploying-prpl-server).
