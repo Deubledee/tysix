@@ -6,7 +6,7 @@ export class cmsImageItem extends cmsItemTemplate {
         <dom-repeat repeat items="[[content]]" as="item">
             <template>                
                 <article centerImageItem>
-                    <div>
+                    <div class="padding">
                         <shop-image
                             class="bigger"
                             aria-label="image"
@@ -15,21 +15,19 @@ export class cmsImageItem extends cmsItemTemplate {
                             alt="[[item.title]]">
                         </shop-image> 
                     </div>
-                    <div>
+                    <div class="padding" title="[[item.title]]">
                         [[item.title]]
                     </div>
-                    <div>
+                    <div class="padding" title="[[item.dateAdded]]">
                         [[item.dateAdded]]
                     </div>
-                    <div class="paddingSmall">
-                            <h3 title="[[item.gallery]]"> 
-                                [[item.gallery]]
-                            </h3>
+                    <div class="padding" title="[[item.gallery]]"> 
+                            [[item.gallery]]
                     </div>
-                    <div>
+                    <div class="padding" title="[[item.url]]">
                         [[item.url]] 
                     </div>
-                    <div>
+                    <div class="padding">
                         <paper-button title="[[this.add]]" on-click="_add" value$="item-[[idx]]">
                             [[this.add]]
                             <dom-if if="[[add]]">

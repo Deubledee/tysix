@@ -31,10 +31,6 @@ class cmsArticleView extends cmsMiddlePageTemplate {
         `
     }
 
-    static get _getBottom() {
-        return html` `
-    }
-
     static get _getTable() {
         return html`
         <div table> 
@@ -160,6 +156,11 @@ class cmsArticleView extends cmsMiddlePageTemplate {
                 notify: true,
                 value: new Array(),
                 observer: '_killSpinner'
+            },
+            hidebottom: {
+                type: Boolean,
+                value: true,
+                reflectToAttribute: true,
             },
             url: {
                 type: String,

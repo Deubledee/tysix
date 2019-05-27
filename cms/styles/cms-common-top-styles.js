@@ -57,6 +57,7 @@ $_documentContainer.innerHTML = `
 
     article[centerListItem] {
         word-break: keep-all;
+        background-color: var(--app-backgound-color);
     }
 
     article[centerImageItem]  {
@@ -66,9 +67,11 @@ $_documentContainer.innerHTML = `
     
     article[centerListItem] div, article[centerImageItem] div {
         @apply --layout-flex;
-        box-shadow: 1px 1px 3px var(--paper-blue-300);
+       /* box-shadow: 1px 1px 3px var(--paper-blue-300);*/
         height: var(--app-content-article-height);
         overflow-y: hidden;
+        border-bottom: 0.5px dashed;
+        margin-right: 4px;
     }
 
     article[centerListItem] span, article[centerImageItem]span  {
@@ -176,7 +179,7 @@ $_documentContainer.innerHTML = `
     }
 
     paper-button[front] {
-        background-color: var(--app-backgound-color)
+        background-color: var(--app-backgound-color);
     }
 
     .button {

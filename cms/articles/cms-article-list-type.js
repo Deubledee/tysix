@@ -22,24 +22,24 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
     static get _getBottom() {
         return html`
            <section class="flexchildbotom noFlex">
-               <div class="flexleft">
-                   <h3> [[title]] </h3>
+               <div class="center">
+                    <h4>   [[title]] </h4>
                </div>
            </section>                        
                
            <section class="flexchildbotom noFlex">
-               <div class="flexleft">
-                   <h3> [[viewedit]] </h3>
+               <div class="center">
+                <h4>   [[viewedit]] </h4>
                </div>
            </section>                        
            <section class="flexchildbotom noFlex">
-               <div class="flexleft">
-                   <h3> [[items]] #</h3>
+               <div class="center">
+                <h4>    [[items]] #</h4>
                </div>
            </section>                         
            <section class="flexchildbotom noFlex">
-               <div class="flexleft">
-                   <h3> [[publishedCount]] #</h3>
+               <div class="center">
+                <h4>   [[publishedCount]] #</h4>
                </div>
            </section>
            `
@@ -60,7 +60,7 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
         return html`
            <dom-repeat repeat items="[[inForm]]" as="detail">
                <template>
-                   <div class="flexsidecenter">
+                   <div class="flexsidecenter title">
                        <aside>
                            <span>
                                [[Info]] 
@@ -165,7 +165,7 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
         this.innerHTML = ''
     }
     _getArticles() {
-        this.translator._DBW.askAllArticles((data) => {
+        this.translator._DBW.getAllArticles((data) => {
             this._setAll(data);
         }, this.translator.__DEV)
     }

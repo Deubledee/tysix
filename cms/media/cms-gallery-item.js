@@ -29,6 +29,13 @@ class cmsGalleryItem extends cmsItemTemplate {
                 type: Boolean,
                 notify: true
             },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals.translator
+                }
+            },
             images: {
                 type: Array,
                 notify: true
@@ -61,10 +68,14 @@ class cmsGalleryItem extends cmsItemTemplate {
         super.ready()
     }
     _putRow(data) {
-        let template = html`
+        let template = `
             <article centerListItem slot="table">
-                <div class="padding">
-    
+                <div>
+                    <span> 
+                        <paper-button>
+                            ${this._getGalleryName(data.content[0])}
+                        </paper-button>
+                    </span>
                 </div>
                 <div>
                     <paper-button>
@@ -73,23 +84,19 @@ class cmsGalleryItem extends cmsItemTemplate {
                     </paper-button>
                 </div> 
                 <div>
-                    <paper-icon-button on-click="openConfirm" icon="av:not-interested" aria-label="mode-delete">
+                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
                     </paper-icon-button>      
                 </div>
             </article>`;
-        template.content.children[0].
-            children[0].innerHTML = `
-                <span> 
-                    ${this._getGalleryName(data.content[0])}
-                </span>`;
-        let clone = document.importNode(template.content, true);
-        this.append(clone);
-        this.children[0].children[1].
+
+        this.translator.template.innerHTML = template
+        this.translator.clone(this)
+        this.children[this.childElementCount - 1].children[1].
             children[0].addEventListener('click', (this._showImages).
                 bind(this));
-        this.children[0].children[2].
+        this.children[this.childElementCount - 1].children[2].
             children[0].addEventListener('click', (this._openConfirm).bind(this));
-        this.children[0].children[2].
+        this.children[this.childElementCount - 1].children[2].
             children[0].setAttribute('id', "item-" + (this.childElementCount - 1))
     }
     _getGalleryName(gall) {

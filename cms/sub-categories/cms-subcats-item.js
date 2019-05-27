@@ -2,6 +2,7 @@ import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
+import '../styles/cms-comon-style_v3';
 export class cmsSubcatsItem extends cmsItemTemplate {
     static get _getStyles() {
         return html`
@@ -12,22 +13,21 @@ export class cmsSubcatsItem extends cmsItemTemplate {
             } 
             div[bottom] {
                 padding: 4px;
+                height: auto;
             }     
             paper-icon-button {
                 width: 31px;
                 height: 31px;
             }
-            article[centerListItem] div{
-                box-shadow: 1px 1px 2px var(--paper-blue-200)
-            }
+          
         </style>`
     }
     static get _getElement() {
         return html`
         <dom-if if="[[view]]">
             <template>
-                <dom-repeat repeat items="[[subcatContent]]" as="item">
-                    <template>                
+                <!--dom-repeat repeat items="[[subcatContent]]" as="item">
+                    <template-->                
                         <article centerlistitem>
                             <div>
                                 <shop-image class="bigger" title="[[item.title]]" aria-label="image" src="[[_getImage()]]"
@@ -55,8 +55,8 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                                 </paper-icon-button>
                             </div>                
                         </article>
-                    </template>                            
-                </dom-repeat>
+                    <!--/template>                            
+                </dom-repeat-->
             </template>
         </dom-if>
         <dom-if if="[[!view]]">
@@ -66,10 +66,10 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                         [[save]]save
                     </paper-button>
                 </nav>             
-                <div bottom>
+                <div bottom noborder$="[[noborder]]">
                     <dom-repeat repeat items="[[inputVal]]" as="item">
                         <template>                              
-                            <section class="flexchildbotom">
+                            <section class="flexchildbotomShort">
                                 <cms-content-item item-input="true"
                                     item="[[item]]" 
                                     anchor="[[anchor]]" 
@@ -106,24 +106,32 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 </div>
             </template>
         </dom-if>
-        <div bottom> 
-            <div class="plus">
-                <div class="plussubcat noFlex">
-                    <paper-icon-button icon="av:library-add" aria-label="mode-show"></paper-icon-button>
-                </div>  
-                <div class="subcat noFlex">
-                    <div class="center">
-                        <paper-icon-button icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
-                    </div>
-                    <slot name="table"></slot> 
-                    <dom-repeat repeat items="[[subcatSubats]]" as="item">
-                        <template> 
-                            [[_slottItem(item, index)]]
-                        </template>                            
-                    </dom-repeat>               
-                </div>  
-            </div> 
-        </div>
+        <dom-if if="[[view]]">
+            <template>
+                <div bottom > 
+                    <div class="plus">
+                        <div class="plussubcat noFlex">
+                            <paper-icon-button icon="av:library-add" aria-label="mode-show"></paper-icon-button>
+                        </div>  
+                        <div class="subcat noFlex">
+                            <div class="flexleft">
+                                <paper-icon-button on-click="_toggleChildren" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
+                            </div>
+
+                            <div class="diferent">
+                                <slot name="table"></slot> 
+                            </div>
+
+                            <dom-repeat repeat items="[[subcatSubats]]" as="item">
+                                <template> 
+                                    [[_slottItem(item, index)]]
+                                </template>                            
+                            </dom-repeat>               
+                        </div>  
+                    </div> 
+                </div>
+            </template>
+        </dom-if>
         `;
     }
     static get is() { return 'cms-subcats-item'; }
@@ -145,6 +153,11 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 type: String,
                 notify: true,
                 value: ''
+            },
+            noborder: {
+                type: Boolean,
+                value: true,
+                reflectToAttribute: true,
             },
             inputResponse: {
                 type: Object,
@@ -211,6 +224,10 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     _log(data) {
         console.log(data)
     }
+    _toggleChildren(evt) {
+        let elem = evt.srcElement.parentElement.nextElementSibling
+        elem.classList.toggle('diferent')
+    }
     _setContent(content) {
         if (content['info']) {
             this.set('content', content);
@@ -228,7 +245,7 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         if (this.content !== undefined && this.content['items']) {
             for (let par in data) {
                 this.content.items[0][par] = data[par]
-                console.log(this.content, par)
+                //  console.log(this.content, par)
             }
         }
     }
@@ -236,7 +253,7 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         if (this.content !== undefined && this.content['contentText']) {
             for (let par in data) {
                 this.content.contentText[0][par] = data[par]
-                console.log(this.content.contentText[0][par], par, data)
+                //console.log(this.content.contentText[0][par], par, data)
             }
         }
     }

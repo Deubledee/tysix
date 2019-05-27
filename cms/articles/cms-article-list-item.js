@@ -41,23 +41,23 @@ class cmsArticleListItem extends cmsItemTemplate {
     _putRow(data) {
         this.translator.template.innerHTML = `
         <article centerListItem slot="table">
-            <div class="padding">
+            <div>
                 <span> 
                     ${this._getPagename(data)}
                 </span>
             </div>
-            <div class="">
+            <div>
                 <paper-button>
                     <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
                     <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                 </paper-button> 
             </div>  
-            <div class="padding">                
+            <div>                
                 <span> 
                     <paper-button> ${this._getPublished(data.info[0].items)} </paper-button>
                 </span>
             </div>   
-            <div class="padding">                
+            <div>                
                 <span class="${this._getPublished(data)}"> 
                     <paper-button> ${this._getPublished(data.info[0].publishedCount)} </paper-button>
                 </span>

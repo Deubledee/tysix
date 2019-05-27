@@ -11,7 +11,8 @@ export class cmsItemTemplate extends PolymerElement {
         `;
     }
     static get _getStyles() {
-        return html`<style include="cms-comon-style_v3">    
+        return html`
+        <style include="cms-comon-style_v3">    
         :host {
             position: relative;
             display: block;

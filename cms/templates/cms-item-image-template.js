@@ -14,24 +14,23 @@ export class cmsItemImageTemplate extends PolymerElement {
         word-break: keep-all;
         }
 
-        div[table] , div[bottom]{
+        div[table] , div[arow]{
             max-width: 100%;
         } 
 
-        div[bottom]{
+        div[arow]{
             height: 35px;
-            background-color: var(--app-tabs-color);
             font-size: var(--app-images-article-font-size);
-            box-shadow: 1px 1px 4px var(--disabled-text-color);
+            /*box-shadow: 1px 1px 4px var(--disabled-text-color);*/
         }
         main[small]{
             width: 342px; 
         }
-        div[bottom] div[small]{
+        div[arow] div[small]{
             height: 23px;
             font-size: 9px; 
         }
-        div[bottom] h4{
+        div[arow] h4{
             margin-block-start: 8px;
         }
         div[table] {
@@ -46,7 +45,7 @@ export class cmsItemImageTemplate extends PolymerElement {
         #reset{
             display: none
         }
-        div[bottom][size],
+        div[arow][size],
         div[table][size]{
             max-width: 75%; 
         }`
@@ -60,13 +59,13 @@ export class cmsItemImageTemplate extends PolymerElement {
                 ${this._getStyles}
         </style>           
         <main class="flexH" small$="[[small]]">
-            <div bottom size$="[[size]]" small$="[[small]]">    
+            <div arow size$="[[size]]" small$="[[small]]">    
                 ${this._getMenu}  
             </div>
             <div table size$="[[size]]" class="scroll">
                 ${this._getItem}   
             </div> 
-        <main> `;
+        </main> `;
     }
 
     static get _getMenu() {
@@ -127,6 +126,11 @@ export class cmsItemImageTemplate extends PolymerElement {
                 notify: true
             },
             size: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
+            },
+            hidden: {
                 type: Boolean,
                 value: false,
                 reflectToAttribute: true,

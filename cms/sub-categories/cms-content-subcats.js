@@ -1,12 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { Setter } from '../tools/cms-element-set';
 import '@polymer/iron-icons/editor-icons';
 import '../media/cms-image';
 import '../styles/cms-comon-style_v3';
 import './cms-subcats'
 import './cms-subcats-item'
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-elements')
 export class cmsContentSubcats extends PolymerElement {
     static get template() {
         return html`<style include="cms-comon-style_v3">
@@ -14,9 +11,9 @@ export class cmsContentSubcats extends PolymerElement {
             position: relative;
         }
         div[scroll]{
-            width: 760px;
             overflow-x: auto;
             overflow-y: hidden;
+            margin-bottom: 12px;
         }
         div[scroll]::-webkit-scrollbar-track {
             background-color: var(--app-scrollbar-color)
@@ -38,12 +35,14 @@ export class cmsContentSubcats extends PolymerElement {
         <section class="flexchildbotom3">
             <div left name="image">
                 <paper-button>
-                    [[imageLabel]]
+                    [[subcatLabel]]
                 </paper-button>
                 <paper-icon-button  name="[[itemLabel]]" icon="av:library-add"  on-click="_addSubCategory" aria-label="mode-edit">
                 </paper-icon-button> 
             </div>
-            <cms-subcats id="subcats" lang="[[lang]]" sub-sub-cats="{{subSubCats}}" add="{{add}}">                  
+            <cms-subcats id="subcats" sub-sub-cats="{{subSubCats}}" add="{{add}}">                  
+                <div scroll slot="item">                
+                </div>                 
             </cms-subcats>
         </section>
         `;
@@ -86,9 +85,9 @@ export class cmsContentSubcats extends PolymerElement {
     }
     ready() {
         super.ready();
-        this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-page-list-type-content', 'setLangObject')
+        this.translator.target('cms-content-image', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-content-image', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-content-image', 'setLangObject')
         window.addEventListener('reset', (this._reset).bind(this))
     }
     _setLObj(res, querySnapshot) {
@@ -107,7 +106,9 @@ export class cmsContentSubcats extends PolymerElement {
     }
     _addSubCategory() {
         this.add = true
-        // this.subSubCats = this.model
+    }
+    _resetSubCats() {
+        this.$.subcats._reset()
     }
     _log(data) {
         console.log('images', data)

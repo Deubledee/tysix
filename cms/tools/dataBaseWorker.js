@@ -4,6 +4,252 @@ export class dataBaseworker {
     constructor() {
         this.categories = [];
     }
+    updateBrands(done, table, dev) {
+        let teble = { name: "brands&manufactures", doc: table.name, data: { content: table.content } };
+        if (dev === false) {
+            Worker.updateContent(done, teble)
+                .then(function () {
+                    console.log("brands&manufactures successfully updated!");
+                    done("brands&manufactures successfully updated!", table.lang);
+                })
+                .catch(function (error) {
+                    done("Error", error);
+                });
+        }
+        else {
+            Worker.updateContentDev(done, teble)
+                .then(function () {
+                    console.log("brands&manufactures successfully updated!");
+                    done("brands&manufactures successfully updated!", table.lang);
+                })
+                .catch(function (error) {
+                    done("Error", error);
+                });
+        }
+    }
+    setBrands(done, table, dev) {
+        let obj = table.name !== undefined ? { name: 'brands&manufactures', docName: table.name, doc: table.langs } : false;
+        if (obj === false) {
+            done(false, false);
+            return;
+        }
+        if (dev === false) {
+            Worker.createDoc(obj)
+                .then(function () {
+                    done('newlangs');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing document: ", error);
+                });
+        }
+        else {
+            Worker.createDocDev(obj)
+                .then(function () {
+                    done('newlang');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing document: ", error);
+                });
+        }
+    }
+    deleteBrandsZone(done, lang, dev) {
+        if (dev === false) {
+            Worker.deleteDoc({ name: 'brands&manufactures', docName: lang })
+                .then(function () {
+                    done("brands&manufactures successfully deleted!");
+                }).catch(function (error) {
+                    console.error("Error removing article: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.deleteDocDev({ name: 'brands&manufactures', docName: lang })
+                .then(function () {
+                    done("brands&manufactures successfully deleted!");
+                }).catch(function (error) {
+                    console.error("Error removing article: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    getBrands(done, table, dev) {
+        let obj = { name: 'brands&manufactures', doc: table.name };
+        if (dev === false) {
+            Worker.getDoc(obj)
+                .then((querySnapshot) => {
+                    let content = querySnapshot.data();
+                    done("brands&manufactures", content);
+                }).catch(function (error) {
+                    console.error("Error reteaving brands&manufactures: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocDev(obj)
+                .then((querySnapshot) => {
+                    let content = querySnapshot.data();
+                    done("brands&manufactures", content);
+                }).catch(function (error) {
+                    console.error("Error reteaving brands&manufactures: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    getAllBrands(done, dev) {
+        let obj = { name: 'brands&manufactures' };
+        if (dev === false) {
+            Worker.getDocList(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting All brands&manufactures: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocListDev(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting All brands&manufactures: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    //langs
+    updateLangs(done, table, dev) {
+        let teble = { name: "langs", doc: table.name, data: { content: table.content } };
+        if (dev === false) {
+            Worker.updateContent(done, teble)
+                .then(function () {
+                    console.log("langs successfully updated!");
+                    done("langs successfully updated!", table.lang);
+                })
+                .catch(function (error) {
+                    done("Error", error);
+                });
+        }
+        else {
+            Worker.updateContentDev(done, teble)
+                .then(function () {
+                    console.log("langs successfully updated!");
+                    done("langs successfully updated!", table.lang);
+                })
+                .catch(function (error) {
+                    done("Error", error);
+                });
+        }
+    }
+    setLangs(done, table, dev) {
+        let obj = table.name !== undefined ? { name: 'langs', docName: table.name, doc: table.langs } : false;
+        if (obj === false) {
+            done(false, false);
+            return;
+        }
+        if (dev === false) {
+            Worker.createDoc(obj)
+                .then(function () {
+                    done('newlangs');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing document: ", error);
+                });
+        }
+        else {
+            Worker.createDocDev(obj)
+                .then(function () {
+                    done('newlang');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing document: ", error);
+                });
+        }
+    }
+    deleteLangZone(done, lang, dev) {
+        if (dev === false) {
+            Worker.deleteDoc({ name: 'langs', docName: lang })
+                .then(function () {
+                    done("lang successfully deleted!");
+                }).catch(function (error) {
+                    console.error("Error removing article: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.deleteDocDev({ name: 'langs', docName: lang })
+                .then(function () {
+                    done("lang successfully deleted!");
+                }).catch(function (error) {
+                    console.error("Error removing article: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    getLangs(done, table, dev) {
+        let obj = { name: 'langs', doc: table.name };
+        if (dev === false) {
+            Worker.getDoc(obj)
+                .then((querySnapshot) => {
+                    let content = querySnapshot.data();
+                    done("langs", content);
+                }).catch(function (error) {
+                    console.error("Error reteaving langs: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocDev(obj)
+                .then((querySnapshot) => {
+                    let content = querySnapshot.data();
+                    done("langs", content);
+                }).catch(function (error) {
+                    console.error("Error reteaving langs: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    getAllLangs(done, dev) {
+        let obj = { name: 'langs' };
+        if (dev === false) {
+            Worker.getDocList(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting All langs: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocListDev(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting All langs: ", error);
+                    done("error", error);
+                });
+        }
+    }
+    //aticles
     updateArticles(done, table, dev) {
         let teble = { name: "articles", doc: table.name, data: { content: table.content } };
         if (dev === false) {
@@ -97,7 +343,7 @@ export class dataBaseworker {
                 });
         }
     }
-    askAllArticles(done, dev) {
+    getAllArticles(done, dev) {
         let obj = { name: 'articles' };
         if (dev === false) {
             Worker.getDocList(obj)
@@ -126,8 +372,9 @@ export class dataBaseworker {
                 });
         }
     }
-    writePagesContent(done, table, dev) {
-        let teble = { name: 'pages', doc: table.items[0].categoryName, data: table };
+    changePages(done, table, dev) {
+        console.log(table.id)
+        let teble = { name: 'pages', doc: table.id, data: table };
         if (dev === false) {
             Worker.updateContent(done, teble)
                 .then(function () {
@@ -149,9 +396,8 @@ export class dataBaseworker {
                 });
         }
     }
-    setPages(done, parsed, dev) {
-        let obj = { name: 'pages', docName: parsed.items[0].categoryName, doc: parsed }
-        console.log(obj);
+    setPages(done, table, dev) {
+        let obj = { name: 'pages', docName: table.id, doc: table }
         if (dev === false) {
             Worker.createDoc(obj)
                 .then(function () {
@@ -193,7 +439,7 @@ export class dataBaseworker {
                 });
         }
     }
-    askAllPages(done, dev) {
+    getAllPages(done, dev) {
         let obj = { name: 'pages' };
         if (dev === false) {
             Worker.getDocList(obj)

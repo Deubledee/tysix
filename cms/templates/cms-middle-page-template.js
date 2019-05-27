@@ -8,24 +8,30 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 position: var(--app-default-position);
                 display: var(--app-block)
             }
+            .navbottom{
+                height: auto
+            }
+            flexchildbotom{
+                
+            }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
         </app-route>
             ${this._getSilentAnchor}
            <slot name="spinner"></slot>
+        <nav top>
+            <app-toolbar>
+                <paper-tabs no-bar>
+                    <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                    ${this._getShoutAnchor}
+                    </iron-selector>
+                </paper-tabs>
+            </app-toolbar>
+        </nav>
         <main class="flex">
             <div class="navbottom">
-                <nav top>
-                    <app-toolbar>
-                        <paper-tabs no-bar>
-                            <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                            ${this._getShoutAnchor}
-                            </iron-selector>
-                        </paper-tabs>
-                    </app-toolbar>
-                </nav>
-                <div bottom>
+                <div arow hidebottom$="[[hidebottom]]">
                     ${this._getBottom}
                 </div>
                     ${this._getTable}
@@ -71,29 +77,29 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     static get _getBottom() {
         return html`
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[title]] </h3>
+            <div class="center">
+                <h4> [[title]] </h4>
             </div>
         </section>                        
             
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[viewedit]] </h3>
+            <div class="center">
+                <h4> [[viewedit]] </h4>
             </div>
         </section>                        
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[type]] </h3>
+            <div class="center">
+                <h4> [[type]] </h4>
             </div>
         </section>                        
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[published]] </h3>
+            <div class="center">
+                <h4> [[published]] </h4>
             </div>
         </section>                        
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[delete]] </h3>
+            <div class="center">
+                <h4> [[delete]] </h4>
             </div>
         </section>
         `
@@ -103,7 +109,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         return html`
         <dom-repeat repeat items="[[inForm]]" as="detail">
             <template>
-                <div class="flexsidecenter">
+                <div class="flexsidecenter title">
                     <aside>
                         <span>
                             [[Info]] 
@@ -167,6 +173,11 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             closed: {
                 type: Boolean,
                 notify: true,
+            },
+            hidebottom: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
             },
             confirm: {
                 type: Boolean,

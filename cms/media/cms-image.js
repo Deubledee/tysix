@@ -11,7 +11,6 @@ class cmsImage extends cmsItemImageTemplate {
                 <cms-image-item  
                     to-content="[[toContent]]"
                     add="[[addTo]]" 
-                    lang="[[lang]]" 
                     image="[[item]]" 
                     save-button="[[saveButton]]"
                     reset-button="[[resetButton]]"
@@ -24,37 +23,37 @@ class cmsImage extends cmsItemImageTemplate {
     static get _getMenu() {
         return html`                         
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4>  [[Imag]]   </h4>     
                 </div>  
             </section>
 
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4> 
                     [[title]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4> 
                     [[dateCreated]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4> 
                     [[Gallery]]     </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4> 
                     [[url]]      </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4> 
                     [[delete]]   [[add]]     </h4>     
                 </div>  
@@ -81,15 +80,18 @@ class cmsImage extends cmsItemImageTemplate {
             },
             addTo: {
                 type: Boolean,
-                value: false
+                value: false,
+                notify: true
             },
             add: {
                 type: String,
-                value: 'add'
+                notify: true,
+                computed: '_setLabelAdd(addTo)'
             },
             delete: {
                 type: String,
-                value: 'delete'
+                notify: true,
+                computed: '_setLabelDelete(addTo)'
             },
             images: {
                 type: Array,
@@ -143,12 +145,18 @@ class cmsImage extends cmsItemImageTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _setLabel(data) {
-        if (data === true) {
-            this.set('delete', '')
-        }
+    _setLabelAdd(data) {
         if (data === false) {
-            this.set('add', '')
+            return ''
+        } else {
+            return 'add'
+        }
+    }
+    _setLabelDelete(data) {
+        if (data === true) {
+            return ''
+        } else {
+            return 'delete'
         }
     }
     _placeEventMethod(data) {

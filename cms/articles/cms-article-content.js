@@ -1,5 +1,6 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
+import '../elements/cms-content-text'
 class cmsArticleContent extends cmsContentTemplate {
     static get _getAnchor() {
         return html`
@@ -17,7 +18,7 @@ class cmsArticleContent extends cmsContentTemplate {
             <div bottom>                   
                 <dom-repeat repeat items="[[inputVal]]" as="item">
                     <template>
-                        <section class="flexchildbotom">
+                        <section class="flexchildbotomShort">
                             <cms-content-item item-input="true"
                                 item="[[item]]" 
                                 anchor="[[anchor]]" 
@@ -32,14 +33,14 @@ class cmsArticleContent extends cmsContentTemplate {
                 <dom-repeat repeat items="[[textareaVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFull">
-                            <cms-content-item item-text-area="true"
+                            <cms-content-text item-text-area="true"
                                 item="[[item]]" 
                                 anchor="[[anchor]]" 
                                 save-button="[[saveButton]]"  
                                 lang="[[lang]]"  
                                 editing="{{editing}}" 
                                 res="{{textAreaResponse}}">
-                            </cms-content-item>            
+                            </cms-content-text>            
                         </section>
                     </template>
                 </dom-repeat>                          

@@ -1,11 +1,6 @@
 import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { dataBaseworker } from './tools/dataBaseWorker';
-const __DEV = true;
-const _DBW = new dataBaseworker();
-const _STYLES = _DBW.getElementAssets('cms-image-viewer', __DEV);
 class cmsMedia extends cmsTopPageTemplate {
-
   static get topTitle() {
     return html`
     <div> [[Media]] </div>

@@ -130,6 +130,11 @@ class cmsImages extends cmsMiddlePageTemplate {
                     return MyAppGlobals.translator
                 }
             },
+            hidebottom: {
+                type: Boolean,
+                value: true,
+                reflectToAttribute: true,
+            },
             lang: {
                 type: String,
                 notify: true

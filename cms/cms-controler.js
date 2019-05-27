@@ -129,7 +129,14 @@ class cmsControler extends PolymerElement {
         .background {
             background-color: var(--app-secondary-text-color)
         }
-
+        div[rows]{
+          display: flex;
+          flex-direction: column
+        }
+        div[pages]{
+          min-height: 1470px;
+          max-height: 1800px
+        }
         paper-dropdown-menu {
             width: 82px;
             box-sizing: border-box;
@@ -154,72 +161,83 @@ class cmsControler extends PolymerElement {
 
   <shop-category-data lang="{{lang}}">
   </shop-category-data>
-  <nav toolbar>
-    <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
-        <div class="content-wrapper">
-            <nav>
-                <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-                <div>
-                    <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
-                </div>
-            </nav>
-            <nav>
-                <paper-icon-button icon="social:pages" aria-label="content">
-                </paper-icon-button>
-                <div>
-                    <a on-click="_resetEvent" name="content" href="[[rootPath]]content/search">[[content]]</a>
-                </div>
-            </nav>
-            <nav>
-                <paper-icon-button icon="social:person-outline" aria-label="users">
-                </paper-icon-button>
-                <div>
-                    <a on-click="_resetEvent" name="users" href="[[rootPath]]users/search">[[users]]</a>
-                </div>
-            </nav>
-            <nav>
-                <paper-icon-button icon="image:photo-library" aria-label="galleries">
-                </paper-icon-button>
-                <div>
-                    <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
-                </div>
-            </nav>
+  <div rows>
+    <nav toolbar>
+      <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
+          <div class="content-wrapper">
+              <nav>
+                  <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+                  <div>
+                      <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
+                  </div>
+              </nav>
+              <nav>
+                  <paper-icon-button icon="social:pages" aria-label="content">
+                  </paper-icon-button>
+                  <div>
+                      <a on-click="_resetEvent" name="content" href="[[rootPath]]content/search">[[content]]</a>
+                  </div>
+              </nav>
+              <nav>
+                  <paper-icon-button icon="social:person-outline" aria-label="users">
+                  </paper-icon-button>
+                  <div>
+                      <a on-click="_resetEvent" name="users" href="[[rootPath]]users/search">[[users]]</a>
+                  </div>
+              </nav>
+              <nav>
+                  <paper-icon-button icon="image:photo-library" aria-label="galleries">
+                  </paper-icon-button>
+                  <div>
+                      <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
+                  </div>
+              </nav>
+          </div>
+      </iron-selector>
+      <div class="cart-btn-container">
+        <div class="background">
+          <paper-dropdown-menu label="[[language]]" value="{{lang}}">
+            <paper-tabs slot="dropdown-content" class="dropdown-content">
+              <paper-tab>pt</paper-tab>
+              <paper-tab>en</paper-tab>
+            </paper-tabs>
+          </paper-dropdown-menu>
         </div>
-    </iron-selector>
-    <div class="cart-btn-container">
-      <div class="background">
-        <paper-dropdown-menu label="[[language]]" value="{{lang}}">
-          <paper-tabs slot="dropdown-content" class="dropdown-content">
-            <paper-tab>pt</paper-tab>
-            <paper-tab>en</paper-tab>
-          </paper-tabs>
-        </paper-dropdown-menu>
+        <div>
+          <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
+        </div>
+        <div class="user-badge">
+          <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
+        </div>
       </div>
-      <div>
-        <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
-      </div>
-      <div class="user-badge">
-        <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
-      </div>
+    </nav>
+    <div pages>
+      <iron-pages selected="[[page]]" attr-for-selected="name">
+            <article name="home">
+              <h1> 
+                <b>Home</b>
+              </h1>
+            </article>
+        <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
+        </cms-user-viewer>
+
+        <cms-content route="[[subroute]]" name="content" user="[[user]]">
+        </cms-content>
+
+        <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
+        </cms-media>
+
+        <my-view404 name="view404"></my-view404>
+      </iron-pages>
     </div>
-  </nav>
-  <iron-pages selected="[[page]]" attr-for-selected="name">
-        <article name="home">
-          <h1> 
-            <b>Home</b>
-          </h1>
-        </article>
-    <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
-    </cms-user-viewer>
-
-    <cms-content route="[[subroute]]" name="content" user="[[user]]">
-    </cms-content>
-
-    <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
-    </cms-media>
-
-    <my-view404 name="view404"></my-view404>
-  </iron-pages>
+    <div>
+      <ul>
+        <li>sera</li>
+        <li>sempre</li>
+        <li>a subir</li>
+      </ul>
+    </div>
+  </div>
   <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery" user="[[user]]" lang="[[lang]]">
   </cms-confirm>       
         `;

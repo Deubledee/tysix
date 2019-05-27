@@ -12,6 +12,8 @@ export class cmsContentTemplate extends PolymerElement {
         :host {
             position: relative;
         }
+            
+       
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>
@@ -71,7 +73,7 @@ export class cmsContentTemplate extends PolymerElement {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
             <template>
-                <div class="flexsidecenter">
+                <div class="flexsidecenter title">
                     <aside>
                         <span>
                             [[info]]
@@ -95,18 +97,18 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="navsideright">
-                    <aside>
+                <div class="flexsidecenter">
+                    <aside class="asideBackgrc">
                         <span>
                             [[ _getPublishedBy(cat.publishedBy)]]
                         </span>
                     </aside>
-                    <aside published$="[[cat.published]]">
+                    <aside  class="asideBackgrc" published$="[[cat.published]]">
                         <span>
                             [[cat.published]]
                         </span>
                     </aside>
-                    <aside>
+                    <aside class="asideBackgrc">
                         <span>
                             [[cat.datePublished]]
                         </span>
@@ -124,13 +126,13 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="navsideright">
-                    <aside>
+                <div class="flexsidecenter">
+                    <aside class="asideBackgrc">
                         <span>
                             [[cat.author]]
                         </span>
                     </aside>
-                    <aside>
+                    <aside class="asideBackgrc">
                         <span>
                             [[cat.dateAdded]]
                         </span>
@@ -159,12 +161,12 @@ export class cmsContentTemplate extends PolymerElement {
                     <dom-repeat repeat items="[[cat.lastModified]]" as="createdAt">
                         <template>
                             <section>
-                                <aside>
+                                <aside class="asideBackgrc">
                                     <span>
                                         [[createdAt.author]]
                                     </span>
                                 </aside>
-                                <aside>
+                                <aside class="asideBackgrc">
                                     <span>
                                         [[createdAt.date]]
                                     </span>

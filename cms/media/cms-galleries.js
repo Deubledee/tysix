@@ -24,18 +24,18 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     static get _getBottom() {
         return html`
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[Gallery]] </h3>
+            <div class="center">
+                <h4> [[Gallery]] </h4>
             </div>
         </section>    
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[viewEdit]] </h3>
+            <div class="center">
+                <h4> [[viewEdit]] </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
-            <div class="flexleft">
-                <h3> [[remove]] </h3>
+            <div class="center">
+                <h4> [[remove]] </h4>
             </div>
         </section>  
         `

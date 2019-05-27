@@ -3,7 +3,6 @@ import { cmsItemTemplate } from '../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { Setter } from '../tools/cms-element-set';
 class cmsPageListItem extends cmsItemTemplate {
     static get template() {
         return html`
@@ -33,10 +32,12 @@ class cmsPageListItem extends cmsItemTemplate {
         super.ready();
     }
     _putRow(data) {
-        let template = html`
+        this.translator.template.innerHTML = `
            <article centerListItem slot="table">
-               <div class="padding">   
-
+               <div>   
+                <span> 
+                   <paper-button> ${data.items[0].categoryName}</paper-button>
+                </span>
                </div>
                <div>
                    <paper-button>
@@ -44,30 +45,22 @@ class cmsPageListItem extends cmsItemTemplate {
                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                    </paper-button> 
                </div>  
-               <div class="padding">
-                   
-               </div>   
-               <div class="padding">
-                   
-               </div>   
-               <div>
-                   <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button>        
-               </div>
-           </article>`;
-        template.content.children[0].children[0].innerHTML = `
-                <span> 
-                   <paper-button> ${data.items[0].categoryName}</paper-button>
-                </span>`;
-        template.content.children[0].children[2].innerHTML = `
+               <div>                   
                 <span> 
                     <paper-button> ${data.items[0].type} </paper-button>
-                </span>`;
-        template.content.children[0].children[3].innerHTML += `
-                <span class="${data.info[0].published}"> 
+                </span>
+               </div>   
+               <div class="${data.info[0].published}">
+                   
+                <span> 
                     <paper-button> ${data.info[0].published} </paper-button>
-                </span>`;
-        let clone = document.importNode(template.content, true);
-        this.append(clone);
+                </span>
+               </div>   
+               <div>
+                   <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                </div>
+           </article>`;
+        this.translator.clone(this)
         this.children[0].children[1].
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
@@ -112,7 +105,7 @@ class cmsPageListItem extends cmsItemTemplate {
                 bubbles: true, composed: true,
                 detail: {
                     name: this.page.items[0].categoryName, method: (this.__delete).bind(this),
-                    argument: this.page.items[0].categoryName, headderMsgKind: 'delete', type: 'categoryPage'
+                    argument: this.page.id, headderMsgKind: 'delete', type: 'categoryPage'
                 }
             }));
         });

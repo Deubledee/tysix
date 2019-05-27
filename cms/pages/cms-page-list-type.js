@@ -69,7 +69,7 @@ class cmsPageListType extends cmsMiddlePageTemplate {
         this._askPages()
     }
     _askPages() {
-        this.translator._DBW.askAllPages((done) => {
+        this.translator._DBW.getAllPages((done) => {
             this._setAll(done);
         }, this.translator.__DEV);
     }

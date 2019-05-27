@@ -11,8 +11,8 @@ export class cmsSubcats extends cmsItemImageTemplate {
         div[bottom]{
             height: 35px;
             font-size: var(--app-images-article-font-size);
-            background-color: var(--app-tabs-color);
-            box-shadow: 1px 1px 4px var(--disabled-text-color);
+            background-color: #e2e2e2;
+           
         }
         div[bottom] h4{
             margin-block-start: 8px;
@@ -22,37 +22,36 @@ export class cmsSubcats extends cmsItemImageTemplate {
             font-size: 9px; 
         }
         div[table]{
-            width: 773px;
             overflow-x: hidden;
         }`
     }
     static get _getMenu() {
         return html`                          
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
-                    <h4 title="[[item]]"> [[item]]item </h4>     
+            <section class="flexchildbotomShort noFlex">
+                <div class="center">   
+                    <h4 title="[[item]]"> [[item]] </h4>     
                 </div>  
             </section>
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
-                    <h4 title="[[title]]"> [[title]]title </h4>     
+            <section class="flexchildbotomShort noFlex">
+                <div class="center">   
+                    <h4 title="[[title]]"> [[title]] </h4>     
                 </div>  
             </section>
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">
-                    <h4 title="[[viewedit]]"> [[viewedit]]viewedit </h4>
+            <section class="flexchildbotomShort noFlex">
+                <div class="center">
+                    <h4 title="[[viewedit]]"> [[viewedit]] </h4>
                 </div>  
             </section>
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+            <section class="flexchildbotomShort noFlex">
+                <div class="center">  
                     <h4 title="[[type]]"> 
-                    [[type]]  type   </h4>     
+                    [[type]]     </h4>     
                 </div>  
             </section>
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+            <section class="flexchildbotomShort noFlex">
+                <div class="center">  
                     <h4 title="[[delete]]"> 
-                    [[delete]]  delete  </h4>     
+                    [[delete]]   </h4>     
                 </div>  
             </section>`
     }
@@ -168,10 +167,11 @@ export class cmsSubcats extends cmsItemImageTemplate {
     }
     ready() {
         super.ready();
+        window.addEventListener('reset-subcats', (this._reset).bind(this))
         window.addEventListener('reset', (this._reset).bind(this))
-        this.translator.target('cms-elements', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-elements', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-elements', 'setLangObject')
+        this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-subcats', 'setLangObject')
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -189,7 +189,7 @@ export class cmsSubcats extends cmsItemImageTemplate {
     }
     _pushModel(data) {
         if (data === true) {
-            let subcat = this.subSubCats
+            let subcat = this.subSubCats || []
             this._reset()
             setTimeout(() => {
                 subcat.push(this.Modelo)
@@ -199,17 +199,15 @@ export class cmsSubcats extends cmsItemImageTemplate {
             }, 100)
         }
     }
-    _slottItem(item, index, edit) {
-        let template = document.createElement('template')
+    _slottItem(item, index) {
         let str = `            
                 <div scroll slot="item">          
                     <cms-subcats-item article="[[item]]">
                     </cms-subcats-item>          
                 </div>                
                 `
-        template.innerHTML = str
-        var clone = document.importNode(template.content, true);
-        this.appendChild(clone)
+        this.translator.template.innerHTML = str
+        this.translator.clone(this)
         this.children[this.childElementCount - 1].children[0].model = this.Modelo
         this.children[this.childElementCount - 1].children[0].view = true
         if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
@@ -222,8 +220,11 @@ export class cmsSubcats extends cmsItemImageTemplate {
         return data
     }
     _reset() {
+        this.editIndex = NaN
         this.subSubCats = []
+        this.add = false
         this.innerHTML = ''
+        console.log(this.innerHTML)
     }
 }
 customElements.define(cmsSubcats.is, cmsSubcats);

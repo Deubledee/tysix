@@ -7,13 +7,12 @@ Consts.assets = Consts.getAssets('cms-articles')
 class cmsArticle extends cmsItemImageTemplate {
     static get _getStyles() {
         return html`        
-        div[bottom]{
+        div[arow]{
             height: 35px;
             font-size: var(--app-images-article-font-size);
-            background-color: var(--app-tabs-color);
-            box-shadow: 1px 1px 4px var(--disabled-text-color);
+           /* background-color: var(--app-secondary-text-color);*/
         }
-        div[bottom] h4{
+        div[arow] h4{
             margin-block-start: 8px;
         }
         `
@@ -21,41 +20,41 @@ class cmsArticle extends cmsItemImageTemplate {
     static get _getMenu() {
         return html`                           
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4 title="[[item]]">  [[item]]   </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4 title="[[title]]"> 
                     [[title]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">
+                <div class="center">
                     <h4 title="[[viewedit]]"> [[viewedit]] </h4>
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
+                <div class="center">   
                     <h4 title="[[stock]]"> 
                     [[stock]]    </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4 title="[[type]]"> 
                     [[type]]     </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4 title="[[published]]"> 
                     [[published]] </h4>     
                 </div>  
             </section>
             <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
+                <div class="center">  
                     <h4 title="[[delete]]"> 
                     [[delete]]      </h4>     
                 </div>  
