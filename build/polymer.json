@@ -1,12 +1,13 @@
 {
   "entrypoint": "index.html",
-  "shell": "cms/cms-controler.js",
+  "shell": "cms/cms-login.js",
   "fragments": [],
   "sources": [
     "data/**/*",
     "images/**/*",
+    "cms/tools/**/*",
     "index.html",
-    "cms/cms-controler.js"
+    "cms/cms-login.js"
   ],
   "extraDependencies": [
     "bower_components/webcomponentsjs/*.js",
@@ -24,7 +25,7 @@
         "minify": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true
@@ -43,7 +44,7 @@
         "transformModulesToAmd": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true
@@ -59,7 +60,7 @@
         "transformModulesToAmd": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true

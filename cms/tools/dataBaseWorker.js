@@ -1,4 +1,4 @@
-import { worker } from './firebaseWorker';
+import { worker } from '/cms/tools/firebaseWorker.js';
 const Worker = new worker();
 export class dataBaseworker {
     constructor() {

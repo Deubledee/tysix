@@ -12,7 +12,6 @@ export class cmsContentTemplate extends PolymerElement {
         :host {
             position: relative;
         }
-            
        
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
@@ -73,14 +72,14 @@ export class cmsContentTemplate extends PolymerElement {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
             <template>
-                <div class="flexsidecenter title">
+                <div class="center-menu title">
                     <aside>
                         <span>
                             [[info]]
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="row-menu">
                     <aside>
                         <span>
                             [[publishedby]]
@@ -97,7 +96,7 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="flexsidecenter">
+                <div class="center-menu">
                     <aside class="asideBackgrc">
                         <span>
                             [[ _getPublishedBy(cat.publishedBy)]]
@@ -114,7 +113,7 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="row-menu">
                     <aside>
                         <span>
                             [[author]]
@@ -126,7 +125,7 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="flexsidecenter">
+                <div class="center-menu">
                     <aside class="asideBackgrc">
                         <span>
                             [[cat.author]]
@@ -138,14 +137,14 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="flexsidecenter">
+                <div class="center-menu">
                     <aside>
                         <span>
                             [[lastmodified]]
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="row-menu">
                     <aside>
                         <span>
                             [[author]]

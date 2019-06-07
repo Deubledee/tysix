@@ -15,6 +15,9 @@ class cmsArticle extends cmsItemImageTemplate {
         div[arow] h4{
             margin-block-start: 8px;
         }
+        article[centerListItem] div{
+            height:
+        }
         `
     }
     static get _getMenu() {

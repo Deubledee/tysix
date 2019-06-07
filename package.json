@@ -22,7 +22,7 @@
     "@polymer/app-storage": "^3.0.2",
     "@polymer/iron-ajax": "^3.0.1",
     "@polymer/iron-component-page": "^4.0.1",
-    "@polymer/iron-demo-helpers": "^3.0.2",
+    "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/iron-flex-layout": "^3.0.1",
     "@polymer/iron-form": "^3.0.1",
     "@polymer/iron-icon": "^3.0.1",
@@ -57,6 +57,8 @@
     "finalhandler": "^1.1.1",
     "firebase-admin": "^7.0.0",
     "formidable": "^1.2.1",
+    "ipfs": "^0.36.3",
+    "ipfs-http-client": "^32.0.1",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
@@ -65,7 +67,7 @@
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
     "pem": "^1.13.2",
-    "polymer-cli": "^1.9.7",
+    "polymer-cli": "^1.9.9",
     "prpl-server": "^1.2.0",
     "response-time": "^2.3.2",
     "util": "^0.11.1",

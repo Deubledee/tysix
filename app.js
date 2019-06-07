@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use(responseTime());
 //app.use('/node', express.static(path.join(__dirname, 'public/bower_components/webcomponentsjs')));
 app.use('/webcomponentsjs', express.static(path.join(__dirname, 'node_modules/@webcomponents/webcomponentsjs')));
-app.use('/src', express.static(path.join(__dirname, 'src')));
+app.use('/cms', express.static(path.join(__dirname, 'cms')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
 

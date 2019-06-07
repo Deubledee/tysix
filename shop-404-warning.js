@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icon/iron-icon.js';
-
-class cms404Warning extends PolymerElement {
+class Shop404Warning extends PolymerElement {
   static get template() {
     return html`
     <style>
@@ -29,13 +28,13 @@ class cms404Warning extends PolymerElement {
       <iron-icon icon="error"></iron-icon>
       <h1>Sorry, we couldn't find that page</h1>
     </div>
-    <oaper-button>
+    <shop-button>
       <a href="/">Go to the home page</a>
-    </oaper-button>
+    </shop-button>
 `;
   }
 
-  static get is() { return 'cms-404-warning'; }
+  static get is() { return 'shop-404-warning'; }
 }
 
-customElements.define(cms404Warning.is, cms404Warning);
+customElements.define(Shop404Warning.is, Shop404Warning);

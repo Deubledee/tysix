@@ -12,7 +12,8 @@ import './tools/cms-input-sellector';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { reuest } from './tools/http-handler';
-
+import { expresso } from "/cms/tools/expresso/expresso.js"
+window.MyAppGlobals.translator = new expresso();
 class cmsLogin extends PolymerElement {
     static get template() {
         return html`

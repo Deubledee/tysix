@@ -135,7 +135,7 @@ class cmsControler extends PolymerElement {
         }
         div[pages]{
           min-height: 1470px;
-          max-height: 1800px
+          height: 1877px;
         }
         paper-dropdown-menu {
             width: 82px;
@@ -381,7 +381,7 @@ class cmsControler extends PolymerElement {
       return;
     }
     if (page === 'view404') {
-      import('../shop-404-warning');
+      import('./cms-404-warning');
       return;
     }
   }

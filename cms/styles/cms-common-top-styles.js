@@ -57,7 +57,8 @@ $_documentContainer.innerHTML = `
 
     article[centerListItem] {
         word-break: keep-all;
-        background-color: var(--app-backgound-color);
+       /* background-color: var(--app-backgound-color);*/
+        border-radius: 4px;
     }
 
     article[centerImageItem]  {
@@ -67,13 +68,11 @@ $_documentContainer.innerHTML = `
     
     article[centerListItem] div, article[centerImageItem] div {
         @apply --layout-flex;
-       /* box-shadow: 1px 1px 3px var(--paper-blue-300);*/
         height: var(--app-content-article-height);
-        overflow-y: hidden;
-        border-bottom: 0.5px dashed;
-        margin-right: 4px;
+        background-color: var(--app-item-backgound-color);
+       /* overflow-y: hidden;
+        box-shadow: 1px 1px 4px;*/
     }
-
     article[centerListItem] span, article[centerImageItem]span  {
         word-break: var(--app-default-text-word-break)
     }
@@ -113,7 +112,7 @@ $_documentContainer.innerHTML = `
     }
 
     nav {
-        color: var(--app-primary-text-color);
+        color: var(--paper-blue-grey-700);
         flex-flow: var(--app-flexrow);
         padding: var(--app-default-padding, 10px);
         padding-left: var(--app-content-nav-padding-left)
@@ -173,7 +172,7 @@ $_documentContainer.innerHTML = `
     }
 
     paper-button[front] {
-        height: var(--app-content-button-height, 40px);
+        height: var(--app-front-button)31px;
         border-bottom: unset;
         top: unset;
     }
@@ -185,8 +184,7 @@ $_documentContainer.innerHTML = `
     .button {
         min-width: var(--app-content-paper-button-minwidth);
         border-left: var(--app-content-button-border);
-       /* border-bottom: var(--app-content-button-border);*/
-        background-color: var(--app-content-paper-button-background-color);
+        background-color: var(--divider-color);
         border-top: var(--app-content-button-border);
         border-right: var(--app-content-button-border);
         margin-right: var(--app-content-paper-button-margin-right);

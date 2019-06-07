@@ -146,6 +146,7 @@ export class cmsContentItemTemplate extends PolymerElement {
         }
     }
     _setValues(data) {
+        this.$.cancel.classList.add('diferent');
         if (data['reset'] === undefined) {
             this.temp = this.item
             for (let par in data) {
@@ -236,7 +237,7 @@ export class cmsContentItemTemplate extends PolymerElement {
     }
     cancelState() {
         this.temp = {};
-        this.cancelElement.classList.add('diferent');
+        this.$.cancel.classList.add('diferent');
         this.inputObject.onkeydown = function () { };
         if (this.editing <= 1) {
             this.oninputing = true
@@ -252,9 +253,9 @@ export class cmsContentItemTemplate extends PolymerElement {
         this.editing = 0;
         this.raised = false
         this.oninputing = true
+        this.$.cancel.classList.add('diferent');
         window.onbeforeunload = function () { };
         this.saveButton.classList.add('diferent');
-        this.$.cancel.classList.add('diferent');
         //   this.anchor.classList.remove('diferent');
     }
 }

@@ -95,11 +95,6 @@ class cmsGalleryViewer extends cmsViewerTemplate {
                 });
                 return;
             }
-            if (['add-gallery', 'edit-gallery'].indexOf(page)) {
-                import('./cms-gallery-form').then(item => {
-                });
-                return;
-            }
             if (page === 'view404') {
                 import('../cms-404-warning');
                 return;

@@ -177,7 +177,7 @@ class cmsMedia extends cmsTopPageTemplate {
             return;
           }
           if (page === 'view404') {
-            import('../shop-404-warning');
+            import('./cms-404-warning');
             return;
           }*/
     }

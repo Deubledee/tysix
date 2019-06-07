@@ -6,6 +6,8 @@ const template = html`
   <style is="cms-common-styles_v2">
   html {
   --app-backgound-color: #fff;
+  --app-item-backgound-color: #eaeaea;
+  --app-front-button: 31px;
   --app-primary-color: #3f4756;
   --app-secondary-color: var(--paper-cyan-50);
   --app-tabs-color: var(--app-secondary-color);
@@ -66,7 +68,7 @@ const template = html`
   --app-content-margin-bottom: 1px;
   --app-content-article-margin-bottom: 10px;
   --app-content-article-marginleft: auto;
-  --app-content-article-height: 43px;
+  --app-content-article-height: 25px;
   --app-content-article-lsitItem-flex-basis: 25%;
   --app-content-nav-padding-left: 21px;
   --app-content-nav-topleft: -22px;
@@ -77,6 +79,7 @@ const template = html`
   --app-content-divtop-height: 130px;
   --app-content-divtop-padding-top: 30px;
   --app-content-divtop-border-bottom: 1px solid var(--app-primary-text-color);
+  --app-content-section-span-color: #6597c0;
   --app-content-section-padding: 4px;
   --app-content-section-height: 50px;
   --app-content-section-margin-left: 20px;
@@ -88,13 +91,13 @@ const template = html`
   --app-content-button-border: 1px solid;
   --app-content-paper-button-minwidth: 98px;
   --app-content-paper-button-height: 31px;
-  --app-content-paper-button-background-color: #e1e1e1;
+  --app-content-paper-button-background-color: #d0e6f1;
   --app-content-paper-button-margin-right: -7px;
   --app-content-hidden-minwidth: 98px;
   --app-content-paper-tabs-font-size: 17px;
   --app-content-paper-tabs-padding-top: 7px;
   --app-content-navcenter-letter-spacing: 0.02em;
-  --app-content-button-height: 31px;
+  --app-content-button-height: 25px;
   --app-content-page-viewertop: 70px;
   --app-content-page-viewerleft: -3px;
   --app-pages-padding-right: 18px;

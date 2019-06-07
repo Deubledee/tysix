@@ -3,6 +3,18 @@ import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 export class cmsArticleItem extends cmsItemTemplate {
+    static get _getStyles() {
+        return html`
+        <style include="cms-comon-style_v3">    
+        :host {
+            position: relative;
+            display: block;
+        } 
+        shop-image{
+            top: 1px; 
+        }
+        </style> `
+    }
     static get _getElement() {
         return html`
         <dom-repeat repeat items="[[content]]" as="item">
@@ -40,8 +52,10 @@ export class cmsArticleItem extends cmsItemTemplate {
                         </paper-button>
                     </div>
                     <div>
-                        <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
-                        </paper-icon-button>
+                        <paper-button on-click="_openConfirm">
+                            <paper-icon-button icon="av:not-interested" aria-label="delete">
+                            </paper-icon-button>
+                        </paper-button>
                     </div>
                 
                 </article>

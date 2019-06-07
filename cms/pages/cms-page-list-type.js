@@ -5,7 +5,7 @@ import './cms-page-list-item';
 class cmsPageListType extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGVkIjoiIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInVuUHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sImxhc3RNb2RpZmllZCI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwiZGF0ZVB1Ymxpc2hlZCI6Ik5QIiwicHVibGlzaGVkIjoiTlAifV0sIml0ZW1zIjpbeyJjYXRlZ29yeU5hbWUiOiIiLCJ0eXBlIjoiIiwibGFuZyI6IiJ9XSwic3ViQ2F0ZWdvcmllcyI6W119&add=true">
+        <a href="[[rootPath]]content/pages/add-category-pages?content=eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGVkIjoiIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInVuUHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sImxhc3RNb2RpZmllZCI6W10sImRhdGVQdWJsaXNoZWQiOiJOUCIsInB1Ymxpc2hlZCI6Ik5QIn1dLCJpdGVtcyI6W3siY2F0ZWdvcnlOYW1lIjoiIiwidHlwZSI6IiIsImxhbmciOiIifV0sInN1YkNhdGVnb3JpZXMiOltdfQ==&add=true">
             <paper-tab name=" add-category-pages">
             [[ADD]] [[categorypages]]
                 <paper-icon-button-light>

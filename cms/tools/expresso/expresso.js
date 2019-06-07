@@ -1,5 +1,6 @@
-import { Setter } from '../cms-element-set';
-export class expresso extends Setter {
+import { Setter } from '/cms/tools/cms-element-set.js';
+export { expresso }
+class expresso extends Setter {
     constructor() {
         super()
         this.set = new Object()
@@ -60,4 +61,3 @@ export class expresso extends Setter {
         return 0
     }
 }
-window.MyAppGlobals.translator = new expresso();

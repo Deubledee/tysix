@@ -32,6 +32,7 @@ $_documentContainer.innerHTML = `
 
             .flex {
                 @apply --layout-horizontal;
+                height: 1525px;
             }
 
             .flexH,  div[container] {
@@ -45,8 +46,8 @@ $_documentContainer.innerHTML = `
                 border-radius: 4px;
             }
             div[arow]{
-                border: 1px outset;
-                background-color: var(--app-secondary-color);
+              /*  border: 1px outset;
+                background-color: var(--app-secondary-color);*/
                 height: 30px;
             }
 
@@ -69,7 +70,7 @@ $_documentContainer.innerHTML = `
                 height: auto;
                 margin-bottom: 30px;
             }
-            .flexsidecenter {
+            .center-menu {
                 -webkit-flex: unset;
                 flex: unset;
                 webkit-flex-basis: var(--layout-flex_-_-webkit-flex-basis, 0);
@@ -82,6 +83,7 @@ $_documentContainer.innerHTML = `
 
             div[table] {
                 min-height: 100px;
+                max-height: 600px;
                 flex-direction: var(--app-flexcolumn);
                 margin-top: 8px;
                 padding: 8px;
@@ -142,8 +144,9 @@ $_documentContainer.innerHTML = `
             .navbottom,
             .navside {
                 box-sizing: border-box;
-                background-color: #d8e7ef;
+               /* background-color: #d8e7ef;*/
                 border-radius: 4px;
+                height: auto;
             }
             .flexchildbotom3 {
                 @apply --layout-self-stretch;
@@ -167,15 +170,13 @@ $_documentContainer.innerHTML = `
                 padding: 8px;
                 transition-property: height, opacity;
                 transition-duration: .5s, 1s;
-                height: 1179px;
             }
             .navside {
                 @apply --layout-vertical;
                 @apply --layout-self-stretch;
                 @apply --layout-flex;
                 flex-direction: column;
-                height: 340px;
-                max-width: 340px;
+                max-width: 342px;
                 border-left: 10px solid  var(--app-backgound-color);
                 padding: 8px;
             }
@@ -191,21 +192,14 @@ $_documentContainer.innerHTML = `
             .navside div[left] aside {
                 box-shadow: 1px 1px 1px
             }
-           .asideBackgrc {
-                box-sizing: border-box;
-                background-color: #dedede;
-                border: 1px solid #fff;
-                height: 20px;
-            }
-            .flexsidecenter, 
-            .navsideright, 
+
+            .center-menu, 
+            .collumn-left-menu, 
             div[rightSide] {
-                background-color: var(--app-backgound-color);
                 padding: 8px
             }
-
-            .flexsidecenter {
-                color: #7087b4;
+            .center-menu {
+                color: var(--app-published-color);
                 font-weight: 700;
                 height: 20px;
             }
@@ -218,30 +212,37 @@ $_documentContainer.innerHTML = `
                 color: var(--google-blue-700);
                 text-align: center;
             }            
-            .navsideleft {
+            .row-menu {
                 color: var(--paper-blue-600);
                 font-weight: 700;
                 flex-grow: 0;
                 flex-basis: 35px
             }       
-            .navsideleft aside{
+            .row-menu aside{
                 padding-top: 16px;
-            }
-            .title{
-                background-color: #e0f7fa; 
-            }
-            .navsideright{
-                width: 30%;   
-                height: 18px
-            }
-           
-            .flexsidecenter aside,
-             .navsideright aside{                
                 text-align: center;
             }
-            .navsideright,
-            div[rightSide] {
-                color: var(--content-color-section)
+           /* .title{
+                background-color: #e0f7fa; 
+            }*/
+            .collumn-left-menu{
+                width: 50%;   
+                color: var(--paper-blue-600);
+                font-weight: 700;
+                height: 18px;
+            }
+           
+            .asideBackgrc {
+                box-sizing: border-box;
+                background-color: #dedede;
+                border: 1px solid #fff;
+                height: 20px;
+                color: var(--app-content-section-span-color);
+            }
+            div[published],
+            .center-menu aside,
+             .collumn-left-menu aside{                
+                text-align: center;
             }
 
             div[rightSide] {
@@ -253,7 +254,7 @@ $_documentContainer.innerHTML = `
 
             div[rightSide] section {
                 @apply --layout-horizontal;
-                margin-bottom: 36px
+                text-align: center;
             }
 
             div[rightCenter] aside {
@@ -390,7 +391,7 @@ $_documentContainer.innerHTML = `
             }
             article[centerListItem], 
             article[centerImageItem]{
-                background-color: var(--app-backgound-color)
+                background-color: var(--app-item-backgound-color);
             }
             
             article[centerImageItem], article[centerImageItem]{
@@ -404,22 +405,17 @@ $_documentContainer.innerHTML = `
             }
 
             article[centerImageItem]  {
-                letter-spacing: var(--app-content-letter-spacing, 1px);
-                font-size: 10px;
-                box-sizing: border-box;
+                height: 37px;
+                margin-bottom: 4px
             }
 
             article[centerListItem] div, article[centerImageItem] div {
                 @apply --layout-flex;
-               /* box-shadow: 1px 1px 3px var(--paper-blue-300);*/
-                height: auto;
-                max-height: 50px;
-                overflow-y: hidden;
-                border-bottom: 0.5px dashed;
-                margin-right: 4px;
                 font-size: 10px;
             }
-
+            article[centerListItem] div{
+                height: 30px;                
+            }
             article[centerListItem] span, article[centerImageItem] span {
                 word-break: break-word
             }
@@ -474,11 +470,11 @@ $_documentContainer.innerHTML = `
                 width: 640px;
             }
             shop-image {
-                height: 35px;
-                top: 5px;
+                height: 30px;
             }
             div[published] {
                 font-size: small;
+                width: 45%
             }
             div[published="NP"] {
                 color: var(--app-not-published-color)

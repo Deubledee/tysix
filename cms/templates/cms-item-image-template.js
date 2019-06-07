@@ -37,7 +37,6 @@ export class cmsItemImageTemplate extends PolymerElement {
             font-size: 9px;
             font-weight: bold; box-sizing: var(--app-default-box-sizing);
             padding: 0px;
-            background-color: #fff;
             overflow: var(--app-images-div-overflow);
             text-overflow: var(--app-images-div-text-overflow);
             overflow-y: var(--app-images-divnav-overflow-y);

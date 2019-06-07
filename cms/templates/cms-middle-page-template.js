@@ -14,6 +14,9 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             flexchildbotom{
                 
             }
+            .flex{
+                height: auto
+            }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
@@ -109,28 +112,28 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         return html`
         <dom-repeat repeat items="[[inForm]]" as="detail">
             <template>
-                <div class="flexsidecenter title">
-                    <aside>
+                <div class="center-menu">
+                    <aside class="">
                         <span>
                             [[Info]] 
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="collumn-left-menu">
                     <aside>
                         <span>
                         [[categorycount]]
                         </span>
                     </aside>
                 </div>
-                <div class="navsideright">
-                    <aside>
+                <div class="collumn-left-menu">
+                    <aside  class="asideBackgrc">
                         <span>
-                        <b> [[detail.categoryCount]] </b>
+                            <b> [[detail.categoryCount]] </b>
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="row-menu">
                     <aside>
                         <span>
                         [[publishedpage]]
@@ -146,12 +149,12 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                     <dom-repeat repeat items="[[detail.published]]" as="published">
                         <template>
                             <section>
-                                <aside>
-                                    <div published$="[[_getPublished(published.page)]]">
-                                        [[published.page]]
-                                    </div>
-                                </aside>
-                                <aside>
+                                <div published$="[[_getPublished(published.page)]]">
+                                    <aside class="asideBackgrc">
+                                            [[published.page]]
+                                    </aside>
+                                </div>
+                                <aside class="asideBackgrc">
                                     <span>
                                         [[published.datePublished]]
                                     </span>

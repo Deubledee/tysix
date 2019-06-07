@@ -1,9 +1,10 @@
 {
   "entrypoint": "index.html",
-  "shell": "./cms/cms-controler.js",
+  "shell": "./cms/cms-login.js",
   "sources": [
     "data/**/*",
-    "images/**/*"
+    "images/**/*",
+    "cms/tools/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
@@ -20,7 +21,7 @@
         "minify": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true
@@ -39,7 +40,7 @@
         "transformModulesToAmd": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true
@@ -55,7 +56,7 @@
         "transformModulesToAmd": true
       },
       "css": {
-        "minify": true
+        "minify": false
       },
       "html": {
         "minify": true

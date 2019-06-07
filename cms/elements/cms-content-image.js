@@ -9,6 +9,9 @@ export class cmsContentImage extends PolymerElement {
         :host {
             position: relative;
         }
+        cms-image.top {
+            top: 0px;
+        }
         </style>        
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route> 
@@ -20,7 +23,7 @@ export class cmsContentImage extends PolymerElement {
                 <paper-icon-button  name="[[itemLabel]]" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
                 </paper-icon-button>           
             </div>
-                <cms-image class="small" images="[[images]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
+                <cms-image class="small top" images="[[images]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
                 </cms-image>
         </section>
         `;

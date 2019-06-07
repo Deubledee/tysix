@@ -165,15 +165,16 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
-        window.addEventListener('reset', (this._reset).bind(this))
+        //  window.addEventListener('reset', (this._reset).bind(this))
         this.set('saveButton', this.$.saveButton)
-        // this.$.saveButton.classList.remove('diferent')
+        this.$.saveButton.classList.add('diferent')
         this.set('anchor', this.$.anchor)
         this.$.image.addImage = (this.addImage).bind(this)
     }
     _setValues(data) {
         console.log(data)
         this.set('temp', data)
+        this.$.saveButton.classList.add('diferent')
         for (let par in data) {
             this.set('itemText', data[par])
         }
@@ -198,10 +199,6 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         this.inputObject = {}
         if (Boolean(this.slashed) === false) {
             this.slashed = true
-            this.set('content', []);
-            this.set('imageArr', [])
-            this.set('inform', [])
-            this.set('subCats', [])
         }
         if (active === true &&
             routeData.page === 'edit-category-pages' ||
@@ -228,6 +225,7 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         }
     }
     _setContent(content, query) {
+        this.$.saveButton.classList.add('diferent')
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
         this.set('content', JSON.parse(window.atob(content)));
         let obj = this.content.image
@@ -337,33 +335,33 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             }
         }, this.content, Consts.__DEV);
     }
-    _reset() {
-        this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
-        this.$.saveButton.classList.add('diferent')
-        this.query = {}
-        this.routeData = {}
-        this.imageLabel = ''
-        this.set('content', []);
-        this.set('imageArr', [])
-        this.set('inform', [])
-        this.set('subCats', [])
-        this.set('add', 0);
-        this.set('slashed', true);
-        this.set('imageArr', [])
-        this.set('inputVal', [{ reset: true }]);
-        this.set('textareaVal', [{ reset: true }]);
-        this.set('inform', []);
-        this.set('subSubCats', []);
-        this.set('add', 0);
-    }
+    /* _reset() {
+         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
+         this.query = {}
+         this.routeData = {}
+         this.imageLabel = ''
+         this.set('content', []);
+         this.set('imageArr', [])
+         this.set('inform', [])
+         this.set('subCats', [])
+         this.set('add', 0);
+         this.set('slashed', true);
+         this.set('imageArr', [])
+         this.set('inputVal', [{ reset: true }]);
+         this.set('textareaVal', [{ reset: true }]);
+         this.set('inform', []);
+         this.set('subSubCats', []);
+         this.set('add', 0);
+         //  this.$.saveButton.classList.add('diferent')
+     }*/
     resetSubcats() {
+        //   this._reset()
         window.onbeforeunload = function () { }
         this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
             window.dispatchEvent(new CustomEvent('reset-subcats', {
                 bubbles: true, composed: true
             }));
         });
-        this._reset()
     }
     __reset() {
         this.$.anchor.click()

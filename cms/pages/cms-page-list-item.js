@@ -57,7 +57,9 @@ class cmsPageListItem extends cmsItemTemplate {
                 </span>
                </div>   
                <div>
-                   <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                    <paper-button>
+                        <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                    </paper-button> 
                 </div>
            </article>`;
         this.translator.clone(this)
