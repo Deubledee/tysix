@@ -47,14 +47,14 @@ class cmsArticleView extends cmsMiddlePageTemplate {
         return html`
         <dom-repeat repeat items="[[info]]" as="detail">
             <template>
-                <div class="flexsidecenter">
+                <div class="center-menu">
                     <aside>
                         <span>
                             [[Info]]
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="row-menu">
                     <aside>
                         <span>
                         [[Category]]
@@ -71,32 +71,32 @@ class cmsArticleView extends cmsMiddlePageTemplate {
                         </span>
                     </aside>
                 </div>
-                <div class="navsideright">
-                    <aside>
+                <div class="center-menu">
+                    <aside class="asideBackgrc">
                         <span>
                         <b> [[detail.id]]</b>
                         </span>
                     </aside>
-                    <aside>
+                    <aside class="asideBackgrc">
                         <span>
                         <b> [[detail.items]]</b>
                         </span>
                     </aside>
-                    <aside>
+                    <aside class="asideBackgrc">
                         <span>
                         <b> [[detail.type]]</b>
                         </span>
                     </aside>
                 </div>
-                <div class="navsideleft">
+                <div class="collumn-left-menu">
                     <aside>
                         <span>
                         [[Published]]
                         </span>
                     </aside>
                 </div>
-                <div class="navsideright">
-                    <aside>
+                <div class="collumn-left-menu">
+                    <aside class="asideBackgrc">
                         <span>
                         <b> [[detail.publishedCount]] </b>
                         </span>

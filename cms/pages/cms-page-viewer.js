@@ -19,12 +19,16 @@ class cmsPageViewer extends cmsViewerTemplate {
                 }
                 if (!page.page) {
                     this.page = 'home';
-                } else
-                    if (['add-category-pages', 'edit-category-pages', 'edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page.page) !== -1) {
-                        this.page = 'add-category-pages';
-                    } else {
-                        this.page = 'view404';
-                    }
+                }
+                else if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
+                    this.page = 'add-category-pages';
+                }
+                else if (['edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page.page) !== -1) {
+                    this.page = 'add-subcategory-pages';
+                }
+                else {
+                    this.page = 'view404';
+                }
             }
             else if (page instanceof Object === true) {
                 this.page = 'home';
@@ -40,6 +44,11 @@ class cmsPageViewer extends cmsViewerTemplate {
             }
             if (page === 'add-category-pages') {
                 import('./cms-page-list-type-content').then(item => {
+                });
+                return;
+            }
+            if (page === 'add-subcategory-pages') {
+                import('../sub-categories/cms-content-subcats').then(item => {
                 });
                 return;
             }

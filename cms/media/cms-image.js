@@ -9,8 +9,9 @@ class cmsImage extends cmsItemImageTemplate {
         <dom-repeat repeat items="[[content]]" as="item">
             <template>
                 <cms-image-item  
-                    to-content="[[toContent]]"
+                    to-content="{{toContent}}"
                     add="[[addTo]]" 
+                    add-to-subcats="{{addToSubcats}}"
                     image="[[item]]" 
                     save-button="[[saveButton]]"
                     reset-button="[[resetButton]]"
@@ -82,6 +83,11 @@ class cmsImage extends cmsItemImageTemplate {
                 type: Boolean,
                 value: false,
                 notify: true
+            },
+            addToSubcats: {
+                type: Object,
+                notify: true,
+                value: {},
             },
             add: {
                 type: String,
@@ -160,13 +166,24 @@ class cmsImage extends cmsItemImageTemplate {
         }
     }
     _placeEventMethod(data) {
-        data.addEventListener('click', (this.showPage).bind(this))
+        data.onclick = (this.showPage).bind(this)
     }
     showPage() {
-        let string = window.btoa(JSON.stringify(this.toContent))
-        this.resetButton.click()
-        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
+        let string = window.btoa(JSON.stringify(this.toContent)),
+            string2
+        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&indexarr=${this.indexarr}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
+        /* if (this.addToSubcats.items === undefined) {
+             window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
+             window.dispatchEvent(new CustomEvent('location-changed'));
+             console.log(this.toContent, string)
+         } else {
+             string2 = window.btoa(JSON.stringify([this.addToSubcats]))
+             let url = `${this.rootPath}${this.returnPath}?content=${string}&tocontent=${string2}&indexarr=${this.indexarr}`
+             window.history.pushState({}, null, url);
+             window.dispatchEvent(new CustomEvent('location-changed'));
+         }*/
+        //this.resetButton.click()
         this.saveButton.classList.add('diferent')
         this.resetButton.classList.remove('diferent')
         this.toContent = Object()

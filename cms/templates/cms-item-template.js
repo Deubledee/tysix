@@ -5,8 +5,9 @@ import '../styles/cms-comon-style_v3';
 export class cmsItemTemplate extends PolymerElement {
     static get template() {
         return html`   
-    ${this._getStyles}      
-       
+    ${this._getStyles}       
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>  
     ${this._getElement}
         `;
     }

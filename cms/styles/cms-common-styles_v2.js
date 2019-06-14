@@ -10,6 +10,7 @@ const template = html`
   --app-front-button: 31px;
   --app-primary-color: #3f4756;
   --app-secondary-color: var(--paper-cyan-50);
+  --app-third-color: #5a5f69;
   --app-tabs-color: var(--app-secondary-color);
   --app-topnav-icon-color: var(--light-theme-disabled-color);
   --app-published-color: var(--paper-blue-a700);
@@ -89,7 +90,8 @@ const template = html`
   --app-content-section-title-width: 257px;
   --app-content-button-light-marginleft: var(--app-content-article-margin-bottom);
   --app-content-button-border: 1px solid;
-  --app-content-paper-button-minwidth: 98px;
+  --app-content-paper-button-minwidth: 105px;
+  --app-content-paper-button-maxwidth: 151px;
   --app-content-paper-button-height: 31px;
   --app-content-paper-button-background-color: #d0e6f1;
   --app-content-paper-button-margin-right: -7px;
@@ -98,7 +100,7 @@ const template = html`
   --app-content-paper-tabs-padding-top: 7px;
   --app-content-navcenter-letter-spacing: 0.02em;
   --app-content-button-height: 25px;
-  --app-content-page-viewertop: 70px;
+  --app-content-page-viewertop: 50px;
   --app-content-page-viewerleft: -3px;
   --app-pages-padding-right: 18px;
   --app-pages-minwidth: 730px;

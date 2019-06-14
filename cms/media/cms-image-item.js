@@ -69,6 +69,11 @@ export class cmsImageItem extends cmsItemTemplate {
                 notify: true,
                 computed: '_putRow(image)'
             },
+            addToSubcats: {
+                type: Object,
+                notify: true,
+                value: {},
+            },
             idx: Number,
             delete: Object,
             resetButton: Object,
@@ -86,6 +91,14 @@ export class cmsImageItem extends cmsItemTemplate {
         super.ready();
     }
     _putRow(item) {
+        if (this.resetButton !== undefined) {
+            let reset = this.resetButton.onclick
+            this.resetButton.onclick = {}
+            this.resetButton.onclick = () => {
+                this.addButton.classList.remove('added')
+                reset()
+            }
+        }
         return [item]
     }
     _getIcon(add) {
@@ -111,12 +124,31 @@ export class cmsImageItem extends cmsItemTemplate {
             this.resetButton.classList.add('diferent')
         }
     }
+
+    _removeImage(image) {
+        if (this.toContent instanceof Array) {
+            this.toContent.image.s
+        } else {
+            this.toContent.image.push(image)
+        }
+        if (this.saveButton.classList.contains('diferent') === true) {
+            this.saveButton.classList.remove('diferent')
+        }
+    }
     __add(event) {
-        if (event.srcElement.classList.contains('added') === false) {
-            event.srcElement.classList.add('added')
+        this.set('addButton', event.srcElement)
+        if (this.addButton.classList.contains('added') === false) {
+            let save = this.saveButton.onclick
+            this.saveButton.onclick = {}
+            this.saveButton.onclick = () => {
+                this.addButton.classList.remove('added')
+                save()
+            }
+            this.addButton.classList.add('added')
             this._addImage(this.image)
         } else {
-            event.srcElement.classList.remove('added')
+            this.addButton.classList.remove('added')
+            this._removeImage(this.idx)
         }
     }
     _add(event) {

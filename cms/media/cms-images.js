@@ -5,14 +5,12 @@ import './cms-image-item'
 class cmsImages extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         let template = document.createElement('template')
-        template.innerHTML = `
-            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-                <a id="reset" href="[[rootPath]]media/images[[Seach]]" on-click="reset">                
+        template.innerHTML = `      
+            <div>
+                <a id="reset" href="[[rootPath]]media/images[[Seach]]">                
                     <paper-icon-button  icon="arrow-back" aria-label="Go back">
                     </paper-icon-button>
-                </a>
-            </iron-selector>         
-            <div>
+                </a>  
                 <paper-button id="saveButton" class="diferent" aria-label="mode-save">
                     [[Save]]
                 </paper-button>
@@ -22,7 +20,6 @@ class cmsImages extends cmsMiddlePageTemplate {
 
     static get _getSilentAnchor() {
         return html`
-        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
             <a href="[[rootPath]]media/images/add-images?&add=true">
                 <paper-tab name=" add-category-pages">                        
                     <span class="spanpadding"> 
@@ -33,7 +30,6 @@ class cmsImages extends cmsMiddlePageTemplate {
                     </paper-icon-button-light>
                 </paper-tab>
             </a>
-        </iron-selector>
         `
     }
     static get _getBottom() {
@@ -46,9 +42,11 @@ class cmsImages extends cmsMiddlePageTemplate {
                 <cms-image 
                     add-to="{{add}}" 
                     to-content="[[contentto]]" 
+                    indexarr="[[indexarr]]"
                     return-path="[[returnPath]]"
                     save-button="[[saveButton]]" 
                     reset-button="[[resetButton]]"
+                    add-to-subcats="[[addToSubcats]]"
                     lang="[[lang]]" 
                     query="[[query]]"
                     images="[[contents]]">
@@ -135,6 +133,7 @@ class cmsImages extends cmsMiddlePageTemplate {
                 value: true,
                 reflectToAttribute: true,
             },
+            indexarr: Array,
             lang: {
                 type: String,
                 notify: true
@@ -174,6 +173,11 @@ class cmsImages extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
             },
+            addToSubcats: {
+                type: Object,
+                notify: true,
+                value: {},
+            },
             contents: {
                 type: Array,
                 notify: true,
@@ -191,7 +195,7 @@ class cmsImages extends cmsMiddlePageTemplate {
         this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
-        this.$.reset.addEventListener('click', (this.reset).bind(this))
+        this.$.reset.onclick = (this.reset).bind(this)
         window.addEventListener('reset', (this.reset).bind(this))
         this.saveButton = this.$.saveButton
         this.resetButton = this.$.reset
@@ -217,6 +221,10 @@ class cmsImages extends cmsMiddlePageTemplate {
             this.set('add', false)
             if ('addimageto' in query) {
                 this.set('add', true)
+                if ('tocontent' in query) {
+                    this.set('addToSubcats', JSON.parse(atob(query.tocontent)).pop())
+                    this.set('indexarr', query.indexarr.split(''))
+                }
                 this.set('contentto', JSON.parse(atob(query.content)))
             }
         }

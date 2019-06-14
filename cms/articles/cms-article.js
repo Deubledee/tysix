@@ -8,15 +8,12 @@ class cmsArticle extends cmsItemImageTemplate {
     static get _getStyles() {
         return html`        
         div[arow]{
-            height: 35px;
             font-size: var(--app-images-article-font-size);
-           /* background-color: var(--app-secondary-text-color);*/
+            height: 41px;
+            padding-top: unset;
         }
         div[arow] h4{
             margin-block-start: 8px;
-        }
-        article[centerListItem] div{
-            height:
         }
         `
     }

@@ -8,21 +8,17 @@ import '../elements/cms-content-item';
 import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
     static get template() {
-        return html`<style include="cms-comon-style_v3">
-        :host {
-            position: relative;
-        }
-       
-        </style>
+        return html`       
+        ${this._getStyles}
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>
         <main id="main">
-            <div>
+            <nav top>
                 ${this._getAnchor}
                 <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
                     [[Save]]
                 </paper-button>
-            </div>
+            </nav>
             <div class="flex">
                 <nav class="navbottom" id="bottom">
                     ${this._getContentItems}
@@ -33,6 +29,17 @@ export class cmsContentTemplate extends PolymerElement {
             </div>
         </main>
         `;
+    }
+    static get _getStyles() {
+        return html` 
+        <style include="cms-comon-style_v3">
+        :host {
+            position: relative;
+        }
+        .navbottom{
+            margin-top: 48px;  
+        }
+        </style>`
     }
     static get _getAnchor() {
         return html`
@@ -72,7 +79,7 @@ export class cmsContentTemplate extends PolymerElement {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
             <template>
-                <div class="center-menu title">
+                <div class="center-menu">
                     <aside>
                         <span>
                             [[info]]
@@ -102,7 +109,7 @@ export class cmsContentTemplate extends PolymerElement {
                             [[ _getPublishedBy(cat.publishedBy)]]
                         </span>
                     </aside>
-                    <aside  class="asideBackgrc" published$="[[cat.published]]">
+                    <aside class="asideBackgrc" published$="[[cat.published]]">
                         <span>
                             [[cat.published]]
                         </span>

@@ -60,28 +60,28 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
         return html`
            <dom-repeat repeat items="[[inForm]]" as="detail">
                <template>
-                   <div class="flexsidecenter title">
+                   <div class="center-menu">
                        <aside>
                            <span>
                                [[Info]] 
                            </span>
                        </aside>
                    </div>
-                   <div class="navsideleft">
+                   <div class="collumn-left-menu">
                        <aside>
                            <span>
                            [[categorycount]]
                            </span>
                        </aside>
                    </div>
-                   <div class="navsideright">
-                       <aside>
+                   <div class="collumn-left-menu">
+                       <aside class="asideBackgrc">
                            <span>
                            <b> [[detail.categoryCount]] </b>
                            </span>
                        </aside>
                    </div>
-                   <div class="navsideleft">
+                   <div class="row-menu">
                        <aside>
                            <span>
                            [[publishedarticle]]
@@ -97,12 +97,12 @@ class cmsArticleListType extends cmsMiddlePageTemplate {
                        <dom-repeat repeat items="[[detail.published]]" as="published">
                            <template>
                                <section>
-                                   <aside>
+                                   <aside class="asideBackgrc">
                                        <div published$="[[_getPublished(published.page)]]">
                                            [[published.page]]
                                        </div>
                                    </aside>
-                                   <aside>
+                                   <aside class="asideBackgrc">
                                        <span>
                                            [[published.datePublished]]
                                        </span>

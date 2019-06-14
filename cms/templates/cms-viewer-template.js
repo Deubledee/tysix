@@ -45,6 +45,10 @@ export class cmsViewerTemplate extends PolymerElement {
                 <slot name="add"></slot>  
             </article>
 
+            <article name="add-subcategory-pages">  
+                <slot name="sub-categories"></slot>  
+            </article>
+
             <article name="home">           
                 <slot name="categories"></slot>
             </article>`

@@ -120,6 +120,9 @@ class cmsGalleryItem extends cmsItemTemplate {
     editPages() {
         this.set('returnPath', 'content/pages/add-category-pages')
     }
+    editSubCats() {
+        this.set('returnPath', 'content/pages/add-subcategory-pages')
+    }
     deleteGallerie(data) {
         console.log(this.gallery.content[data])
         /* Consts._DBW.deleteMediaGallery((done, err) => {

@@ -21,15 +21,13 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
         </app-route>
-            ${this._getSilentAnchor}
            <slot name="spinner"></slot>
         <nav top>
             <app-toolbar>
-                <paper-tabs no-bar>
                     <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    ${this._getShoutAnchor}
+                        ${this._getShoutAnchor}
+                        ${this._getSilentAnchor}
                     </iron-selector>
-                </paper-tabs>
             </app-toolbar>
         </nav>
         <main class="flex">
@@ -60,8 +58,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     static get _getShoutAnchor() {
         return html`
         <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">
-            <paper-tab name="add-category-pages">
-                
+            <paper-tab name="add-category-pages">                
                 <paper-icon-button-light>
                     <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
                 </paper-icon-button-light>
@@ -71,10 +68,8 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     static get _getSilentAnchor() {
         return html`
-        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
             <a id="reset" href="[[rootPath]]content/">
             </a>
-        </iron-selector>
         `
     }
     static get _getBottom() {
@@ -89,7 +84,12 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <div class="center">
                 <h4> [[viewedit]] </h4>
             </div>
-        </section>                        
+        </section>  
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[viewedit]] sub-cat </h4>
+            </div>
+        </section>                      
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[type]] </h4>

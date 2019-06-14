@@ -5,6 +5,8 @@ import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import './cms-subcats-item'
 import '../styles/cms-comon-style_v3';
+const Modelo = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGUiOiIiLCJwdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwidW5QdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwibGFzdE1vZGlmaWVkIjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dLCJkYXRlUHVibGlzaGVkIjoiTlAiLCJwdWJsaXNoZWQiOiJOUCJ9XSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
+
 export class cmsSubcats extends cmsItemImageTemplate {
     static get _getStyles() {
         return html`        
@@ -87,8 +89,7 @@ export class cmsSubcats extends cmsItemImageTemplate {
             lang: {
                 type: String,
                 value: '',
-                notify: true,
-                observer: '__changeLang'
+                notify: true
             },
             langs: {
                 type: Object,
@@ -105,6 +106,7 @@ export class cmsSubcats extends cmsItemImageTemplate {
             content: {
                 type: Array,
                 value: '',
+                notify: true,
                 computed: '_setContent(subSubCats)'
             },
             add: {
@@ -112,42 +114,6 @@ export class cmsSubcats extends cmsItemImageTemplate {
                 value: false,
                 notify: true,
                 observer: '_pushModel'
-            },
-            Modelo: {
-                type: Object,
-                value: {
-                    contentText: [{
-                        description: ""
-                    }],
-                    image: [],
-                    info: [{
-                        author: "",
-                        dateAdde: "",
-                        publishedBy: [{
-                            author: "",
-                            date: "", uid: ""
-                        }],
-                        unPublishedBy: [{
-                            author: "",
-                            date: "",
-                            uid: ""
-                        }],
-                        lastModified: [{
-                            author: "",
-                            date: "",
-                            uid: ""
-                        }],
-                        datePublished: "NP",
-                        published: "NP"
-                    }],
-                    items: [{
-                        categoryName: "",
-                        type: "",
-                        lang: ""
-                    }],
-                    subCategories: []
-                },
-                notify: true,
             },
             info: {
                 type: Object,
@@ -188,11 +154,12 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.translator.changeLang.call(this)
     }
     _pushModel(data) {
+        let modelo = JSON.parse(atob(Modelo))
         if (data === true) {
             let subcat = this.subSubCats || []
             this._reset()
             setTimeout(() => {
-                subcat.push(this.Modelo)
+                subcat.push(modelo.value)
                 this.editIndex = subcat.length - 1
                 this.subSubCats = subcat
                 this.add = false
@@ -206,15 +173,30 @@ export class cmsSubcats extends cmsItemImageTemplate {
                     </cms-subcats-item>          
                 </div>                
                 `
+        let content = btoa(JSON.stringify(this.subSubCats))
         this.translator.template.innerHTML = str
         this.translator.clone(this)
-        this.children[this.childElementCount - 1].children[0].model = this.Modelo
         this.children[this.childElementCount - 1].children[0].view = true
         if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
         this.children[this.childElementCount - 1].children[0].lang = this.lang
-        this.children[this.childElementCount - 1].children[0].toContent = this.content
-        this.children[this.childElementCount - 1].children[0].indexArr = [index]
+        this.children[this.childElementCount - 1].children[0].route = this.route
+        this.children[this.childElementCount - 1].children[0].toContent = content
         this.children[this.childElementCount - 1].children[0].subcat = item
+        this.children[this.childElementCount - 1].children[0].indexArr = [index]
+        this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
+    }
+    _removeChild(data) {
+        let subcat = this.subSubCats
+        let index = (data instanceof CustomEvent) === true ? data.detail.argument : data
+        if (index === 0) {
+            subcat.splice(0, 1)
+        } else {
+            subcat.splice(index, index)
+        }
+        this._reset()
+        setTimeout(() => {
+            this.set('subSubCats', subcat)
+        }, 120)
     }
     _setContent(data) {
         return data
@@ -224,7 +206,6 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.subSubCats = []
         this.add = false
         this.innerHTML = ''
-        console.log(this.innerHTML)
     }
 }
 customElements.define(cmsSubcats.is, cmsSubcats);

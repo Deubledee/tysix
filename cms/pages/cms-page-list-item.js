@@ -45,6 +45,12 @@ class cmsPageListItem extends cmsItemTemplate {
                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                    </paper-button> 
                </div>  
+               <div>
+                   <paper-button>
+                       <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                       <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                   </paper-button> 
+               </div> 
                <div>                   
                 <span> 
                     <paper-button> ${data.items[0].type} </paper-button>
@@ -66,10 +72,13 @@ class cmsPageListItem extends cmsItemTemplate {
         this.children[0].children[1].
             children[0].addEventListener('click', (this.showPage).
                 bind(this));
-        this.children[0].children[3].
-            children[0].addEventListener('click', (this._confirmPublish).
+        this.children[0].children[2].
+            children[0].addEventListener('click', (this.showCats).
                 bind(this));
         this.children[0].children[4].
+            children[0].addEventListener('click', (this._confirmPublish).
+                bind(this));
+        this.children[0].children[5].
             children[0].addEventListener('click', (this._openConfirm).
                 bind(this));
     }
@@ -85,6 +94,11 @@ class cmsPageListItem extends cmsItemTemplate {
     showPage() {
         let string = window.btoa(`${JSON.stringify(this.page)}`);
         window.history.pushState({}, null, `content/pages/edit-category-pages?content=${string}&add=false`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+    }
+    showCats() {
+        let string = window.btoa(`${JSON.stringify(this.page)}`);
+        window.history.pushState({}, null, `content/pages/edit-subcategory-pages?content=${string}&add=false`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {

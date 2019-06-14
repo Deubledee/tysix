@@ -10,15 +10,15 @@ export class cmsContentItemTemplate extends PolymerElement {
             position: relative;
         }
         ${this._getStyles}
-        </style>      
-            <div class="flexleft" name="itemLabel">
-                <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
-                    [[title]]
-                </paper-button>
-                <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                    [[cancel]]
-                </paper-button>
-            </div>
+        </style>    
+        <div class="flexleft" name="itemLabel">
+            <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
+                [[title]]
+            </paper-button>
+            <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
+                [[cancel]]
+            </paper-button>
+        </div>
             ${this._getElement}
         `;
     }
@@ -224,28 +224,17 @@ export class cmsContentItemTemplate extends PolymerElement {
         this.set('itemText', this.temp[this.itemLabel])
         this.set('res', this.temp);
         this.cancelState()
-        /*  if (this.temp.canceled === false) {
-              this.cancelState();
-          }
-           let obj = {};
-           obj[this.itemLabel] = this.temp.data
-           this.set('itemText', this.temp.data);
-           this.set('res', obj);
-           if (this.temp.canceled === false) {
-               this.cancelState();
-           }*/
     }
     cancelState() {
-        this.temp = {};
         this.$.cancel.classList.add('diferent');
-        this.inputObject.onkeydown = function () { };
-        if (this.editing <= 1) {
+        console.log(this.editing)
+        if (this.editing === 1) {
             this.oninputing = true
+            this.editing = 0
             window.onbeforeunload = function () { };
             this.saveButton.classList.add('diferent');
         }
-        else {
-            this.set('par', {});
+        if (this.editing > 1) {
             this.editing--;
         }
     }

@@ -23,22 +23,19 @@ $_documentContainer.innerHTML = `
             nav[top]{
                 color: var(--paper-blue-800);
                 background-color: var(--app-backgound-color);
+                height: 22px;
             }
-
             .flexright,
             .navside div {
                 word-break: break-word;
             }
-
             .flex {
                 @apply --layout-horizontal;
                 height: 1525px;
             }
-
             .flexH,  div[container] {
                 @apply --layout-vertical;
             }
-
             div[arow], div[bottom] {
                 box-sizing: border-box;
                 @apply --layout-horizontal;
@@ -46,19 +43,14 @@ $_documentContainer.innerHTML = `
                 border-radius: 4px;
             }
             div[arow]{
-              /*  border: 1px outset;
-                background-color: var(--app-secondary-color);*/
-                height: 30px;
-            }
-
-            
-             h4{
+                height: 60px;
+                padding-top: 27px;
+            }            
+            h4{
                 margin-block-start: 0.33em;
             }
             div[arow][hidebottom]{
-                border: none;
-                height: 0px;
-                background-color: unset;
+                display: none;
             }  
             div[bottom][hidebottom]{
                 border: none;
@@ -75,6 +67,7 @@ $_documentContainer.innerHTML = `
                 flex: unset;
                 webkit-flex-basis: var(--layout-flex_-_-webkit-flex-basis, 0);
                 flex-basis: unset;
+                font-size: initial;
             }
 
             .scroll{
@@ -144,8 +137,6 @@ $_documentContainer.innerHTML = `
             .navbottom,
             .navside {
                 box-sizing: border-box;
-               /* background-color: #d8e7ef;*/
-                border-radius: 4px;
                 height: auto;
             }
             .flexchildbotom3 {
@@ -166,10 +157,7 @@ $_documentContainer.innerHTML = `
             .navbottom {
                 max-width: 82%;
                 @apply --layout-flex;
-                height: auto;
                 padding: 8px;
-                transition-property: height, opacity;
-                transition-duration: .5s, 1s;
             }
             .navside {
                 @apply --layout-vertical;
@@ -177,8 +165,6 @@ $_documentContainer.innerHTML = `
                 @apply --layout-flex;
                 flex-direction: column;
                 max-width: 342px;
-                border-left: 10px solid  var(--app-backgound-color);
-                padding: 8px;
             }
             .navside div {
                 @apply --layout-horizontal;
@@ -233,6 +219,9 @@ $_documentContainer.innerHTML = `
             }
            
             .asideBackgrc {
+                text-overflow: ellipsis;
+                font-size: 12px;
+                letter-spacing: 1px;
                 box-sizing: border-box;
                 background-color: #dedede;
                 border: 1px solid #fff;

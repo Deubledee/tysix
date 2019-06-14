@@ -112,40 +112,43 @@ $_documentContainer.innerHTML = `
     }
 
     nav {
-        color: var(--paper-blue-grey-700);
-        flex-flow: var(--app-flexrow);
         padding: var(--app-default-padding, 10px);
         padding-left: var(--app-content-nav-padding-left)
     }
 
     .navtop {
         flex-direction: var(--app-flexcolumn);
-       /* left: var(--app-content-nav-topleft);
-        top: var(--app-content-navtop-top);*/
-        height: var(--app-content-nav-top-height, 26px);
+        height: 107px;
+        padding: unset;
     }
-
+    .topLabel{
+        position: inherit;
+        padding-left: 31px;
+        background-color: #eaeaea;
+        box-shadow: 0px 1px 4px grey;
+        z-index: 1;
+    }
     .navtop section {
-        font-size: var(--app-tollbar-default-font-size)
+        position: relative;
+        top: 1px;
+        left: 0px;
+        padding-left: 71px;
+        padding-right: 8px;
+        padding-top: 0px;
+        /* border-top: 1px solid var(--dark-theme-secondary-color); */
+        background-color: var(--app-third-color);
+        height: 102px;
     }
 
     .navtop iron-icon {
         height: var(--app-tollbar-default-font-size)
     }
 
-    .divtop {
-      /*  top: var(--app-content-divtop-top);*/
-        background-color: var(--app-secondary-color);
-      /*  height: var(--app-content-divtop-height);
-        padding-top: var(--app-content-divtop-padding-top);*/
-        border-bottom: var(--app-content-divtop-border-bottom)
-    }
-
     section {
         flex-flow: var(--app-flexrow);
         padding: var(--app-content-section-padding);
         height: var(--app-content-section-height);
-        margin-left: var(--app-content-section-margin-left)
+       /* margin-left: var(--app-content-section-margin-left)*/
     }
 
     .diferent,
@@ -172,25 +175,20 @@ $_documentContainer.innerHTML = `
     }
 
     paper-button[front] {
-        height: var(--app-front-button)31px;
-        border-bottom: unset;
-        top: unset;
-    }
-
-    paper-button[front] {
-        background-color: var(--app-backgound-color);
+        background-color: #ffffff;
+        color: var(--google-blue-700);
     }
 
     .button {
+        color: var(--app-item-backgound-color);
         min-width: var(--app-content-paper-button-minwidth);
-        border-left: var(--app-content-button-border);
-        background-color: var(--divider-color);
-        border-top: var(--app-content-button-border);
-        border-right: var(--app-content-button-border);
-        margin-right: var(--app-content-paper-button-margin-right);
-        height: 30px;
+        max-width: var(--app-content-paper-button-maxwidth);
+        background-color: var(--app-third-color);
+        margin-right: -8px;
+        height: 106px;
+        border-left: 1px solid var(--divider-color);
+        border-right: 1px solid var(--divider-color);
         border-radius: 0;
-        top: -1px;
     }
 
     paper-tabs {

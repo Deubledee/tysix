@@ -19,7 +19,7 @@ export class cmsItemImageTemplate extends PolymerElement {
         } 
 
         div[arow]{
-            height: 35px;
+            height: 55px;
             font-size: var(--app-images-article-font-size);
             /*box-shadow: 1px 1px 4px var(--disabled-text-color);*/
         }
@@ -56,7 +56,7 @@ export class cmsItemImageTemplate extends PolymerElement {
                     position: var(--app-default-position);
                 }            
                 ${this._getStyles}
-        </style>           
+        </style>            
         <main class="flexH" small$="[[small]]">
             <div arow size$="[[size]]" small$="[[small]]">    
                 ${this._getMenu}  

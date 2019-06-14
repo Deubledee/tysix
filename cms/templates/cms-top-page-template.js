@@ -15,9 +15,9 @@ export class cmsTopPageTemplate extends PolymerElement {
     </app-route>
     <main> 
         <div class="divtop">
-          <section class="title2">
+          <!--section class="title2"-->
             ${this.topTitle}
-          </section>
+          <!--/section-->
         <nav class="navtop">
             <app-toolbar>
                 <section>
@@ -43,11 +43,13 @@ export class cmsTopPageTemplate extends PolymerElement {
 
   static get topTitle() {
     return html`
-      <div> [[Content]] </div>
-
+    <div class="topLabel"> 
+      [[Content]] 
       <paper-icon-button-light>
         <iron-icon icon="social:pages" aria-label="Content"></iron-icon>
-      </paper-icon-button-light>`
+      </paper-icon-button-light>
+    </div>
+`
   }
   static get topPages() {
     return html`
@@ -75,7 +77,7 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   static get homePage() {
     return html` 
-      <nav>
+      <nav class="">
           <div>
             <h3> [[Search]] </h3>
               <article>    
@@ -88,29 +90,33 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   static get viewPages() {
     return html`
-    <cms-page-viewer name="pages" route="[[subroute]]">      
-        <cms-page-list-type-content 
-          slot="add" id="content"           
-          route="[[subroute]]" 
-          user="[[user]]">
-        </cms-page-list-type-content>   
-        <cms-page-list-type 
-          slot="categories" 
-          route="[[subroute]]">
-        </cms-page-list-type>  
-        <cms-page-sub-cat-type slot="suCategories" route="[[subroute]]" >
-        </cms-page-sub-cat-type>  
+    <cms-page-viewer name="pages" route="[[subroute]]">
+
+        <cms-content-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
+        </cms-content-subcats>
+
+        <cms-page-list-type-content slot="add" user="[[user]]" route="[[subroute]]">
+        </cms-page-list-type-content>
+
+        <cms-page-list-type slot="categories"user="[[user]]"  route="[[subroute]]">
+        </cms-page-list-type>
+
+        <cms-page-sub-cat-type slot="suCategories" user="[[user]]" route="[[subroute]]">
+        </cms-page-sub-cat-type>
+
     </cms-page-viewer>
-    <cms-articles-viewer  name="articles" route="[[subroute]]" >
-        <cms-article-content slot="addart" id="addeditart" 
-          route="[[subroute]]" user="[[user]]">
-        </cms-article-content>  
-        <cms-article-list-type slot="categories"  
-          route="[[subroute]]">
-        </cms-article-list-type>       
-        <cms-article-view slot="view" id="view"   
-          route="[[subroute]]" user="[[user]]" rootPath="[[rootPath]]">
+
+    <cms-articles-viewer name="articles" user="[[user]]" route="[[subroute]]">
+
+        <cms-article-content slot="addart" user="[[user]]" route="[[subroute]]">
+        </cms-article-content>
+
+        <cms-article-list-type slot="categories" user="[[user]]" route="[[subroute]]">
+        </cms-article-list-type>
+
+        <cms-article-view slot="view" user="[[user]]"  route="[[subroute]]">
         </cms-article-view>
+
     </cms-articles-viewer>
     `
   }

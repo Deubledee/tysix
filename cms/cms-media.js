@@ -3,11 +3,12 @@ import { html } from '@polymer/polymer/polymer-element.js';
 class cmsMedia extends cmsTopPageTemplate {
   static get topTitle() {
     return html`
-    <div> [[Media]] </div>
-    <paper-icon-button-light>
-      <iron-icon icon="image:photo-library" aria-label="Content">
-      </iron-icon>
-    </paper-icon-button-light>`
+    <div class="topLabel"> [[Media]] 
+      <paper-icon-button-light>
+        <iron-icon icon="image:photo-library" aria-label="Content">
+        </iron-icon>
+      </paper-icon-button-light>
+    </div>`
   }
   static get topPages() {
     return html`
