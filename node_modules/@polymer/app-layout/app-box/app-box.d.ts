@@ -103,8 +103,8 @@ interface AppBoxElement extends AppScrollEffectsBehavior, IronResizableBehavior,
    * That is, visible in the current viewport.
    */
   isOnScreen(): boolean;
-  _getDOMRef(id: any): any;
   attached(): void;
+  _getDOMRef(id: any): any;
   _debounceRaf(fn: any): void;
 
   /**

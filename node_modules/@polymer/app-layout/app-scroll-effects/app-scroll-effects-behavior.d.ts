@@ -191,6 +191,7 @@ interface AppScrollEffectsBehavior extends IronScrollTargetBehavior {
    * should be overridden by the consumer of this behavior.
    */
   isContentBelow(): boolean;
+  attached(): void;
   detached(): void;
 
   /**
@@ -251,6 +252,7 @@ interface AppScrollEffectsBehavior extends IronScrollTargetBehavior {
    * @param y The top position of the current element relative to the viewport.
    */
   _runEffects(p: number, y: number): void;
+  _scrollStateChanged(): void;
 
   /**
    * Override this method to return a reference to a node in the local DOM.
