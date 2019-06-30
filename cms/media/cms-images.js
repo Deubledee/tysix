@@ -41,6 +41,7 @@ class cmsImages extends cmsMiddlePageTemplate {
             <div table> 
                 <cms-image 
                     add-to="{{add}}" 
+                    ad-tosub="[[adTosub]]" 
                     to-content="[[contentto]]" 
                     indexarr="[[indexarr]]"
                     return-path="[[returnPath]]"
@@ -155,6 +156,10 @@ class cmsImages extends cmsMiddlePageTemplate {
                 type: Boolean,
                 notify: true
             },
+            adTosub: {
+                type: Boolean,
+                notify: true
+            },
             returnPath: {
                 type: String,
                 notify: true,
@@ -221,9 +226,9 @@ class cmsImages extends cmsMiddlePageTemplate {
             this.set('add', false)
             if ('addimageto' in query) {
                 this.set('add', true)
-                if ('tocontent' in query) {
-                    this.set('addToSubcats', JSON.parse(atob(query.tocontent)).pop())
+                if ('indexarr' in query) {
                     this.set('indexarr', query.indexarr.split(''))
+                    this.adTosub = query.adTosub
                 }
                 this.set('contentto', JSON.parse(atob(query.content)))
             }

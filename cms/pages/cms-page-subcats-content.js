@@ -2,12 +2,9 @@ import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons';
 import '../styles/cms-comon-style_v3';
-import './cms-subcats'
-import './cms-subcats-item'
-import '../elements/cms-content-item'
-import '../elements/cms-content-text'
-import '../elements/cms-content-image'
-export class cmsContentSubcats extends cmsContentTemplate {
+import '../sub-categories/cms-subcats'
+import '../sub-categories/cms-subcats-item'
+export class cmsPageSubcats extends cmsContentTemplate {
     static get _getStyles() {
         return html` 
         <style include="cms-comon-style_v3">
@@ -58,11 +55,8 @@ export class cmsContentSubcats extends cmsContentTemplate {
                 <section class="flexchildbotomFull">  
                     <cms-subcats id="subcats" 
                         sub-sub-cats="{{subSubCats}}"
-                        add="{{add}}"
-                        route="{{route}}">  
-                                        
-                        <div scroll slot="item">                
-                        </div>                 
+                        add="{{addSubCategory}}"
+                        route="{{route}}">                    
                     </cms-subcats>  
                 </section>
             </div>
@@ -177,7 +171,7 @@ export class cmsContentSubcats extends cmsContentTemplate {
             <!--/template>
         </dom-repeat-->`
     }
-    static get is() { return 'cms-content-subcats'; }
+    static get is() { return 'cms-page-subcats'; }
     static get properties() {
         return {
             content: {
@@ -211,11 +205,12 @@ export class cmsContentSubcats extends cmsContentTemplate {
                 value: '',
                 notify: true
             },
-            add: {
+            addSubCategory: {
                 type: Boolean,
                 value: false,
                 notify: true
-            }
+            },
+            add: Boolean
         };
     }
     static get observers() {
@@ -231,9 +226,8 @@ export class cmsContentSubcats extends cmsContentTemplate {
         this.translator.target('cms-content-image', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content-image', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-content-image', 'setLangObject')
-        this.set('anchor', this.$.anchor)
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
-        window.addEventListener('reset', (this._reset).bind(this))
+        this.$.subcats.onSave = (this._Save).bind(this)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -251,23 +245,83 @@ export class cmsContentSubcats extends cmsContentTemplate {
     }
     _routePageChanged(routeData, query) {
         if (routeData.page === "edit-subcategory-pages" || routeData.page === "add-subcategory-pages") {
+            this._resetSubCats()
             if ('indexarr' in query) {
-                this._resetSubCats()
-                this.set('subSubCats', JSON.parse(atob(query.content)))
+                let subs = JSON.parse(atob(this.content)).subCategories
+                let temp = query.indexarr.split(',')
+                this.subSubCats = []
+                // console.log(temp)
+                if (subs === undefined) {
+                    subs = []
+                    subs.push(JSON.parse(atob(query.content)))
+                    this.subSubCats = subs
+                    // console.log(this.subSubCats, subs, temp)
+                } else {
+                    if (temp.length === 1) {
+                        subs.push(JSON.parse(atob(query.content)))
+                        this.subSubCats = subs
+                        this.set('subSubCats', subs)
+                        // console.log(this.subSubCats, subs, temp)
+                    } else
+                        if (temp.length > 1) {
+                            this.subSubCats = subs
+                            //   console.log(this.subSubCats, temp)
+                        }
+                }
+
             } else if ('content' in query, query.content) {
                 this.set('content', query.content)
                 this.set('subSubCats', JSON.parse(atob(query.content)).subCategories)
             }
         }
     }
+    _Save(add, idx) {
+        this.content = JSON.parse(atob(this.content))
+        this.add = add
+        let index = parseInt(idx) === parseInt(idx) ? idx : (this.$.subcats.childElementCount - 1) //avoid NaN
+        let temp = this.content.subCategories
+        if (this.add === 'false' || this.add === false) {
+            if (this.subSubCats.constructor === [].constructor) {
+                if (index === 0) {
+                    temp.splice(0, 1)
+                } else {
+                    temp.splice(index, index)
+                }
+                this.content.subCategories.unshift(this.subSubCats.pop())
+                console.log(this.content)
+            }
+            if (this.subSubCats.constructor === {}.constructor) {
+                console.log(this.subSubCats, index, idx, add)
+                this.add = false
+                /* if (index === 0) {
+                     temp.splice(0, 1)
+                 } else {
+                     temp.splice(index, index)
+                 }*/
+            }
+        }
+        if (this.add === 'true' || this.add === true) {
+            if (this.subSubCats.constructor === [].constructor) {
+                console.log(this.subSubCats, index, temp)
+            }
+            /*  if (this.subSubCats.constructor === {}.constructor) {
+                 this.add = false
+                 if (index === 0) {
+                     //   temp.splice(0, 1)
+                     console.log(this.subSubCats, index, true)
+                 } else {
+                     console.log(this.subSubCats, index, idx, true)
+                 }
+             }*/
+        }
+        this.save()
+    }
     _addSubCategory() {
-        this.add = true
+        this.addSubCategory = true
     }
     _resetSubCats() {
-        this.$.subcats._reset()
-    }
-    _reset() {
-        this.images = []
+        this.$.subcats._reset(() => {
+        }, 60)
     }
 }
-customElements.define(cmsContentSubcats.is, cmsContentSubcats);
+customElements.define(cmsPageSubcats.is, cmsPageSubcats);

@@ -1,10 +1,10 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer'
-import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
+import { cmsItemImageTemplate } from '../../templates/cms-item-image-template';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import './cms-subcats-item'
-import '../styles/cms-comon-style_v3';
+import '../../styles/cms-comon-style_v3';
 const Modelo = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGUiOiIiLCJwdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwidW5QdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwibGFzdE1vZGlmaWVkIjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dLCJkYXRlUHVibGlzaGVkIjoiTlAiLCJwdWJsaXNoZWQiOiJOUCJ9XSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
 
 export class cmsSubcats extends cmsItemImageTemplate {
@@ -209,6 +209,16 @@ export class cmsSubcats extends cmsItemImageTemplate {
         }
         if (indexArr.add === 'false' || indexArr.add === false) this.onSave(indexArr.add, indexArr.idx[0])
     }
+    _addChild(data) {
+        let subcat = this.subSubCats
+        let index = (data instanceof CustomEvent) === true ? data.detail.argument : data
+        _pushModel(data)
+        /*  subcat.splice(index, index)
+      this._reset()
+      setTimeout(() => {
+          this.set('subSubCats', subcat)
+      }, 120)*/
+    }
     _setContent(data) {
         //console.log(data)
         return data.constructor === [].constructor ? data : [data]
@@ -221,6 +231,7 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.subSubCats = []
         this.add = false
         this.innerHTML = ''
+        this.route = {}
         window.onbeforeunload = function () { }
         setTimeout(() => {
             call()

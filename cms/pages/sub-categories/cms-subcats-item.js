@@ -1,12 +1,12 @@
-import { cmsItemTemplate } from '../templates/cms-item-template'
+import { cmsItemTemplate } from '../../templates/cms-item-template'
 import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer'
-import '../styles/cms-comon-style_v3';
-import '../elements/cms-content-item'
-import '../elements/cms-content-text'
-import '../elements/cms-content-image'
+import '../../styles/cms-comon-style_v3';
+import '../../elements/cms-content-item'
+import '../../elements/cms-content-text'
+import '../../elements/cms-content-image'
 const Model = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGUiOiIiLCJwdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwidW5QdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwibGFzdE1vZGlmaWVkIjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dLCJkYXRlUHVibGlzaGVkIjoiTlAiLCJwdWJsaXNoZWQiOiJOUCJ9XSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
 export class cmsSubcatsItem extends cmsItemTemplate {
     static get _getStyles() {

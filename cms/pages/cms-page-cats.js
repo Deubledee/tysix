@@ -2,7 +2,7 @@ import '@polymer/iron-selector/iron-selector';
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import './cms-page-list-item';
-class cmsPageListType extends cmsMiddlePageTemplate {
+class cmsPageCats extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`
         <a href="[[rootPath]]content/pages/add-category-pages?content=eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGVkIjoiIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInVuUHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sImxhc3RNb2RpZmllZCI6W10sImRhdGVQdWJsaXNoZWQiOiJOUCIsInB1Ymxpc2hlZCI6Ik5QIn1dLCJpdGVtcyI6W3siY2F0ZWdvcnlOYW1lIjoiIiwidHlwZSI6IiIsImxhbmciOiIifV0sInN1YkNhdGVnb3JpZXMiOltdfQ==&add=true">
@@ -15,7 +15,7 @@ class cmsPageListType extends cmsMiddlePageTemplate {
         </a>
         `
     }
-    static get is() { return 'cms-page-list-type'; }
+    static get is() { return 'cms-page-cats'; }
     static get properties() {
         return {
             lang: {
@@ -107,4 +107,4 @@ class cmsPageListType extends cmsMiddlePageTemplate {
         }
     }
 }
-customElements.define(cmsPageListType.is, cmsPageListType);
+customElements.define(cmsPageCats.is, cmsPageCats);

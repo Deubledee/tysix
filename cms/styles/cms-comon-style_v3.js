@@ -75,8 +75,7 @@ $_documentContainer.innerHTML = `
             }
 
             div[table] {
-                min-height: 100px;
-                max-height: 600px;
+                min-height: 600px;
                 flex-direction: var(--app-flexcolumn);
                 margin-top: 8px;
                 padding: 8px;
@@ -446,7 +445,8 @@ $_documentContainer.innerHTML = `
                 border-right: 1px dashed;
             }
             .plus{
-                display: flex;             
+                display: flex;
+                width: 100%;        
             }
             .center{
                 margin-left: auto;
@@ -456,7 +456,6 @@ $_documentContainer.innerHTML = `
             }
             .subcat{
                 flex-grow: 1;
-                width: 640px;
             }
             shop-image {
                 height: 30px;

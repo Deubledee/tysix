@@ -116,6 +116,7 @@ export class cmsImageItem extends cmsItemTemplate {
     _addImage(image) {
         if (this.toContent instanceof Array) {
             this.toContent.image.push(image)
+            console.log(this.toContent)
         } else {
             this.toContent.image.push(image)
         }

@@ -222,5 +222,68 @@ export class cmsContentTemplate extends PolymerElement {
             }));
         });
     }
+    save() {
+        let data = new Date()
+        this.content.info[0].lastModified.push({
+            uid: this.user.uid,
+            author: this.user.displayName,
+            date: data.toLocaleString().replace(',', '')
+        });
+        if (this.add === true) {
+            this.saveAdded(data)
+        }
+        if (this.add === false) {
+            this.saveChanged(data)
+        }
+    }
+    saveAdded(data) {
+        this.content.info[0].author = this.user.displayName;
+        this.content.info[0].dateAdded = data.toLocaleString().replace(',', '');
+        this.content.info[0].uid = this.user.uid;
+        this.content.id = this.content.items[0].categoryName.split(' ').join('_');
+        this.translator._DBW.setPages((done, err) => {
+            if (done !== 'error') {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                setTimeout(() => {
+                    this.__reset();
+                }, 500)
+            }
+            else {
+                console.log(err);
+            }
+        }, this.content, this.translator.__DEV);
+    }
+    saveChanged() {
+        this.translator._DBW.changePages((msg, err) => {
+            if (msg !== 'error') {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                setTimeout(() => {
+                    this.__reset();
+                }, 500)
+            }
+            else {
+                console.log(err);
+            }
+        }, this.content, this.translator.__DEV);
+    }
+    __reset() {
+        this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+            window.dispatchEvent(new CustomEvent('reset-list-type', {
+                bubbles: true, composed: true
+            }));
+            window.dispatchEvent(new CustomEvent('reset', {
+                bubbles: true, composed: true
+            }));
+            this.$.anchor.click()
+        });
+    }
 }
 customElements.define(cmsContentTemplate.is, cmsContentTemplate);

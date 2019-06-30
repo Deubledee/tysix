@@ -91,18 +91,15 @@ export class cmsTopPageTemplate extends PolymerElement {
   static get viewPages() {
     return html`
     <cms-page-viewer name="pages" route="[[subroute]]">
+    
+        <cms-page-cats slot="categories"user="[[user]]"  route="[[subroute]]">
+        </cms-page-cats>
 
-        <cms-content-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
-        </cms-content-subcats>
+        <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
+        </cms-page-subcats>
 
-        <cms-page-list-type-content slot="add" user="[[user]]" route="[[subroute]]">
-        </cms-page-list-type-content>
-
-        <cms-page-list-type slot="categories"user="[[user]]"  route="[[subroute]]">
-        </cms-page-list-type>
-
-        <cms-page-sub-cat-type slot="suCategories" user="[[user]]" route="[[subroute]]">
-        </cms-page-sub-cat-type>
+        <cms-page-cats-content slot="add-cats" user="[[user]]" route="[[subroute]]">
+        <cms-page-cats-content>
 
     </cms-page-viewer>
 

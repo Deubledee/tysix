@@ -112,9 +112,12 @@ export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBe
               outline-style: none;
             }
             .textfield{
+                height: 23px;
+                overflow: hidden;
                 position: relative;
-                top: -5px;
-                left: -5px;
+                top: -8px;
+                left: -2px;
+                text-overflow: ellipsis;
             }
             div[overf][textarea]{
                 position: relative;

@@ -1,14 +1,9 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { Setter } from '../tools/cms-element-set';
-import { microTask } from '@polymer/polymer/lib/utils/async';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import '../elements/cms-content-item'
 import '../elements/cms-content-text'
 import '../elements/cms-content-image'
-const Consts = new Setter()
-Consts.assets = Consts.getAssets('cms-page-list-type-content')
-class cmsPageListTypeContent extends cmsContentTemplate {
+class cmsPageCatsContent extends cmsContentTemplate {
 
     static get _getAnchor() {
         return html`
@@ -55,7 +50,7 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             </div>
         </div>  `
     }
-    static get is() { return 'cms-page-list-type-content'; }
+    static get is() { return 'cms-page-cats-content'; }
     static get properties() {
         return {
             user: {
@@ -242,58 +237,6 @@ class cmsPageListTypeContent extends cmsContentTemplate {
             return pubuser;
         }
     }
-    save() {
-        let data = new Date()
-        this.content.info[0].lastModified.push({
-            uid: this.user.uid,
-            author: this.user.displayName,
-            date: data.toLocaleString().replace(',', '')
-        });
-        if (this.add === true) {
-            this.saveAdded(data)
-        }
-        if (this.add === false) {
-            this.saveChanged(data)
-        }
-    }
-    saveAdded(data) {
-        this.content.info[0].author = this.user.displayName;
-        this.content.info[0].dateAdded = data.toLocaleString().replace(',', '');
-        this.content.info[0].uid = this.user.uid;
-        this.content.id = this.content.items[0].categoryName.split(' ').join('_');
-        Consts._DBW.setPages((done, err) => {
-            if (done !== 'error') {
-                window.onbeforeunload = function () { };
-                this.editing = 0;
-                this.temp = '';
-                this.$.saveButton.classList.add('diferent');
-                this.$.anchor.classList.remove('diferent');
-                setTimeout(() => {
-                    this.__reset();
-                }, 500)
-            }
-            else {
-                console.log(err);
-            }
-        }, this.content, Consts.__DEV);
-    }
-    saveChanged() {
-        Consts._DBW.changePages((done, err) => {
-            if (done !== 'error') {
-                window.onbeforeunload = function () { };
-                this.editing = 0;
-                this.temp = '';
-                this.$.saveButton.classList.add('diferent');
-                this.$.anchor.classList.remove('diferent');
-                setTimeout(() => {
-                    this.__reset();
-                }, 500)
-            }
-            else {
-                console.log(err);
-            }
-        }, this.content, Consts.__DEV);
-    }
     _reset() {
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
         this.query = {}
@@ -307,13 +250,5 @@ class cmsPageListTypeContent extends cmsContentTemplate {
         this.set('inform', []);
         this.set('add', 0);
     }
-    __reset() {
-        this.$.anchor.click()
-        this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
-            window.dispatchEvent(new CustomEvent('reset-list-type', {
-                bubbles: true, composed: true
-            }));
-        });
-    }
 }
-customElements.define(cmsPageListTypeContent.is, cmsPageListTypeContent);
+customElements.define(cmsPageCatsContent.is, cmsPageCatsContent);

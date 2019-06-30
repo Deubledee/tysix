@@ -38,17 +38,18 @@ class cmsPageViewer extends cmsViewerTemplate {
     _pageChanged(page) {
         if (page !== undefined) {
             if (page === 'home') {
-                import('./cms-page-list-type').then(item => {
+                import('./cms-page-cats').then(item => {
                 });
                 return;
             }
             if (page === 'add-category-pages') {
-                import('./cms-page-list-type-content').then(item => {
+                console.log('add-category-pages')
+                import('./cms-page-cats-content').then(item => {
                 });
                 return;
             }
             if (page === 'add-subcategory-pages') {
-                import('../sub-categories/cms-content-subcats').then(item => {
+                import('./cms-page-subcats-content').then(item => {
                 });
                 return;
             }

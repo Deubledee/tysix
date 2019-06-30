@@ -84,6 +84,10 @@ class cmsImage extends cmsItemImageTemplate {
                 value: false,
                 notify: true
             },
+            adTosub: {
+                type: Boolean,
+                notify: true
+            },
             addToSubcats: {
                 type: Object,
                 notify: true,
@@ -169,20 +173,18 @@ class cmsImage extends cmsItemImageTemplate {
         data.onclick = (this.showPage).bind(this)
     }
     showPage() {
-        let string = window.btoa(JSON.stringify(this.toContent)),
-            string2
-        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&indexarr=${this.indexarr}`);
+        let string = window.btoa(JSON.stringify(this.toContent))
+        /*  if (this.addToSubcats.items === undefined) {
+              window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
+              window.dispatchEvent(new CustomEvent('location-changed'));
+              console.log(this.toContent, string)
+          } else {
+              let string2 = window.btoa(JSON.stringify([this.addToSubcats]))*/
+        console.log(this.toContent)
+        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&indexarr=${this.indexarr}&adTosub=${this.adTosub}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
-        /* if (this.addToSubcats.items === undefined) {
-             window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
-             window.dispatchEvent(new CustomEvent('location-changed'));
-             console.log(this.toContent, string)
-         } else {
-             string2 = window.btoa(JSON.stringify([this.addToSubcats]))
-             let url = `${this.rootPath}${this.returnPath}?content=${string}&tocontent=${string2}&indexarr=${this.indexarr}`
-             window.history.pushState({}, null, url);
-             window.dispatchEvent(new CustomEvent('location-changed'));
-         }*/
+
+        //   }
         //this.resetButton.click()
         this.saveButton.classList.add('diferent')
         this.resetButton.classList.remove('diferent')

@@ -127,6 +127,7 @@ $_documentContainer.innerHTML = `
         background-color: #eaeaea;
         box-shadow: 0px 1px 4px grey;
         z-index: 1;
+        color: #5487b6;
     }
     .navtop section {
         position: relative;
@@ -166,7 +167,7 @@ $_documentContainer.innerHTML = `
     }
 
     paper-icon-button-light {
-        color: var(--app-topnav-icon-color);
+        color: var(--paper-blue-800);
         margin-left: var(--app-content-button-light-marginleft)
     }
 
