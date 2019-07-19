@@ -372,6 +372,65 @@ export class dataBaseworker {
                 });
         }
     }
+    //pages
+    getAllPages(done, dev) {
+        let obj = { name: 'pages' };
+        if (dev === false) {
+            Worker.getDocList(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocListDev(obj)
+                .then((querySnapshot) => {
+                    this.categories = [];
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc);
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+    }
+
+    getPagesEqualTo(done, query, value, dev) {
+        let obj = { name: 'pages', query: query, value: value, condition: '==' };
+        this.categories = [];
+        if (dev === false) {
+            Worker.queryDocList(obj)
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc.data());
+                    });
+                    done({ categories: this.categories });
+                }).catch(function (error) {
+                    console.error("Error getting Pages Equal To: " + value, error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.queryDocListDev(obj)
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.categories.push(doc.data());
+                    });
+                    done({ categories: this.categories });
+                }).catch(function (error) {
+                    console.error("Error getting Pages Equal To: " + value, error);
+                    done("error", error);
+                });
+        }
+    }
     changePages(done, table, dev) {
         console.log(table.id)
         let teble = { name: 'pages', doc: table.id, data: table };
@@ -439,14 +498,20 @@ export class dataBaseworker {
                 });
         }
     }
-    getAllPages(done, dev) {
-        let obj = { name: 'pages' };
+
+    getPageDocPath(done, string) {
+        Worker.getDocPath(string).then(doc => {
+            done(doc)
+        })
+    }
+    getPageData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: table.dataType }
         if (dev === false) {
-            Worker.getDocList(obj)
+            Worker.getDocItemCollection(obj)
                 .then((querySnapshot) => {
-                    this.categories = [];
+                    this.categories = {};
                     querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
+                        this.categories[doc.id] = doc.data();
                     });
                     done(this.categories);
                 }).catch(function (error) {
@@ -455,11 +520,11 @@ export class dataBaseworker {
                 });
         }
         else {
-            Worker.getDocListDev(obj)
+            Worker.getDocItemCollectionDev(obj)
                 .then((querySnapshot) => {
-                    this.categories = [];
+                    this.categories = {};
                     querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
+                        this.categories[doc.id] = doc.data();
                     });
                     done(this.categories);
                 }).catch(function (error) {
@@ -468,34 +533,153 @@ export class dataBaseworker {
                 });
         }
     }
-    getPagesEqualTo(done, query, value, dev) {
-        let obj = { name: 'pages', query: query, value: value, condition: '==' };
-        this.categories = [];
+
+    queryPageData(done, table, dev) {
+        let query, condition, value
+        [query, condition, value] = table.query.split(',')
+        value = value === 'true' || value === 'false' ? (value === 'true') : value
+        let obj = { name: 'pages', docName: table.name, coll: table.dataType, query: query, condition: condition, value: value }
         if (dev === false) {
-            Worker.queryDocList(obj)
+            Worker.queryDocItemCollectionDev(obj)
                 .then((querySnapshot) => {
+                    this.categories = [];
                     querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
+                        this.categories.push(doc.data())
                     });
-                    done({ categories: this.categories });
+                    done(this.categories);
                 }).catch(function (error) {
-                    console.error("Error getting Pages Equal To: " + value, error);
+                    console.error("Error getting all pages: ", error);
                     done("error", error);
                 });
         }
         else {
-            Worker.queryDocListDev(obj)
+            Worker.queryDocItemCollectionDev(obj)
                 .then((querySnapshot) => {
+                    this.categories = [];
                     querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
+                        this.categories.push(doc.data())
                     });
-                    done({ categories: this.categories });
+                    done(this.categories);
                 }).catch(function (error) {
-                    console.error("Error getting Pages Equal To: " + value, error);
+                    console.error("Error getting all pages: ", error);
                     done("error", error);
                 });
         }
     }
+
+    setPageData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.data }
+        if (dev === false) {
+            Worker.createDocItemCollection(obj)
+                .then(function () {
+                    done('page successfully created');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing page: ", error);
+                });
+        }
+        else {
+            Worker.createDocItemCollectionDev(obj)
+                .then(function () {
+                    done('page info created');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing page: ", error);
+                });
+        }
+    }
+
+
+    getSubcatsData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data' }
+        if (dev === false) {
+            Worker.getDocItemCollectionCollection(obj)
+                .then((querySnapshot) => {
+                    this.categories = {};
+                    querySnapshot.forEach((doc) => {
+                        this.categories[doc.id] = doc.data()
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.getDocItemCollectionCollectionDev(obj)
+                .then((querySnapshot) => {
+                    obj = {}
+                    this.categories = {}
+                    querySnapshot.forEach((doc) => {
+                        this.categories[doc.id] = doc.data()
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+    }
+
+    querySubcatsData(done, table, dev) {
+        let query, condition, value
+        [query, condition, value] = table.query.split(',')
+        let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data', query: query, condition: condition, value: value }
+        if (dev === false) {
+            Worker.queryDocItemCollectionCollectionDev(obj)
+                .then((querySnapshot) => {
+                    this.categories = {};
+                    querySnapshot.forEach((doc) => {
+                        this.categories[doc.id] = doc.data()
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+        else {
+            Worker.queryDocItemCollectionCollectionDev(obj)
+                .then((querySnapshot) => {
+                    obj = {}
+                    this.categories = {}
+                    querySnapshot.forEach((doc) => {
+                        this.categories[doc.id] = doc.data()
+                    });
+                    done(this.categories);
+                }).catch(function (error) {
+                    console.error("Error getting all pages: ", error);
+                    done("error", error);
+                });
+        }
+    }
+
+    setSubcatsInfo(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: 'subCatsInfo', doc: table.info }
+        if (dev === false) {
+            Worker.createDocItemCollection(obj)
+                .then(function () {
+                    done('page successfully created');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing page: ", error);
+                });
+        }
+        else {
+            Worker.createDocItemCollectionDev(obj)
+                .then(function () {
+                    done('page info created');
+                })
+                .catch((error) => {
+                    done('error', error);
+                    console.error("Error writing page: ", error);
+                });
+        }
+    }
+    //media
     writeMediaContent(done, table, dev) {
         let teble = { name: "media", doc: table.gallerie, data: { content: table.content } };
         if (dev === false) {
@@ -519,23 +703,23 @@ export class dataBaseworker {
                 });
         }
     }
-    getMediaContent(done, categoryObj, dev) {
-        let obj = { name: 'media', doc: categoryObj.name };
+    getMediaContent(done, table, dev) {
+        let obj = { name: 'media', docName: (table.type || 'images'), coll: table.name };
         if (dev === false) {
-            Worker.getDoc(obj)
+            Worker.getDocItemCollection(obj)
                 .then((querySnapshot) => {
                     this.categories = [];
-                    done(querySnapshot.data());
+                    done(querySnapshot);
                 }).catch(function (error) {
                     console.error("Error getting Media Galleries ", error);
                     done("error", error);
                 });
         }
         else {
-            Worker.getDocDev(obj)
+            Worker.getDocItemCollectionDev(obj)
                 .then((querySnapshot) => {
                     this.categories = [];
-                    done(querySnapshot.data());
+                    done(querySnapshot);
                 }).catch(function (error) {
                     console.error("Error getting Media Galleries ", error);
                     done("error", error);

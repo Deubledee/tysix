@@ -5,7 +5,7 @@ import './cms-page-list-item';
 class cmsPageCats extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGVkIjoiIiwicHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sInVuUHVibGlzaGVkQnkiOlt7ImF1dGhvciI6IiIsImRhdGUiOiIiLCJ1aWQiOiIifV0sImxhc3RNb2RpZmllZCI6W10sImRhdGVQdWJsaXNoZWQiOiJOUCIsInB1Ymxpc2hlZCI6Ik5QIn1dLCJpdGVtcyI6W3siY2F0ZWdvcnlOYW1lIjoiIiwidHlwZSI6IiIsImxhbmciOiIifV0sInN1YkNhdGVnb3JpZXMiOltdfQ==&add=true">
+        <a href="[[rootPath]]content/pages/add-category-pages?&add=true">
             <paper-tab name=" add-category-pages">
             [[ADD]] [[categorypages]]
                 <paper-icon-button-light>
@@ -71,18 +71,21 @@ class cmsPageCats extends cmsMiddlePageTemplate {
     _askPages() {
         this.translator._DBW.getAllPages((done) => {
             this._setAll(done);
-        }, this.translator.__DEV);
+        }, this.translator.__DEV);/**/
     }
-    _setAll(data) {
+    _setAll(response) {
         let arr = [], arr2 = [];
         this.set('inForm', arr);
-        this.pages = '';
-        for (let i = 0; i < data.length; i++) {
-            if ('categoryCount' in data[i]) {
-                arr.push(data[i]);
-            }
-            else {
-                arr2.push(data[i]);
+        for (let i = 0; i < response.length; i++) {
+            this.pages = '';
+            if (!!response[i].id) {
+                let datarr = response[i].data()
+                if (response[i].id === 'addedContent') {
+                    arr.push(datarr);
+                }
+                else {
+                    arr2.push(datarr);
+                }
             }
         }
         this.set('inForm', arr);
@@ -100,6 +103,7 @@ class cmsPageCats extends cmsMiddlePageTemplate {
         this.appendChild(clone);
         this.children[index].setAttribute('slot', `item${index}`);
         this.children[index].set('page', page);
+        this.children[index].set('idx', index);
     }
     deSpin(data) {
         if (this.$.spinner.active === true) {

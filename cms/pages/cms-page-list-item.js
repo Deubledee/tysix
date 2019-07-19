@@ -32,55 +32,64 @@ class cmsPageListItem extends cmsItemTemplate {
         super.ready();
     }
     _putRow(data) {
-        this.translator.template.innerHTML = `
-           <article centerListItem slot="table">
-               <div>   
-                <span> 
-                   <paper-button> ${data.items[0].categoryName}</paper-button>
-                </span>
-               </div>
-               <div>
-                   <paper-button>
-                       <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                       <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                   </paper-button> 
-               </div>  
-               <div>
-                   <paper-button>
-                       <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                       <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                   </paper-button> 
-               </div> 
-               <div>                   
-                <span> 
-                    <paper-button> ${data.items[0].type} </paper-button>
-                </span>
-               </div>   
-               <div class="${data.info[0].published}">
-                   
-                <span> 
-                    <paper-button> ${data.info[0].published} </paper-button>
-                </span>
-               </div>   
-               <div>
-                    <paper-button>
-                        <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
-                    </paper-button> 
-                </div>
-           </article>`;
-        this.translator.clone(this)
-        this.children[0].children[1].
-            children[0].addEventListener('click', (this.showPage).
-                bind(this));
-        this.children[0].children[2].
-            children[0].addEventListener('click', (this.showCats).
-                bind(this));
-        this.children[0].children[4].
-            children[0].addEventListener('click', (this._confirmPublish).
-                bind(this));
-        this.children[0].children[5].
-            children[0].addEventListener('click', (this._openConfirm).
-                bind(this));
+        let objInfo = []
+        objInfo.push(data)
+        this.translator._DBW.getPageData((done2) => {
+            let objdata = {}
+            objdata = [done2]
+            this.translator.template.innerHTML = `
+                        <article centerListItem slot="table">
+                            <div>   
+                             <span> 
+                                 <paper-button> ${objdata[0].items.categoryName}</paper-button>
+                             </span>
+                            </div>
+                            <div>
+                                <paper-button>
+                                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                                </paper-button> 
+                            </div>  
+                            <div>
+                                <paper-button>
+                                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                                </paper-button> 
+                            </div> 
+                            <div>                   
+                            <span> 
+                                <paper-button> ${objdata[0].items.type} </paper-button>
+                            </span>
+                            </div>   
+                            <div class="${objInfo[0].Published.state}">
+                                
+                            <span> 
+                                <paper-button> ${objInfo[0].Published.state} </paper-button>
+                            </span>
+                            </div>   
+                            <div>
+                                <paper-button>
+                                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                                </paper-button> 
+                            </div>
+                        </article>`;
+            this.translator.clone(this)
+            this.children[0].children[1].
+                children[0].addEventListener('click', (this.showPage).
+                    bind(this));
+            this.children[0].children[2].
+                children[0].addEventListener('click', (this.showCats).
+                    bind(this));
+            this.children[0].children[4].
+                children[0].addEventListener('click', (this._confirmPublish).
+                    bind(this));
+            this.children[0].children[5].
+                children[0].addEventListener('click', (this._openConfirm).
+                    bind(this));
+            // objdata.
+            localStorage.setItem(`page${data.id}`, JSON.stringify(objdata))/**/
+            localStorage.setItem(`page${data.id}info`, JSON.stringify(objInfo))/**/
+        }, { name: data.id, dataType: 'data' }, this.translator.__DEV)
     }
     _getPagename(cats) {
         return cats;
@@ -92,13 +101,11 @@ class cmsPageListItem extends cmsItemTemplate {
         this.$.spinner.active = !this.$.spinner.active;
     }
     showPage() {
-        let string = window.btoa(`${JSON.stringify(this.page)}`);
-        window.history.pushState({}, null, `content/pages/edit-category-pages?content=${string}&add=false`);
+        window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.page.id}&add=false`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     showCats() {
-        let string = window.btoa(`${JSON.stringify(this.page)}`);
-        window.history.pushState({}, null, `content/pages/edit-subcategory-pages?content=${string}&add=false`);
+        window.history.pushState({}, null, `content/pages/edit-subcategory-pages?content=${this.page.id}&add=false`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {

@@ -69,22 +69,11 @@ export class cmsImageItem extends cmsItemTemplate {
                 notify: true,
                 computed: '_putRow(image)'
             },
-            addToSubcats: {
-                type: Object,
-                notify: true,
-                value: {},
-            },
             idx: Number,
             delete: Object,
             resetButton: Object,
             toContent: Object,
-            saveButton: Object,
-            noItem: {
-                type: Array,
-                value: [{
-                    "image": [],
-                }]
-            }
+            saveButton: Object
         };
     }
     ready() {
@@ -92,12 +81,12 @@ export class cmsImageItem extends cmsItemTemplate {
     }
     _putRow(item) {
         if (this.resetButton !== undefined) {
-            let reset = this.resetButton.onclick
-            this.resetButton.onclick = {}
-            this.resetButton.onclick = () => {
-                this.addButton.classList.remove('added')
+            /* let reset = this.resetButton.onclick
+             this.resetButton.onclick = {}*/
+            this.resetButton.addEventListener('click', () => {
+                if (this.addButton !== undefined) this.addButton.classList.remove('added')
                 reset()
-            }
+            }, false)
         }
         return [item]
     }
@@ -114,12 +103,10 @@ export class cmsImageItem extends cmsItemTemplate {
         }
     }
     _addImage(image) {
-        if (this.toContent instanceof Array) {
-            this.toContent.image.push(image)
-            console.log(this.toContent)
-        } else {
-            this.toContent.image.push(image)
-        }
+        this.res = JSON.parse(localStorage[`${this.query.addimageto}${this.query.content}`])
+        let images = this.res[0].images.content
+        images.push(image)
+        localStorage[`${this.query.addimageto}${this.query.content}`] = JSON.stringify(this.res)
         if (this.saveButton.classList.contains('diferent') === true) {
             this.saveButton.classList.remove('diferent')
             this.resetButton.classList.add('diferent')

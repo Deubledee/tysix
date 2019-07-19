@@ -49,7 +49,7 @@ class cmsPageViewer extends cmsViewerTemplate {
                 return;
             }
             if (page === 'add-subcategory-pages') {
-                import('./cms-page-subcats-content').then(item => {
+                import('./cms-page-subcats').then(item => {
                 });
                 return;
             }

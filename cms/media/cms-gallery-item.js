@@ -45,7 +45,7 @@ class cmsGalleryItem extends cmsItemTemplate {
                 type: String,
                 notify: true
             },
-            addImageTo: {
+            method: {
                 type: String,
                 notify: true,
                 value: {}
@@ -73,7 +73,7 @@ class cmsGalleryItem extends cmsItemTemplate {
                 <div>
                     <span> 
                         <paper-button>
-                            ${this._getGalleryName(data.content[0])}
+                            ${data.id}
                         </paper-button>
                     </span>
                 </div>
@@ -98,17 +98,16 @@ class cmsGalleryItem extends cmsItemTemplate {
             children[0].addEventListener('click', (this._openConfirm).bind(this));
         this.children[this.childElementCount - 1].children[2].
             children[0].setAttribute('id', "item-" + (this.childElementCount - 1))
-    }
-    _getGalleryName(gall) {
-        return gall.gallery;
+        //  localStorage.setItem(data.id, data.content)
     }
     _showImages() {
+        let temp = this.gallery.content
         this.set('images', [])
-        this.set('images', this.gallery)
+        this.images = temp/* */
         this.default()
-        if (this[this.addImageTo] !== undefined) {
-            this[this.addImageTo]()
-        }
+        if (this[this.method] !== undefined) {
+            this[this.method]()
+        }/**/
     }
     default() {
         window.history.pushState({}, null, `/media/images/view-images${location.search}`);

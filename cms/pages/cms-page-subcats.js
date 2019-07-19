@@ -53,8 +53,9 @@ export class cmsPageSubcats extends cmsContentTemplate {
         <div container>
             <div bottom hidebottom$="[[hidebottom]]"> 
                 <section class="flexchildbotomFull">  
-                    <cms-subcats id="subcats" 
+                    <cms-subcats id="subcats"
                         sub-sub-cats="{{subSubCats}}"
+                        user="{{user}}"
                         add="{{addSubCategory}}"
                         route="{{route}}">                    
                     </cms-subcats>  
@@ -210,7 +211,8 @@ export class cmsPageSubcats extends cmsContentTemplate {
                 value: false,
                 notify: true
             },
-            add: Boolean
+            add: Boolean,
+            time: Number
         };
     }
     static get observers() {
@@ -228,6 +230,8 @@ export class cmsPageSubcats extends cmsContentTemplate {
         this.translator.shoot('cms-content-image', 'setLangObject')
         this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
         this.$.subcats.onSave = (this._Save).bind(this)
+        this.$.subcats.setInfo = (this.setInfo).bind(this)
+        this.$.subcats.getInfo = (this.getInfo).bind(this)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -245,83 +249,74 @@ export class cmsPageSubcats extends cmsContentTemplate {
     }
     _routePageChanged(routeData, query) {
         if (routeData.page === "edit-subcategory-pages" || routeData.page === "add-subcategory-pages") {
-            this._resetSubCats()
-            if ('indexarr' in query) {
-                let subs = JSON.parse(atob(this.content)).subCategories
-                let temp = query.indexarr.split(',')
-                this.subSubCats = []
-                // console.log(temp)
-                if (subs === undefined) {
-                    subs = []
-                    subs.push(JSON.parse(atob(query.content)))
-                    this.subSubCats = subs
-                    // console.log(this.subSubCats, subs, temp)
-                } else {
-                    if (temp.length === 1) {
-                        subs.push(JSON.parse(atob(query.content)))
-                        this.subSubCats = subs
-                        this.set('subSubCats', subs)
-                        // console.log(this.subSubCats, subs, temp)
-                    } else
-                        if (temp.length > 1) {
-                            this.subSubCats = subs
-                            //   console.log(this.subSubCats, temp)
-                        }
+            let subs = query.content
+            if ('content' in query) {
+                this._resetSubCats()
+                if (typeof this.time === 'number') {
+                    clearTimeout(this.time)
                 }
+                this.translator._DBW.getPageData((done) => {
+                    this.set('inform', [done.info])
+                }, { name: subs, dataType: "subCategoriesInfo" })
 
-            } else if ('content' in query, query.content) {
-                this.set('content', query.content)
-                this.set('subSubCats', JSON.parse(atob(query.content)).subCategories)
+                this.time = setTimeout(() => {
+                    this.translator._DBW.queryPageData((done) => {
+                        this.set('subSubCats', done)
+                    }, { name: subs, dataType: "subCategories", query: 'top,==,true' })/* */
+                }, 120)
             }
+            // this._resetSubCats()
+            /*  if ('indexarr' in query) {
+                  let subs = JSON.parse(this.content).subCategories
+                  let temp = query.indexarr.split(',')
+              }  */
         }
     }
+
+    getInfo(data) {
+        this.translator._DBW.getSubcatsInfo((done) => {
+
+        }, { name: '' }, this.translator.__DEV)
+    }
+
+    setInfo(data) {
+        this.translator._DBW.setSubcatsInfo((msg) => {
+
+        }, { name: data.id, info: data.type, doc: data.info }, this.translator.__DEV)
+    }
+
     _Save(add, idx) {
-        this.content = JSON.parse(atob(this.content))
+        this.content = JSON.parse(this.content)
         this.add = add
         let index = parseInt(idx) === parseInt(idx) ? idx : (this.$.subcats.childElementCount - 1) //avoid NaN
         let temp = this.content.subCategories
         if (this.add === 'false' || this.add === false) {
             if (this.subSubCats.constructor === [].constructor) {
+                console.log(this.subSubCats, temp, idx)
                 if (index === 0) {
                     temp.splice(0, 1)
                 } else {
                     temp.splice(index, index)
                 }
-                this.content.subCategories.unshift(this.subSubCats.pop())
-                console.log(this.content)
-            }
-            if (this.subSubCats.constructor === {}.constructor) {
-                console.log(this.subSubCats, index, idx, add)
-                this.add = false
-                /* if (index === 0) {
-                     temp.splice(0, 1)
-                 } else {
-                     temp.splice(index, index)
-                 }*/
+                this.content.subCategories.push(this.subSubCats.pop())
             }
         }
         if (this.add === 'true' || this.add === true) {
             if (this.subSubCats.constructor === [].constructor) {
-                console.log(this.subSubCats, index, temp)
+                this.content.subCategories = this.subSubCats
             }
-            /*  if (this.subSubCats.constructor === {}.constructor) {
-                 this.add = false
-                 if (index === 0) {
-                     //   temp.splice(0, 1)
-                     console.log(this.subSubCats, index, true)
-                 } else {
-                     console.log(this.subSubCats, index, idx, true)
-                 }
-             }*/
         }
-        this.save()
+        this.save(() => {
+            this.routeData = {}
+            this.query = {}
+        })
     }
     _addSubCategory() {
         this.addSubCategory = true
     }
     _resetSubCats() {
-        this.$.subcats._reset(() => {
-        }, 60)
+
+        this.$.subcats._reset(() => { })
     }
 }
 customElements.define(cmsPageSubcats.is, cmsPageSubcats);

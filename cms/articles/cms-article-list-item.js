@@ -81,9 +81,10 @@ class cmsArticleListItem extends cmsItemTemplate {
         this.$.spinner.active = !this.$.spinner.active;
     }
     showPage() {
-        let string = window.btoa(`${JSON.stringify(this.page)}`)
-        window.history.pushState({}, null, `${this.rootPath}content/articles/view-articles?content=${string}&type=${this.page.info[0].type}&category=${this.page.info[0].id}`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        console.log(this.page)
+        /*    let string = window.btoa(`${JSON.stringify(this.page)}`)
+          window.history.pushState({}, null, `${this.rootPath}content/articles/view-articles?content=${string}&type=${this.page.info[0].type}&category=${this.page.info[0].id}`);
+           window.dispatchEvent(new CustomEvent('location-changed'));*/
     }
     __delete(data) {
         let page = data;

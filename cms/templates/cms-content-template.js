@@ -15,7 +15,7 @@ export class cmsContentTemplate extends PolymerElement {
         <main id="main">
             <nav top>
                 ${this._getAnchor}
-                <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
+                <paper-button id="saveButton" class="diferent" on-click="onSave" aria-label="mode-save">
                     [[Save]]
                 </paper-button>
             </nav>
@@ -24,6 +24,7 @@ export class cmsContentTemplate extends PolymerElement {
                     ${this._getContentItems}
                 </nav>
                 <nav class="navside">
+                    [[infoState]]
                     ${this._getSideInfo}
                 </nav>
             </div>
@@ -86,64 +87,6 @@ export class cmsContentTemplate extends PolymerElement {
                         </span>
                     </aside>
                 </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                            [[publishedby]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[publiShed]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datepublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[ _getPublishedBy(cat.publishedBy)]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc" published$="[[cat.published]]">
-                        <span>
-                            [[cat.published]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.datePublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                            [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datecreated]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.author]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.dateAdded]]
-                        </span>
-                    </aside>
-                </div>
                 <div class="center-menu">
                     <aside>
                         <span>
@@ -195,8 +138,13 @@ export class cmsContentTemplate extends PolymerElement {
                 type: Boolean,
                 value: true,
                 notify: true
+            },
+            infoState: {
+                type: String,
+                value: 'No info available..',
+                notify: true
             }
-        };
+        }
     }
     ready() {
         super.ready();
@@ -222,26 +170,20 @@ export class cmsContentTemplate extends PolymerElement {
             }));
         });
     }
-    save() {
-        let data = new Date()
-        this.content.info[0].lastModified.push({
-            uid: this.user.uid,
-            author: this.user.displayName,
-            date: data.toLocaleString().replace(',', '')
-        });
+    onSave() {
+        return 0
+    }
+    save(call) {
         if (this.add === true) {
-            this.saveAdded(data)
+            this.saveAdded(call)
         }
         if (this.add === false) {
-            this.saveChanged(data)
+            this.saveChanged(call)
         }
     }
-    saveAdded(data) {
-        this.content.info[0].author = this.user.displayName;
-        this.content.info[0].dateAdded = data.toLocaleString().replace(',', '');
-        this.content.info[0].uid = this.user.uid;
+    saveAdded(call) {
         this.content.id = this.content.items[0].categoryName.split(' ').join('_');
-        this.translator._DBW.setPages((done, err) => {
+        this.translator._DBW.setPageData((done, err) => {
             if (done !== 'error') {
                 window.onbeforeunload = function () { };
                 this.editing = 0;
@@ -250,14 +192,15 @@ export class cmsContentTemplate extends PolymerElement {
                 this.$.anchor.classList.remove('diferent');
                 setTimeout(() => {
                     this.__reset();
+                    if (call instanceof Function) call(true)
                 }, 500)
             }
             else {
                 console.log(err);
             }
-        }, this.content, this.translator.__DEV);
+        }, { name: this.content.id, dataType: 'data', data: this.content.items }, this.translator.__DEV);
     }
-    saveChanged() {
+    saveChanged(call) {
         this.translator._DBW.changePages((msg, err) => {
             if (msg !== 'error') {
                 window.onbeforeunload = function () { };
@@ -267,9 +210,17 @@ export class cmsContentTemplate extends PolymerElement {
                 this.$.anchor.classList.remove('diferent');
                 setTimeout(() => {
                     this.__reset();
+                    if (call instanceof Function) call(false)
                 }, 500)
             }
             else {
+                console.log(err);
+            }
+        }, this.content, this.translator.__DEV);
+    }
+    saveInfo() {
+        this.translator._DBW.changePagesInfo((msg, err) => {
+            if (msg === 'error') {
                 console.log(err);
             }
         }, this.content, this.translator.__DEV);

@@ -158,9 +158,6 @@ class cmsControler extends PolymerElement {
 
   <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
   </app-route>
-
-  <shop-category-data lang="{{lang}}">
-  </shop-category-data>
   <div rows>
     <nav toolbar>
       <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
@@ -218,7 +215,7 @@ class cmsControler extends PolymerElement {
                 <b>Home</b>
               </h1>
             </article>
-        <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
+        <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]" >
         </cms-user-viewer>
 
         <cms-content route="[[subroute]]" name="content" user="[[user]]">
@@ -338,7 +335,6 @@ class cmsControler extends PolymerElement {
       this.set('lang', 'en');
     }
   }
-
   _resetEvent() {
     this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
       microTask, () => {
@@ -352,7 +348,7 @@ class cmsControler extends PolymerElement {
   }
   _routePageChanged(page, route) {
     if (this.page !== page.page && page.page !== 'NaN') {
-      if (!page) {
+      if (!page.page) {
         this.page = 'home';
       }
       else if (['app', 'content', 'users', 'home', 'media'].indexOf(page.page) !== -1) {

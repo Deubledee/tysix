@@ -5,7 +5,7 @@ import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import './cms-subcats-item'
 import '../styles/cms-comon-style_v3';
-const Modelo = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGUiOiIiLCJwdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwidW5QdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwibGFzdE1vZGlmaWVkIjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dLCJkYXRlUHVibGlzaGVkIjoiTlAiLCJwdWJsaXNoZWQiOiJOUCJ9XSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
+const Modelo = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
 
 export class cmsSubcats extends cmsItemImageTemplate {
     static get _getStyles() {
@@ -74,6 +74,10 @@ export class cmsSubcats extends cmsItemImageTemplate {
                 type: Array,
                 value: [],
                 notify: true,
+            },
+            user: {
+                type: Object,
+                value: {}
             },
             deleteImg: {
                 type: Object,
@@ -161,11 +165,12 @@ export class cmsSubcats extends cmsItemImageTemplate {
     _pushModel(data) {
         let modelo = JSON.parse(atob(Modelo))
         if (data === true) {
-            let subcat = this.subSubCats || {}
+            let subcat = this.subSubCats || []
+            subcat.push(modelo.value)
             this._reset(() => {
-                subcat.push(modelo.value)
-                this.editIndex = this.childElementCount
                 this.subSubCats = subcat
+                this.editIndex = this.subSubCats.length === parseInt(this.subSubCats.length) ? this.subSubCats.length - 1 :
+                    this.childElementCount === parseInt(this.childElementCount) ? this.childElementCount - 1 : 0
                 this.add = false
             }, 60)
         }
@@ -185,10 +190,13 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.children[this.childElementCount - 1].children[0].lang = this.lang
         this.children[this.childElementCount - 1].children[0].route = this.route
         this.children[this.childElementCount - 1].children[0].toContent = content
+        this.children[this.childElementCount - 1].children[0].user = this.user
+        this.children[this.childElementCount - 1].children[0].getInfo = (this.getInfo).bind(this)
+        this.children[this.childElementCount - 1].children[0].setInfo = (this.setInfo).bind(this)
         this.children[this.childElementCount - 1].children[0].subcat = item
         this.children[this.childElementCount - 1].children[0].onSave = (this.onSave).bind(this)
-        this.children[this.childElementCount - 1].children[0].indexArr = btoa(JSON.stringify([index]))
-        this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
+        this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
+        this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this) /* */
     }
     _removeChild(indexArr) {
         let index = indexArr.idx[indexArr.idx.length - 1]
@@ -210,8 +218,8 @@ export class cmsSubcats extends cmsItemImageTemplate {
         if (indexArr.add === 'false' || indexArr.add === false) this.onSave(indexArr.add, indexArr.idx[0])
     }
     _setContent(data) {
-        //console.log(data)
-        return data.constructor === [].constructor ? data : [data]
+        //return data.constructor === [].constructor ? data : [data]
+        return data
     }
     __reset() {
         this._reset(() => { }, 0)

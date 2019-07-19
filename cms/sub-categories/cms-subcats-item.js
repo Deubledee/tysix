@@ -7,7 +7,7 @@ import '../styles/cms-comon-style_v3';
 import '../elements/cms-content-item'
 import '../elements/cms-content-text'
 import '../elements/cms-content-image'
-const Model = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaW5mbyI6W3siYXV0aG9yIjoiIiwiZGF0ZUFkZGUiOiIiLCJwdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwidW5QdWJsaXNoZWRCeSI6W3siYXV0aG9yIjoiIiwiZGF0ZSI6IiIsInVpZCI6IiJ9XSwibGFzdE1vZGlmaWVkIjpbeyJhdXRob3IiOiIiLCJkYXRlIjoiIiwidWlkIjoiIn1dLCJkYXRlUHVibGlzaGVkIjoiTlAiLCJwdWJsaXNoZWQiOiJOUCJ9XSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
+const Model = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
 export class cmsSubcatsItem extends cmsItemTemplate {
     static get _getStyles() {
         return html`
@@ -241,11 +241,16 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 computed: '_onIndexArr(indexArr)',
                 observer: '_subcatAdded'
             },
+            dataObj: {
+                type: Array,
+                observer: '_setChildren'
+            },
             add: {
                 type: Boolean,
                 value: true,
                 notify: true
-            }
+            },
+            time: Number
         };
     }
     _log(data) {
@@ -285,15 +290,13 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
 
     _subcatAdded(data) {
-        if (data.length > 0) {
+        if (!!data) {
             if (this.routeData.page === "edit-subcategory-pages" || this.routeData.page === "add-subcategory-pages") {
+                this.add = this.query.adTosub
                 if ('indexarr' in this.query) {
                     let temp = this.query.indexarr.split(','),
                         index2 = this._indexArr.length,
-                        index = (temp.length),
-                        subcat = JSON.parse(atob(this.query.content))
-                    this.add = this.query.adTosub
-                    this._setContent(this.subcat)
+                        index = (temp.length)
                     if (index > index2) {
                         if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
                             this._toggleChildren()
@@ -301,15 +304,6 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                     }
                     if ((index - 1) === index2) {
                         if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
-                            let tempSubcat = this.subcat
-                            if (this.query.adTosub === 'true' || this.query.adTosub === true) {
-                                tempSubcat.subCategories.push(subcat)
-                            }
-                            if (this.query.adTosub === 'false' || this.query.adTosub === false) {
-                                let idx = temp[index2]
-                                tempSubcat.subCategories[idx] = subcat
-                            }
-                            this.subcat = tempSubcat
                             this._reset(() => {
                                 this._setContent(this.subcat)
                             }, 60)
@@ -317,36 +311,56 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                     }
                     if (index === index2) {
                         if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
+                            this._setContent(JSON.parse(localStorage[`cats${this.subcat.id}`]))
                             this._viewEdit(false)
                             this.saveButton.classList.remove('diferent')
                         }
                     }
-
                 } else {
-                    this._setContent(this.subcat)
+                    this.set("parent", this.query.content)
+                    this.translator._DBW.getSubcatsData((done) => {
+                        this._setContent(done)
+                    }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+                    if (this.subcat.subCatChildren !== 'N/A') {
+                        this.set('subCatChildren', this.subcat.children)
+                    }
                 }
             }
         }
     }
+
     _setContent(content) {
-        if (content['info']) {
-            this.set('temp', content.items[0].categoryName)
+        if (content['items']) {
+            //  console.log(this.subcat[0].name)
             this.set('content', content);
-            let obj = this.content.image
+            this.set('temp', content.items.categoryName)
+            let obj = this.content.images.content
             this.imageLabel = 'images'
             this.set('imageArr', obj)
-            this.set('inputVal', this._getObjArr(this.content.items))
-            this.set('textareaVal', this.content.contentText)
-            this.set('subcatSubats', this.content.subCategories)
+            this.set('inputVal', this._getObjArr([this.content.items]))
+            this.set('textareaVal', [this.content.contentText])
             this._setsubcatContent()
             if (this.$.Imag)
                 this.$.Imag.addImage = (this.addImage).bind(this)
+            /**/
         }
     }
+    _getObjArr(content) {
+        let obj,
+            arr = []
+        for (let par in content[0]) {
+            if (par.toString() !== 'undefined' && par.toString() !== 'image') {
+                obj = Object()
+                obj[par] = content[0][par]
+                arr.push(obj)
+            }
+        }
+        return arr
+    }
     _setsubcatContent() {
-        if (this.content.items[0].categoryName.split('').length > 0) {
-            this.set('subcatContent', this.content.items)
-            this.subcatContent[0].image = this.content.image[0] === undefined ? '' : this.content.image[0].url
+        if (this.content.items.categoryName.split('').length > 0) {
+            this.set('subcatContent', [this.content.items])
+            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.imageArr[0].url
         }
     }
     _setButtons(data) {
@@ -357,11 +371,12 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         }
     }
     _onIndexArr(data) {
-        return JSON.parse(atob(data))
+        return atob(data)
     }
     addImage() {
-        let string = `editSubCats&content=${btoa(JSON.stringify(this.content))}&indexarr=${this._indexArr.join('')}&adTosub=${this.add}`
-        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?addimageto=cats&method=${string}`);
+        let string = `addimageto=cats&content=${this.subcat.id}&method=editSubCats&indexarr=${this._indexArr}&adTosub=${this.add}`
+        localStorage[`cats${this.subcat.id}`] = JSON.stringify(this.subcat)
+        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
         window.onbeforeunload = function (e) {
             return "you might have changes to be saved, are you sure you whant to leave?";
@@ -373,6 +388,25 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         } else {
             this.$.subcats.classList.add('diferent')
         }
+        if (!this.subcatSubats && this.subCatChildren !== 'N/A') {
+            let dataObj = []
+            this.subCatChildren.map(item => {
+                if (!!this.parent) {
+                    this.translator._DBW.queryPageData((done) => {
+                        dataObj.push(done.pop())
+                        this.dataObj = dataObj
+                    }, { name: this.parent, dataType: "subCategories", query: `id,==,${item}` })
+                }
+            })
+        }
+    }
+    _setChildren(data) {
+        if (typeof this.time === 'number') {
+            clearTimeout(this.time)
+        }
+        this.time = setTimeout(() => {
+            this.set('subcatSubats', data)
+        }, 120);
     }
     _addChildren() {
         this._pushModel(true)
@@ -400,7 +434,7 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 </cms-subcats-item>
              </div>             
              `;
-        let arr = JSON.parse(atob(this.indexArr))
+        let arr = [atob(this.indexArr)]
         arr.push(index)
         this.translator.template.innerHTML = str;
         this.translator.clone(this)
@@ -409,15 +443,16 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         this.children[this.childElementCount - 1].children[0].lang = this.lang
         this.children[this.childElementCount - 1].children[0].route = this.route
         this.children[this.childElementCount - 1].children[0].toContent = [this.toContent]
+        this.children[this.childElementCount - 1].children[0].getInfo = (this.getInfo).bind(this)
+        this.children[this.childElementCount - 1].children[0].setInfo = (this.setInfo).bind(this)
         this.children[this.childElementCount - 1].children[0].subcat = data
         this.children[this.childElementCount - 1].children[0].onSave = (this._onSave).bind(this)
-        this.children[this.childElementCount - 1].children[0].indexArr = btoa(JSON.stringify(arr))
+        this.children[this.childElementCount - 1].children[0].indexArr = btoa(arr.join(''))
         this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
     }
     _showBack() {
         this.$.backButton.classList.add('diferent')
         if (this.temp !== undefined && this.temp.split('').length === 0) {
-            console.log('subcat_removeChild')
             let model = JSON.parse(atob(Model))
             this._setContent(model.value)
             this._removeChild({ idx: this._indexArr, add: this.add })
@@ -430,14 +465,12 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     _save() {
         this._setsubcatContent()
-        //  console.log(this.indexArr, this.indexArr.length - 1, this.indexArr[this.indexArr.length - 1])
         this.view = !this.view
         this.saveButton.classList.add('diferent')
-        this.__onSave(this.add, this.indexArr)
+        this._onSave(this.add, this._indexArr)
     }
     __onSave(data) {
         return function (add, indexArr) {
-            //console.log(add, indexArr[0])            
             data(add, indexArr[0])
         }
     }
@@ -458,16 +491,6 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 }
             }
         }
-    }
-    _getObjArr(content) {
-        let obj,
-            arr = []
-        for (let par in content[0]) {
-            obj = Object()
-            obj[par] = content[0][par]
-            arr.push(obj)
-        }
-        return arr
     }
     _setSaveButton() {
         return this.$.saveButton
@@ -501,6 +524,8 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     _reset(call, mlscs) {
         this.innerHTML = ''
+        this.subcatSubats = undefined
+        this.subCatChildren = undefined
         setTimeout(() => {
             call()
         }, mlscs)

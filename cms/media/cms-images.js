@@ -47,9 +47,8 @@ class cmsImages extends cmsMiddlePageTemplate {
                     return-path="[[returnPath]]"
                     save-button="[[saveButton]]" 
                     reset-button="[[resetButton]]"
-                    add-to-subcats="[[addToSubcats]]"
                     lang="[[lang]]" 
-                    query="[[query]]"
+                    route="[[route]]"
                     images="[[contents]]">
                 </cms-image>
             </div>`
@@ -178,11 +177,6 @@ class cmsImages extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
             },
-            addToSubcats: {
-                type: Object,
-                notify: true,
-                value: {},
-            },
             contents: {
                 type: Array,
                 notify: true,
@@ -230,15 +224,16 @@ class cmsImages extends cmsMiddlePageTemplate {
                     this.set('indexarr', query.indexarr.split(''))
                     this.adTosub = query.adTosub
                 }
-                this.set('contentto', JSON.parse(atob(query.content)))
+                this.set('contentto', query.content)
             }
         }
     }
     _setContent(cont) {
+        console.log(cont)
         this.slashed = false;
         this.removed = false;
         this.set('inform', cont.info)
-        return cont.content
+        return cont/**/
     }
     reset() {
         this.routeData.page = ''

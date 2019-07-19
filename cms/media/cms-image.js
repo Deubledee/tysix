@@ -9,9 +9,8 @@ class cmsImage extends cmsItemImageTemplate {
         <dom-repeat repeat items="[[content]]" as="item">
             <template>
                 <cms-image-item  
-                    to-content="{{toContent}}"
+                    route="[[route]]"
                     add="[[addTo]]" 
-                    add-to-subcats="{{addToSubcats}}"
                     image="[[item]]" 
                     save-button="[[saveButton]]"
                     reset-button="[[resetButton]]"
@@ -79,6 +78,11 @@ class cmsImage extends cmsItemImageTemplate {
                 type: Object,
                 value: {}
             },
+            res: {
+                type: Object,
+                value: {},
+                notify: true
+            },
             addTo: {
                 type: Boolean,
                 value: false,
@@ -87,11 +91,6 @@ class cmsImage extends cmsItemImageTemplate {
             adTosub: {
                 type: Boolean,
                 notify: true
-            },
-            addToSubcats: {
-                type: Object,
-                notify: true,
-                value: {},
             },
             add: {
                 type: String,
@@ -170,22 +169,22 @@ class cmsImage extends cmsItemImageTemplate {
         }
     }
     _placeEventMethod(data) {
-        data.onclick = (this.showPage).bind(this)
+        data.onclick = (this._sendBackTo).bind(this)
     }
-    showPage() {
-        let string = window.btoa(JSON.stringify(this.toContent))
-        /*  if (this.addToSubcats.items === undefined) {
-              window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&added=true`);
-              window.dispatchEvent(new CustomEvent('location-changed'));
-              console.log(this.toContent, string)
-          } else {
-              let string2 = window.btoa(JSON.stringify([this.addToSubcats]))*/
-        console.log(this.toContent)
-        window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${string}&indexarr=${this.indexarr}&adTosub=${this.adTosub}`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-
-        //   }
-        //this.resetButton.click()
+    _sendBackTo() {
+        let temp = this.query.content
+        if (this.query.addimageto === 'page') {
+            window.history.pushState({}, null, `${this.rootPath}`);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+            window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${temp}&added=true`);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+        }
+        if (this.query.addimageto === 'cats') {
+            window.history.pushState({}, null, `${this.rootPath}`);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+            window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${temp}&indexarr=${this.indexarr}&adTosub=${this.adTosub}`);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+        }
         this.saveButton.classList.add('diferent')
         this.resetButton.classList.remove('diferent')
         this.toContent = Object()

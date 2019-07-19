@@ -48,7 +48,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                     route="{{route}}" 
                     gallery="[[gallery]]" 
                     images="{{images}}" 
-                    add-image-to="[[addImageTo]]"
+                    method="[[method]]"
                     query="[[query]]"
                     return-path="{{returnPath}}"> 
                 </cms-gallery-item>
@@ -110,7 +110,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                 type: String,
                 notify: true
             },
-            addImageTo: {
+            method: {
                 type: String,
                 notify: true
             },
@@ -170,9 +170,9 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     }
     _routePageChanged(routeData, query, active) {
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
-            this.addImageTo = query.method
-            this.contentto = JSON.parse(atob(query.content))
-            this.add = true
+            this.method = query.method
+            this.contentto = JSON.parse(localStorage[`${query.addimageto}${query.content}`])
+            this.add = true/**/
         }
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === false) {
             this.addImageTo = ''
@@ -181,18 +181,19 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         }
     }
     _setGalleries(event) {
-        for (let par in event) {
-            if (par !== 'Info') {
-                this.set('galleries', event[par])
-            } else {
-                this.set('inform', event[par])
-            }
-        }
+        this.set('galleries', event)
+        console.log(event)
+        /*    this.set('galleries', event[par])*/
+
     }
     _getGalleries(data) {
         if (data === true || data === 'true') {
             this.translator._DBW.getMediaContent((done) => {
-                this._setGalleries(done)
+                let temp = []
+                done.forEach(item => {
+                    temp.push(item.data())
+                })
+                this._setGalleries(temp)
             }, { name: 'galleries' }, true)
         }
         this.removeChild(this.children[0])

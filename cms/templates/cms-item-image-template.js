@@ -56,7 +56,9 @@ export class cmsItemImageTemplate extends PolymerElement {
                     position: var(--app-default-position);
                 }            
                 ${this._getStyles}
-        </style>            
+        </style>    
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>          
         <main class="flexH" small$="[[small]]">
             <div arow size$="[[size]]" small$="[[small]]">    
                 ${this._getMenu}  
