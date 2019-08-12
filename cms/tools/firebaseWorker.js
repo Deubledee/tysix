@@ -27,40 +27,51 @@ export class worker {
         var imagesRef = this.db.collection(table.name).doc(table.doc);
         return imagesRef.update(table.data);
     }
-
-    updateDocItemCollection(done, table) {
-        var imagesRef = this.db.collection(table.name).
-            doc(table.docName).
-            collection(table.coll).doc(table.doc);;
-        return imagesRef.update(table.data);
-    }
-
-
-    createDocItemCollection(table) {
+    //collection 
+    createItemCollectionDoc(table) {
         var pagesRef = this.db.collection(table.name).
-            doc(table.docName).
-            collection(table.coll);
-        return pagesRef.set(table.doc);
+            doc(table.docName).collection(table.coll).
+            doc(table.doc);
+        return pagesRef.set(table.data);
+    }
+    createItemCollectionDocDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').
+            collection(table.name).doc(table.docName).collection(table.coll).
+            doc(table.doc)
+        return pagesRef.set(table.data);
     }
 
-    getDocItemCollection(table) {
+    getItemCollectionDoc(table) {
         var pagesRef = this.db.collection(table.name).
             doc(table.docName).
             collection(table.coll)
         return pagesRef.get();
     }
+    getItemCollectionDocDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll)
+        return pagesRef.get();
+    }
 
-    queryDocItemCollection(table) {
+
+    queryItemCollectionDoc(table) {
         var pagesRef = this.db.collection(table.name).where(table.query, table.condition, table.value)
         doc(table.docName).
             collection(table.coll)
         return pagesRef.get();/**/
     }
-    queryDocItemCollectionDev(table) {
+    queryItemCollectionDocDev(table) {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
         return pagesRef.get(); /**/
     }
 
+
+    updateItemCollectionDoc(table) {
+        var imagesRef = this.db.collection(table.name).
+            doc(table.docName).
+            collection(table.coll).doc(table.doc);;
+
+        return imagesRef.update(table.data);
+    }
     updateDocItemCollectionDev(table) {
         var imagesRef = this.db.collection('dev').
             doc('VoSSMkzGYmPTvUhh9mgL').
@@ -68,60 +79,78 @@ export class worker {
         return imagesRef.update(table.data);
     }
 
-    createDocItemCollectionDev(table) {
-        var pagesRef = this.db.collection('dev').
+    deleteDocItemCollection(table) {
+        var imagesRef = this.db.collection(table.name).
+            doc(table.docName).
+            collection(table.coll).doc(table.doc);;
+        return imagesRef.update(table.data);
+    }
+
+    deleteCollectionDocDev(table) {
+        var imagesRef = this.db.collection('dev').
             doc('VoSSMkzGYmPTvUhh9mgL').
-            collection(table.name).doc(table.docName).collection(table.coll)
-        return pagesRef.set(table.doc);
+            collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc)
+        return imagesRef.delete();
     }
 
-    getDocPath(table) {
-        var pagesRef = this.db.doc(table)
-        return pagesRef.get();
-    }
-
-    getDocItemCollectionDev(table) {
-        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll)
-        return pagesRef.get();
-    }
-
-
+    //collection collection
     getDocItemCollectionCollection(table) {
         var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
         return pagesRef.get();
     }
-
-
     getDocItemCollectionCollectionDev(table) {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
         return pagesRef.get();
     }
 
+
+    createDocItemCollectionCollection(table) {
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
+        return pagesRef.set(table.doc);
+    }
+    createDocItemCollectionCollectionDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
+        return pagesRef.set(table.doc);
+    }
+
+
+    updateDocItemCollectionCollection(table) {
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
+        return pagesRef.update(table.doc);
+    }
+    updateDocItemCollectionCollectionDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName)
+        return pagesRef.update(table.doc);
+    }
+
+
+    queryDocItemCollectionCollection(table) {
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).where(table.query, table.condition, table.value)
+        return pagesRef.get();
+    }
     queryDocItemCollectionCollectionDev(table) {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).where(table.query, table.condition, table.value)
         return pagesRef.get();
     }
 
+    ///
+
+    getDocPath(table) {
+        var pagesRef = this.db.doc(table)
+        return pagesRef.get();
+    }
     getDocListDev(table) {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name)
         return pagesRef.get();
     }
-
-
-
     getDocDev(table) {
         var categoriesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.doc}`)
         return categoriesRef.get();
     }
-
-
-
     queryDocListDev(table) {
         var pagesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}`).where(table.query, table.condition, table.value);
         return pagesRef.get();
     }
-
-
     createDocDev(table) {
         var pagesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.docName}`)
         return pagesRef.set(table.doc);
@@ -175,7 +204,7 @@ export class worker {
                 console.log(errorMessage, errorCode);
             });
     }
-    andleTransaction(table) {
+    handleTransaction(table) {
         var sfDocRef = this.db.collection(table.name).doc(table.doc);
         sfDocRef.set(table.query);
         return this.db.runTransaction(function (transaction) {

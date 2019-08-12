@@ -172,7 +172,7 @@ class cmsImage extends cmsItemImageTemplate {
         data.onclick = (this._sendBackTo).bind(this)
     }
     _sendBackTo() {
-        let temp = this.query.content
+        let temp = this.query.content, parent = this.query.parent
         if (this.query.addimageto === 'page') {
             window.history.pushState({}, null, `${this.rootPath}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
@@ -182,7 +182,7 @@ class cmsImage extends cmsItemImageTemplate {
         if (this.query.addimageto === 'cats') {
             window.history.pushState({}, null, `${this.rootPath}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
-            window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${temp}&indexarr=${this.indexarr}&adTosub=${this.adTosub}`);
+            window.history.pushState({}, null, `${this.rootPath}${this.returnPath}?content=${temp}&parent=${parent}&indexarr=${this.indexarr}&adTosub=${this.adTosub}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
         this.saveButton.classList.add('diferent')

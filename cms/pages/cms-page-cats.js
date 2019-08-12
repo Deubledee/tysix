@@ -5,13 +5,26 @@ import './cms-page-list-item';
 class cmsPageCats extends cmsMiddlePageTemplate {
     static get _getShoutAnchor() {
         return html`
+        <a>   
+            < 
+        </a>            
+        <dom-repeat repeat items="[[trigger]]" as="page">
+            <template>  
+                <a  href="/[[page]]">  
+                    <paper-button  aria-label="Go back page">                   
+                        [[page]]
+                    </paper-button>               
+                </a>                   
+            </template>
+        </dom-repeat> /
+        `
+    }
+    static get _getSilentAnchor() {
+        return html`            
         <a href="[[rootPath]]content/pages/add-category-pages?&add=true">
-            <paper-tab name=" add-category-pages">
+                <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
+                </paper-icon-button>
             [[ADD]] [[categorypages]]
-                <paper-icon-button-light>
-                    <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button-light>
-            </paper-tab>
         </a>
         `
     }
@@ -71,6 +84,11 @@ class cmsPageCats extends cmsMiddlePageTemplate {
     _askPages() {
         this.translator._DBW.getAllPages((done) => {
             this._setAll(done);
+            if (!!this.route) {
+                let arr2 = []
+                arr2.push('home')
+                this.set('trigger', arr2)
+            }
         }, this.translator.__DEV);/**/
     }
     _setAll(response) {
@@ -104,11 +122,6 @@ class cmsPageCats extends cmsMiddlePageTemplate {
         this.children[index].setAttribute('slot', `item${index}`);
         this.children[index].set('page', page);
         this.children[index].set('idx', index);
-    }
-    deSpin(data) {
-        if (this.$.spinner.active === true) {
-            this.$.spinner.active = false;
-        }
     }
 }
 customElements.define(cmsPageCats.is, cmsPageCats);

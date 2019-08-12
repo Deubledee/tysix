@@ -32,64 +32,59 @@ class cmsPageListItem extends cmsItemTemplate {
         super.ready();
     }
     _putRow(data) {
-        let objInfo = []
-        objInfo.push(data)
-        this.translator._DBW.getPageData((done2) => {
-            let objdata = {}
-            objdata = [done2]
-            this.translator.template.innerHTML = `
-                        <article centerListItem slot="table">
-                            <div>   
-                             <span> 
-                                 <paper-button> ${objdata[0].items.categoryName}</paper-button>
-                             </span>
-                            </div>
-                            <div>
-                                <paper-button>
-                                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                                </paper-button> 
-                            </div>  
-                            <div>
-                                <paper-button>
-                                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                                </paper-button> 
-                            </div> 
-                            <div>                   
-                            <span> 
-                                <paper-button> ${objdata[0].items.type} </paper-button>
-                            </span>
-                            </div>   
-                            <div class="${objInfo[0].Published.state}">
-                                
-                            <span> 
-                                <paper-button> ${objInfo[0].Published.state} </paper-button>
-                            </span>
-                            </div>   
-                            <div>
-                                <paper-button>
-                                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
-                                </paper-button> 
-                            </div>
-                        </article>`;
-            this.translator.clone(this)
-            this.children[0].children[1].
-                children[0].addEventListener('click', (this.showPage).
-                    bind(this));
-            this.children[0].children[2].
-                children[0].addEventListener('click', (this.showCats).
-                    bind(this));
-            this.children[0].children[4].
-                children[0].addEventListener('click', (this._confirmPublish).
-                    bind(this));
-            this.children[0].children[5].
-                children[0].addEventListener('click', (this._openConfirm).
-                    bind(this));
-            // objdata.
-            localStorage.setItem(`page${data.id}`, JSON.stringify(objdata))/**/
-            localStorage.setItem(`page${data.id}info`, JSON.stringify(objInfo))/**/
-        }, { name: data.id, dataType: 'data' }, this.translator.__DEV)
+        this.objInfo = []
+        this.objInfo.push(data)
+        this.translator.template.innerHTML = `
+            <article centerListItem slot="table">
+                <div>   
+                <span> 
+                    <paper-button> ${this.objInfo[0].id}</paper-button>
+                </span>
+                </div>
+                <div>
+                    <paper-button>
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                    </paper-button> 
+                </div>  
+                <div>
+                    <paper-button>
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                    </paper-button> 
+                </div> 
+                <div>                   
+                <span> 
+                    <paper-button> ${this.objInfo[0].type} </paper-button>
+                </span>
+                </div>   
+                <div class="${this.objInfo[0].Published.state}">
+                    
+                <span> 
+                    <paper-button> ${this.objInfo[0].Published.state} </paper-button>
+                </span>
+                </div>   
+                <div>
+                    <paper-button>
+                        <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                    </paper-button> 
+                </div>
+            </article>`;
+        this.translator.clone(this)
+        this.children[0].children[1].
+            children[0].addEventListener('click', (this.showPage).
+                bind(this));
+        this.children[0].children[2].
+            children[0].addEventListener('click', (this.showCats).
+                bind(this));
+        this.children[0].children[4].
+            children[0].addEventListener('click', (this._confirmPublish).
+                bind(this));
+        this.children[0].children[5].
+            children[0].addEventListener('click', (this._openConfirm).
+                bind(this));
+        // objdata.
+        localStorage.setItem(`page${data.id}info`, JSON.stringify(this.objInfo))
     }
     _getPagename(cats) {
         return cats;
@@ -101,11 +96,15 @@ class cmsPageListItem extends cmsItemTemplate {
         this.$.spinner.active = !this.$.spinner.active;
     }
     showPage() {
-        window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.page.id}&add=false`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.translator._DBW.getPageData((done2) => {
+            let objdata = [done2]
+            localStorage.setItem(`page${this.objInfo[0].id}`, JSON.stringify(objdata))
+            window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.objInfo[0].id}&add=false`);
+            window.dispatchEvent(new CustomEvent('location-changed'));
+        }, { name: this.objInfo[0].id, dataType: 'data' }, this.translator.__DEV)
     }
     showCats() {
-        window.history.pushState({}, null, `content/pages/edit-subcategory-pages?content=${this.page.id}&add=false`);
+        window.history.pushState({}, null, `content/pages/subcategory-pages?content=${this.objInfo[0].id}&add=false`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     __delete(data) {

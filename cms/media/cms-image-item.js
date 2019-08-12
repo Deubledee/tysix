@@ -103,10 +103,10 @@ export class cmsImageItem extends cmsItemTemplate {
         }
     }
     _addImage(image) {
-        this.res = JSON.parse(localStorage[`${this.query.addimageto}${this.query.content}`])
+        this.res = JSON.parse(localStorage[`${this.query.addimageto}${this.query.parent}${this.query.content}`])
         let images = this.res[0].images.content
         images.push(image)
-        localStorage[`${this.query.addimageto}${this.query.content}`] = JSON.stringify(this.res)
+        localStorage[`${this.query.addimageto}${this.query.parent}${this.query.content}`] = JSON.stringify(this.res)
         if (this.saveButton.classList.contains('diferent') === true) {
             this.saveButton.classList.remove('diferent')
             this.resetButton.classList.add('diferent')

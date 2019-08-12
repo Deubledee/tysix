@@ -202,16 +202,14 @@ $_documentContainer.innerHTML = `
         letter-spacing: var(--app-content-navcenter-letter-spacing)
     }
 
-    cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
+   cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
         top: var(--app-content-page-viewertop);
-       /* left: var(--app-content-page-viewerleft)*/
     }
     shop-image.bigger{
         height: var(--app-content-article-height)
     }
     .navpages {
         display: var(--app-listitem);
-       /* padding-left: var(--app-default-min-padding)*/
     }
     .strech{
         width: 75%

@@ -100,7 +100,7 @@ const template = html`
   --app-content-paper-tabs-padding-top: 7px;
   --app-content-navcenter-letter-spacing: 0.02em;
   --app-content-button-height: 25px;
-  --app-content-page-viewertop: 50px;
+  --app-content-page-viewertop: 10px;
   --app-content-page-viewerleft: -3px;
   --app-pages-padding-right: 18px;
   --app-pages-minwidth: 730px;

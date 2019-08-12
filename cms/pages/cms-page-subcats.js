@@ -22,31 +22,39 @@ export class cmsPageSubcats extends cmsContentTemplate {
             div[scroll]::-webkit-scrollbar-track {
                 background-color: var(--app-scrollbar-color)
             }
-
             div[scroll]::-webkit-scrollbar {
                 height: 5px
             }
-
             div[scroll]::-webkit-scrollbar-thumb {
                 background-color: var(--app-primary-text-color)
             }
+            div[goback]{
+                height: 38px;
+                display: flex;
+                padding-left: 10px;
+            }
+            paper-button{
+                height: auto
+            }
+            div[langdiv]{
+                height: 38px;
+                border-radius: 4px;
+                background-color: var(--divider-color);
+            }
         </style>`
     }
-    static get _getAnchor() {
-        return html`
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a id="anchor">
-                <paper-icon-button icon="arrow-back" aria-label="Go back">
-                </paper-icon-button>
-            </a>
-            <a>
-                <paper-button>
-                    [[subcatLabel]]
-                </paper-button>
-                <paper-icon-button  name="[[itemLabel]]" icon="av:library-add"  on-click="_addSubCategory" aria-label="mode-edit">
-                </paper-icon-button> 
-            </a>
-        </iron-selector>`
+    static get _getLangAnchor() {
+        return html`      
+        <div langdiv>
+            <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                <a>
+                    <paper-icon-button  name="[[itemLabel]]" icon="av:library-add"  on-click="_addSubCategory" aria-label="mode-edit">
+                    </paper-icon-button> 
+                       add [[subcatLabel]]
+                </a>
+            </iron-selector>
+        </div>
+        `
     }
     static get _getContentItems() {
         return html`
@@ -228,10 +236,7 @@ export class cmsPageSubcats extends cmsContentTemplate {
         this.translator.target('cms-content-image', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content-image', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-content-image', 'setLangObject')
-        this.$.anchor.setAttribute('href', `${this.rootPath}content/pages`)
         this.$.subcats.onSave = (this._Save).bind(this)
-        this.$.subcats.setInfo = (this.setInfo).bind(this)
-        this.$.subcats.getInfo = (this.getInfo).bind(this)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -248,75 +253,36 @@ export class cmsPageSubcats extends cmsContentTemplate {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query) {
-        if (routeData.page === "edit-subcategory-pages" || routeData.page === "add-subcategory-pages") {
-            let subs = query.content
-            if ('content' in query) {
-                this._resetSubCats()
+        if (!!this.route) {
+            let arr2 = []
+            arr2.push('home')
+            arr2.push(this.route.prefix)
+            this.set('trigger', arr2)
+        }
+        if (routeData.page === "subcategory-pages") {
+            let subs = !!query.parent ? query.parent : query.content
+            this._reset()
+            if ('content' in query && !!subs) {
                 if (typeof this.time === 'number') {
                     clearTimeout(this.time)
                 }
-                this.translator._DBW.getPageData((done) => {
-                    this.set('inform', [done.info])
-                }, { name: subs, dataType: "subCategoriesInfo" })
-
+                this.subSubCats = []
                 this.time = setTimeout(() => {
                     this.translator._DBW.queryPageData((done) => {
-                        this.set('subSubCats', done)
-                    }, { name: subs, dataType: "subCategories", query: 'top,==,true' })/* */
-                }, 120)
-            }
-            // this._resetSubCats()
-            /*  if ('indexarr' in query) {
-                  let subs = JSON.parse(this.content).subCategories
-                  let temp = query.indexarr.split(',')
-              }  */
-        }
-    }
-
-    getInfo(data) {
-        this.translator._DBW.getSubcatsInfo((done) => {
-
-        }, { name: '' }, this.translator.__DEV)
-    }
-
-    setInfo(data) {
-        this.translator._DBW.setSubcatsInfo((msg) => {
-
-        }, { name: data.id, info: data.type, doc: data.info }, this.translator.__DEV)
-    }
-
-    _Save(add, idx) {
-        this.content = JSON.parse(this.content)
-        this.add = add
-        let index = parseInt(idx) === parseInt(idx) ? idx : (this.$.subcats.childElementCount - 1) //avoid NaN
-        let temp = this.content.subCategories
-        if (this.add === 'false' || this.add === false) {
-            if (this.subSubCats.constructor === [].constructor) {
-                console.log(this.subSubCats, temp, idx)
-                if (index === 0) {
-                    temp.splice(0, 1)
-                } else {
-                    temp.splice(index, index)
-                }
-                this.content.subCategories.push(this.subSubCats.pop())
+                        this.subSubCats = done
+                    }, { name: subs, dataType: "subCategories", query: 'top,==,true' }, this.translator.__DEV)/* */
+                }, 240)
             }
         }
-        if (this.add === 'true' || this.add === true) {
-            if (this.subSubCats.constructor === [].constructor) {
-                this.content.subCategories = this.subSubCats
-            }
-        }
-        this.save(() => {
-            this.routeData = {}
-            this.query = {}
-        })
+    }
+    _Save() {
+        this.$.saveButton.classList.add('diferent');
+        this.$.anchor.classList.remove('diferent');
     }
     _addSubCategory() {
         this.addSubCategory = true
     }
-    _resetSubCats() {
-
-        this.$.subcats._reset(() => { })
+    _reset() {
     }
 }
 customElements.define(cmsPageSubcats.is, cmsPageSubcats);

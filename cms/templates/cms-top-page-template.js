@@ -99,7 +99,10 @@ export class cmsTopPageTemplate extends PolymerElement {
         </cms-page-subcats>
 
         <cms-page-cats-content slot="add-cats" user="[[user]]" route="[[subroute]]">
-        <cms-page-cats-content>
+        </cms-page-cats-content>
+
+        <cms-subcats-content slot="add-subcats" user="[[user]]" route="[[subroute]]">
+        </cms-subcats-content>
 
     </cms-page-viewer>
 

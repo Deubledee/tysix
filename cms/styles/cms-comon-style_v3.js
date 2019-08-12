@@ -23,7 +23,7 @@ $_documentContainer.innerHTML = `
             nav[top]{
                 color: var(--paper-blue-800);
                 background-color: var(--app-backgound-color);
-                height: 22px;
+                height: 85px;
             }
             .flexright,
             .navside div {
@@ -350,11 +350,12 @@ $_documentContainer.innerHTML = `
            
             #saveButton,
             #cancelButton {
-                background-color: var(--paper-light-green-a100);                
+                background-color: var(--app-scrollbar-color);
                 color: var(--app-published-color);
                 font-weight: bold;
                 max-width: 90px;
                 letter-spacing: 2px;
+                height: 25px;
             }
 
             .contenth4{

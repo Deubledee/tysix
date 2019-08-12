@@ -68,26 +68,27 @@ class cmsGalleryItem extends cmsItemTemplate {
         super.ready()
     }
     _putRow(data) {
+        console.log(data)
         let template = `
-            <article centerListItem slot="table">
-                <div>
-                    <span> 
-                        <paper-button>
-                            ${data.id}
-                        </paper-button>
-                    </span>
-                </div>
-                <div>
-                    <paper-button>
-                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                        <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                    </paper-button>
-                </div> 
-                <div>
-                    <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
-                    </paper-icon-button>      
-                </div>
-            </article>`;
+             <article centerListItem slot="table">
+                 <div>
+                     <span> 
+                         <paper-button>
+                             ${data.id}
+                         </paper-button>
+                     </span>
+                 </div>
+                 <div>
+                     <paper-button>
+                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                         <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                     </paper-button>
+                 </div> 
+                 <div>
+                     <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
+                     </paper-icon-button>      
+                 </div>
+             </article>`;
 
         this.translator.template.innerHTML = template
         this.translator.clone(this)
@@ -97,20 +98,20 @@ class cmsGalleryItem extends cmsItemTemplate {
         this.children[this.childElementCount - 1].children[2].
             children[0].addEventListener('click', (this._openConfirm).bind(this));
         this.children[this.childElementCount - 1].children[2].
-            children[0].setAttribute('id', "item-" + (this.childElementCount - 1))
+            children[0].setAttribute('id', "item-" + (this.childElementCount - 1)) /* */
         //  localStorage.setItem(data.id, data.content)
     }
     _showImages() {
-        let temp = this.gallery.content
-        this.set('images', [])
-        this.images = temp/* */
         this.default()
         if (this[this.method] !== undefined) {
             this[this.method]()
         }/**/
     }
     default() {
-        window.history.pushState({}, null, `/media/images/view-images${location.search}`);
+        let string = !!location.search ?
+            `/media/images/view-images${location.search}&gallery=${this.gallery.id}` :
+            `/media/images/view-images?gallery=${this.gallery.id}`
+        window.history.pushState({}, null, string);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
     editArticles() {

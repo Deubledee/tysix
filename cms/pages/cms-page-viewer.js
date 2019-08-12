@@ -23,6 +23,9 @@ class cmsPageViewer extends cmsViewerTemplate {
                 else if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
                     this.page = 'add-category-pages';
                 }
+                else if (['subcategory-pages'].indexOf(page.page) !== -1) {
+                    this.page = 'subcategory-pages';
+                }
                 else if (['edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page.page) !== -1) {
                     this.page = 'add-subcategory-pages';
                 }
@@ -43,12 +46,16 @@ class cmsPageViewer extends cmsViewerTemplate {
                 return;
             }
             if (page === 'add-category-pages') {
-                console.log('add-category-pages')
                 import('./cms-page-cats-content').then(item => {
                 });
                 return;
             }
             if (page === 'add-subcategory-pages') {
+                import('../sub-categories/cms-subcats-content').then(item => {
+                });
+                return;
+            }
+            if (page === 'subcategory-pages') {
                 import('./cms-page-subcats').then(item => {
                 });
                 return;

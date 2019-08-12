@@ -17,18 +17,32 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             .flex{
                 height: auto
             }
+            div[top] {                
+                padding-left: 10px;
+                padding-top: 6px;
+                height: 32px;
+                }
+            div[silent]{
+                height: 38px;
+                border-radius: 4px;
+                background-color: var(--divider-color);
+            }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
         </app-route>
            <slot name="spinner"></slot>
-        <nav top>
-            <app-toolbar>
-                    <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                        ${this._getShoutAnchor}
-                        ${this._getSilentAnchor}
-                    </iron-selector>
-            </app-toolbar>
+        <nav top>          
+            <div top>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                    ${this._getShoutAnchor}
+                </iron-selector>
+            </div>
+            <div silent>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
+                    ${this._getSilentAnchor}
+                </iron-selector>
+            </div>
         </nav>
         <main class="flex">
             <div class="navbottom">
@@ -57,12 +71,10 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         `}
     static get _getShoutAnchor() {
         return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">
-            <paper-tab name="add-category-pages">                
-                <paper-icon-button-light>
-                    <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button-light>
-            </paper-tab>
+        <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">                          
+            <paper-icon-button-light>
+                <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
+            </paper-icon-button-light>            
         </a>
         `
     }
@@ -194,6 +206,25 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     _getPublished(data) {
         return (data === 'NPP' || data === 'NPA') ? 'NP' : 'p'
+    }
+
+    _getStr(item) {
+        let str = ''
+        str = `${item}`
+        return str
+    }
+    _getPage(item) {
+        let str = ''
+        let word
+        if (item === 'home') {
+            str = `${item}`
+        } else {
+            word = item.split('/')
+            word.shift()
+            word = word.join(' | ')
+            str = word;
+        }
+        return str
     }
 }
 customElements.define(cmsMiddlePageTemplate.is, cmsMiddlePageTemplate);

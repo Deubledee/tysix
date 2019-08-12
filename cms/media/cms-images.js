@@ -214,10 +214,15 @@ class cmsImages extends cmsMiddlePageTemplate {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, active, query) {
-        if (Boolean(active) === true && Boolean(routeData.page) === true && routeData.page === "view-images") {
+        if (!!active && !!routeData.page && routeData.page === "view-images") {
             this.slashed = false;
             this.set('Seach', location.search)
             this.set('add', false)
+
+
+            this.imageData
+
+
             if ('addimageto' in query) {
                 this.set('add', true)
                 if ('indexarr' in query) {

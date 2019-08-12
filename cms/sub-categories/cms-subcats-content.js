@@ -1,7 +1,7 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
-class cmsPageCatsContent extends cmsContentTemplate {
+class cmsSubcatsContent extends cmsContentTemplate {
     static get _getSideInfo() {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
@@ -11,6 +11,20 @@ class cmsPageCatsContent extends cmsContentTemplate {
                     <aside>
                         <span>
                             [[info]]
+                        </span>
+                    </aside>
+                </div>
+                <div class="row-menu">
+                    <aside>
+                        <span>
+                        children Count 
+                        </span>
+                    </aside>
+                </div>
+                <div class="center-menu">
+                    <aside class="asideBackgrc">
+                        <span>
+                            [[cat.childrenCount]]
                         </span>
                     </aside>
                 </div>
@@ -113,7 +127,8 @@ class cmsPageCatsContent extends cmsContentTemplate {
             </template>
         </dom-repeat>`
     }
-    static get is() { return 'cms-page-cats-content'; }
+
+    static get is() { return 'cms-subcats-content'; }
     static get properties() {
         return {
             user: {
@@ -204,6 +219,13 @@ class cmsPageCatsContent extends cmsContentTemplate {
         this.set('saveButton', this.$.saveButton)
         this.$.image.addImage = (this.addImage).bind(this)
     }
+    _setValues(data) {
+        this.set('temp', data)
+        for (let par in data) {
+            this.set('itemText', data[par])
+        }
+        this._setLabels(data)
+    }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
             let langs = querySnapshot.data()
@@ -218,14 +240,19 @@ class cmsPageCatsContent extends cmsContentTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-
     _routePageChanged(routeData, query, active) {
-        if (!!routeData.page) {
+        if (!!query.parent) {
+            this.add = this.query.adTosub
+            let parent = (!!this.query.parent) === false ? this.query.content : this.query.parent
+            this.set("parent", parent)
+            let indexArr = (!!this.query.indexarr) === false ? this.query.content : this.query.indexarr
+            this.set("_indexArr", indexArr)
             let arr = []
             if (!!this.route) {
                 let arr2 = []
                 arr2.push('home')
                 arr2.push(this.route.prefix)
+                arr2.push(`/subcategory-pages`)
                 this.set('trigger', arr2)
             }
             if (!!query.add) {
@@ -234,25 +261,26 @@ class cmsPageCatsContent extends cmsContentTemplate {
             if (!!query.added) {
                 this.added = (query.added === 'true' || query.added === true)
             }
-            if (active === true && routeData.page === 'add-category-pages') {
+            if (active === true && routeData.page === 'add-subcategory-pages') {
                 if (this.add === true) {
-                    let cont = JSON.parse(atob(Modelo))
+                    let cont = JSON.parse(atobJSON.parse(atob(Modelo)))
                     let obj = cont.images.content
                     this.imageLabel = 'images'
                     this.set('imageArr', obj)
-                    this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
-                    this._setContent('lang', [cont])
+                    this.set('str', `content/pages/add-subcategory-pages?content=pagenotsaved`)
+                    this._setContent(query.lang, [cont])
                     this.set('pageLangs', [])
                 }
             }
-            if (active === true && routeData.page === 'edit-category-pages') {
+            if (active === true && routeData.page === 'edit-subcategory-pages') {
                 this.set('content', []);
                 this.$.saveButton.classList.add('diferent')
                 if (!!this.added) {
                     this.$.saveButton.classList.remove('diferent')
                 }
                 if (!!query.content) {
-                    let cont = JSON.parse(localStorage[`page${query.content}`])
+                    let cont = JSON.parse(localStorage[`cats${parent}${query.content}`])
+                    this._getPageInfo(`cats${parent}${query.content}`)
                     if (this.add === false || this.added === true) {
                         this.set('inputVal', [])
                         this.set('textareaVal', [])
@@ -267,7 +295,7 @@ class cmsPageCatsContent extends cmsContentTemplate {
                             let obj = cont[0].images.content
                             this.imageLabel = 'images'
                             this.set('imageArr', obj)
-                            this.set('str', `content/pages/edit-category-pages?content=${query.content}&add=${this.add}`)
+                            this.set('str', `content/pages/edit-subcategory-pages?content=${query.content}&parent=${parent}&add=${this.add}`)
                             this.set('pageLangs', arr)
                         }
                     }
@@ -275,25 +303,18 @@ class cmsPageCatsContent extends cmsContentTemplate {
             }
         }
     }
+
     addImage() {
-        if (this.add === false) {
-            localStorage[`page${this.query.content}`] = JSON.stringify(this.content)
-            let string = `addimageto=page&method=editPages&content=${this.query.content}`
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
-            window.dispatchEvent(new CustomEvent('location-changed'));
-            window.onbeforeunload = function (e) {
-                return "you might have changes to be saved, are you sure you whant to leave?";
-            };
-        } else {
-            localStorage[`pagenotsaved`] = JSON.stringify(this.content)
-            let string = `addimageto=page&method=editPages&content=notsaved`
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
-            window.dispatchEvent(new CustomEvent('location-changed'));
-            window.onbeforeunload = function (e) {
-                return "you might have changes to be saved, are you sure you whant to leave?";
-            }
-        }
+        let string = `addimageto=cats&content=${this.subcat.id}&method=editSubCats&parent=${this.parent}&indexarr=${this._indexArr}&adTosub=${this.add}`
+        // console.log(this.subcat, this.content)
+        localStorage[`cats${this.parent}${this.subcat.id}`] = JSON.stringify(this.content)
+        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        window.onbeforeunload = function (e) {
+            return "you might have changes to be saved, are you sure you whant to leave?";
+        }; /* */
     }
+
     _getPublishedBy(publishedBy) {
         if (publishedBy !== undefined && publishedBy.length > 0) {
             let pubuser = publishedBy[0].name;
@@ -336,4 +357,4 @@ class cmsPageCatsContent extends cmsContentTemplate {
         this.set('add', 0);
     }
 }
-customElements.define(cmsPageCatsContent.is, cmsPageCatsContent);
+customElements.define(cmsSubcatsContent.is, cmsSubcatsContent);

@@ -52,7 +52,7 @@ export class cmsContentItem extends cmsContentItemTemplate {
                         raised="[[raised]]">
                             [[itemText]]                        
                         <iron-input slot="input" bind-value="{{itemText}}">
-                            <input id="input" value="{{value::input}}" texarea$="[[texarea]]">
+                            <input id="input" value="{{value::input}}">
                             </input>       
 
                         </iron-input>   
@@ -71,18 +71,6 @@ export class cmsContentItem extends cmsContentItemTemplate {
                 type: Object,
                 value: {}
             },
-            texarea: {
-                type: Boolean,
-                notify: true,
-                value: false,
-                reflectToAttribute: true
-            },
-            itemTextArea: {
-                type: Boolean,
-                notify: true,
-                value: false,
-                observer: '_setAsTextArea'
-            },
             translator: {
                 type: Object,
                 notify: true,
@@ -100,10 +88,6 @@ export class cmsContentItem extends cmsContentItemTemplate {
         this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
         this.translator.shoot('cms-content-item', 'setLangObject')
-    }
-    _setAsTextArea(data) {
-        //  console.log(data)
-        this.texarea = data
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {

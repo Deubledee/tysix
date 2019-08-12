@@ -171,7 +171,8 @@ class cmsGalleries extends cmsMiddlePageTemplate {
     _routePageChanged(routeData, query, active) {
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
             this.method = query.method
-            this.contentto = JSON.parse(localStorage[`${query.addimageto}${query.content}`])
+            let string = !!query.parent ? `${query.addimageto}${query.parent}${query.content}` : `${query.addimageto}${query.content}`
+            this.contentto = JSON.parse(localStorage[string])
             this.add = true/**/
         }
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === false) {
@@ -180,21 +181,15 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             this.add = false
         }
     }
-    _setGalleries(event) {
-        this.set('galleries', event)
-        console.log(event)
-        /*    this.set('galleries', event[par])*/
-
-    }
     _getGalleries(data) {
         if (data === true || data === 'true') {
-            this.translator._DBW.getMediaContent((done) => {
-                let temp = []
-                done.forEach(item => {
-                    temp.push(item.data())
-                })
-                this._setGalleries(temp)
-            }, { name: 'galleries' }, true)
+            this.translator._DBW.getMediaGalleries((done) => {
+                let temp = done, arr = []
+                for (let par in temp) {
+                    arr.push(temp[par])
+                }
+                this.set('galleries', arr)
+            }, this.translator.__DEV)
         }
         this.removeChild(this.children[0])
     }

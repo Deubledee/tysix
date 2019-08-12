@@ -1,33 +1,39 @@
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';
 import '@polymer/iron-icons/editor-icons';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import { html } from '@polymer/polymer/polymer-element';
 import '../elements/cms-content-image';
 import '../elements/cms-content-item';
+import '../elements/cms-content-text';
 import '../styles/cms-comon-style_v3';
-export class cmsContentTemplate extends PolymerElement {
+import { cmsSaveLib } from '../tools/cms-save-lib.js';
+export class cmsContentTemplate extends cmsSaveLib {
     static get template() {
         return html`       
         ${this._getStyles}
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>
         <main id="main">
-            <nav top>
-                ${this._getAnchor}
-                <paper-button id="saveButton" class="diferent" on-click="onSave" aria-label="mode-save">
-                    [[Save]]
-                </paper-button>
-            </nav>
-            <div class="flex">
-                <nav class="navbottom" id="bottom">
-                    ${this._getContentItems}
-                </nav>
-                <nav class="navside">
-                    [[infoState]]
-                    ${this._getSideInfo}
-                </nav>
-            </div>
+            <nav top>    
+                <div goback>
+                    ${this._getAnchor}
+                </div>
+                    ${this._getLangAnchor} 
+                <div save> 
+                    <paper-button id="saveButton" class="diferent" on-click="onSave" aria-label="mode-save">
+                        [[Save]]
+                    </paper-button>
+                </div>
+            </nav>           
+                <div class="flex">
+                    <nav class="navbottom" id="bottom">                    
+                            ${this._getContentItems}
+                    </nav>
+                    <nav class="navside">
+                        [[infoState]]
+                        ${this._getSideInfo}
+                    </nav>
+                </div> 
         </main>
         `;
     }
@@ -40,41 +46,103 @@ export class cmsContentTemplate extends PolymerElement {
         .navbottom{
             margin-top: 48px;  
         }
+        paper-button[langbtn]{  
+            background-color: var(--paper-blue-50);
+        }
+        div[goback]{
+            height: 38px;
+            display: flex;
+            padding-left: 10px;
+        }
+        div[save]{
+            position: relative;
+            top: 4px;            
+        }
+        paper-button{
+            height: auto
+        }
+        div[langdiv]{
+            height: 38px;
+            border-radius: 4px;
+            background-color: var(--divider-color);
+        }
         </style>`
     }
     static get _getAnchor() {
-        return html`
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a>
-                <paper-icon-button icon="arrow-back" aria-label="Go back">
-                </paper-icon-button>
-            </a>
-        </iron-selector>`
+        return html`   
+            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">                    
+                <a>   
+                    < 
+                </a>            
+                <dom-repeat repeat items="[[trigger]]" as="page">
+                    <template>  
+                        <a href="[[_getStr(page)]]">  
+                            <paper-button  aria-label="Go back page">                   
+                               [[_getPage(page)]]
+                            </paper-button>               
+                        </a>    /                
+                    </template>
+                </dom-repeat> 
+            </iron-selector> `
+    }
+    static get _getLangAnchor() {
+        return html`         
+        <div langdiv>
+            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+                <a id="adlang">
+                    <paper-icon-button icon="av:library-add" aria-label="lang">
+                    </paper-icon-button>
+                    Add lang
+                </a>           
+                <dom-repeat repeat items="[[pageLangs]]" as="pagelang">
+                    <template>
+                        <a href="[[rootPath]][[str]]&lang=[[pagelang]]">
+                            <paper-button langbtn aria-label="lang">
+                                [[pagelang]]
+                            </paper-button>
+                        </a>
+                    </template>
+                </dom-repeat> 
+            </iron-selector> 
+        </div>`
     }
     static get _getContentItems() {
-        return html`
+        return html`           
         <div container>
-            <div bottom>
-            
-                <!--dom-repeat item="[[]]" as="">
-                    <template-->
-                        <cms-content-item itemLabel="[[item.inputLabel]]" itemText="{{item.itemText}}" inputElement="[[inputElement]]">
-                        </cms-content-item>
-                    <!--/template>
-                </dom-repeat-->    
-                    
-                <!--dom-repeat item="[[]]" as="">
-                    <template--->
-                        <cms-content-item itemLabel="[[item.textareaLabel]]" itemText="{{item.itemText}}" inputElement="[[inputElement]]">
-                        </cms-content-item>
-                    <!--/template>
-                </dom-repeat-->    
-                            
-                <cms-content-image itemLabel itemText images="[[]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
-                </cms-content-image>    
+            <div bottom hidebottom$="[[hidebottom]]">   
+                <dom-repeat repeat items="[[inputVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotomShort">
+                            <cms-content-item
+                                item="[[item]]"
+                                save-button="[[saveButton]]"
+                                res="{{inputResponse}}">
+                            </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+                <dom-repeat repeat items="[[textareaVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotomFull">
+                            <cms-content-text
+                                item="[[item]]"
+                                save-button="[[saveButton]]"
+                                res="{{textAreaResponse}}">
+                            </cms-content-text>
+                        </section>
+                    </template>
+                </dom-repeat>
+                <section class="flexchildbotom">      
+                    <cms-content-image  id="image"
+                        item-label="[[imageLabel]]"
+                        images="[[imageArr]]"  
+                        _deleteImg="[[deleteImg]]"  
+                    </cms-content-image>
+                </section> 
 
+                </div>
             </div>
-        </div>`
+        `;
     }
     static get _getSideInfo() {
         return html`
@@ -143,87 +211,145 @@ export class cmsContentTemplate extends PolymerElement {
                 type: String,
                 value: 'No info available..',
                 notify: true
+            },
+            tempo: {
+                type: String,
+                value: 'undefined',
+                notify: true
             }
         }
     }
     ready() {
         super.ready();
     }
-    _getObjArr(content) {
-        let obj,
-            arr = []
-        for (let par in content[0]) {
-            obj = Object()
-            obj[par] = content[0][par]
-            arr.push(obj)
-        }
-        return arr
-    }
-    reset() {
-        this._reset()
-        this._resetHtml()
-    }
-    _resetHtml() {
-        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
-            window.dispatchEvent(new CustomEvent('reset-html', {
-                bubbles: true, composed: true
-            }));
-        });
-    }
     onSave() {
         return 0
     }
-    save(call) {
+    _setContent(lang, content) {
+        if (this.time !== undefined) clearTimeout(this.time)
+        this.content = content
+        let cont = this.content[0][lang]
+        this.set('inputVal', this._getObjArr(cont, true))
+        this.set('textareaVal', this._getObjArr(cont, false))
+        this.set('inform', [])
+    }
+    _getStr(item) {
+        let str = ''
+        if (item === 'home') {
+            str = `/${item}`
+        }
+        if (item.match('/content') !== null) {
+            str = `${item}`;
+        }
+        if (item.match('/subcategory') !== null) {
+            str = `${this.route.prefix}${item}${location.search}`;
+        }
+        return str
+    }
+    _getPage(item) {
+        let str = ''
+        let word
+        if (item === 'home') {
+            str = `${item}`
+        } else {
+            word = item.split('/')
+            word.shift()
+            word = word.join(' | ')
+            str = word;
+        }
+        return str
+    }
+    _getObjArr(content, item) {
+        let obj,
+            arr = []
+        for (let par in content) {
+            if (par !== 'image') {
+                if (!!item) {
+                    if (par !== 'description') {
+                        obj = Object()
+                        obj[par] = content[par]
+                        arr.push(obj)
+                    }
+                } else {
+                    if (par === 'description') {
+                        obj = Object()
+                        obj[par] = content[par]
+                        arr.push(obj)
+                    }
+                }
+            }
+        }
+        return arr || []
+    }
+    _getPageInfo(str) {
+        this.infoState = 'info not available..'
+        let time
+        if (this.add === false) {
+            this.infoState = 'getting info data..'
+            time = setTimeout(() => {
+                this.infoState = ''
+                this.set('inform', JSON.parse(localStorage[`${str}info`]))
+                clearTimeout(time)
+            }, 250);
+        } else {
+            clearTimeout(time)
+            this.set('inform', [])
+        }
+    }
+    _setItemsValue(data) {
+        if (!!this.content[0]) {
+            for (let par in data) {
+                if (par.toString() !== 'undefined') {
+                    let lang = this.query.lang || 'lang'
+                    this.content[0][lang][par] = data[par]
+                }
+            }
+        }
+    }
+    _setContentTextValue(data) {
+        if (!!this.content[0]) {
+            for (let par in data) {
+                if (par.toString() !== 'undefined') {
+                    let lang = this.query.lang || 'lang'
+                    this.content[0][lang][par] = data[par]
+                }
+            }
+        }
+    }
+    save() {
         if (this.add === true) {
-            this.saveAdded(call)
+            this.saveAdded().then(data => {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                setTimeout(() => {
+                    this.__reset();
+                }, 500)
+            })
+            this.saveAddedData('data').then(data => {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                this.$.anchor.classList.remove('diferent');
+                setTimeout(() => {
+                    this.__reset();
+                }, 500)
+            })
         }
         if (this.add === false) {
-            this.saveChanged(call)
+            this.saveChanged().then(data => {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                this.temp = '';
+                this.$.saveButton.classList.add('diferent');
+                setTimeout(() => {
+                    this.__reset();
+                }, 500)
+            })
         }
-    }
-    saveAdded(call) {
-        this.content.id = this.content.items[0].categoryName.split(' ').join('_');
-        this.translator._DBW.setPageData((done, err) => {
-            if (done !== 'error') {
-                window.onbeforeunload = function () { };
-                this.editing = 0;
-                this.temp = '';
-                this.$.saveButton.classList.add('diferent');
-                this.$.anchor.classList.remove('diferent');
-                setTimeout(() => {
-                    this.__reset();
-                    if (call instanceof Function) call(true)
-                }, 500)
-            }
-            else {
-                console.log(err);
-            }
-        }, { name: this.content.id, dataType: 'data', data: this.content.items }, this.translator.__DEV);
-    }
-    saveChanged(call) {
-        this.translator._DBW.changePages((msg, err) => {
-            if (msg !== 'error') {
-                window.onbeforeunload = function () { };
-                this.editing = 0;
-                this.temp = '';
-                this.$.saveButton.classList.add('diferent');
-                this.$.anchor.classList.remove('diferent');
-                setTimeout(() => {
-                    this.__reset();
-                    if (call instanceof Function) call(false)
-                }, 500)
-            }
-            else {
-                console.log(err);
-            }
-        }, this.content, this.translator.__DEV);
-    }
-    saveInfo() {
-        this.translator._DBW.changePagesInfo((msg, err) => {
-            if (msg === 'error') {
-                console.log(err);
-            }
-        }, this.content, this.translator.__DEV);
     }
     __reset() {
         this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
@@ -233,7 +359,6 @@ export class cmsContentTemplate extends PolymerElement {
             window.dispatchEvent(new CustomEvent('reset', {
                 bubbles: true, composed: true
             }));
-            this.$.anchor.click()
         });
     }
 }

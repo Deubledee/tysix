@@ -1,16 +1,17 @@
-import { cmsItemTemplate } from '../templates/cms-item-template'
-import { html } from '@polymer/polymer/polymer-element';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer'
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer';
+import { html } from '@polymer/polymer/polymer-element';
+import '../elements/cms-content-image';
+import '../elements/cms-content-item';
+import '../elements/cms-content-text';
 import '../styles/cms-comon-style_v3';
-import '../elements/cms-content-item'
-import '../elements/cms-content-text'
-import '../elements/cms-content-image'
-const Model = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
-export class cmsSubcatsItem extends cmsItemTemplate {
-    static get _getStyles() {
-        return html`
+import { PolymerElement } from '@polymer/polymer/polymer-element';
+const Model = "eyJjb250ZW50VGV4dCI6eyJkZXNjcmlwdGlvbiI6ImFzZGFkc2FkcyJ9LCJpbWFnZXMiOnsiY29udGVudCI6W3siYXV0aG9yIjoiRGlvZ28iLCJkYXRlQWRkZWQiOiIiLCJnYWxsZXJ5IjoicGFnZXMiLCJ0aXRsZSI6ImxhZGllc190c2hpcnRzIiwidXJsIjoiZGF0YS9wYWdlcy9sYWRpZXNfdHNoaXJ0cy5qcGcifV19LCJpdGVtcyI6eyJjYXRlZ29yeU5hbWUiOiJmZGciLCJsYW5nIjoicHQiLCJpbWFnZSI6ImRhdGEvcGFnZXMvbGFkaWVzX3RzaGlydHMuanBnIn19"
+const ModeloInfo = "eyJhdXRob3IiOiIiLCJjaGlsZHJlbiI6W10sImRhdGVDcmVhdGVkIjoiIiwiaWQiOiIiLCJsYXN0TW9kaWZpZWQiOltdLCJwYXJlbnQiOiIiLCJ0b0FydGljbGUiOiIiLCJ0b3AiOiIiLCJjaGlsZHJlbkNvdW50IjowfQ=="
+export class cmsSubcatsItem extends PolymerElement {
+    static get template() {
+        return html` 
         <style include="cms-comon-style_v3">    
             :host {
                 position: relative;
@@ -27,92 +28,42 @@ export class cmsSubcatsItem extends cmsItemTemplate {
             div[bottom]{
                 display: flex
             }
-            div[bottom][hide]{
-                display: none
-            }
-        </style>`
-    }
-    static get _getElement() {
-        return html`
-        <dom-if if="[[view]]">
-            <template>
-                <dom-repeat repeat items="[[subcatContent]]" as="item">
-                    <template>                
-                        <article centerlistitem>
-                            <div>
-                                <shop-image class="bigger" title="[[item.categoryName]]" aria-label="image" src="[[item.image]]"
-                                    alt="[[item.categoryName]]">
-                                </shop-image>
-                            </div>
-                            <div title="[[item.categoryName]]">
-                                <paper-button title="[[item.categoryName]]">
-                                    [[item.categoryName]]
-                                </paper-button>
-                            </div>
-                            <div>
-                                <paper-button on-click="_viewEdit">
-                                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
-                                    <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                                </paper-button>
-                            </div>
-                            <div title="[[item.type]]">
-                                <paper-button title="[[item.lang]]">
-                                    [[item.type]]
-                                </paper-button>
-                            </div>
-                            <div>
-                                <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
-                                </paper-icon-button>
-                            </div>                
-                        </article>
-                    </template>                            
-                </dom-repeat>
-            </template>
-        </dom-if> 
-        <nav>
-            <paper-button id="backButton" on-click="_showBack">                         
-                <paper-icon-button icon="arrow-back" aria-label="Go back">
-                </paper-icon-button>
-            </paper-button>
-            <paper-button id="saveButton" on-click="_save"> 
-                [[save]]
-            </paper-button>
-        </nav>         
-        <div bottom hide$="[[view]]" noborder$="[[noborder]]">
-            <dom-repeat repeat items="[[inputVal]]" as="item">
-                <template>                              
-                    <section class="flexchildbotomShort">  
-                        <cms-content-item
-                            item="[[item]]" 
-                            save-button="[[saveButton]]" 
-                            res="{{inputResponse}}">
-                        </cms-content-item> 
-                    </section> 
+        </style>
+        <slot name="spinner"></slot>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>  
+            <dom-repeat repeat items="[[subcatContent]]" as="item">
+                <template>                
+                    <article centerlistitem>
+                        <div>
+                            <shop-image class="bigger" title="[[item.categoryName]]" aria-label="image" src="[[item.image]]"
+                                alt="[[item.categoryName]]">
+                            </shop-image>
+                        </div>
+                        <div title="[[item.categoryName]]">
+                            <paper-button title="[[item.categoryName]]">
+                                [[item.categoryName]]
+                            </paper-button>
+                        </div>
+                        <div>
+                            <paper-button on-click="_viewEdit">
+                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
+                                <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                            </paper-button>
+                        </div>
+                        <div title="[[item.type]]">
+                            <paper-button title="[[item.lang]]">
+                                [[item.type]]
+                            </paper-button>
+                        </div>
+                        <div>
+                            <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
+                            </paper-icon-button>
+                        </div>                
+                    </article>
                 </template>                            
             </dom-repeat>
-            <dom-repeat repeat items="[[textareaVal]]" as="item">
-                <template>    
-                    <section class="flexchildbotomFull">  
-                        <cms-content-text 
-                            item="[[item]]" 
-                            save-button="[[saveButton]]"
-                            res="{{textAreaResponse}}"> 
-                        </cms-content-text>   
-                    </section> 
-                </template>                            
-            </dom-repeat>  
-            <section class="flexchildbotom">   
-                <cms-content-image  id="Imag"
-                    item-label="[[imageLabel]]"
-                    images="[[imageArr]]" 
-                    editing="{{editing}}" 
-                    anchor="[[anchor]]" 
-                    save-button="[[saveButton]]" 
-                    _deleteImg="[[deleteImg]]" >
-                </cms-content-image>
-            </section>             
-        </div>
-        <div bottom hide$="[[!view]]"> 
+        <div bottom> 
             <div class="plus">
                 <div class="plussubcat noFlex">
                     <paper-icon-button on-click="_addChildren" icon="av:library-add" aria-label="mode-show"></paper-icon-button>
@@ -153,33 +104,6 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 type: Object,
                 value: {}
             },
-            inputVal: {
-                type: Array,
-                notify: true,
-                value: []
-            },
-            textareaVal: {
-                type: String,
-                notify: true,
-                value: ''
-            },
-            noborder: {
-                type: Boolean,
-                value: true,
-                reflectToAttribute: true,
-            },
-            inputResponse: {
-                type: Object,
-                notify: true,
-                value: {},
-                observer: '_setItemsValue'
-            },
-            textAreaResponse: {
-                type: Object,
-                notify: true,
-                value: {},
-                observer: '_setContentTextValue'
-            },
             subcat: {
                 type: Object,
                 notify: true,
@@ -197,39 +121,19 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 type: Array,
                 notify: true,
             },
-            saveButton: {
-                type: Object,
-                notify: true
-            },
-            toContent: {
-                type: Object,
-                notify: true,
-                value: {}
-            },
-            view: {
-                type: Boolean,
-                notify: true,
-                value: true,
-                observer: '_setButtons'
-            },
+            /* toContent: {
+                 type: Object,
+                 notify: true,
+                 value: {}
+             },*/
             published: {
                 type: String,
-                reflectToAttribute: true
-            },
-            hide: {
-                type: Boolean,
-                notify: true,
                 reflectToAttribute: true
             },
             onSave: {
                 type: Object,
                 notify: true,
                 value: {}
-            },
-            _onSave: {
-                type: Object,
-                notify: true,
-                computed: '__onSave(onSave)'
             },
             indexArr: {
                 type: Array,
@@ -250,6 +154,10 @@ export class cmsSubcatsItem extends cmsItemTemplate {
                 value: true,
                 notify: true
             },
+            spinOut: {
+                type: Boolean,
+                value: false
+            },
             time: Number
         };
     }
@@ -268,8 +176,10 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     ready() {
         super.ready();
-        this.set('saveButton', this.$.saveButton)
-        this.$.saveButton.classList.add('diferent')
+        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+        </paper-spinner-lite>`
+        this.spinOut = false
+        this.translator.clone(this)
         this.translator.target('cms-subcats-item', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-subcats-item', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-subcats-item', 'setLangObject')
@@ -288,61 +198,80 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-
     _subcatAdded(data) {
         if (!!data) {
-            if (this.routeData.page === "edit-subcategory-pages" || this.routeData.page === "add-subcategory-pages") {
-                this.add = this.query.adTosub
+            if (this.routeData.page === "subcategory-pages") {
+                let parent = (!!this.query.parent) === false ? this.query.content : this.query.parent
+                this.set("parent", parent)
+                this.set('subCatChildren', this.subcat.children)
                 if ('indexarr' in this.query) {
                     let temp = this.query.indexarr.split(','),
-                        index2 = this._indexArr.length,
+                        index2 = data.length,
                         index = (temp.length)
                     if (index > index2) {
-                        if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
+                        this.translator._DBW.getSubcatsData((done) => {
+                            this._setContent(done)
+                            this.deSpin()
+
+                        }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+                        if (data[index2 - 1] === parseInt(temp[index2 - 1])) {
                             this._toggleChildren()
                         }
                     }
-                    if ((index - 1) === index2) {
-                        if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
-                            this._reset(() => {
-                                this._setContent(this.subcat)
-                            }, 60)
-                        }
-                    }
                     if (index === index2) {
-                        if (this._indexArr[index2 - 1] === parseInt(temp[index2 - 1])) {
-                            this._setContent(JSON.parse(localStorage[`cats${this.subcat.id}`]))
+                        if (data[index2 - 1] === temp[index2 - 1]) {
+                            this._setContent(JSON.parse(localStorage[`cats${parent}${this.query.indexarr}`]).pop())
                             this._viewEdit(false)
                             this.saveButton.classList.remove('diferent')
+                        } else {
+                            this.translator._DBW.getSubcatsData((done) => {
+                                this._setContent(done)
+                                this.deSpin()
+                            }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
                         }
                     }
                 } else {
-                    this.set("parent", this.query.content)
                     this.translator._DBW.getSubcatsData((done) => {
                         this._setContent(done)
+                        this.deSpin()
                     }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
-                    if (this.subcat.subCatChildren !== 'N/A') {
-                        this.set('subCatChildren', this.subcat.children)
-                    }
+
                 }
             }
         }
     }
+    deSpin() {
+        if (this.spinOut === false) {
+            this.removeChild(this.children[0])
+            this.spinOut = true
+        }
+    }
+    _viewEdit(boll) {
+        let string = `content=${this.subcat.id}&parent=${this.parent}&add=false&name=${this.content[this.catlang].categoryName}`
+        this.add = (boll instanceof MouseEvent) === true ? false : boll
+        localStorage[`cats${this.parent}${this.subcat.id}`] = JSON.stringify([this.content])
+        localStorage[`cats${this.parent}${this.subcat.id}info`] = JSON.stringify([this.subcat])
+        window.history.pushState({}, null, `${this.rootPath}content/pages/edit-subcategory-pages?${string}`);
+        window.dispatchEvent(new CustomEvent('location-changed'))
 
+    }
     _setContent(content) {
-        if (content['items']) {
-            //  console.log(this.subcat[0].name)
-            this.set('content', content);
-            this.set('temp', content.items.categoryName)
-            let obj = this.content.images.content
-            this.imageLabel = 'images'
-            this.set('imageArr', obj)
-            this.set('inputVal', this._getObjArr([this.content.items]))
-            this.set('textareaVal', [this.content.contentText])
-            this._setsubcatContent()
-            if (this.$.Imag)
-                this.$.Imag.addImage = (this.addImage).bind(this)
-            /**/
+        this.set('content', content);
+        this._setsubcatContent()
+        if (this.$.Imag)
+            this.$.Imag.addImage = (this.addImage).bind(this) /**/
+    }
+    _setsubcatContent() {
+        if (this.content[this.lang]) {
+            this.set('catlang', this.lang)
+            this.set('subcatContent', [this.content[this.lang]])
+            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.content.images.content[0].url
+        } else {
+            let keys = Object.keys(this.content)
+            let arr = keys.find(item => { if (item !== 'images') return item })
+            this.set('catlang', arr)
+            this.set('subcatContent', [this.content[this.catlang]])
+            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.content.images.content[0].url
         }
     }
     _getObjArr(content) {
@@ -357,12 +286,6 @@ export class cmsSubcatsItem extends cmsItemTemplate {
         }
         return arr
     }
-    _setsubcatContent() {
-        if (this.content.items.categoryName.split('').length > 0) {
-            this.set('subcatContent', [this.content.items])
-            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.imageArr[0].url
-        }
-    }
     _setButtons(data) {
         if (data === false) {
             this.$.backButton.classList.remove('diferent')
@@ -372,15 +295,6 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     _onIndexArr(data) {
         return atob(data)
-    }
-    addImage() {
-        let string = `addimageto=cats&content=${this.subcat.id}&method=editSubCats&indexarr=${this._indexArr}&adTosub=${this.add}`
-        localStorage[`cats${this.subcat.id}`] = JSON.stringify(this.subcat)
-        window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-        window.onbeforeunload = function (e) {
-            return "you might have changes to be saved, are you sure you whant to leave?";
-        };
     }
     _toggleChildren() {
         if (this.$.subcats.classList.contains('diferent') === true) {
@@ -414,9 +328,10 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     _pushModel(data) {
         if (data === true) {
-            let model = JSON.parse(atob(Model))
+            let model = JSON.parse(atob(ModeloInfo))
             let subcat = this.subcat
-            subcat.subCategories.push(model.value)
+            modelo.top = false
+            subcat.subCategories.push(model)
             this.subcat = subcat
             this.subcatSubats = []
             this.editIndex = this.childElementCount
@@ -427,80 +342,72 @@ export class cmsSubcatsItem extends cmsItemTemplate {
             }, 60)/* */
         }
     }
+    _save(subcat, content, add) {
+        this.content = content
+        this.__info = {}
+        this.__info.page = subcat.parent
+        this.__info.id = subcat.id
+        this.__info.content = subcat
+        this.add = add
+        this.saveSubcats()
+    }
+    setChild(id) {
+        this.subcat.children.push(id)
+        this.__info = {}
+        this.__info.page = this.subcat.parent
+        this.__info.id = this.subcat.id
+        this.__info.content = this.subcat
+        this.saveChangedData('subCategories').then(data => { console.log(data) })
+    }
+    saveSubcats() {
+        if (this.add === true) {
+            this.saveAddedData('subCategories').then(data => {
+                this.saveAddedSubcatData().then(data => {
+                    this._setsubcatContent()
+                    this.saveButton.classList.add('diferent')
+                    this.routeData = {}
+                    this.query = {}
+                    this.view = !this.view
+                    this.onSave()
+                })
+            })
+            this.parentElement.parentElement.setChild(this.__info.id)
+        }
+        if (this.add === false) {
+            this.saveChangedData('subCategories').then(data => {
+                saveCangedSubcatData('subCategories').then(data => {
+                    this._setsubcatContent()
+                    this.saveButton.classList.add('diferent')
+                    this.routeData = {}
+                    this.query = {}
+                    this.view = !this.view
+                    this.onSave()
+                })
+            })
+        }
+    }
     _slottItem(data, index) {
         let str = `
              <div slot="table"> 
                 <cms-subcats-item>
+
                 </cms-subcats-item>
              </div>             
              `;
         let arr = [atob(this.indexArr)]
         arr.push(index)
+        this.subcat.children.push(arr.join(''))
         this.translator.template.innerHTML = str;
         this.translator.clone(this)
         this.children[this.childElementCount - 1].children[0].view = true
         if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
         this.children[this.childElementCount - 1].children[0].lang = this.lang
         this.children[this.childElementCount - 1].children[0].route = this.route
-        this.children[this.childElementCount - 1].children[0].toContent = [this.toContent]
-        this.children[this.childElementCount - 1].children[0].getInfo = (this.getInfo).bind(this)
-        this.children[this.childElementCount - 1].children[0].setInfo = (this.setInfo).bind(this)
+        //this.children[this.childElementCount - 1].children[0].toContent = [this.toContent]
         this.children[this.childElementCount - 1].children[0].subcat = data
-        this.children[this.childElementCount - 1].children[0].onSave = (this._onSave).bind(this)
+        this.children[this.childElementCount - 1].children[0].onSave = (this.onSave).bind(this)
         this.children[this.childElementCount - 1].children[0].indexArr = btoa(arr.join(''))
         this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
-    }
-    _showBack() {
-        this.$.backButton.classList.add('diferent')
-        if (this.temp !== undefined && this.temp.split('').length === 0) {
-            let model = JSON.parse(atob(Model))
-            this._setContent(model.value)
-            this._removeChild({ idx: this._indexArr, add: this.add })
-        }
-        this._viewEdit(true)
-    }
-    _viewEdit(boll) {
-        this.view = !this.view
-        this.add = (boll instanceof MouseEvent) === true ? false : boll
-    }
-    _save() {
-        this._setsubcatContent()
-        this.view = !this.view
-        this.saveButton.classList.add('diferent')
-        this._onSave(this.add, this._indexArr)
-    }
-    __onSave(data) {
-        return function (add, indexArr) {
-            data(add, indexArr[0])
-        }
-    }
-    _setItemsValue(data) {
-        if (this.content !== undefined && this.content['items']) {
-            for (let par in data) {
-                if (par.toString() !== 'undefined' && par.toString() !== 'image') {
-                    this.content.items[0][par] = data[par]
-                }
-            }
-        }
-    }
-    _setContentTextValue(data) {
-        if (this.content !== undefined && this.content['contentText']) {
-            for (let par in data) {
-                if (par.toString() !== 'undefined') {
-                    this.content.contentText[0][par] = data[par]
-                }
-            }
-        }
-    }
-    _setSaveButton() {
-        return this.$.saveButton
-    }
-    _setChildrenLang(data) {
-        if (this.childElementCount > 0) {
-            for (let i = 0; i < this.childElementCount; i++) {
-                this.children[i].children[0].lang = data
-            }
-        }
     }
     _openConfirm(event) {
         let index = event.srcElement.parentElement.getAttribute('value')
@@ -524,8 +431,8 @@ export class cmsSubcatsItem extends cmsItemTemplate {
     }
     _reset(call, mlscs) {
         this.innerHTML = ''
-        this.subcatSubats = undefined
-        this.subCatChildren = undefined
+        this.subcatSubats = []
+        this.subCatChildren = ''
         setTimeout(() => {
             call()
         }, mlscs)

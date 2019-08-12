@@ -5,28 +5,9 @@ import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import './cms-subcats-item'
 import '../styles/cms-comon-style_v3';
-const Modelo = "eyJ2YWx1ZSI6eyJjb250ZW50VGV4dCI6W3siZGVzY3JpcHRpb24iOiIifV0sImltYWdlIjpbXSwiaXRlbXMiOlt7ImNhdGVnb3J5TmFtZSI6IiIsInR5cGUiOiIiLCJsYW5nIjoiIn1dLCJzdWJDYXRlZ29yaWVzIjpbXX19"
+const Modelo = "eyJhdXRob3IiOiIiLCJjaGlsZHJlbiI6W10sImRhdGVDcmVhdGVkIjoiIiwiaWQiOiIiLCJsYXN0TW9kaWZpZWQiOltdLCJwYXJlbnQiOiIiLCJ0b0FydGljbGUiOiIiLCJ0b3AiOiIiLCJjaGlsZHJlbkNvdW50IjowfQ=="
 
 export class cmsSubcats extends cmsItemImageTemplate {
-    static get _getStyles() {
-        return html`        
-        div[bottom]{
-            height: 35px;
-            font-size: var(--app-images-article-font-size);
-            background-color: #e2e2e2;
-           
-        }
-        div[bottom] h4{
-            margin-block-start: 8px;
-        }
-        div[small]{
-            height: 23px;
-            font-size: 9px; 
-        }
-        div[table]{
-            overflow-x: hidden;
-        }`
-    }
     static get _getMenu() {
         return html`                          
             <section class="flexchildbotomShort noFlex">
@@ -142,8 +123,6 @@ export class cmsSubcats extends cmsItemImageTemplate {
     }
     ready() {
         super.ready();
-        window.addEventListener('reset-subcats', (this.__reset).bind(this))
-        window.addEventListener('reset', (this.__reset).bind(this))
         this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-subcats', 'setLangObject')
@@ -162,11 +141,15 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
+    _setContent(data) {
+        if (!this.content) return data
+    }
     _pushModel(data) {
         let modelo = JSON.parse(atob(Modelo))
         if (data === true) {
             let subcat = this.subSubCats || []
-            subcat.push(modelo.value)
+            modelo.top = true
+            subcat.push(modelo)
             this._reset(() => {
                 this.subSubCats = subcat
                 this.editIndex = this.subSubCats.length === parseInt(this.subSubCats.length) ? this.subSubCats.length - 1 :
@@ -176,27 +159,28 @@ export class cmsSubcats extends cmsItemImageTemplate {
         }
     }
     _slottItem(item, index) {
-        let str = `            
+        if (!this.sloted) {
+            let str = `            
                 <div scroll slot="item">          
                     <cms-subcats-item>
                     </cms-subcats-item>          
                 </div>                
                 `
-        let content = btoa(JSON.stringify(this.subSubCats))
-        this.translator.template.innerHTML = str
-        this.translator.clone(this)
-        this.children[this.childElementCount - 1].children[0].view = true
-        if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
-        this.children[this.childElementCount - 1].children[0].lang = this.lang
-        this.children[this.childElementCount - 1].children[0].route = this.route
-        this.children[this.childElementCount - 1].children[0].toContent = content
-        this.children[this.childElementCount - 1].children[0].user = this.user
-        this.children[this.childElementCount - 1].children[0].getInfo = (this.getInfo).bind(this)
-        this.children[this.childElementCount - 1].children[0].setInfo = (this.setInfo).bind(this)
-        this.children[this.childElementCount - 1].children[0].subcat = item
-        this.children[this.childElementCount - 1].children[0].onSave = (this.onSave).bind(this)
-        this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
-        this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this) /* */
+            let content = btoa(JSON.stringify(this.subSubCats))
+            this.translator.template.innerHTML = str
+            this.translator.clone(this)
+            this.children[this.childElementCount - 1].children[0].view = true
+            if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
+            this.children[this.childElementCount - 1].children[0].lang = this.lang
+            this.children[this.childElementCount - 1].children[0].route = this.route
+            this.children[this.childElementCount - 1].children[0].toContent = content
+            this.children[this.childElementCount - 1].children[0].user = this.user
+            this.children[this.childElementCount - 1].children[0].subcat = item
+            this.children[this.childElementCount - 1].children[0].onSave = (this.onSave).bind(this)
+            this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
+            this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
+            this.set('sloted', true)
+        }/* */
     }
     _removeChild(indexArr) {
         let index = indexArr.idx[indexArr.idx.length - 1]
@@ -217,14 +201,11 @@ export class cmsSubcats extends cmsItemImageTemplate {
         }
         if (indexArr.add === 'false' || indexArr.add === false) this.onSave(indexArr.add, indexArr.idx[0])
     }
-    _setContent(data) {
-        //return data.constructor === [].constructor ? data : [data]
-        return data
-    }
     __reset() {
         this._reset(() => { }, 0)
     }
     _reset(call, mlscs) {
+        this.set('sloted', false)
         this.editIndex = NaN
         this.subSubCats = []
         this.add = false

@@ -1,775 +1,169 @@
 import { worker } from '/cms/tools/firebaseWorker.js';
 const Worker = new worker();
+//Class
 export class dataBaseworker {
     constructor() {
         this.categories = [];
     }
+
     updateBrands(done, table, dev) {
-        let teble = { name: "brands&manufactures", doc: table.name, data: { content: table.content } };
-        if (dev === false) {
-            Worker.updateContent(done, teble)
-                .then(function () {
-                    console.log("brands&manufactures successfully updated!");
-                    done("brands&manufactures successfully updated!", table.lang);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
-        else {
-            Worker.updateContentDev(done, teble)
-                .then(function () {
-                    console.log("brands&manufactures successfully updated!");
-                    done("brands&manufactures successfully updated!", table.lang);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
+        let obj = { name: "brands&manufactures", doc: table.name, data: { content: table.content } };
+        updateContent.call(this, obj, done, dev)
     }
     setBrands(done, table, dev) {
         let obj = table.name !== undefined ? { name: 'brands&manufactures', docName: table.name, doc: table.langs } : false;
-        if (obj === false) {
-            done(false, false);
-            return;
-        }
-        if (dev === false) {
-            Worker.createDoc(obj)
-                .then(function () {
-                    done('newlangs');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
-        else {
-            Worker.createDocDev(obj)
-                .then(function () {
-                    done('newlang');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
+        createDoc.cal(this, obj, done, dev)
     }
     deleteBrandsZone(done, lang, dev) {
-        if (dev === false) {
-            Worker.deleteDoc({ name: 'brands&manufactures', docName: lang })
-                .then(function () {
-                    done("brands&manufactures successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.deleteDocDev({ name: 'brands&manufactures', docName: lang })
-                .then(function () {
-                    done("brands&manufactures successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
+        let obj = { name: 'brands&manufactures', docName: lang }
+        deleteDoc.cal(this, obj, done, dev)
     }
     getBrands(done, table, dev) {
         let obj = { name: 'brands&manufactures', doc: table.name };
-        if (dev === false) {
-            Worker.getDoc(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data();
-                    done("brands&manufactures", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving brands&manufactures: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocDev(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data();
-                    done("brands&manufactures", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving brands&manufactures: ", error);
-                    done("error", error);
-                });
-        }
+        getDoc.call(this, obj, done, dev)
     }
     getAllBrands(done, dev) {
         let obj = { name: 'brands&manufactures' };
-        if (dev === false) {
-            Worker.getDocList(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All brands&manufactures: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocListDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All brands&manufactures: ", error);
-                    done("error", error);
-                });
-        }
+        getDocListDev.call(this, obj, done, dev)
     }
     //langs
     updateLangs(done, table, dev) {
-        let teble = { name: "langs", doc: table.name, data: { content: table.content } };
-        if (dev === false) {
-            Worker.updateContent(done, teble)
-                .then(function () {
-                    console.log("langs successfully updated!");
-                    done("langs successfully updated!", table.lang);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
-        else {
-            Worker.updateContentDev(done, teble)
-                .then(function () {
-                    console.log("langs successfully updated!");
-                    done("langs successfully updated!", table.lang);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
+        let obj = { name: "langs", doc: table.name, data: { content: table.content } };
+        updateContent.call(this, obj, done, dev)
     }
     setLangs(done, table, dev) {
         let obj = table.name !== undefined ? { name: 'langs', docName: table.name, doc: table.langs } : false;
-        if (obj === false) {
-            done(false, false);
-            return;
-        }
-        if (dev === false) {
-            Worker.createDoc(obj)
-                .then(function () {
-                    done('newlangs');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
-        else {
-            Worker.createDocDev(obj)
-                .then(function () {
-                    done('newlang');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
+        createDoc.cal(this, obj, done, dev)
     }
     deleteLangZone(done, lang, dev) {
-        if (dev === false) {
-            Worker.deleteDoc({ name: 'langs', docName: lang })
-                .then(function () {
-                    done("lang successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.deleteDocDev({ name: 'langs', docName: lang })
-                .then(function () {
-                    done("lang successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
+        let obj = { name: 'langs', docName: lang }
+        deleteDoc.cal(this, obj, done, dev)
     }
     getLangs(done, table, dev) {
         let obj = { name: 'langs', doc: table.name };
-        if (dev === false) {
-            Worker.getDoc(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data();
-                    done("langs", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving langs: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocDev(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data();
-                    done("langs", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving langs: ", error);
-                    done("error", error);
-                });
-        }
+        getDoc.call(this, obj, done, dev)
     }
     getAllLangs(done, dev) {
         let obj = { name: 'langs' };
-        if (dev === false) {
-            Worker.getDocList(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All langs: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocListDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All langs: ", error);
-                    done("error", error);
-                });
-        }
+        getDocList.call(this, obj, done, dev)
     }
     //aticles
     updateArticles(done, table, dev) {
-        let teble = { name: "articles", doc: table.name, data: { content: table.content } };
-        if (dev === false) {
-            Worker.updateContent(done, teble)
-                .then(function () {
-                    console.log("gallerie successfully updated!");
-                    done("gallerie successfully updated!", table.gallerie);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
-        else {
-            Worker.updateContentDev(done, teble)
-                .then(function () {
-                    console.log("gallerie successfully updated!");
-                    done("gallerie successfully updated!", table.gallerie);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
+        let obj = { name: "articles", doc: table.name, data: { content: table.content } };
+        updateContent.call(this, obj, done, dev)
     }
     setArticles(done, table, dev) {
         let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
-        if (obj === false) {
-            done(false, false);
-            return;
-        }
-        if (dev === false) {
-            Worker.createDoc(obj)
-                .then(function () {
-                    done('newPage');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
-        else {
-            Worker.createDocDev(obj)
-                .then(function () {
-                    done('newPage');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing document: ", error);
-                });
-        }
+        createDoc.cal(this, obj, done, dev)
     }
     deleteArticles(done, page, dev) {
-        if (dev === false) {
-            Worker.deleteDoc({ name: 'articles', docName: page })
-                .then(function () {
-                    done("Page successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.deleteDocDev({ name: 'articles', docName: page })
-                .then(function () {
-                    done("Page successfully deleted!");
-                }).catch(function (error) {
-                    console.error("Error removing article: ", error);
-                    done("error", error);
-                });
-        }
+        let obj = { name: 'articles', docName: page }
+        deleteDoc.cal(this, obj, done, dev)
     }
     getArticle(done, categoryObj, dev) {
         let obj = { name: 'articles', doc: categoryObj.name };
-        if (dev === false) {
-            Worker.getDoc(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data().content;
-                    done("article", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving article: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocDev(obj)
-                .then((querySnapshot) => {
-                    let content = querySnapshot.data().content;
-                    done("article", content);
-                }).catch(function (error) {
-                    console.error("Error reteaving article: ", error);
-                    done("error", error);
-                });
-        }
+        getDoc.call(this, obj, done, dev)
     }
     getAllArticles(done, dev) {
         let obj = { name: 'articles' };
-        if (dev === false) {
-            Worker.getDocList(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All Articles: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocListDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting All Articles: ", error);
-                    done("error", error);
-                });
-        }
+        getDocList.call(this, obj, done, dev)
     }
     //pages
     getAllPages(done, dev) {
         let obj = { name: 'pages' };
-        if (dev === false) {
-            Worker.getDocList(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocListDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc);
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
+        getDocList.call(this, obj, done, dev)
     }
-
     getPagesEqualTo(done, query, value, dev) {
         let obj = { name: 'pages', query: query, value: value, condition: '==' };
         this.categories = [];
-        if (dev === false) {
-            Worker.queryDocList(obj)
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done({ categories: this.categories });
-                }).catch(function (error) {
-                    console.error("Error getting Pages Equal To: " + value, error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.queryDocListDev(obj)
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data());
-                    });
-                    done({ categories: this.categories });
-                }).catch(function (error) {
-                    console.error("Error getting Pages Equal To: " + value, error);
-                    done("error", error);
-                });
-        }
+        queryDocList.call(this, obj, done, dev)
     }
     changePages(done, table, dev) {
-        console.log(table.id)
-        let teble = { name: 'pages', doc: table.id, data: table };
-        if (dev === false) {
-            Worker.updateContent(done, teble)
-                .then(function () {
-                    console.log("page successfully updated!");
-                    done("page successfully updated!", table.name);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
-        else {
-            Worker.updateContentDev(done, teble)
-                .then(function () {
-                    console.log("page successfully updated!");
-                    done("page successfully updated!", table.name);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
+        let obj = { name: 'pages', doc: table.name, data: table.update };
+        updateContent.call(this, obj, done, dev)
     }
     setPages(done, table, dev) {
-        let obj = { name: 'pages', docName: table.id, doc: table }
-        if (dev === false) {
-            Worker.createDoc(obj)
-                .then(function () {
-                    done('page successfully created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
-        else {
-            Worker.createDocDev(obj)
-                .then(function () {
-                    done('page successfully created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
+        let obj = { name: 'pages', docName: table.name, doc: table.create }
+        createDoc.cal(this, obj, done, dev)
     }
     deletePage(done, page, dev) {
-        if (dev === false) {
-            Worker.deleteDoc({ name: 'pages', docName: page })
-                .then(function () {
-                    done("Page successfully deleted!", page);
-                }).catch(function (error) {
-                    console.error("Error removing page: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.deleteDocDev({ name: 'pages', docName: page })
-                .then(function () {
-                    done("Page successfully deleted!", page);
-                }).catch(function (error) {
-                    console.error("Error removing page: ", error);
-                    done("error", error);
-                });
-        }
-    }
-
-    getPageDocPath(done, string) {
-        Worker.getDocPath(string).then(doc => {
-            done(doc)
-        })
+        let obj = { name: 'pages', docName: page }
+        deleteDoc.cal(obj, done, dev)
     }
     getPageData(done, table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType }
-        if (dev === false) {
-            Worker.getDocItemCollection(obj)
-                .then((querySnapshot) => {
-                    this.categories = {};
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data();
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocItemCollectionDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = {};
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data();
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
+        getItemCollectionDoc.call(this, obj, done, dev)
     }
-
     queryPageData(done, table, dev) {
         let query, condition, value
         [query, condition, value] = table.query.split(',')
         value = value === 'true' || value === 'false' ? (value === 'true') : value
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, query: query, condition: condition, value: value }
-        if (dev === false) {
-            Worker.queryDocItemCollectionDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data())
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.queryDocItemCollectionDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    querySnapshot.forEach((doc) => {
-                        this.categories.push(doc.data())
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
+        queryItemCollectionDoc.call(this, obj, done, dev)
     }
-
     setPageData(done, table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.data }
-        if (dev === false) {
-            Worker.createDocItemCollection(obj)
-                .then(function () {
-                    done('page successfully created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
-        else {
-            Worker.createDocItemCollectionDev(obj)
-                .then(function () {
-                    done('page info created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
+        createItemCollectionDoc.call(this, obj, done, dev)
     }
-
-
+    changePageData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
+        updateDocItemCollection.call(this, obj, done, dev)
+    }
+    deletePageData(done, page, dev) {
+        let obj = { name: 'pages', docName: page }
+        deleteCollectionDoc.call(this, obj, done, dev)
+    }
     getSubcatsData(done, table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data' }
-        if (dev === false) {
-            Worker.getDocItemCollectionCollection(obj)
-                .then((querySnapshot) => {
-                    this.categories = {};
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data()
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocItemCollectionCollectionDev(obj)
-                .then((querySnapshot) => {
-                    obj = {}
-                    this.categories = {}
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data()
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
+        getDocItemCollectionCollection.call(this, obj, done, dev)
     }
-
+    setubcatsData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.create }
+        createDocItemCollectionCollection.call(this, obj, done, dev)
+    }
+    changeSubcatsData(done, table, dev) {
+        let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data', doc: table.update }
+        updateDocItemCollectionCollection.call(this, obj, done, dev)
+    }
     querySubcatsData(done, table, dev) {
         let query, condition, value
         [query, condition, value] = table.query.split(',')
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data', query: query, condition: condition, value: value }
-        if (dev === false) {
-            Worker.queryDocItemCollectionCollectionDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = {};
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data()
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.queryDocItemCollectionCollectionDev(obj)
-                .then((querySnapshot) => {
-                    obj = {}
-                    this.categories = {}
-                    querySnapshot.forEach((doc) => {
-                        this.categories[doc.id] = doc.data()
-                    });
-                    done(this.categories);
-                }).catch(function (error) {
-                    console.error("Error getting all pages: ", error);
-                    done("error", error);
-                });
-        }
+        queryDocItemCollectionCollectionDev.call(this, obj, done, dev)
     }
-
-    setSubcatsInfo(done, table, dev) {
+    setSubcatsData(done, table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: 'subCatsInfo', doc: table.info }
-        if (dev === false) {
-            Worker.createDocItemCollection(obj)
-                .then(function () {
-                    done('page successfully created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
-        else {
-            Worker.createDocItemCollectionDev(obj)
-                .then(function () {
-                    done('page info created');
-                })
-                .catch((error) => {
-                    done('error', error);
-                    console.error("Error writing page: ", error);
-                });
-        }
+        createDocItemCollection.call(this, obj, done, dev)
     }
     //media
     writeMediaContent(done, table, dev) {
         let teble = { name: "media", doc: table.gallerie, data: { content: table.content } };
-        if (dev === false) {
-            Worker.updateContent(done, teble)
-                .then(function () {
-                    console.log("gallerie successfully updated!");
-                    done("gallerie successfully updated!", table.gallerie);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
-        else {
-            Worker.updateContentDev(done, teble)
-                .then(function () {
-                    console.log("gallerie successfully updated!");
-                    done("gallerie successfully updated!", table.gallerie);
-                })
-                .catch(function (error) {
-                    done("Error", error);
-                });
-        }
+        updateContent.call(obj, done, dev)
     }
-    getMediaContent(done, table, dev) {
-        let obj = { name: 'media', docName: (table.type || 'images'), coll: table.name };
-        if (dev === false) {
-            Worker.getDocItemCollection(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    done(querySnapshot);
-                }).catch(function (error) {
-                    console.error("Error getting Media Galleries ", error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.getDocItemCollectionDev(obj)
-                .then((querySnapshot) => {
-                    this.categories = [];
-                    done(querySnapshot);
-                }).catch(function (error) {
-                    console.error("Error getting Media Galleries ", error);
-                    done("error", error);
-                });
-        }
+    getMediaGalleries(done, dev) {
+        let obj = { name: 'media', docName: 'images', coll: 'galleries' };
+        getItemCollectionDoc.call(this, obj, done, dev)
     }
     setMediaGalleries(done, table, dev) {
         let obj = { name: String, docName: String, doc: Object };
         obj.name = 'media';
         obj.docName = table.gallery;
         obj.doc = table;
-        if (dev === false) {
-            Worker.createDoc(obj)
-                .then(() => {
-                    done('gallerie created', obj.docName);
-                }).catch((error) => {
-                    console.error("Error creating gallerie" + error);
-                    done('error', error);
-                });
-        }
-        else {
-            Worker.createDocDev(obj)
-                .then(() => {
-                    done('gallerie created', obj.docName);
-                }).catch((error) => {
-                    console.error("Error creating gallerie" + error);
-                    done('error', error);
-                });
-        }
+        createDoc.cal(this, obj, done, dev)
     }
-    deleteMediaGallery(done, gallerie, dev) {
-        if (dev === false) {
-            Worker.deleteDoc({ name: 'media', docName: gallery })
-                .then(function () {
-                    done("Gallerie successfully deleted!", gallery);
-                }).catch(function (error) {
-                    console.error("Error deleting gallerie" + error);
-                    done("error", error);
-                });
-        }
-        else {
-            Worker.deleteDocDev({ name: 'media', docName: gallerie })
-                .then(function () {
-                    done("Gallerie successfully deleted!", gallerie);
-                }).catch(function (error) {
-                    console.error("Error deleting gallerie" + error);
-                    done("error", error);
-                });
-        }
+    deleteMediaGallery(done, gallery, dev) {
+        let obj = { name: 'media', docName: gallery }
+        deleteDoc.cal(this, obj, done, dev)
     }
+    getMediaGalleriesData(done, table, dev) {
+        let obj = { name: 'media', docName: 'images', coll: 'galleries', collDocName: table.gallery, collDocCollName: 'data' }
+        getDocItemCollectionCollection.call(this, obj, done, dev)
+    }
+    getMediaGalleriesGroups(done, table, dev) {
+        let obj = { name: 'media', docName: 'images', coll: 'galleries', collDocName: table.gallery, collDocCollName: 'groups' }
+        getDocItemCollectionCollection.call(this, obj, done, dev)
+    }
+    //other
     loginFire(user) {
         Worker.login(user);
     }
@@ -782,21 +176,410 @@ export class dataBaseworker {
     getElementAssets(element, dev) {
         let obj = { name: 'stylesandlangs', doc: element };
         if (dev === false) {
-            return Worker.getDoc(obj);
+            return Worker.getDoc(obj)
         }
         else {
-            return Worker.getDocDev(obj);
+            return Worker.getDocDev(obj)
         }
+
     }
     setElementAssets(table, dev) {
         let obj = { name: 'stylesandlangs', docName: String, doc: Object };
         obj.docName = table.element;
         obj.doc = table.content;
-        if (dev === false) {
-            return Worker.createDoc(obj);
-        }
-        else {
-            return Worker.createDocDev(obj);
-        }
+        createDoc.cal(obj, done, dev)
+    }
+}
+//private methods
+function getDocList(obj, done, dev) {
+    if (dev === false) {
+        Worker.getDocList(obj)
+            .then((querySnapshot) => {
+                this.categories = [];
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc);
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+    else {
+        Worker.getDocListDev(obj)
+            .then((querySnapshot) => {
+                this.categories = [];
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc);
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+}
+function updateContent(obj, done, dev) {
+    if (dev === false) {
+        Worker.updateContent(done, obj)
+            .then(function () {
+                done("successfully updated!", table.lang);
+            })
+            .catch(function (error) {
+                done("Error", error);
+            });
+    }
+    else {
+        Worker.updateContentDev(done, obj)
+            .then(function () {
+                done("successfully updated!", obj.lang);
+            })
+            .catch(function (error) {
+                done("Error", error);
+            });
+    }
+}
+function createDoc(obj, done, dev) {
+    if (obj === false) {
+        done(false, false);
+        return;
+    }
+    if (dev === false) {
+        Worker.createDoc(obj)
+            .then(function () {
+                done();
+            })
+            .catch((error) => {
+                done('error', error);
+            });
+    }
+    else {
+        Worker.createDocDev(obj)
+            .then(function () {
+                done();
+            })
+            .catch((error) => {
+                done('error', error);
+            });
+    }
+
+}
+function deleteDoc(obj, done, dev) {
+    if (dev === false) {
+        Worker.deleteDoc(obj)
+            .then(function () {
+                done("successfully deleted!");
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+    else {
+        Worker.deleteDocDev(obj)
+            .then(function () {
+                done("successfully deleted!");
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+}
+
+function getDoc(obj, done, dev) {
+    if (dev === false) {
+        Worker.getDoc(obj)
+            .then((querySnapshot) => {
+                let content = querySnapshot.data();
+                done(content);
+            }).catch(function (error) {
+                console.error(error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.getDocDev(obj)
+            .then((querySnapshot) => {
+                let content = querySnapshot.data();
+                done(content);
+            }).catch(function (error) {
+                console.error(error);
+                done("error", error);
+            });
+    }
+}
+function queryDocList(obj, done, dev) {
+    if (dev === false) {
+        Worker.queryDocList(obj)
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc.data());
+                });
+                done({ categories: this.categories });
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+    else {
+        Worker.queryDocListDev(obj)
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc.data());
+                });
+                done({ categories: this.categories });
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+}
+
+function getItemCollectionDoc(obj, done, dev) {
+    if (dev === false) {
+        Worker.getItemCollectionDoc(obj)
+            .then((querySnapshot) => {
+                this.categories = {}
+                querySnapshot.forEach(item => {
+                    this.categories[item.id] = item.data()
+                })
+                done(this.categories);
+            }).catch(function (error) {
+                console.error(error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.getItemCollectionDocDev(obj)
+            .then((querySnapshot) => {
+                this.categories = {}
+                querySnapshot.forEach(item => {
+                    this.categories[item.id] = item.data()
+                })
+                done(this.categories);
+            }).catch(function (error) {
+                console.error(error);
+                done("error", error);
+            });
+    }
+}
+function queryItemCollectionDoc(obj, done, dev) {
+    if (dev === false) {
+        Worker.queryItemCollectionDoc(obj)
+            .then((querySnapshot) => {
+                this.categories = [];
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc.data())
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+    else {
+        Worker.queryItemCollectionDocDev(obj)
+            .then((querySnapshot) => {
+                this.categories = [];
+                querySnapshot.forEach((doc) => {
+                    this.categories.push(doc.data())
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+}
+
+function createItemCollectionDoc(obj, done, dev) {
+    if (dev === false) {
+        Worker.createItemCollectionDoc(obj)
+            .then(function () {
+                done('successfully created');
+            })
+            .catch((error) => {
+                done('error', error);
+            });
+    }
+    else {
+        Worker.createItemCollectionDocDev(obj)
+            .then(function () {
+                done('successfully created');
+            })
+            .catch((error) => {
+                done('error', error);
+            });
+    }
+}
+function updateDocItemCollection(obj, done, dev) {
+    if (dev === false) {
+        Worker.updateDocItemCollection(obj)
+            .then(function () {
+                done('successfully created');
+            })
+            .catch((error) => {
+                done('error', error);
+                console.error("Error writing page: ", error);
+            });
+    }
+    else {
+        Worker.updateItemCollectionDocDev(obj)
+            .then(function () {
+                done('successfully created');
+            })
+            .catch((error) => {
+                done('error', error);
+                console.error("Error writing page: ", error);
+            });
+    }
+}
+function deleteCollectionDoc(obj) {
+    if (dev === false) {
+        Worker.deleteCollectionDoc(obj)
+            .then(function () {
+                done("successfully deleted!", page);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+    else {
+        Worker.deleteCollectionDocDev(obj)
+            .then(function () {
+                done("successfully deleted!", page);
+            }).catch(function (error) {
+                done("error", error);
+            });
+    }
+}
+
+function getDocItemCollectionCollection(obj, done, dev) {
+    if (dev === false) {
+        Worker.getDocItemCollectionCollection(obj)
+            .then((querySnapshot) => {
+                this.categories = {};
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.getDocItemCollectionCollectionDev(obj)
+            .then((querySnapshot) => {
+                obj = {}
+                this.categories = {}
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+}
+function createDocItemCollectionCollection(obj, done, dev) {
+    if (dev === false) {
+        Worker.createDocItemCollectionCollection(obj)
+            .then((querySnapshot) => {
+                this.categories = {};
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.createDocItemCollectionCollection(obj)
+            .then((querySnapshot) => {
+                obj = {}
+                this.categories = {}
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+}
+function updateDocItemCollectionCollection(obj, done, dev) {
+    if (dev === false) {
+        Worker.updateDocItemCollectionCollection(obj)
+            .then((querySnapshot) => {
+                this.categories = {};
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.updateDocItemCollectionCollectionDev(obj)
+            .then((querySnapshot) => {
+                obj = {}
+                this.categories = {}
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+}
+
+function queryDocItemCollectionCollectionDev(obj, done, dev) {
+    if (dev === false) {
+        Worker.queryDocItemCollectionCollectionDev(obj)
+            .then((querySnapshot) => {
+                this.categories = {};
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+    else {
+        Worker.queryDocItemCollectionCollectionDev(obj)
+            .then((querySnapshot) => {
+                obj = {}
+                this.categories = {}
+                querySnapshot.forEach((doc) => {
+                    this.categories[doc.id] = doc.data()
+                });
+                done(this.categories);
+            }).catch(function (error) {
+                console.error("Error getting all pages: ", error);
+                done("error", error);
+            });
+    }
+}
+function createDocItemCollection(obj, dene, dev) {
+    if (dev === false) {
+        Worker.createDocItemCollection(obj)
+            .then(function () {
+                done('page successfully created');
+            })
+            .catch((error) => {
+                done('error', error);
+                console.error("Error writing page: ", error);
+            });
+    }
+    else {
+        Worker.createDocItemCollectionDev(obj)
+            .then(function () {
+                done('page info created');
+            })
+            .catch((error) => {
+                done('error', error);
+                console.error("Error writing page: ", error);
+            });
     }
 }
