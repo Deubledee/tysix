@@ -1,6 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '../styles/cms-comon-style_v3';
 export class cmsItemTemplate extends PolymerElement {
     static get template() {
@@ -18,6 +18,10 @@ export class cmsItemTemplate extends PolymerElement {
             position: relative;
             display: block;
         } 
+        article[centerlistitem] paper-button{
+            ￼    height: auto;
+            ￼    max-height: 35px;
+            }
                 /* styles reside in cms-content*/
         </style> `
     }

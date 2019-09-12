@@ -29,6 +29,7 @@
             line-height: 1.5;
             min-height: 100vh;
             background-color: var(--app-backgound-color);
+            overflow-x: hidden;
         }
 
         paper-button.diferent {
@@ -106,7 +107,7 @@
 
 <body>
     <script>
-        window.MyAppGlobals = { rootPath: '/', translator: {} };
+        window.MyAppGlobals = { rootPath: '/' };
         function fsd(urlo, call, method, formData) {
             let url = urlo, json = [], str = ''
             let xhr = new XMLHttpRequest();

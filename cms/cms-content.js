@@ -16,7 +16,7 @@ class cmsContent extends cmsTopPageTemplate {
         type: Object,
         notify: true,
         value: function () {
-          return MyAppGlobals.translator
+          return MyAppGlobals[window.cms]//MyAppGlobals.translator
         }
       },
       lang: {
@@ -28,23 +28,16 @@ class cmsContent extends cmsTopPageTemplate {
         type: Object,
         value: {}
       },
-      search: {
-        type: Boolean,
-        computed: '_checkMyName(page, "search")'
+      breadcrumbs: {
+        type: Array,
+        notify: true,
+        value: []
       },
-      pages: {
-        type: Boolean,
-        computed: '_checkMyName(page, "pages")'
-      },
-      articles: {
-        type: Boolean,
-        computed: '_checkMyName(page, "articles")'
-      }
     };
   }
   static get observers() {
     return [
-      '_routePageChanged(routeData, query, route)'
+      '_routePageChanged(route, routeData , query)'
     ];
   }
   ready() {
@@ -52,6 +45,7 @@ class cmsContent extends cmsTopPageTemplate {
     this.translator.target('cms-content', 'setLangObject', (this._setLObj).bind(this))
     this.translator.target('cms-content', 'changeLang', (this._setLang).bind(this), false)
     this.translator.shoot('cms-content', 'setLangObject')
+
   }
   _setLObj(res, querySnapshot) {
     if ('data' in querySnapshot) {
@@ -62,42 +56,91 @@ class cmsContent extends cmsTopPageTemplate {
   _setLang(res, lang) {
     this.lang = lang
     res.call(this);
+    if (this.breadcrumbs.length > 0) {
+      this.setBreadcrumbs(this.route, this.routeData)
+    }
   }
   __changeLang() {
     this.lang = this.translator.lang
     this.translator.changeLang.call(this)
+    this.setBreadcrumbs(this.route, this.routeData)
   }
-  _routePageChanged(page, query, route) {
-    if (this.route.prefix === '/content') {
-      if (page !== undefined && 'page' in page) {
-        if (['articles', 'pages', 'search'].indexOf(page.page) !== -1) {
+  _routePageChanged(route, page, query) {
+    if (route.prefix === "/content") {
+      if (this.breadcrumbs.length > 0) {
+        this.setBreadcrumbs(this.route, this.routeData)
+      }
+      if (page !== undefined && "page" in page) {
+        if (["articles", "pages", "search"].indexOf(page.page) !== -1) {
           this.page = page.page;
-        }
-        else {
-          console.log('view404', page, query);
+          /* */
         }
       }
-      else {
-        this.page = 'search';
-      }
+      if (route.path === '/')
+        if (!!query.reset) {
+          this.query = {}
+          window.history.pushState({}, null, `${this.rootPath}content/`)
+          window.dispatchEvent(new CustomEvent('location-changed'))
+        }
     }
+  }
+  setBreadcrumbs(route, routeData) {
+    this.set("breadcrumbs", [])
+    setTimeout(() => {
+      if (!routeData.page) {
+        let arr2 = []
+        this.page = "home";
+        arr2.push("cmshome")
+        this.set("breadcrumbs", arr2)
+      }
+      if (!!routeData && !!routeData.page) {
+        if (["articles", "pages", "search"].indexOf(routeData.page) !== -1) {
+          let arr2 = []
+          arr2.push("cmshome")
+          arr2.push("/content")
+          this.set("breadcrumbs", arr2)
+        }
+        if (["/pages/edit-category-pages",
+          "/pages/add-category-pages",
+          "/pages/subcategory-pages"].indexOf(route.path) !== -1) {
+          let arr2 = []
+          arr2.push("cmshome")
+          arr2.push("/content")
+          arr2.push("/content/pages")
+          this.set("breadcrumbs", arr2)
+        }
+        if (["/pages/edit-subcategory-pages",
+          "/pages/add-subcategory-pages"].indexOf(route.path) !== -1) {
+          let arr2 = []
+          arr2.push("cmshome")
+          arr2.push("/content")
+          arr2.push("/content/pages")
+          arr2.push("/content/pages/subcategory-pages")
+          this.set("breadcrumbs", arr2)
+        }
+        if (["/articles/edit-article",
+          "/articles/add-article"].indexOf(route.path) !== -1) {
+          let arr2 = []
+          arr2.push("cmshome")
+          arr2.push("/content")
+          arr2.push("/content/articles")
+          this.set("breadcrumbs", arr2)
+        }
+      }
+    }, 120);
   }
   _pageChanged(page) {
     if (page !== undefined) {
-      if (page === 'pages') {
-        import('./pages/cms-page-viewer').then(module => {
-          return;
-        }).catch(error => {
-          console.log(error);
-        });
+      if (page === "pages") {
+        import("./pages/cms-page-viewer")
         return;
       }
-      if (page === 'articles') {
-        import('./articles/cms-articles-viewer');
+      if (page === "articles") {
+        import("./articles/cms-articles-viewer");
         return;
       }
-      if (page === 'view404') {
-        import('./cms-404-warning');
+      if (page === "view404") {
+        import("./cms-404-warning");
         return;
       }
     }

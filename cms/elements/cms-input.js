@@ -12,7 +12,7 @@ export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBe
                 box-sizing: border-box;
                 min-width: 5.14em;
                 margin: 0 0.29em;
-                background: #00000014;
+                background: var(--app-item-backgound-color);
                 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                 -webkit-tap-highlight-color: transparent;
                 font: inherit;
@@ -112,7 +112,7 @@ export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBe
               outline-style: none;
             }
             .textfield{
-                height: 23px;
+                min-height: 23px;
                 overflow: hidden;
                 position: relative;
                 top: -8px;

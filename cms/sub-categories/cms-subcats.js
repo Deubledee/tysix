@@ -68,7 +68,7 @@ export class cmsSubcats extends cmsItemImageTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//.translator
                 }
             },
             lang: {
@@ -98,11 +98,16 @@ export class cmsSubcats extends cmsItemImageTemplate {
                 type: Boolean,
                 value: false,
                 notify: true,
-                observer: '_pushModel'
+                observer: '_addChild'
             },
             info: {
                 type: Object,
                 value: {},
+            },
+            sloted: {
+                type: Boolean,
+                value: false,
+                notify: true
             },
             onSave: {
                 type: Object,
@@ -142,24 +147,23 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.translator.changeLang.call(this)
     }
     _setContent(data) {
+        if (!!data && data != 0) this.Parent = data[0].parent
         if (!this.content) return data
     }
-    _pushModel(data) {
-        let modelo = JSON.parse(atob(Modelo))
+    _addChild(data) {
         if (data === true) {
-            let subcat = this.subSubCats || []
-            modelo.top = true
-            subcat.push(modelo)
-            this._reset(() => {
-                this.subSubCats = subcat
-                this.editIndex = this.subSubCats.length === parseInt(this.subSubCats.length) ? this.subSubCats.length - 1 :
-                    this.childElementCount === parseInt(this.childElementCount) ? this.childElementCount - 1 : 0
-                this.add = false
-            }, 60)
+            this.Parent = this.query.content || this.query.parent
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?parent=${this.Parent}&name=${this.childElementCount}&topparentname=${this.Parent}&add=${this.add}&top=true`
+            window.history.pushState({}, null, string);
+            window.dispatchEvent(new CustomEvent('location-changed'))
+            this.add = false
         }
     }
     _slottItem(item, index) {
-        if (!this.sloted) {
+        if (typeof this.time === 'number') {
+            clearTimeout(this.time)
+        }
+        if (this.sloted === false) {
             let str = `            
                 <div scroll slot="item">          
                     <cms-subcats-item>
@@ -169,47 +173,26 @@ export class cmsSubcats extends cmsItemImageTemplate {
             let content = btoa(JSON.stringify(this.subSubCats))
             this.translator.template.innerHTML = str
             this.translator.clone(this)
-            this.children[this.childElementCount - 1].children[0].view = true
-            if (this.editIndex === index) this.children[this.childElementCount - 1].children[0].view = false
             this.children[this.childElementCount - 1].children[0].lang = this.lang
             this.children[this.childElementCount - 1].children[0].route = this.route
             this.children[this.childElementCount - 1].children[0].toContent = content
+            this.children[this.childElementCount - 1].children[0].Parent = this.query.content
             this.children[this.childElementCount - 1].children[0].user = this.user
             this.children[this.childElementCount - 1].children[0].subcat = item
-            this.children[this.childElementCount - 1].children[0].onSave = (this.onSave).bind(this)
             this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
-            this.children[this.childElementCount - 1].children[0]._removeChild = (this._removeChild).bind(this)
-            this.set('sloted', true)
+            this.time = setTimeout(() => {
+                this.set('sloted', true)
+            }, 60);
         }/* */
-    }
-    _removeChild(indexArr) {
-        let index = indexArr.idx[indexArr.idx.length - 1]
-        let topChild = this.children[indexArr.idx[0]].children[0],
-            child = topChild.children[index],
-            subcat = topChild.subcat
-        topChild.subcat = []
-        topChild.removeChild(child)
-        if (parseInt(index) === 0) {
-            subcat.subCategories.splice(0, 1)
-            topChild.set('subcat', subcat)
-            topChild._setContent(topChild.subcat)
-
-        } else {
-            subcat.subCategories.splice(index, index)
-            topChild.set('subcat', subcat)
-            topChild._setContent(topChild.subcat)
-        }
-        if (indexArr.add === 'false' || indexArr.add === false) this.onSave(indexArr.add, indexArr.idx[0])
     }
     __reset() {
         this._reset(() => { }, 0)
     }
     _reset(call, mlscs) {
-        this.set('sloted', false)
-        this.editIndex = NaN
-        this.subSubCats = []
-        this.add = false
         this.innerHTML = ''
+        this.subSubCats = undefined
+        this.set('sloted', false)
+        this.add = false
         window.onbeforeunload = function () { }
         setTimeout(() => {
             call()

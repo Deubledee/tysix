@@ -36,10 +36,10 @@ class cmsConfirm extends PolymerElement {
         }
 
         nav[bottom2] div[one] {
-            height: 44px;
-            color: #3bdbdd;
+            height: auto;
+            color: var(--app-item-backgound-color);
             font-size: 26px;
-            text-shadow: 1px 1px 1px black;;
+            text-shadow: 1px 1px 1px var(--google-blue-500);
         }
 
 
@@ -50,19 +50,25 @@ class cmsConfirm extends PolymerElement {
         h2 {
             text-align: center;
             margin-left: auto;
-            text-shadow: 2px 2px 2px #161616;
             margin-right: auto;
+            text-shadow: 1px 1px 1px var(--light-theme-text-color);
             width: 42%;
             border-radius: 5px;
             height: 35px;
         }
         .typeKind{
-            color: #ff5600;
+            color: var(--app-backgound-color);
             font-size: 44px;
+            font-variant: all-petite-caps;
+            text-shadow: 1px 1px 1px var(--paper-red-400);
+            font-style: italic;
+            font-weight: 400;
+            letter-spacing: 5px;
         }
         .typeheader {
-            color: #32bbff;
-            font-size: 40px;
+            color: var(--paper-deep-orange-600);
+            font-size: 23px;
+            text-shadow: 3px 2px 2px var(--app-primary-color)
         }
         h2[pub="publish"] {
             color: #75ff32;

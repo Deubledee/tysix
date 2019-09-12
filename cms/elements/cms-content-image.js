@@ -52,7 +52,7 @@ export class cmsContentImage extends PolymerElement {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
             itemLabel: {

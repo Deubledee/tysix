@@ -18,21 +18,18 @@ export class cmsTopPageTemplate extends PolymerElement {
           <!--section class="title2"-->
             ${this.topTitle}
           <!--/section-->
-        <nav class="navtop">
-            <app-toolbar>
-                <section>
-                  <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    ${this.topPages}  
-                  </iron-selector>
-                </section>
-            </app-toolbar> 
-        </nav> 
         </div> 
         <nav class="navpages">
-            <iron-pages selected="[[page]]" attr-for-selected="name">
-                <div name="search">
-                    ${this.homePage} 
-                </div>
+            <iron-pages selected="[[page]]" attr-for-selected="name">               
+              <iron-selector name="home" toppage selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                <nav  class="navtop"> 
+                            ${this.topPages}  
+                </nav> 
+              </iron-selector>
+              <div name="search">
+                  ${this.homePage} 
+
+              </div>
                     ${this.viewPages}  
             <iron-pages>            
         </nav>
@@ -40,40 +37,55 @@ export class cmsTopPageTemplate extends PolymerElement {
 
       `;
   }
-
   static get topTitle() {
     return html`
-    <div class="topLabel"> 
-      [[Content]] 
-      <paper-icon-button-light>
-        <iron-icon icon="social:pages" aria-label="Content"></iron-icon>
-      </paper-icon-button-light>
+    <div class="topLabel">     
+      <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+          <a>   
+              < 
+          </a>            
+          <dom-repeat repeat items="[[breadcrumbs]]" as="page">
+              <template>  
+                  <a href="[[_getStr(page)]][[queryContent]]">  
+                      <paper-button  aria-label="Go back page">                   
+                      [[_getPage(page)]]
+                      </paper-button>               
+                  </a>               
+              </template>
+          </dom-repeat> 
+      </iron-selector>         
     </div>
 `
   }
   static get topPages() {
     return html`
+      <section>
         <a  on-click="_resetEvent" href="[[rootPath]]content/search">
-          <paper-button class="button" front$="[[search]]" name="search" aria-label="pages">
+          <paper-button class="button" name="search" aria-label="pages">
                   [[Search]]
               <iron-icon icon="icons:search" aria-label="categories">
               </iron-icon>
           </paper-button>
         </a> 
+      </section>
+      <section>
         <a  on-click="_resetEvent" href="[[rootPath]]content/pages" id="pages">
-          <paper-button class="button" front$="[[pages]]" name="pages" aria-label="pages">
+          <paper-button class="button" name="pages" aria-label="pages">
                   [[Pages]]
               <iron-icon icon="av:library-books" aria-label="categories">
               </iron-icon>
           </paper-button>
         </a> 
+      </section>
+      <section>
         <a on-click="_resetEvent" href="[[rootPath]]content/articles">
-          <paper-button  class="button" front$="[[articles]]" name="articles" aria-label="Articles">    
+          <paper-button  class="button"  name="articles" aria-label="Articles"> 
                   [[Articles]]
               <iron-icon icon="av:art-track" aria-label="sub categories">
               </iron-icon> 
           </paper-button>      
-        </a>`
+        </a>
+      </section>`
   }
   static get homePage() {
     return html` 
@@ -92,7 +104,7 @@ export class cmsTopPageTemplate extends PolymerElement {
     return html`
     <cms-page-viewer name="pages" route="[[subroute]]">
     
-        <cms-page-cats slot="categories"user="[[user]]"  route="[[subroute]]">
+        <cms-page-cats slot="categories"user="[[user]]" route="[[subroute]]">
         </cms-page-cats>
 
         <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
@@ -114,7 +126,7 @@ export class cmsTopPageTemplate extends PolymerElement {
         <cms-article-list-type slot="categories" user="[[user]]" route="[[subroute]]">
         </cms-article-list-type>
 
-        <cms-article-view slot="view" user="[[user]]"  route="[[subroute]]">
+        <cms-article-view slot="view" user="[[user]]" route="[[subroute]]">
         </cms-article-view>
 
     </cms-articles-viewer>
@@ -127,7 +139,8 @@ export class cmsTopPageTemplate extends PolymerElement {
         type: Boolean,
         notify: true,
         reflectToAttribute: true
-      }
+      },
+      queryContent: String
     };
   }
 
@@ -141,13 +154,31 @@ export class cmsTopPageTemplate extends PolymerElement {
       }
     )
   }
-  _checkMyName(event, name) {
-    if (event === name) {
-      return true;
+  _getStr(item) {
+    let str = ''
+    str = (item === '/content' || item === '/media' || item === '/users') ? `${item}/` : `${item}`
+    let count = item.split('/').length
+    this.queryContent = (count > 2) ? `?content=${this.query.content}&reset=false&update=${this.query.parent}` : ''
+    return str
+  }
+  _getPage(item) {
+    let word, final
+    if (item === 'cmshome') {
+      word = item.split('')
+      word[0] = word[0].toUpperCase()
+      word = word.join('')
+      this.translator.changeItemTitleLang.call(this, word.toString(), 'word')
+    } else {
+      word = item.split('/')
+      word.shift()
+      word = word.pop()
+      word = word.split('')
+      word[0] = word[0].toUpperCase()
+      word = word.join('')
+      final = (word === 'Subcategory-pages') ? 'SubcategoryPages' : word
+      this.translator.changeItemTitleLang.call(this, final.toString(), 'word')/**/
     }
-    else {
-      return false;
-    }
+    return this.word
   }
 }
 customElements.define(cmsTopPageTemplate.is, cmsTopPageTemplate);

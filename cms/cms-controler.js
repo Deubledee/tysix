@@ -32,60 +32,52 @@ class cmsControler extends PolymerElement {
     <style>
         :host {
             display: var(--app-block)
-        }
-
+        } 
         app-header,
         nav[toolbar] {
             background-color: var(--app-primary-color)
         }
-
         .cart-btn-container,
         .sellector-list a,
         .sellector-list a.iron-selected {
             font-weight: var(--app-default-font-weight)
         }
-
         :host {
             display: var(--app-block)
         }
-
         nav {
             display: var(--app-flex);
             flex-flow: var(--app-flexrow);
             flex-grow: var(--app-flexgrowshrink);
             color: var(--app-secondary-text-color)
         }
-
         .sellector-list a,
         nav[toolbar] {
             display: var(--app-block);
             color: var(--app-secondary-text-color)
         }
-
         nav div {
             flex-grow: var(--app-flexgrowshrink)
         }
-
         nav[toolbar] {
-            height: var(--app-tollbar-height);
-            padding: var(--app-default-padding);
-            font-size: var(--app-tollbar-default-font-size)
+          height: 28px;
+          padding: var(--app-default-padding);
+          font-size: var(--app-tollbar-default-font-size);
         }
-
         paper-icon-button {
-            color: var(--app-secondary-text-color)
+            color: var(--app-secondary-text-color);
+            height: 30px;
         }
-
         .sellector-list {
             margin: var(--app-tollbar-sellector-list-margin)
         }
-
         .sellector-list a {
-            padding: var(--app-tollbar-sellector-list-padding);
-            text-decoration: var(--app-none);
-            line-height: var(--app-tollbar-sellector-list-line-height)
+          position: relative;
+          /* padding: var(--app-tollbar-sellector-list-padding); */
+          text-decoration: var(--app-none);
+          line-height: var(--app-tollbar-sellector-list-line-height);
+          top: -3px;
         }
-
         .cart-btn-container,
         .content-wrapper {
             display: var(--app-flex);
@@ -95,14 +87,12 @@ class cmsControler extends PolymerElement {
         .sellector-list a.iron-selected {
             color: var(--app-content-title-text-color)
         }
-
         .content-wrapper {
             top: var(--app-tollbar-content-wrapper-top);
             flex-direction: var(--app-flexrow);
             max-width: var(--app-tollbar-content-wrapper-max-width);
             padding-left: var(--app-tollbar-content-wrapper-padding-left)
         }
-
         .cart-btn-container {
             flex-flow: var(--app-flexrow);
             top: var(--app-tollbar-cart-btn-top);
@@ -110,22 +100,18 @@ class cmsControler extends PolymerElement {
             float: var(--app-tollbar-cart-btn-float);
             height: var(--app-tollbar-cart-btn-height)
         }
-
         span[role] {
             color: var(--app-dropDwonMenu-icon-color)
         }
-
         .user-badge {
             margin-top: var(--app-tollbar-user-badge-margin-top)
         }
-
         cms-image-viewer.diferent {
             --main-style: {
                 position: (--app-unset-position);
                 margin-left: -46px
             }
         }
-
         .background {
             background-color: var(--app-secondary-text-color)
         }
@@ -135,22 +121,21 @@ class cmsControler extends PolymerElement {
         }
         div[pages]{
           min-height: 1470px;
-          height: 1877px;
+          height: auto;
         }
-        paper-dropdown-menu {
+        paper-dropdown-menu.styled {
             width: 82px;
             box-sizing: border-box;
             color: var(--app-primary-color);
-
+            --paper-dropdown-menu-input:{
+              color: #df8018
+            }
             --paper-dropdown-menu-icon: {
                 color: var(--app-dropDwonMenu-icon-color, red)
             }
-
-            ;
         }
-
-        paper-tabs {
-            color: var(-app-content-title-text-color)
+        .color {
+            color: blue!important;/*var(-app-content-title-text-color)*/
         }
     </style>
   <app-location route="{{route}}">
@@ -172,30 +157,30 @@ class cmsControler extends PolymerElement {
                   <paper-icon-button icon="social:pages" aria-label="content">
                   </paper-icon-button>
                   <div>
-                      <a on-click="_resetEvent" name="content" href="[[rootPath]]content/search">[[content]]</a>
+                      <a on-click="_resetEvent" name="content" href="[[rootPath]]content/">[[content]]</a>
                   </div>
               </nav>
               <nav>
                   <paper-icon-button icon="social:person-outline" aria-label="users">
                   </paper-icon-button>
                   <div>
-                      <a on-click="_resetEvent" name="users" href="[[rootPath]]users/search">[[users]]</a>
+                      <a on-click="_resetEvent" name="users" href="[[rootPath]]users/">[[users]]</a>
                   </div>
               </nav>
               <nav>
                   <paper-icon-button icon="image:photo-library" aria-label="galleries">
                   </paper-icon-button>
                   <div>
-                      <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
+                      <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/">[[galleries]]</a>
                   </div>
               </nav>
           </div>
       </iron-selector>
       <div class="cart-btn-container">
         <div class="background">
-          <paper-dropdown-menu label="[[language]]" value="{{lang}}">
+          <paper-dropdown-menu class="styled" label="[[language]]" value="{{lang}}">
             <paper-tabs slot="dropdown-content" class="dropdown-content">
-              <paper-tab>pt</paper-tab>
+              <paper-tab class="color">pt</paper-tab>
               <paper-tab>en</paper-tab>
             </paper-tabs>
           </paper-dropdown-menu>
@@ -210,9 +195,9 @@ class cmsControler extends PolymerElement {
     </nav>
     <div pages>
       <iron-pages selected="[[page]]" attr-for-selected="name">
-            <article name="home">
+            <article name="cmshome">
               <h1> 
-                <b>Home</b>
+                <b>Cms Home</b>
               </h1>
             </article>
         <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]" >
@@ -250,7 +235,7 @@ class cmsControler extends PolymerElement {
         type: Object,
         notify: true,
         value: function () {
-          return MyAppGlobals.translator
+          return MyAppGlobals[window.cms]//MyAppGlobals.translator
         }
       },
       stylesSet: {
@@ -347,11 +332,11 @@ class cmsControler extends PolymerElement {
     this.confirm = !this.confirm;
   }
   _routePageChanged(page, route) {
-    if (this.page !== page.page && page.page !== 'NaN') {
+    if (this.page !== page.page && page.page == page.page) {
       if (!page.page) {
-        this.page = 'home';
+        this.page = 'cmshome';
       }
-      else if (['app', 'content', 'users', 'home', 'media'].indexOf(page.page) !== -1) {
+      else if (['app', 'content', 'users', 'cmshome', 'media'].indexOf(page.page) !== -1) {
         this.page = page.page;
       }
       else {
@@ -360,7 +345,7 @@ class cmsControler extends PolymerElement {
     }
   }
   _pageChanged(page) {
-    if (page === 'home') {
+    if (page === 'cmshome') {
       /*- import('./cms-home-viewer');
        return;*/
     }

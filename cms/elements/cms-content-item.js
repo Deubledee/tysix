@@ -53,11 +53,11 @@ export class cmsContentItem extends cmsContentItemTemplate {
                             [[itemText]]                        
                         <iron-input slot="input" bind-value="{{itemText}}">
                             <input id="input" value="{{value::input}}">
-                            </input>       
-
+                            </input>  
                         </iron-input>   
                     </cms-input>  
-                </div>`
+                </div>  
+            </div> `
     }
 
     static get is() { return 'cms-content-item'; }
@@ -75,7 +75,7 @@ export class cmsContentItem extends cmsContentItemTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             }
         };

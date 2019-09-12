@@ -1,83 +1,485 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element';
-export class cmsSaveLib extends PolymerElement {
-    static get is() { return 'cms-save-lib'; }
-    ready() {
-        super.ready();
+import { dataBaseworker } from './dataBaseWorker';
+const _DBW = new dataBaseworker()
+const __DEV = true
+const cmsPagesLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-pages-lib'; }
+        ready() {
+            super.ready();
+        }
+        _setLangArr(cont) {
+            return _setLangArr(cont)
+        }
+        _askPages(query) {
+            getPages(query).then((done) => {
+                this._setAll(done);
+            }, __DEV);
+        }
+
+        removePage(parent, cont) {
+            let str = `${this.rootPath}content/pages?content=${parent}&removed=true`
+            window.onbeforeunload = function () { };
+            saveChanged(parent, cont).then(() => {
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                    this.__reset()
+                }, 250)
+            })
+        }
+        savePages() {
+            window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
+            if (this.add === true && !!this.inform[0].id) {
+                saveAdded(this.inform[0].id, this.inform[0]).then(data => {
+
+                    if (data !== 'error')
+                        saveAddedData('data', this.inform[0].id, this.content[0]).then(data => {
+                            window.onbeforeunload = function () { };
+                            this.editing = 0;
+                            this.$.saveButton.classList.add('diferent');
+                            setTimeout(() => {
+                                this.__reset();
+                                window.dispatchEvent(new CustomEvent('location-changed'))
+                            }, 500)
+                        })
+                })
+            } else {
+                console.log(this.inform)
+            }/**/
+            if (this.add === false) {
+                saveChanged(this.inform[0].id, this.inform[0], Object.keys(this.content[0])).then(data => {
+                    saveChangedData('data', this.inform[0].parent, this.inform[0].id, this.content[0]).then(data => {
+                        window.onbeforeunload = function () { };
+                        this.editing = 0;
+                        this.$.saveButton.classList.add('diferent');
+                        setTimeout(() => {
+                            this.__reset();
+                            window.dispatchEvent(new CustomEvent('location-changed'));
+                        }, 500)
+                    })
+                })
+            }
+        }
     }
-    saveAdded() {
-        return new Promise((resolve, reject) => {
-            this.translator._DBW.setPages((msg, err) => {
-                if (msg !== 'error') {
-                    resolve(msg)
-                }
-                else {
-                    reject(err)
-                }
-            }, { name: this.info.__page, create: this.content }, this.translator.__DEV);/* */
-        })
+}
+
+const cmsSubcatsLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-subcats-lib'; }
+        ready() {
+            super.ready();
+        }
+        _setLangArr(cont) {
+            return _setLangArr(cont)
+        }
+        getTopSubcats(parent) {
+            getTopSubcats(parent).then(done => {
+                this.subSubCats = done
+            })
+        }
+
+        getSubcat(parent, id) {
+            getSubcat(parent, id).then((done) => {
+                this._setContent(done)
+                this.deSpin()
+            })
+        }
+
+        getChildrenSubcats(parent, subCatChildren) {
+            let dataObj = []
+            getChildrenSubcats(parent, subCatChildren).then((done) => {
+                dataObj.push(done.pop())
+                this.dataObj = dataObj
+            })/* */
+        }
+        getSubcatsData(parent, id) {
+            getSubcatsData(parent, id).then((done) => {
+                this._setContent(done)
+                this.deSpin()
+            })
+        }
+        __checkEqual(data, temp, index2) {
+            if (data[index2 - 1] === temp[index2 - 1]) {
+                this.updated = true;
+                getSubcatsData(this.parent, this.subcat.id).then((done) => {
+                    this._setContent(done)
+                    this.deSpin()
+                })
+
+            } else {
+                getSubcatsData(this.parent, this.subcat.id).then((done) => {
+                    this._setContent(done)
+                    this.deSpin()
+                })
+            }
+        }
+        __checkBigger(data, temp, index2) {
+            if (data[index2 - 1] === temp[index2 - 1]) {
+                this.translator._DBW.getSubcatsData((done) => {
+                    this._setContent(done)
+                    this.deSpin()
+                    this._toggleChildren()
+                }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+            } else {
+                this.translator._DBW.getSubcatsData((done) => {
+                    this._setContent(done)
+                    this.deSpin()
+                }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+            }
+        }
+        saveSubcats() {
+            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&reset=true&update=${this.inform[0].id}`
+            if (this.add === true) {
+                saveAddedSubcat(this.inform[0].parent, this.inform[0].id, this.inform[0]).then(() => {
+                    saveAddedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
+                        window.history.pushState({}, null, str)
+                        window.onbeforeunload = function () { };
+                        this.$.saveButton.classList.add('diferent');
+                        setTimeout(() => {
+                            this._reset();
+                            window.dispatchEvent(new CustomEvent('location-changed'))
+                        }, 500)
+                    }) /**/
+                })
+            }
+            if (this.add === false) {
+                saveChangedSubcat(this.inform[0].parent, this.inform[0].id, this.inform[0]).then(() => {
+                    saveChangedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
+                        window.history.pushState({}, null, str)
+                        window.onbeforeunload = function () { };
+                        this.$.saveButton.classList.add('diferent')
+                        setTimeout(() => {
+                            this._reset();
+                            window.dispatchEvent(new CustomEvent('location-changed'));
+                        }, 500)
+                    })/* */
+                })
+            }/**/
+        }
+        removeSubcatsLang() {
+            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&reset=true&update=${this.inform[0].id}`
+            // this.deleteSubcatData(this.inform[0].parent, this.inform[0].id, this.removeArr).then((item, id) => {
+            deleteSubcatData(this.inform[0].parent, this.inform[0].id, this.removeArr).then(() => {
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                setTimeout(() => {
+                    this._reset()
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }, 250)/**/
+            })
+        }
+        removeSubcats(cont, parent, id) {
+            let str
+            if (!!cont) {
+                str = `${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true&update=${topparentname}`
+                cont[0].children = cont[0].children.filter(item => { if (item !== this.subcat.id) return item })
+                cont[0].childrenCount = cont[0].childrenCount--
+                cont[0].removedChildren.push(this.subcat.id)
+                updateSubcatParentInfo(cont[0], parent, id)
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                saveChangedSubcat(parent, this.subcat.id, this.subcat).then(() => {
+                    window.onbeforeunload = function () { };
+                    setTimeout(() => {
+                        this._reset()
+                        window.dispatchEvent(new CustomEvent('location-changed'))
+                    }, 250)
+                })
+            } else {
+                str = `${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true`
+                saveChangedSubcat(parent, id, this.subcat).then(() => {
+                    window.history.pushState({}, null, str)
+                    window.onbeforeunload = function () { };
+                    setTimeout(() => {
+                        this._reset()
+                        window.dispatchEvent(new CustomEvent('location-changed'))
+                    }, 250)
+                })
+            }
+        }
     }
-    saveChanged() {
-        return new Promise((resolve, reject) => {
-            this.translator._DBW.changePages((msg, err) => {
-                if (msg !== 'error') {
-                    resolve(msg)
-                }
-                else {
-                    console.log(err);
-                    reject(err)
-                }
-            }, { name: this.info.__page, update: this.content }, this.translator.__DEV);/* */
-        })
-    }
-    saveAddedData(type) {
-        return new Promise((resolve, reject) => {
-            this.translator._DBW.setPageData((done, err) => {
+}
+
+export { cmsPagesLib }
+export { cmsSubcatsLib }
+function removeSubcatInfo(parent, id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setPageData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: parent, dataType: 'subCategories', doc: id, data: inform }, __DEV);/* */
+    })
+}
+
+function removeSubcatData(parent, id, content) {
+    let toPromisse = []
+    for (let par in this.content[0]) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.setubcatsData((done, err) => {
                 if (done !== 'error') {
                     resolve(done)
                 }
                 else {
-                    console.log(err);
                     reject(err)
                 }
-            }, { name: this.__info.page, dataType: type, data: this.__info.content }, this.translator.__DEV);
-        })
+            }, { page: parent, name: id, doc: par.toString(), data: content[par] }, __DEV); /* */
+        }))
     }
-    saveChangedData(type) {
+    return Promise.race(toPromisse)
+}
+
+function deleteAdded() {
+    return new Promise((resolve, reject) => {
+        _DBW.deletePage((msg) => {
+            if (done !== 'error') {
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+            this.__reset()
+        }, data, __DEV);
+    })
+}
+
+function deleteAddedData(parent) {
+    return new Promise((resolve, reject) => {
+        _DBW.getPageDataSnapshot((done2) => {
+            if (done !== 'error') {
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+            if (done2.docs.length > 0)
+                done2.forEach(item => {
+                    item.ref.delete()
+                })
+        }, { name: parent, dataType: 'data' }, __DEV)
+    })
+}
+
+function deleteAddedDataĨtem(parent, itemArray) {
+    return new Promise((resolve, reject) => {
+        _DBW.getPageDataSnapshot((done2, err) => {
+            if (done2 !== 'error' && done2.docs.length > 0) {
+                let arr = itemArray.entries()
+                done2.forEach(item => {
+                    if (arr.next().value[1] === item.id) {
+                        item.ref.delete()
+                    }
+                })
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: parent, dataType: 'data' }, __DEV)
+    })
+}
+
+/**in use */
+
+function _setLangArr(cont) {
+    let arr = []
+    for (let par in cont) {
+        if (par !== 'images') {
+            arr.push(par)
+        }
+    }
+    return arr
+}
+function getPages(query) {
+    if (!query)
         return new Promise((resolve, reject) => {
-            this.translator._DBW.changePageData((done, err) => {
+            _DBW.getAllPages((done) => {
+                resolve(done)
+            }, __DEV)
+        })
+
+    if (query)
+        return new Promise((resolve, reject) => {
+            _DBW.getPagesEqualTo((done) => {
+                resolve(done)
+            }, query.q, query.v, __DEV)
+        })
+}
+function saveAdded(id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setPages((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                reject(err)
+            }
+        }, { name: id, create: inform }, __DEV);/* */
+    })
+}
+function saveAddedData(type, id, content) {
+    let toPromisse = []
+    for (let par in content) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.setPageData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                }
+            }, { name: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);/* */
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+function saveChanged(id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.changePages((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: id, update: inform }, __DEV);/* */
+    })
+}
+
+function saveChangedData(type, parent, id, content) {
+    let toPromisse = []
+    for (let par in this.content[0]) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.changePageData((done, err) => {
                 if (done !== 'error') {
                     resolve(true)
                 }
-                else {
-                    console.log(err);
-                    reject(err)
-                }
-            }, { name: this.__info.page, dataType: type, doc: this.__info.id, data: this.__info.content }, this.translator.__DEV);
-        })
-    }
-    saveAddedSubcatData() {
-        return new Promise((resolve, reject) => {
-            this.translator._DBW.saveAddedSubcatData((done, err) => {
-                if (done !== 'error') {
-                    resolve(done)
-                }
-                else {
-                    reject(err)
-                }
-            }, { page: this.__info.page, subcat: this.__info.subcat, create: this.content }, this.translator.__DEV); /* */
-        })
-    }
-    saveChangedSubcatData() {
-        return new Promise((resolve, reject) => {
-            this.translator._DBW.saveAddedSubcatData((done, err) => {
-                if (done !== 'error') {
-                    resolve(done)
-                }
-                else {
-                    reject(err)
-                }
-            }, { page: this.__info.page, subcat: this.__info.subcat, update: this.content, data: this.__info.content }, this.translator.__DEV); /* */
-        })
-    }
+            }, { name: parent, docName: id, dataType: type, doc: par, data: content[par] }, __DEV);
+        }))
+    }/**/
+    return Promise.race(toPromisse)
 }
-customElements.define(cmsSaveLib.is, cmsSaveLib);
+
+function saveAddedSubcat(parent, doc, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setPageData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: parent, dataType: 'subCategories', doc: doc, data: inform }, __DEV);/* */
+    })
+}
+
+function saveAddedSubcatData(parent, name, content) {
+    let toPromisse = []
+    for (let par in content) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.setubcatsData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                }
+            }, { page: parent, name: name, doc: par.toString(), data: content[par] }, __DEV); /* */
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+function deleteSubcatData(parent, name, arr) {
+    let toPromisse = []
+    for (let i = 0; i < arr.length; i++) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.deleteSubcatData((done) => {
+                if (done !== 'error') {
+                    resolve()
+                }
+            }, { page: parent, name: name, doc: arr[i] }, __DEV)
+        }))  /* */
+    }
+    return Promise.race(toPromisse)
+}
+
+function saveChangedSubcatData(parent, docName, content) {
+    let toPromisse = []
+    for (let par in content) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.changeSubcatsData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                }
+            }, { name: parent, docName: docName, doc: par.toString(), data: content[par] },
+                __DEV) /* */
+
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+function saveChangedSubcat(parent, doc, data) {
+    return new Promise((resolve, reject) => {
+        _DBW.changePageData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            }
+            else {
+                reject(err)
+            }
+        }, { name: parent, dataType: 'subCategories', doc: doc, data: data },
+            __DEV) /* */
+    })
+}
+function updateSubcatParentInfo(cont, parent, topparent) {
+    _DBW.changePageData((done, err) => {
+        if (done !== 'error') {
+            console.log(done)
+        }
+        else {
+            console.error(err)
+        }
+    }, { name: parent, dataType: 'subCategories', doc: topparent, data: cont }, __DEV)
+}
+function getTopSubcats(parent) {
+    return new Promise((resolve, reject) => {
+        _DBW.mixQueryPageData((done) => {
+            resolve(done)
+        }, { name: parent, dataType: "subCategories", query: 'top,==,true', query2: `removed,==,false` }, __DEV)
+    })
+}
+
+function getChildrenSubcats(parent, subCatChildren) {
+    let arr = subCatChildren
+    let toPromisseArray = []
+    for (let i = 0; i < arr.length; i++) {
+        toPromisseArray.push(new Promise((resolve, reject) => {
+            _DBW.queryPageData((done) => {
+                resolve(done)
+            }, { name: parent, dataType: "subCategories", query: `id,==,${arr[i]}` }, __DEV)
+        }))
+    }
+    return Promise.race(toPromisseArray)
+}
+function getSubcatsData(parent, id) {
+    return new Promise((resolve, reject) => {
+        _DBW.getSubcatsData((done) => {
+            resolve(done)
+        }, { name: parent, doc: id }, __DEV)
+    })
+}
+
+function getSubcat(parent, id) {
+    return new Promise((resolve, reject) => {
+        _DBW.getSubcatsData((done) => {
+            resolve(done)
+        }, { name: parent, doc: id }, __DEV)
+    })
+}

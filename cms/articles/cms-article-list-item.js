@@ -27,7 +27,7 @@ class cmsArticleListItem extends cmsItemTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
         };

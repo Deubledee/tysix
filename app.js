@@ -45,7 +45,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
 
 app.use('/', index);
-app.use('/home', index);
+app.use('/cmshome', index);
 app.use('/content', index);
 app.use('/content/articles', index);
 app.use('/content/pages', index);

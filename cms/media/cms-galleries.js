@@ -2,23 +2,13 @@ import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import './cms-gallery-item';
 class cmsGalleries extends cmsMiddlePageTemplate {
-    static get _getShoutAnchor() {
-        return html` 
-            <a href="[[rootPath]]media/images/add-gallery">
-                <paper-tab name=" add-category-pages">
-                [[ADD]] [[Galleries]]
-                    <paper-icon-button-light>
-                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                    </paper-icon-button-light>
-                </paper-tab>
-            </a>`
-    }
     static get _getSilentAnchor() {
-        return html`
-        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-            <a id="reset" href="[[rootPath]]media/">
-            </a>
-        </iron-selector>
+        return html`            
+        <a href="[[rootPath]]media/images/add-gallery">
+                <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
+                </paper-icon-button>
+            [[ADD]] [[Galleries]]
+        </a>
         `
     }
     static get _getBottom() {
@@ -134,7 +124,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]// MyAppGlobals.translator
                 }
             },
         }
@@ -169,6 +159,12 @@ class cmsGalleries extends cmsMiddlePageTemplate {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
+        if (!!this.route) {
+            let arr2 = []
+            arr2.push('home')
+            //  arr2.push(this.route.prefix)
+            this.set('breadcrumbs', arr2)
+        }
         if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
             this.method = query.method
             let string = !!query.parent ? `${query.addimageto}${query.parent}${query.content}` : `${query.addimageto}${query.content}`

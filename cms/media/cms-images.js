@@ -125,7 +125,7 @@ class cmsImages extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
             hidebottom: {
@@ -194,10 +194,6 @@ class cmsImages extends cmsMiddlePageTemplate {
         this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
-        this.$.reset.onclick = (this.reset).bind(this)
-        window.addEventListener('reset', (this.reset).bind(this))
-        this.saveButton = this.$.saveButton
-        this.resetButton = this.$.reset
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -218,11 +214,7 @@ class cmsImages extends cmsMiddlePageTemplate {
             this.slashed = false;
             this.set('Seach', location.search)
             this.set('add', false)
-
-
             this.imageData
-
-
             if ('addimageto' in query) {
                 this.set('add', true)
                 if ('indexarr' in query) {

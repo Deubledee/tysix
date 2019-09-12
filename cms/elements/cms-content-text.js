@@ -6,10 +6,9 @@ export class cmsContentText extends cmsContentItemTemplate {
         return html`        
         div[inputs] {
             /*background-color: #dadfe2;*/
-            height: 22px;
-            width: 183px;
+            height: 0px;
+            width: 0px;
         }
-
         iron-autogrow-textarea.classy{
                 outline-style: none;
                 resize: none;
@@ -22,12 +21,18 @@ export class cmsContentText extends cmsContentItemTemplate {
                 -webkit-rtl-ordering: unset;
                 cursor: text;
                 padding: 1px;
+                --layout-fit:{
+                    position: relative!important;
+                    top: -15px!important;
+                    left: 2px!important;
+                    width: 76%;
+                    height: 117px;
+                }               
         }
-
         cms-input.larger{
             --cms-input:{
-                width: 420px;
-                height: 175px;
+                width: 314px;
+                height: 127px;
             }
         }`
     }
@@ -63,7 +68,7 @@ export class cmsContentText extends cmsContentItemTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             }
         };

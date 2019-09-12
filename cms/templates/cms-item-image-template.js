@@ -5,6 +5,25 @@ import '@polymer/paper-input/paper-input';
 import '../styles/cms-comon-style_v3';
 import '../../src/shop-image';
 export class cmsItemImageTemplate extends PolymerElement {
+    static get template() {
+        return html`  
+        <style include="cms-comon-style_v3">
+                :host {
+                    position: var(--app-default-position);
+                }            
+                ${this._getStyles}
+        </style>    
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>          
+        <main class="flexH" small$="[[small]]">
+            <div arow size$="[[size]]" small$="[[small]]">    
+                ${this._getMenu}  
+            </div>
+            <div table size$="[[size]]" class="scroll">
+                ${this._getItem}   
+            </div> 
+        </main> `;
+    }
     static get _getStyles() {
         return html`
         article[centerListItem]{
@@ -48,25 +67,6 @@ export class cmsItemImageTemplate extends PolymerElement {
         div[table][size]{
             max-width: 75%; 
         }`
-    }
-    static get template() {
-        return html`  
-        <style include="cms-comon-style_v3">
-                :host {
-                    position: var(--app-default-position);
-                }            
-                ${this._getStyles}
-        </style>    
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>          
-        <main class="flexH" small$="[[small]]">
-            <div arow size$="[[size]]" small$="[[small]]">    
-                ${this._getMenu}  
-            </div>
-            <div table size$="[[size]]" class="scroll">
-                ${this._getItem}   
-            </div> 
-        </main> `;
     }
 
     static get _getMenu() {

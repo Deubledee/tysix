@@ -25,19 +25,20 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             div[silent]{
                 height: 38px;
                 border-radius: 4px;
-                background-color: var(--divider-color);
+                /*background-color: var(--divider-color);*/
             }
+            
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
         </app-route>
            <slot name="spinner"></slot>
         <nav top>          
-            <div top>
+            <!--div top>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    ${this._getShoutAnchor}
+                   
                 </iron-selector>
-            </div>
+            </div-->
             <div silent>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
                     ${this._getSilentAnchor}
@@ -46,7 +47,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         </nav>
         <main class="flex">
             <div class="navbottom">
-                <div arow hidebottom$="[[hidebottom]]">
+                <div arow >
                     ${this._getBottom}
                 </div>
                     ${this._getTable}
@@ -58,6 +59,30 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         `;
     }
     static get is() { return 'cms-middle-page-template'; }
+    /*  static get _getShoutAnchor() {
+          return html`
+            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+                <a>   
+                    < 
+                </a>            
+                <dom-repeat repeat items="[[breadcrumbs]]" as="page">
+                    <template>  
+                        <a href="[[_getStr(page)]]">  
+                            <paper-button  aria-label="Go back page">                   
+                            [[_getPage(page)]]
+                            </paper-button>               
+                        </a>    [[_getSlash(index)]]                
+                    </template>
+                </dom-repeat> 
+            </iron-selector> 
+                `
+      }*/
+    static get _getSilentAnchor() {
+        return html`
+            <a id="reset" href="[[rootPath]]content/">
+            </a>
+        `
+    }
     static get _getTable() {
         return html`
             <div table class="scroll"> 
@@ -69,28 +94,23 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 </dom-repeat>
             </div>
         `}
-    static get _getShoutAnchor() {
-        return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">                          
-            <paper-icon-button-light>
-                <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-            </paper-icon-button-light>            
-        </a>
-        `
-    }
-    static get _getSilentAnchor() {
-        return html`
-            <a id="reset" href="[[rootPath]]content/">
-            </a>
-        `
-    }
     static get _getBottom() {
         return html`
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[title]] </h4>
             </div>
+        </section>                       
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[type]] </h4>
+            </div>
         </section>                        
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[published]] </h4>
+            </div>
+        </section>                     
             
         <section class="flexchildbotom noFlex">
             <div class="center">
@@ -101,17 +121,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <div class="center">
                 <h4> [[viewedit]] sub-cat </h4>
             </div>
-        </section>                      
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[type]] </h4>
-            </div>
-        </section>                        
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[published]] </h4>
-            </div>
-        </section>                        
+        </section>                          
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[delete]] </h4>
@@ -198,7 +208,12 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 type: Boolean,
                 notify: true,
                 value: false,
-            }
+            },
+            breadcrumbs: {
+                type: Array,
+                notify: true,
+                value: []
+            },
         };
     }
     ready() {
@@ -206,25 +221,6 @@ export class cmsMiddlePageTemplate extends PolymerElement {
     }
     _getPublished(data) {
         return (data === 'NPP' || data === 'NPA') ? 'NP' : 'p'
-    }
-
-    _getStr(item) {
-        let str = ''
-        str = `${item}`
-        return str
-    }
-    _getPage(item) {
-        let str = ''
-        let word
-        if (item === 'home') {
-            str = `${item}`
-        } else {
-            word = item.split('/')
-            word.shift()
-            word = word.join(' | ')
-            str = word;
-        }
-        return str
     }
 }
 customElements.define(cmsMiddlePageTemplate.is, cmsMiddlePageTemplate);

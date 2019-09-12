@@ -140,7 +140,7 @@ class cmsArticleView extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]// MyAppGlobals.translator
                 }
             },
             route: {

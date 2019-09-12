@@ -13,7 +13,14 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { reuest } from './tools/http-handler';
 import { expresso } from "/cms/tools/expresso/expresso.js"
-window.MyAppGlobals.translator = new expresso();
+window.cms = Symbol('app')
+
+Object.defineProperty(window, "cms", {
+    enumerable: false,
+    writable: true
+});
+//window.MyAppGlobals.translator = 
+window.MyAppGlobals[window.cms] = new expresso();//window.MyAppGlobals.translator
 class cmsLogin extends PolymerElement {
     static get template() {
         return html`
@@ -142,7 +149,7 @@ class cmsLogin extends PolymerElement {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
             closed: {
@@ -182,15 +189,12 @@ class cmsLogin extends PolymerElement {
     }
     ready() {
         super.ready();
-        this.translator._DBW.authStateChanged((user, err) => {
-            if (user !== 0) {
-                this.closed = !this.closed;
-                this._userAccepted(user);
-            }
-            else {
-                this.set('notLogedIn', true);
-                console.log(err);
-            }
+        this.translator.authStateChanged().then(data => {
+            this.closed = !this.closed;
+            this._userAccepted(data);
+        }).catch((err) => {
+            this.set('notLogedIn', true);
+            console.log(err);
         });
         window.addEventListener('update-user', (event) => {
             let string = `http://localhost:3000/update?obj=${JSON.stringify(event.detail)}&uid=${this._getUid()}`;

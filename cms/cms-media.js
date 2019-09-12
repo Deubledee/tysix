@@ -1,45 +1,41 @@
 import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 class cmsMedia extends cmsTopPageTemplate {
-  static get topTitle() {
-    return html`
-    <div class="topLabel"> [[Media]] 
-      <paper-icon-button-light>
-        <iron-icon icon="image:photo-library" aria-label="Content">
-        </iron-icon>
-      </paper-icon-button-light>
-    </div>`
-  }
   static get topPages() {
     return html`
-      <a href="[[rootPath]]media/search">
-        <paper-button class="button" front$="[[search]]" name="search" aria-label="search">
-                    [[Search]]
-                <iron-icon icon="icons:search" aria-label="search">
-                </iron-icon>
-        </paper-button>
-      </a> 
-      <a href="[[rootPath]]media/images">
-        <paper-button class="button" front$="[[images]]" name="images" aria-label="images">
-                    [[Images]]
-                <iron-icon icon="av:library-books" aria-label="images">
-                </iron-icon>
-        </paper-button>
-      </a> 
-      <a href="[[rootPath]]media/videos">
-        <paper-button  class="button" front$="[[videos]]" name="videos" aria-label="videos">    
-                    [[Videos]]
-                <iron-icon icon="av:art-track" aria-label="cms videos">
-                </iron-icon> 
-        </paper-button>      
-      </a>`
+      <section>
+        <a href="[[rootPath]]media/search">
+          <paper-button class="button" name="search" aria-label="search">
+                      [[Search]]
+                  <iron-icon icon="icons:search" aria-label="search">
+                  </iron-icon>
+          </paper-button>
+        </a> 
+      </section>
+      <section>
+        <a href="[[rootPath]]media/images">
+          <paper-button class="button" name="images" aria-label="images">
+                      [[Images]]
+                  <iron-icon icon="av:library-books" aria-label="images">
+                  </iron-icon>
+          </paper-button>
+        </a> 
+      </section>
+      <section>
+        <a href="[[rootPath]]media/videos">
+          <paper-button  class="button" name="videos" aria-label="videos">    
+                      [[Videos]]
+                  <iron-icon icon="av:art-track" aria-label="cms videos">
+                  </iron-icon> 
+          </paper-button>      
+        </a>
+      </section>`
   }
   static get viewPages() {
     return html`
       <article name="images">         
-        <cms-gallery-viewer route="{{subroute}}" lang="[[lang]]">
-        
-          <cms-galleries slot="galleries" id="galleries" 
+        <cms-gallery-viewer route="{{subroute}}" lang="[[lang]]">        
+          <cms-galleries slot="galleries" id="galleries"            
             route="{{subroute}}" 
             images="{{Imags}}" 
             add="{{add}}" 
@@ -47,7 +43,7 @@ class cmsMedia extends cmsTopPageTemplate {
             return-path="{{returnPath}}">
           </cms-galleries>
 
-          <cms-images slot="images" id="images" 
+          <cms-images slot="images" id="images"            
             route="{{subroute}}" 
             image-data="{{Imags}}" 
             add="[[add]]" 
@@ -78,7 +74,7 @@ class cmsMedia extends cmsTopPageTemplate {
         type: Object,
         notify: true,
         value: function () {
-          return MyAppGlobals.translator
+          return MyAppGlobals[window.cms]// MyAppGlobals.translator
         }
       },
       returnPath: {
@@ -107,24 +103,17 @@ class cmsMedia extends cmsTopPageTemplate {
         type: Boolean,
         value: false
       },
-      search: {
-        type: Boolean,
-        computed: '_checkMyName(page, "search")'
+      breadcrumbs: {
+        type: Array,
+        notify: true,
+        value: []
       },
-      images: {
-        type: Boolean,
-        computed: '_checkMyName(page, "images")'
-      },
-      videos: {
-        type: Boolean,
-        computed: '_checkMyName(page, "videos")'
-      }
     }
   }
 
   static get observers() {
     return [
-      '_routePageChanged(routeData, query, active)'
+      '_routePageChanged(route, routeData, query)'
     ];
   }
   ready() {
@@ -142,27 +131,74 @@ class cmsMedia extends cmsTopPageTemplate {
   _setLang(res, lang) {
     this.lang = lang
     res.call(this);
+    this.set('breadcrumbs', [])
+    setTimeout(() => {
+      this.setBreadcrumbs(this.route, this.routeData)
+    }, 120);
   }
   __changeLang() {
     this.lang = this.translator.lang
     this.translator.changeLang.call(this)
+    setTimeout(() => {
+      this.setBreadcrumbs(this.route, this.routeData)
+    }, 120);
   }
-  _routePageChanged(page, query) {
-    if (this.route.prefix === '/media') {
-      if (page !== undefined && 'page' in page) {
-        if (['search', 'images', 'videos'].indexOf(page.page) !== -1) {
-          this.page = page.page;
+  _routePageChanged(route, routeData, query) {
+    if (route.prefix === '/media') {
+      if (this.breadcrumbs.length > 0) {
+        this.set('breadcrumbs', [])
+        setTimeout(() => {
+          this.setBreadcrumbs(this.route, this.routeData)
+        }, 120);
+      }
+      if (!routeData.page) {
+        this.page = 'home';
+      }
+      if (!!routeData && !!routeData.page) {
+        if (['search', 'images', 'videos'].indexOf(routeData.page) !== -1) {
+          this.page = routeData.page;
         }
         else {
-          console.log('view404', page, query);
+          console.log('view404', routeData.page, query);
         }
-      }
-      else {
-        this.page = 'search';
       }
     }
   }
-
+  setBreadcrumbs(route, routeData) {
+    this.set('breadcrumbs', [])
+    if (!routeData.page) {
+      let arr2 = []
+      this.page = 'home';
+      arr2.push('cmshome')
+      this.set('breadcrumbs', arr2)
+    }
+    if (!!routeData && !!routeData.page) {
+      if (['images', 'videos', 'search'].indexOf(routeData.page) !== -1) {
+        let arr2 = []
+        arr2.push('cmshome')
+        arr2.push('/media')
+        this.set('breadcrumbs', arr2)
+      }
+      if (["/images/view-images",
+        "/images/add-images",
+        "/images/add-gallery"].indexOf(route.path) !== -1) {
+        let arr2 = []
+        arr2.push('cmshome')
+        arr2.push('/media')
+        arr2.push('/media/images')
+        this.set('breadcrumbs', arr2)
+      }
+      if (["/videos/view-videos",
+        "/videos/add-videos",
+        "/videos/add-playlist"].indexOf(route.path) !== -1) {
+        let arr2 = []
+        arr2.push('cmshome')
+        arr2.push('/media')
+        arr2.push('/media/videos')
+        this.set('breadcrumbs', arr2)
+      }
+    }
+  }
   _pageChanged(page) {
     if (page !== undefined) {
       if (page === 'images') {
@@ -173,14 +209,14 @@ class cmsMedia extends cmsTopPageTemplate {
         });
         return;
       }
-      /*    if (page === 'articles') {
-            import('./cms-articles-viewer');
-            return;
-          }
-          if (page === 'view404') {
-            import('./cms-404-warning');
-            return;
-          }*/
+      if (page === 'articles') {
+        import('./cms-articles-viewer');
+        return;
+      }
+      /*    if (page === 'view404') {
+           import('./cms-404-warning');
+           return;
+         }*/
     }
   }
 }

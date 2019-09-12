@@ -2,23 +2,8 @@ import '@polymer/iron-selector/iron-selector';
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import './cms-page-list-item';
-class cmsPageCats extends cmsMiddlePageTemplate {
-    static get _getShoutAnchor() {
-        return html`
-        <a>   
-            < 
-        </a>            
-        <dom-repeat repeat items="[[trigger]]" as="page">
-            <template>  
-                <a  href="/[[page]]">  
-                    <paper-button  aria-label="Go back page">                   
-                        [[page]]
-                    </paper-button>               
-                </a>                   
-            </template>
-        </dom-repeat> /
-        `
-    }
+import { cmsPagesLib } from '../tools/cms-save-lib.js';
+class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
     static get _getSilentAnchor() {
         return html`            
         <a href="[[rootPath]]content/pages/add-category-pages?&add=true">
@@ -43,7 +28,7 @@ class cmsPageCats extends cmsMiddlePageTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
             spinOut: {
@@ -60,7 +45,8 @@ class cmsPageCats extends cmsMiddlePageTemplate {
         this.translator.target('cms-page-list-type', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type', 'setLangObject')
-        this._askPages();
+        //sem query pede todas as páginas\\
+        this._askPages({ q: 'removed', v: false });
         window.addEventListener('reset-list-type', (this._contentChanged.bind(this)));
     }
     _setLang(res, lang) {
@@ -79,17 +65,11 @@ class cmsPageCats extends cmsMiddlePageTemplate {
     }
     _contentChanged() {
         this.innerHTML = ''
-        this._askPages()
-    }
-    _askPages() {
-        this.translator._DBW.getAllPages((done) => {
-            this._setAll(done);
-            if (!!this.route) {
-                let arr2 = []
-                arr2.push('home')
-                this.set('trigger', arr2)
-            }
-        }, this.translator.__DEV);/**/
+        this.translator.clone(this)
+        this.spinOut = false
+        setTimeout(() => {
+            this._askPages({ q: 'removed', v: false })
+        }, 500);
     }
     _setAll(response) {
         let arr = [], arr2 = [];

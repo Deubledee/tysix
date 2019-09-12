@@ -10,16 +10,28 @@ export class cmsContentItemTemplate extends PolymerElement {
             position: relative;
         }
         ${this._getStyles}
-        </style>    
-        <div class="flexleft" name="itemLabel">
-            <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
-                [[title]]
-            </paper-button>
-            <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                [[cancel]]
-            </paper-button>
-        </div>
+        paper-button[id="label"]{
+            height: var(--app-content-button-height);
+            text-decoration: var(--app-none);
+            color: inherit;
+            -webkit-justify-content: left;
+            justify-content: left
+        }
+        paper-button[id="cancel"]{
+            font-size: 9px;  
+        }
+        </style> 
+        <div arow>
+            <div class="flexleft" name="itemLabel">
+                <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
+                    [[title]]
+                </paper-button>
+                <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
+                    [[cancel]]
+                </paper-button>
+            </div>
             ${this._getElement}
+        </div>
         `;
     }
     static get _getStyles() {
@@ -27,7 +39,8 @@ export class cmsContentItemTemplate extends PolymerElement {
         textarea:focus, input:focus{
           outline-offset: 0px;
           outline-style: none;
-        }`
+        }
+        `
     }
     static get _getElement() {
         return html`        

@@ -1,14 +1,16 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
+import { cmsPagesLib } from '../tools/cms-save-lib.js';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
-class cmsPageCatsContent extends cmsContentTemplate {
+const ModeloInfo = "W3siUHVibGlzaGVkIjp7ImRhdGUiOiIiLCJwdWJsaXNoZWRCeSI6Ik4vQSIsInN0YXRlIjoiTi9QIn0sImF1dGhvciI6eyJpZCI6IiIsIm5hbWUiOiIifSwiZGF0ZUNyZWF0ZWQiOiIiLCJpZCI6IiIsInN1YkNhdGVnb3J5Q291bnQiOiIiLCJ0b0FydGljbGUiOmZhbHNlLCJ0eXBlIjoiIiwibGFzdE1vZGlmaWVkIjpbXX1d"
+class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     static get _getSideInfo() {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
         no items here
             <template>
                 <div class="center-menu">
-                    <aside>
+                    <aside class="info">
                         <span>
                             [[info]]
                         </span>
@@ -143,7 +145,7 @@ class cmsPageCatsContent extends cmsContentTemplate {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals.translator
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
             lang: {
@@ -154,6 +156,12 @@ class cmsPageCatsContent extends cmsContentTemplate {
             langs: {
                 type: Object,
                 value: {}
+            },
+            addLangResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setAddLangValue'
             },
             inputResponse: {
                 type: Object,
@@ -187,6 +195,7 @@ class cmsPageCatsContent extends cmsContentTemplate {
                 value: {
                 }
             },
+            langStr: String,
             time: Number
         }
     }
@@ -222,12 +231,6 @@ class cmsPageCatsContent extends cmsContentTemplate {
     _routePageChanged(routeData, query, active) {
         if (!!routeData.page) {
             let arr = []
-            if (!!this.route) {
-                let arr2 = []
-                arr2.push('home')
-                arr2.push(this.route.prefix)
-                this.set('trigger', arr2)
-            }
             if (!!query.add) {
                 this.add = (query.add === 'true' || query.add === true)
             }
@@ -237,11 +240,13 @@ class cmsPageCatsContent extends cmsContentTemplate {
             if (active === true && routeData.page === 'add-category-pages') {
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
+                    localStorage[`pagenewcontentinfo`] = atob(ModeloInfo)
                     let obj = cont.images.content
                     this.imageLabel = 'images'
                     this.set('imageArr', obj)
                     this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
                     this._setContent('lang', [cont])
+                    this._getPageInfo(`pagenewcontent`)
                     this.set('pageLangs', [])
                 }
             }
@@ -252,23 +257,21 @@ class cmsPageCatsContent extends cmsContentTemplate {
                     this.$.saveButton.classList.remove('diferent')
                 }
                 if (!!query.content) {
-                    let cont = JSON.parse(localStorage[`page${query.content}`])
-                    if (this.add === false || this.added === true) {
-                        this.set('inputVal', [])
-                        this.set('textareaVal', [])
-                        if (!!query.lang) {
-                            this._setContent(query.lang, cont)
-                        } else {
-                            for (let par in cont[0]) {
-                                if (par !== 'images') {
-                                    arr.push(par)
-                                }
-                            }
+                    if (!!localStorage[`page${query.content}`]) {
+                        let cont = JSON.parse(localStorage[`page${query.content}`])
+                        this._getPageInfo(`page${query.content}`)
+                        if (this.add === false) {
+                            this.set('inputVal', [])
+                            this.set('textareaVal', [])
+                            arr = this._setLangArr(cont[0])
+                            this.set('pageLangs', arr)
                             let obj = cont[0].images.content
                             this.imageLabel = 'images'
                             this.set('imageArr', obj)
-                            this.set('str', `content/pages/edit-category-pages?content=${query.content}&add=${this.add}`)
-                            this.set('pageLangs', arr)
+                            this.set('str', `content/pages/edit-category-pages${location.search}`)
+                            if (!!query.lang) {
+                                this.__setLAng(query.lang, cont)
+                            }
                         }
                     }
                 }
@@ -281,18 +284,15 @@ class cmsPageCatsContent extends cmsContentTemplate {
             let string = `addimageto=page&method=editPages&content=${this.query.content}`
             window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
-            window.onbeforeunload = function (e) {
-                return "you might have changes to be saved, are you sure you whant to leave?";
-            };
         } else {
             localStorage[`pagenotsaved`] = JSON.stringify(this.content)
             let string = `addimageto=page&method=editPages&content=notsaved`
             window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
-            window.onbeforeunload = function (e) {
-                return "you might have changes to be saved, are you sure you whant to leave?";
-            }
         }
+        window.onbeforeunload = function (e) {
+            return "you might have changes to be saved, are you sure you whant to leave?";
+        };
     }
     _getPublishedBy(publishedBy) {
         if (publishedBy !== undefined && publishedBy.length > 0) {
@@ -301,28 +301,53 @@ class cmsPageCatsContent extends cmsContentTemplate {
         }
     }
     onSave() {
-        this.save((set) => {
-            let data = new Date()
-            if (set === true) {
-                this.inform.Published.date = 'NP'
-                this.inform.Published.publishedBy = 'N/A'
-                this.inform.Published.state = 'NP'
-                this.inform.Published.unPublishedBy
-                this.inform.author.uid = this.user.uid
-                this.inform.author.name = this.user.displayName
-                this.inform.dateAdded = data.toLocaleString().replace(',', '')
-            }
-            this.inform.lastModified.pages.push({
+        let data = new Date(), inform
+        if (!!this.newlangstate) {
+            this.add = true
+        }
+        // let cont = (add === false) ? JSON.parse(localStorage[`cats${this.query.content}${this.query.topparent}info`]) : undefined
+        inform = this.inform.pop()
+        let noLang = this._lastModified(this._setInfo(inform, data), data)
+        if (!!noLang) return
+        if (!this.removelang) {
+            this.savePages()
+        } else {
+            // this.removeSubcatsLang()
+        }
+    }
+    _lastModified(inform, data) {
+        if (!inform) return 1
+        if (this.add === true)
+            inform.lastModified.push({
                 uid: this.user.uid,
                 author: this.user.displayName,
                 date: data.toLocaleString().replace(',', '')
             });
-            this.translator._DBW.setPageData((done) => {
-                if (done === 'error') {
-                    console.log(done)
+        this.inform = [inform]
+    }
+    _setInfo(inform, data) {
+        if (!this.newlangstate) {
+            if (this.add === true) {
+                if (!this.content[0].lang.lang && !this.content[0].lang.categoryName) {
+                    alert('insert Lang & Category Name first')
+                    return undefined
                 }
-            }, { name: this.content.id, dataType: 'info', data: this.inform }, this.translator.__DEV)
-        })
+                this.content[0][this.content[0].lang.lang] = this.content[0].lang
+                inform.id = this.content[0][this.content[0].lang.lang].categoryName
+                inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName)
+                inform.type = this.content[0][this.content[0].lang.lang].type
+                delete this.content[0].lang
+                inform.Published.date = 'NP'
+                inform.Published.publishedBy = 'N/A'
+                inform.Published.state = 'NP'
+                inform.author.id = this.user.uid
+                inform.author.name = this.user.displayName
+                inform.toArticle = false
+                inform.removed = false
+                inform.dateCreated = data.toLocaleString().replace(',', '')
+            }
+        }
+        return inform
     }
     _reset() {
         this.query = {}
