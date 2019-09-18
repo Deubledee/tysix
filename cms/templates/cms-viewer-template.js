@@ -13,25 +13,56 @@ export class cmsViewerTemplate extends PolymerElement {
           max-width: 1890px;
           min-width: 730px;
           color: #5487b6;
-          padding-left: 21px;
-          padding-right: 18px;
         }
 
         #reset {
           display: none;
         }
+     /*   div[horizontal]{
+            @apply --layout-horizontal;
+            max-width: 1800px;
+            max-height: 600px;
+            height: auto;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+       div[horizontal]::-webkit-scrollbar-track {
+            background: #ddd;
+        }
+        div[horizontal]::-webkit-scrollbar-button{
+            height: 7.5px;
+            width: 7.5px;
+            background: var(--google-blue-300);
+
+        }
+        div[horizontal]::-webkit-scrollbar {
+            width: 7.5px;
+            height: 7.5px;
+        }
+
+        div[horizontal]::-webkit-scrollbar-thumb {
+            background-color: var(--content-color-default, #8098ad)
+        } */
+        iron-pages.flexy{
+            flex-basis: 100%;
+        }
+        ${this._getStyles} 
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
     active="{{active}}">
     </app-route>
         ${this._getSilentAnchor}
-        <main id="main">
-        <iron-pages selected="[[page]]" attr-for-selected="name"> 
-            ${this._getPages}
-        </iron-pages>  
+    <main id="main">
+        <div id="pageholder" horizontal>
+            <iron-pages class="flexy" selected="[[page]]" attr-for-selected="name"> 
+                ${this._getPages}
+            </iron-pages>  
+        </div>
     </main> `;
     }
-
+    static get _getStyles() {
+        return html``
+    }
     static get _getSilentAnchor() {
         return html`  
     <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
@@ -47,16 +78,9 @@ export class cmsViewerTemplate extends PolymerElement {
 
             <article name="subcategory-pages">  
                 <slot name="sub-categories"></slot>  
-            </article>
-
-            <article name="add-category-pages">  
-                <slot name="add-cats"></slot>  
-            </article>
-            
-            <article name="add-subcategory-pages">  
-                <slot name="add-subcats"></slot>  
-            </article>`
+            </article> `
     }
+
     static get is() { return 'cms-viewer-template'; }
     static get properties() {
         return {
@@ -65,6 +89,11 @@ export class cmsViewerTemplate extends PolymerElement {
                 notify: true
             },
             page: {
+                type: String,
+                reflectToAttribute: true,
+                observer: '_pageChanged'
+            },
+            subcats: {
                 type: String,
                 reflectToAttribute: true,
                 observer: '_pageChanged'

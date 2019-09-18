@@ -9,192 +9,306 @@ import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
     static get template() {
         return html`
-        <style include="cms-comon-style_v3">
-        :host {
-            position: relative;
-        }       
-            ${this._getStyles}
-        </style>
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>
-        <main id="main">
-            <nav top>
-                <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">                    
-                    <div langdiv>
-                        ${this._getLangAnchor} 
-                    </div> 
-                </iron-selector>        
-                <div path> 
-                    ${this._getPath} 
-                    <div inputlang tgglelang$="[[!tgglelang]]"> 
-                        <cms-content-item
-                            item="[[itemlang]]"
-                            save-button="[[saveButton]]"
-                            res="{{addLangResponse}}">
-                        </cms-content-item>               
-                        <!--dom-repeat repeat items="[[itemlang]]" as="item">
-                            <template-->
-                            <!--/template>
-                        </dom-repeat-->
-                        <div class="closed" warning$="[[warning]]">
-                            <h5>
-                                [[warningMsg]] 
-                            </h5>   
-                            <a href="https://www.metamodpro.com/browser-language-codes" target="_blank">
-                            <h6>  more info </h6> 
-                            </a>                        
-                        </div>                                               
-                    </div>
-                </div>
-                <div save> 
-                    <paper-button id="saveButton" class="diferent" on-click="onSave" aria-label="mode-save">
-                        [[Save]]
-                    </paper-button>
-                </div>  
-            </nav>           
-                <div class="flex">
-                    <nav class="navbottom" id="bottom">                    
-                        ${this._getContentItems}
-                    </nav>
-                    <nav class="navside">
+    <style include="cms-comon-style_v3">
+    :host {
+        position: relative;
+    }   
+    main{
+        width: 1100px  
+    }                  
+    nav[bottom2]{
+        background-color: rgba(0, 0, 0, 0.45098039215686275);
+        position: fixed;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+    }   
+    div[background]{
+        margin-left: auto;
+        margin-right: auto;
+        top: 0%;
+        display: flex;
+        flex-direction: column;
+        width: 1014px;
+        height: 100%;
+        background-color: rgba(241, 241, 241)
+    }
+    div[placertop]{
+        display: block;
+    }
+    div[placerbottom]{
+        display: flex;
+        flex-direction: column;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    div[path]{
+        height: 30px;
+        width: 300px;
+    }
+    nav[buttons] {
+        background-color: var(--app-backgound-color);
+        display: flex;
+        flex-direction: row;
+        border: unset;
+        flex-basis: 60px;
+        border-bottom: 1px solid var(--light-theme-divider-color);
+    } 
+    div[saveandaddlang]:{
+        flex-basis: 100px
+    }
+    .navside {
+        display: none;
+    }
+    div[langdiv] section {
+        display: flex;
+        flex-flow: nowrap;
+        flex-direction: row-reverse;
+        border-right: 1px solid var(--disabled-text-color);
+        color: var(--app-published-color);
+    }
+    div[goback]{
+        height: 38px;
+        display: flex;
+        padding-left: 10px;
+    }
+    div[path]{
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        font-style: italic;    
+        padding-left: 57px;
+        color: var(--app-content-section-span-color)    
+    }
+    div[path] h5 {
+        margin-block-start: 12px;
+        margin-block-end: 7px;
+    }
+    div[path] h6 {
+        margin-block-start: 12px;
+        margin-block-end: 7px;
+        color: var(--paper-blue-a200); 
+    }
+    .path{
+        flex-basis: 100%;
+    }    
+    div[inputlang] {
+        padding: 17px;
+        box-sizing: border-box;
+        position: absolute;
+        top: 110px;
+        left: 68%;
+        /* display: none; */
+        background-color: var(--app-backgound-color);
+        width: 419px;
+        z-index: 10;
+        height: 155px;
+        padding: 17px;
+        padding-top: 43px;
+        /* border: 1px solid var(--light-theme-divider-color); */
+        box-shadow: 0px 1px 7px var(--disabled-text-color);
+        border-radius: 8px;
+    }
+    div[langdiv]{
+        margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        flex-basis: 35px;
+        background-color: var(--app-backgound-color);
+        border: 1px solid var(--divider-color);
+        border-radius: 9px;
+    }
+    .langdivsection{
+        border-radius: unset!important; 
+        box-shadow: unset!important;
+        width: 110px;
+        height: 60px;
+    }
+    .langdivsectionnpaddingtop {
+        padding-top: 6px;
+        flex-basis: 7%;
+    }
+    div[tgglelang]{
+        display: none;
+    }
+    .anchorish{
+        cursor: pointer; 
+    }
+    div[bottom]{
+        background-color: var(--app-backgound-color);
+        flex-direction: column;
+        border: 1px solid var(--divider-color);
+        border-radius: 12px;
+        padding: 22px;
+        padding-left: 17%;
+        width: 816px;
+    }
+    div[langdiv] section[nova]{
+        color: var(--paper-grey-300);;
+        background-color: grey;
+    }
+    div[langdiv] paper-button[nova]{
+        color: var(--paper-blue-300);
+        background-color: var(--paper-blue-300);;
+    }
+    section[class="langdivsectionnpaddingtop"] a{
+        height: 16px;
+        width: 54px;  
+    }
+    div.closed{
+        position: absolute;
+        display: none
+    }
+    div[warning]{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        color: var(--paper-pink-700);
+       /* background-color: grey;*/
+    }
+    div[warning] h5{
+        flex-basis: 66%;
+        margin-block-start: 1.4em;
+    }
+    div[warning] h5, div[warning] h6{
+        letter-spacing: 0.1em;
+    }
+    div[warning] h6 {
+        margin-block-start: 1.3em;
+    }
+    div[warning]  a{
+        flex-basis: 6%;
+        color: var(--paper-grey-600);
+    }  
+    div[save]{
+        flex-basis: 70%;
+        display: block;  
+    }       
+    .rightblock{
+        display: block;
+        width: 100%;
+    } 
+    .marginalize{
+        float: right;
+    }
+    .borderright{
+        border-right: 1px solid grey;
+    }   
+    .xbuton{
+        cursor: pointer;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        padding-top: 2px;
+    }    
+    .borderleft{
+        border-left : 1px solid grey;
+    }
+    .upright, .upleft{
+        top: 15px;
+        height: 27px;
+        border-right-color: var(--dark-theme-secondary-color);
+        border-right-style: ridge;
+        border-right-width: 1px;
+        width: 1px;
+    }
+    .upright{
+        position: relative;
+        right: -13px;
+        margin-left: auto;
+        transform: rotateZ(46deg)
+    }
+    .upleft{
+        position: relative;
+        right: 19px;
+        margin-right: auto;
+        margin-left: auto;
+        transform: rotateZ(-46deg);;
+    }
+    paper-button[aria-label="lang"]{
+        top: 11px;
+        left: 8px;
+        color: var(--app-content-section-span-color);
+        font-weight: 500;
+    }
+        ${this._getStyles}
+    </style>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+    </app-route>
+    <main id="main">
+        <nav bottom2 on-click="closeanchor">
+            <div placertop>
+                <div background>
+                    <nav class="diferent">
                         [[infoState]]
                         ${this._getSideInfo}
                     </nav>
+                    <nav buttons>
+                        <div class="langdivsection borderright"> 
+                            <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]">
+                                <div class="upright">
+                                </div>
+                                <div class="upleft">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="rightblock"> 
+                            <div class="langdivsection marginalize borderleft"> 
+                                <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
+                                    [[Save]]
+                                </paper-button>
+                            </div> 
+                            <section class="langdivsection marginalize borderleft">
+                                <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+                                    <a class="anchorish" id="adlang"  on-click="_newLang">                                            
+                                        <paper-button aria-label="lang"> 
+                                            <span>Add lang</span>
+                                        </paper-button>
+                                    </a>           
+                                </iron-selector>
+                            </section>
+                        </div>
+                    </nav> 
+                    <div placerbottom> 
+                        <div langdiv> 
+                            ${this._getLangAnchor}
+                        </div>  
+                        <div path> 
+                            ${this._getPath} 
+                            <div inputlang tgglelang$="[[!tgglelang]]"> 
+                                    <cms-content-item
+                                        item="[[itemlang]]"
+                                        save-button="[[saveButton]]"
+                                        res="{{addLangResponse}}">
+                                    </cms-content-item>     
+                                <div class="closed" warning$="[[warning]]">
+                                    <h5>
+                                        [[warningMsg]] 
+                                    </h5>   
+                                    <a href="https://www.metamodpro.com/browser-language-codes" target="_blank">
+                                    <h6>  more info </h6> 
+                                    </a>                        
+                                </div>                                               
+                            </div>
+                        </div>      
+                        <div class="flex">
+                            <nav class="navbottom" id="bottom">                    
+                                ${this._getContentItems}
+                            </nav>
+                        </div> 
+                    </div> 
                 </div> 
-        </main>
+            </div> 
+        </nav> 
+    </main>
         `;
     }
     static get _getStyles() {
-        return html` 
-        nav[top]{
-            display: flex;
-            flex-direction: column;
-        }
-        div[saveandaddlang]:{
-            flex-basis: 100px
-        }
-        .navbottom{
-            margin-top: 48px;  
-        }
-        div[langdiv] section {
-            display: flex;
-            width: 75px;
-            flex-flow: nowrap;
-            flex-direction: row-reverse;
-            height: 23px;
-            color: var(--app-published-color);
-            border-radius: 6px;
-            border-bottom-right-radius: unset;
-            border-bottom-left-radius: unset;
-            border-top-left-radius: unset;
-            box-shadow: 1px -1px 0px var(--app-topnav-icon-color)
-        }
-        div[goback]{
-            height: 38px;
-            display: flex;
-            padding-left: 10px;
-        }
-        div[path]{
-            display: flex;
-            flex-direction: row;
-            position: relative;
-          /*  top: -14px; */ 
-            font-style: italic;    
-            padding-left: 42px;      
-        }
-        div[path] h3 {
-            margin-block-start: 21px;
-            margin-block-end: 7px;
-        }
-        div[path] h4 {
-            margin-block-start: 8px;
-            margin-block-end: 25.33px;
-            color: var(--paper-blue-a100); 
-        }
-        .path{
-            flex-basis: 100%;
-        }
-        div[save]{
-            position: relative;
-            top: 20px;
-            padding-left: 10px;            
-        }
-        div[inputlang] {
-            padding: 17px;
-        }
-        div[langdiv]{
-            display: flex;
-            flex-direction: row;
-        }
-        .langdivsectionflexbasis{
-            flex-basis: 143px;
-            text-align: center;
-            border-radius: unset!important;
-            box-shadow: unset!important;
-            margin-right: 35px;
-        }
-        .langdivsectionnpaddingtop {
-            padding-top: 6px;
-            flex-basis: 7%;
-        }
-        div[tgglelang]{
-            display: none
-        }
-        .anchorish{
-            cursor: pointer; 
-        }
-        div[bottom]{
-            flex-direction: column;
-            padding-left: 10%;
-        }
-        div[langdiv] section[nova]{
-            color: var(--paper-grey-300);;
-            background-color: grey;
-        }
-        div[langdiv] paper-button[nova]{
-            color: var(--paper-blue-300);
-            background-color: var(--paper-blue-300);;
-        }
-        section[class="langdivsectionnpaddingtop"] a{
-            height: 16px;
-            width: 54px;  
-        }
-        div.closed{
-            position: absolute;
-            display: none
-        }
-        div[warning]{
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            color: var(--paper-pink-700);
-           /* background-color: grey;*/
-        }
-        div[warning] h5{
-            flex-basis: 19%;
-            margin-block-start: 0.4em;
-        }
-        div[warning] h5, div[warning] h6{
-            letter-spacing: 0.1em;
-        }
-        div[warning] h6 {
-            margin-block-start: 1.3em;
-        }
-        div[warning]  a{
-            flex-basis: 6%;
-            color: var(--paper-grey-600);
-        }        
-        `
+        return html``
     }
     static get _getLangAnchor() {
-        return html` 
-        <section class="langdivsectionflexbasis">
-            <a class="anchorish" id="adlang"  on-click="_newLang">
-                <paper-icon-button icon="av:library-add" aria-label="lang">
-                </paper-icon-button> <span>Add lang</span>
-            </a> 
-        </section>         
+        return html`            
         <dom-repeat repeat items="[[pageLangs]]" as="pagelang">
             <template>
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">
@@ -202,7 +316,7 @@ export class cmsContentTemplate extends PolymerElement {
                             x
                     </paper-button>
                     <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
-                        <paper-button langbtn aria-label="lang">
+                        <paper-button langbtn aria-label="langbutton">
                             [[pagelang]]
                         </paper-button>
                     </a>
@@ -212,7 +326,7 @@ export class cmsContentTemplate extends PolymerElement {
     }
     static get _getPath() {
         return html`   
-         <div  class="path" tgglelang$="[[tgglelang]]">          
+         <div  class="path">          
         </div>`
     }
 
@@ -224,6 +338,7 @@ export class cmsContentTemplate extends PolymerElement {
                             <template>
                                 <section class="flexchildbotomFull">
                                     <cms-content-item
+                                        editing="[[editing]]"
                                         item="[[item]]"
                                         save-button="[[saveButton]]"
                                         res="{{inputResponse}}">
@@ -235,6 +350,7 @@ export class cmsContentTemplate extends PolymerElement {
                             <template>
                                 <section class="flexchildbotomFullExtra">
                                     <cms-content-text
+                                        editing="[[editing]]"
                                         item="[[item]]"
                                         save-button="[[saveButton]]"
                                         res="{{textAreaResponse}}">
@@ -244,6 +360,7 @@ export class cmsContentTemplate extends PolymerElement {
                         </dom-repeat>
                         <section class="flexchildbotom">
                             <cms-content-image id="image"
+                                editing="[[editing]]"
                                 item-label="[[imageLabel]]"
                                 images="[[imageArr]]"
                                 _deleteImg="[[deleteImg]]"  
@@ -346,6 +463,9 @@ export class cmsContentTemplate extends PolymerElement {
         let cont = this.content[0][lang]
         this.set('inputVal', this._getObjArr(cont, true))
         this.set('textareaVal', this._getObjArr(cont, false))
+    }
+    closeanchor(event) {
+        if (event.srcElement.hasAttribute('placertop')) this.$.closeanchor.click()
     }
     _getObjArr(content, item) {
         let obj,
@@ -464,7 +584,7 @@ export class cmsContentTemplate extends PolymerElement {
         let arr = this._setLangArr(this.content[0])
         this.pageLangs = []
         this.set('pageLangs', arr)
-        this.$.saveButton.classList.remove('diferent')
+        // this.$.saveButton.classList.remove('diferent')
         let evalu = !!(this.newlangstate)
         this.removelang = (evalu === true) ? false : true
     }

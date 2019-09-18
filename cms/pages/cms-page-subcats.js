@@ -1,184 +1,67 @@
-import { cmsListTemplate } from '../templates/cms-list-template';
+//import { cmsListTemplate } from '../templates/cms-list-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-icons/editor-icons';
 import '../styles/cms-comon-style_v3';
 import '../sub-categories/cms-subcats'
 import '../sub-categories/cms-subcats-item'
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
-export class cmsPageSubcats extends cmsSubcatsLib(cmsListTemplate) {
-    static get _getStyles() {
-        return html` 
-        <style include="cms-comon-style_v3">
-            :host {
-                position: relative;
-            }
-            div[scroll]{
-                overflow-x: auto;
-                overflow-y: hidden;
-                margin-bottom: 12px;
-            }
-            div[scroll]::-webkit-scrollbar-track {
-                background-color: var(--app-scrollbar-color)
-            }
-            div[scroll]::-webkit-scrollbar {
-                height: 5px
-            }
-            div[scroll]::-webkit-scrollbar-thumb {
-                background-color: var(--app-primary-text-color)
-            }
-            div[goback]{
-                height: 38px;
-                display: flex;
-                padding-left: 10px;
-            }
-            paper-button{
-                height: auto
-            }
-            div[path]{
-                padding-left: 12px
-            }
-            div[path] h4{
-                padding-left: 12px;
-                font-style: italic;
-            }
-        </style>`
-    }
-    static get _getLangAnchor() {
-        return html`      
-        <div langdiv>
-            <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
+    static get _getSilentAnchor() {
+        return html`    
                 <a href="" on-click="_addSubCategory">
                     <paper-icon-button  name="[[itemLabel]]" icon="av:library-add"   aria-label="mode-edit">
                     </paper-icon-button> 
-                       add [[subcatLabel]]
-                </a>
-            </iron-selector>
-        </div>
+                       [[ADD]]
+                </a>            
         `
     }
-    static get _getContentItems() {
-        return html`
-        <div container>
-            <div bottom hidebottom$="[[hidebottom]]"> 
-                <section class="flexchildbotomFull">  
-                    <cms-subcats id="subcats"
-                        sub-sub-cats="{{subSubCats}}"
-                        user="{{user}}"
-                        add="{{addSubCategory}}"
-                        route="{{route}}">                    
-                    </cms-subcats>  
-                </section>
-            </div>
-        </div>`
+    static get _topLabel() {
+        return html`       
+            <h3 class="higherh3">[[query.content]]</h3>       
+            <h5 class="higherh5"> [[subcatLabel]] </h5> 
+        `
     }
-    static get _getSideInfo() {
+    static get _getTable() {
         return html`
-        <!--dom-repeat repeat items="[[inform]]" as="cat">
-            <template-->
-                <div class="center-menu">
-                    <aside class="info">
-                        <span>
-                            [[info]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                            [[publishedby]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[publiShed]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datepublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[ _getPublishedBy(cat.publishedBy)]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc" published$="[[cat.published]]">
-                        <span>
-                            [[cat.published]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.datePublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                            [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datecreated]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.author]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.dateAdded]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside>
-                        <span>
-                            [[lastmodified]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                            [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[date]]
-                        </span>
-                    </aside>
-                </div>
-                <div rightSide>
-                    <!--dom-repeat repeat items="[[cat.lastModified]]" as="createdAt">
-                        <template-->
-                            <section>
-                                <aside class="asideBackgrc">
-                                    <span>
-                                        [[createdAt.author]]
-                                    </span>
-                                </aside>
-                                <aside class="asideBackgrc">
-                                    <span>
-                                        [[createdAt.date]]
-                                    </span>
-                                </aside>
-                            </section>
-                        <!--/template>
-                    </dom-repeat-->
-                </div>
-            <!--/template>
-        </dom-repeat-->`
+            <div table class="scroll"> 
+                <cms-subcats id="subcats"
+                    sub-sub-cats="{{subSubCats}}"
+                    user="{{user}}"
+                    add="{{addSubCategory}}"
+                    route="{{route}}">      
+                </cms-subcats> 
+            </div>
+        `}
+
+    static get _getBottom() {
+        return html`                      
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[title]]"> [[title]] </h4>   
+            </div>
+        </section>                                
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[item]]"> [[item]] </h4>   
+            </div>
+        </section>     
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[type]]"> 
+            [[type]]     </h4>     
+        </section>                    
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[viewedit]]"> [[viewedit]] </h4>
+            </div>
+        </section>                          
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[delete]]"> 
+            [[delete]]   </h4>   
+            </div>
+        </section>`
     }
     static get is() { return 'cms-page-subcats'; }
     static get properties() {
@@ -236,11 +119,12 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsListTemplate) {
     _log(data) {
         console.log(data)
     }
+
     ready() {
         super.ready();
-        this.translator.target('cms-content-image', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-content-image', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-content-image', 'setLangObject')
+        this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-subcats', 'setLangObject')
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -259,19 +143,30 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsListTemplate) {
     _routePageChanged(routeData, query) {
         if (routeData.page === "subcategory-pages" && (!!query.content || !!query.reset)) {
             let parent = query.content
-            if (!!this.lastpagesubs && !query.reset)
+            console.log(document.querySelector('cms-controler'))
+            if (this.lastpagesubs === parent && !query.reset) {
                 this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))
-            if (!this.lastpagesubs.includes(parent) || (!!query.reset && query.reset === 'true')) {
-                localStorage.setItem('lastpagesubs', btoa(parent))
-                this.lastpagesubs = parent
-                this.subSubCats = []
-                this.$.subcats._reset(() => {
-                    this.getTopSubcats(parent)
-                }, 250)
+
+                console.log('no reset')
+                return
             } else
-                if (!!query.reset && query.reset === 'false') {
-                    window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
-                }
+                if (this.lastpagesubs !== parent || (!!query.reset && query.reset === 'true')) {
+                    this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+                    </paper-spinner-lite>`
+                    this.spinOut = false
+                    this.translator.clone(this)
+                    localStorage.setItem('lastpagesubs', btoa(parent))
+                    this.lastpagesubs = parent
+
+                    console.log(this.lastpagesubs, parent)
+                    this.$.subcats._reset(() => {
+                        this.getTopSubcats(this.lastpagesubs)
+
+                    }, 550)
+                } else
+                    if (!!query.reset && query.reset === 'false') {
+                        window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
+                    }
 
         }
     }

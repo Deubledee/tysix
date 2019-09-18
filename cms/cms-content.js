@@ -56,6 +56,7 @@ class cmsContent extends cmsTopPageTemplate {
   _setLang(res, lang) {
     this.lang = lang
     res.call(this);
+    this.set('breadcrumbs', [])
     if (this.breadcrumbs.length > 0) {
       this.setBreadcrumbs(this.route, this.routeData)
     }
@@ -66,23 +67,25 @@ class cmsContent extends cmsTopPageTemplate {
     this.setBreadcrumbs(this.route, this.routeData)
   }
   _routePageChanged(route, page, query) {
-    if (route.prefix === "/content") {
-      if (this.breadcrumbs.length > 0) {
-        this.setBreadcrumbs(this.route, this.routeData)
-      }
-      if (page !== undefined && "page" in page) {
-        if (["articles", "pages", "search"].indexOf(page.page) !== -1) {
-          this.page = page.page;
-          /* */
+    console.log(route, page, query)
+    if (!!route)
+      if (route.prefix === "/content") {
+        if (this.breadcrumbs.length > 0) {
+          this.setBreadcrumbs(this.route, this.routeData)
         }
-      }
-      if (route.path === '/')
-        if (!!query.reset) {
-          this.query = {}
-          window.history.pushState({}, null, `${this.rootPath}content/`)
-          window.dispatchEvent(new CustomEvent('location-changed'))
+        if (page !== undefined && "page" in page) {
+          if (["articles", "pages", "search"].indexOf(page.page) !== -1) {
+            this.page = page.page;
+            /* */
+          }
         }
-    }
+        if (route.path === '/')
+          if (!!query.reset) {
+            this.query = {}
+            window.history.pushState({}, null, `${this.rootPath}content/`)
+            window.dispatchEvent(new CustomEvent('location-changed'))
+          }
+      }
   }
   setBreadcrumbs(route, routeData) {
     this.set("breadcrumbs", [])

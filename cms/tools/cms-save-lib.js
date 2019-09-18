@@ -13,9 +13,21 @@ const cmsPagesLib = function (superClass) {
         _askPages(query) {
             getPages(query).then((done) => {
                 this._setAll(done);
-            }, __DEV);
+            }, __DEV).catch(error => {
+                console.error(error)
+            });
         }
-
+        getPageData(id) {
+            var ID = id
+            getPageData(ID).then(data => {
+                let cont = [data]
+                let arr = this._setLangArr(cont[0])
+                let str = `content/pages/edit-category-pages?content=${ID}&add=false&lang=${arr[0]}`
+                localStorage.setItem(`page${ID}`, JSON.stringify(cont))
+                window.history.pushState({}, null, str);
+                window.dispatchEvent(new CustomEvent('location-changed'));
+            })
+        }
         removePage(parent, cont) {
             let str = `${this.rootPath}content/pages?content=${parent}&removed=true`
             window.onbeforeunload = function () { };
@@ -29,40 +41,52 @@ const cmsPagesLib = function (superClass) {
             })
         }
         savePages() {
-            window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
-            if (this.add === true && !!this.inform[0].id) {
-                saveAdded(this.inform[0].id, this.inform[0]).then(data => {
-
-                    if (data !== 'error')
-                        saveAddedData('data', this.inform[0].id, this.content[0]).then(data => {
+            console.log(this.inform[0])
+            if (this.add === true)
+                if (!!this.inform[0].id) {
+                    let id = [this.inform[0].id]
+                    console.log(id)
+                    window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
+                    saveAdded(this.inform[0].id, this.inform[0]).then(data => {
+                        if (data !== 'error')
+                            saveAddedData('data', this.inform[0].id, this.content[0]).then(data => {
+                                window.onbeforeunload = function () { };
+                                this.editing = 0;
+                                //this.$.saveButton.classList.add('diferent');
+                                setTimeout(() => {
+                                    this.__reset();
+                                    window.dispatchEvent(new CustomEvent('location-changed'))
+                                }, 500)
+                            })
+                    })
+                } else {
+                    console.log(this.inform)
+                }
+            if (this.add === false)
+                if (!!this.inform[0].id) {
+                    let id = [this.inform[0].id]
+                    window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
+                    saveChanged(id[0], this.inform[0], Object.keys(this.content[0])).then(data => {
+                        saveChangedData('data', id[0], this.content[0]).then(data => {
                             window.onbeforeunload = function () { };
                             this.editing = 0;
-                            this.$.saveButton.classList.add('diferent');
                             setTimeout(() => {
-                                this.__reset();
-                                window.dispatchEvent(new CustomEvent('location-changed'))
+                                window.dispatchEvent(new CustomEvent('location-changed'));
+                                localStorage.clear()
                             }, 500)
-                        })
-                })
-            } else {
-                console.log(this.inform)
-            }/**/
-            if (this.add === false) {
-                saveChanged(this.inform[0].id, this.inform[0], Object.keys(this.content[0])).then(data => {
-                    saveChangedData('data', this.inform[0].parent, this.inform[0].id, this.content[0]).then(data => {
-                        window.onbeforeunload = function () { };
-                        this.editing = 0;
-                        this.$.saveButton.classList.add('diferent');
-                        setTimeout(() => {
-                            this.__reset();
-                            window.dispatchEvent(new CustomEvent('location-changed'));
-                        }, 500)
+                        })/* */
                     })
-                })
-            }
+                }
         }
     }
 }
+/************************************************************************************************* */
+/******************************************sub-categorias***************************************** */
+/************************************************************************************************* */
+/************************************************************************************************* */
+
+
+
 
 const cmsSubcatsLib = function (superClass) {
     return class extends superClass {
@@ -75,17 +99,27 @@ const cmsSubcatsLib = function (superClass) {
         }
         getTopSubcats(parent) {
             getTopSubcats(parent).then(done => {
-                this.subSubCats = done
+                let child = this.children[0]
+                child = child.getAttribute('slot')
+                if (!!done && done.length > 0) {
+                    if (child === "spinner") {
+                        this.removeChild(this.children[0])
+                    }
+                    this.subSubCats = done
+                } else {
+                    if (child === "spinner") {
+                        this.removeChild(this.children[0])
+                    }
+                    this.subSubCats = 'no content'
+                }
             })
         }
-
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {
                 this._setContent(done)
                 this.deSpin()
             })
         }
-
         getChildrenSubcats(parent, subCatChildren) {
             let dataObj = []
             getChildrenSubcats(parent, subCatChildren).then((done) => {
@@ -116,16 +150,16 @@ const cmsSubcatsLib = function (superClass) {
         }
         __checkBigger(data, temp, index2) {
             if (data[index2 - 1] === temp[index2 - 1]) {
-                this.translator._DBW.getSubcatsData((done) => {
+                _DBW.getSubcatsData((done) => {
                     this._setContent(done)
                     this.deSpin()
                     this._toggleChildren()
-                }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+                }, { name: this.parent, doc: this.subcat.id }, __DEV)
             } else {
-                this.translator._DBW.getSubcatsData((done) => {
+                _DBW.getSubcatsData((done) => {
                     this._setContent(done)
                     this.deSpin()
-                }, { name: this.parent, doc: this.subcat.id }, this.translator.__DEV)
+                }, { name: this.parent, doc: this.subcat.id }, __DEV)
             }
         }
         saveSubcats() {
@@ -135,7 +169,7 @@ const cmsSubcatsLib = function (superClass) {
                     saveAddedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
-                        this.$.saveButton.classList.add('diferent');
+                        //  this.$.saveButton.classList.add('diferent');
                         setTimeout(() => {
                             this._reset();
                             window.dispatchEvent(new CustomEvent('location-changed'))
@@ -148,7 +182,7 @@ const cmsSubcatsLib = function (superClass) {
                     saveChangedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
-                        this.$.saveButton.classList.add('diferent')
+                        //     this.$.saveButton.classList.add('diferent')
                         setTimeout(() => {
                             this._reset();
                             window.dispatchEvent(new CustomEvent('location-changed'));
@@ -168,6 +202,9 @@ const cmsSubcatsLib = function (superClass) {
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 250)/**/
             })
+        }
+        updateSubcatParentInfo(cont, parent, id) {
+            updateSubcatParentInfo(cont, parent, id)
         }
         removeSubcats(cont, parent, id) {
             let str
@@ -201,8 +238,51 @@ const cmsSubcatsLib = function (superClass) {
     }
 }
 
+/* ************************************************************************************************ */
+/* *******************************************media************************************************ */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+const cmsMediaLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-media-lib'; }
+        ready() {
+            super.ready();
+        }
+        _getGalleries(data) {
+            if (data === true || data === 'true') {
+                getGalleries().then(data => {
+                    let temp = data, arr = []
+                    for (let par in temp) {
+                        arr.push(temp[par])
+                    }
+                    this.set('galleries', arr)
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+            this.removeChild(this.children[0])
+        }
+    }
+}
+
+export { cmsMediaLib }
 export { cmsPagesLib }
 export { cmsSubcatsLib }
+
+function getGalleries() {
+    return new Promise((resolve, reject) => {
+        _DBW.getMediaGalleries((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                console.log(err);
+                reject(err)
+            }
+        }, __DEV)
+    })
+
+}
 function removeSubcatInfo(parent, id, inform) {
     return new Promise((resolve, reject) => {
         _DBW.setPageData((done, err) => {
@@ -308,10 +388,21 @@ function getPages(query) {
 
     if (query)
         return new Promise((resolve, reject) => {
-            _DBW.getPagesEqualTo((done) => {
-                resolve(done)
+            _DBW.getPagesEqualTo((done, error) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    reject(error)
+                }
             }, query.q, query.v, __DEV)
         })
+}
+function getPageData(id) {
+    return new Promise((resolve, reject) => {
+        _DBW.getPageData((done2) => {
+            resolve(done2)
+        }, { name: id, dataType: 'data' }, __DEV)/* */
+    })
 }
 function saveAdded(id, inform) {
     return new Promise((resolve, reject) => {
@@ -353,16 +444,17 @@ function saveChanged(id, inform) {
     })
 }
 
-function saveChangedData(type, parent, id, content) {
+function saveChangedData(type, id, content) {
     let toPromisse = []
-    for (let par in this.content[0]) {
-        toPromisse.push(new Promise((resolve, reject) => {
-            _DBW.changePageData((done, err) => {
-                if (done !== 'error') {
-                    resolve(true)
-                }
-            }, { name: parent, docName: id, dataType: type, doc: par, data: content[par] }, __DEV);
-        }))
+    for (let par in content) {
+        if (id !== 'undefined')
+            toPromisse.push(new Promise((resolve, reject) => {
+                _DBW.changePageData((done, err) => {
+                    if (done !== 'error') {
+                        resolve(true)
+                    }
+                }, { docName: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);
+            }))
     }/**/
     return Promise.race(toPromisse)
 }

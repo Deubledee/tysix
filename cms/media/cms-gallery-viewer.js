@@ -42,7 +42,7 @@ class cmsGalleryViewer extends cmsViewerTemplate {
         ];
     }
     _routePageChanged(route, page, query) {
-        if (route.prefix === '/media/images') {
+        if (route.prefix === '/media/galleries') {
             if (page !== undefined && 'page' in page) {
                 if (route.path === "") {
                     this.routeData.page = ''

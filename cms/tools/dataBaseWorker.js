@@ -75,7 +75,7 @@ export class dataBaseworker {
     }
 
     /****************************************************************************************************************************/
-    /************************************************queies**********************************************************************/
+    /************************************************queries**********************************************************************/
     /****************************************************************************************************************************/
 
     getPagesEqualTo(done, query, value, dev) {
@@ -132,7 +132,7 @@ export class dataBaseworker {
     }
 
     changePageData(done, table, dev) {
-        let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
+        let obj = { name: 'pages', docName: table.docName, coll: table.dataType, doc: table.doc, data: table.data }
         // console.log(table, obj)
         updateDocItemCollection.call(this, obj, done, dev)
     }
@@ -357,6 +357,7 @@ function getDoc(obj, done, dev) {
 }
 
 function queryDocList(obj, done, dev) {
+    this.categories = []
     if (dev === false) {
         Worker.queryDocList(obj)
             .then((querySnapshot) => {

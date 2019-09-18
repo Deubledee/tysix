@@ -24,58 +24,62 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                 height: 31px;
             }
             div[bottom]{
-                display: flex
+                display: flex;
+            }
+            div[chilssubcat]{
+                border-bottom: 1px dashed #10b6be;;
             }
             article[updated]{
                 background-color: var(--app-scrollbar-color);
             }
         </style>
-        <slot name="spinner"></slot>
+            <slot name="spinner"></slot>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>  
-            <dom-repeat repeat items="[[subcatContent]]" as="item">
-                <template>                
-                    <article on-click="__changeColorTimeout" centerlistitem updated$="[[updated]]">
-                        <div>
-                            <shop-image class="bigger" title="[[item.categoryName]]" aria-label="image" src="[[item.image]]"
-                                alt="[[item.categoryName]]">
-                            </shop-image>
-                        </div>
-                        <div title="[[item.categoryName]]">
-                            <paper-button title="[[item.categoryName]]">
-                                [[item.categoryName]]
-                            </paper-button>
-                        </div>
-                        <div>
-                            <paper-button on-click="_viewEdit">
-                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
-                                <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                            </paper-button>
-                        </div>
-                        <div title="[[item.type]]">
-                            <paper-button title="[[item.type]]">
-                                [[item.type]]
-                            </paper-button>
-                        </div>
-                        <div>
-                            <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
-                            </paper-icon-button>
-                        </div>                
-                    </article>
-                </template>                            
-            </dom-repeat>
-        <div  bottom> 
+        
+        <dom-repeat repeat items="[[subcatContent]]" as="item">
+            <template>                
+                <article on-click="__changeColorTimeout" centerlistitem updated$="[[updated]]">                    
+                    <div title="[[item.categoryName]]">
+                        <paper-button title="[[item.categoryName]]">
+                            [[item.categoryName]]
+                        </paper-button>
+                    </div>
+                    <div title="[[item.toArticle]]" toarticle$="[[item.toArticle]]">
+                        <paper-button title="[[item.toArticle]]">
+                            [[item.toArticle]]
+                        </paper-button>
+                    </div>
+                    <div title="[[item.Published.state]]" published$="[[item.Published.state]]">
+                        <paper-button title="[[item.Published.state]]">
+                            [[item.Published.state]]
+                        </paper-button>
+                    </div>
+                    <div>
+                        <paper-button on-click="_viewEdit">
+                            <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
+                            <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                        </paper-button>
+                    </div>
+                    <div>
+                        <paper-icon-button icon="av:not-interested" aria-label="delete" on-click="_openConfirm">
+                        </paper-icon-button>
+                    </div>                
+                </article>
+            </template>                            
+        </dom-repeat>         
+        <div  bottom>        
             <div  class="plus">
-                <div class="plussubcat noFlex">
-                    <paper-icon-button on-click="_addChildren" icon="av:library-add" aria-label="mode-show"></paper-icon-button>
-                </div>  
+                    <div class="plussubcat noFlex">
+                        <paper-icon-button on-click="_addChildren" icon="av:library-add" aria-label="mode-show"></paper-icon-button>
+                    </div>  
                 <div class="subcat noFlex">
-                    <div on-click="__changeColorTimeout" class="flexleft">
-                        <paper-icon-button on-click="_toggleChildren" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
-                    </div>
-                    <div id="subcats" class="diferent">
-                        <slot name="table"></slot> 
-                    </div>
+                        <div on-click="__changeColorTimeout" class="flexleft">
+                            <paper-icon-button on-click="_toggleChildren" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
+                        </div>
+                        <div  id="subcats" class="diferent">
+                            <slot name="table"></slot> 
+                        </div>
                     <dom-repeat repeat items="[[subcatSubats]]" as="item">
                         <template> 
                             [[_slottItem(item, index)]]
@@ -131,6 +135,18 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                 reflectToAttribute: true,
                 notify: true,
                 value: false
+            },
+            published: {
+                type: String,
+                reflectToAttribute: true,
+                notify: true,
+                value: ''
+            },
+            toarticle: {
+                type: String,
+                reflectToAttribute: true,
+                notify: true,
+                value: ''
             },
             onSave: {
                 type: Object,
@@ -286,17 +302,23 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
         if (this.$.Imag)
             this.$.Imag.addImage = (this.addImage).bind(this) /**/
     }
+
     _setsubcatContent() {
-        if (this.content[this.lang]) {
-            this.set('catlang', this.lang)
-            this.set('subcatContent', [this.content[this.lang]])
-            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.content.images.content[0].url
-        } else {
-            let keys = Object.keys(this.content)
-            let arr = keys.find(item => { if (item !== 'images') return item })
-            this.set('catlang', arr)
-            this.set('subcatContent', [this.content[this.catlang]])
-            this.subcatContent[0].image = this.content.images.content[0] === undefined ? '' : this.content.images.content[0].url
+        let arr = []
+        arr.push(this.subcat)
+        if (!!this.content) {
+            if (!!this.content[this.lang]) {
+                this.set('catlang', this.lang)
+                arr[0].categoryName = this.content[this.catlang].categoryName
+                this.set('subcatContent', arr)
+            } else {
+                let keys = Object.keys(this.content)
+                let arr2 = keys.find(item => { if (item !== 'images') return item })
+                this.set('catlang', arr2)
+                arr[0].categoryName = this.content[this.catlang].categoryName
+
+                this.set('subcatContent', arr)
+            }
         }
         this.__store()
     }
@@ -355,14 +377,6 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
     }
     _addChildren() {
         this._addChild(true)
-    }
-    setChild(id) {
-        this.subcat.children.push(id)
-        this.__info = {}
-        this.__info.page = this.subcat.parent
-        this.__info.id = this.subcat.id
-        this.__info.content = this.subcat
-        this.saveChangedData('subCategories').then(data => { console.log(data) })
     }
     _slottItem(data, index) {
         let str = `

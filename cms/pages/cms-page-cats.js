@@ -9,7 +9,7 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         <a href="[[rootPath]]content/pages/add-category-pages?&add=true">
                 <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
                 </paper-icon-button>
-            [[ADD]] [[categorypages]]
+            [[ADD]]
         </a>
         `
     }
@@ -35,7 +35,27 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
                 type: Boolean,
                 value: false
             },
+            pages: {
+                type: Array,
+                value: []
+            },
+            sloted: {
+                type: Boolean,
+                value: false
+            }
         }
+    }
+    connectedCallback() {
+        super.connectedCallback();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        //this._observer.disconnect();
+    }
+    static get observers() {
+        return [
+            '_routePageChanged(routeData, query)'
+        ];
     }
     ready() {
         super.ready();
@@ -45,9 +65,6 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         this.translator.target('cms-page-list-type', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type', 'setLangObject')
-        //sem query pede todas as páginas\\
-        this._askPages({ q: 'removed', v: false });
-        window.addEventListener('reset-list-type', (this._contentChanged.bind(this)));
     }
     _setLang(res, lang) {
         this.lang = lang
@@ -63,13 +80,33 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _contentChanged() {
+    _routePageChanged(routeData, query) {
+        let reset = (query.reset === 'true')
+        if (routeData.page === "pages") {
+            if (!query.reset) {
+                if (this.pages.length < 1)
+                    this._askPages({ q: 'removed', v: false });
+            }
+            if (!!query.reset) {
+                if (reset === true) {
+                    this._contentChanged(query, reset)
+                }
+            }
+        }
+    }
+    _contentChanged(query, reset) {
         this.innerHTML = ''
-        this.translator.clone(this)
-        this.spinOut = false
         setTimeout(() => {
-            this._askPages({ q: 'removed', v: false })
+            if (this.spinOut === true) {
+                this.spinOut = false
+                this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">`
+                this.translator.clone(this)
+            }
+            setTimeout(() => {
+                this._askPages({ q: 'removed', v: false })
+            }, 500);
         }, 500);
+        this.sloted = false
     }
     _setAll(response) {
         let arr = [], arr2 = [];
@@ -94,14 +131,33 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         }
     }
     putElement(index, page) {
-        let template = html`
-        <cms-page-list-item>
-        </cms-page-list-item>`;
-        var clone = document.importNode(template.content, true);
-        this.appendChild(clone);
-        this.children[index].setAttribute('slot', `item${index}`);
-        this.children[index].set('page', page);
-        this.children[index].set('idx', index);
+        if (typeof this.time === 'number') {
+            clearTimeout(this.time)
+        }
+        if (this.sloted === false) {
+            let template = html`
+                <cms-page-list-item>
+                </cms-page-list-item>`;
+            var clone = document.importNode(template.content, true);
+            this.appendChild(clone);
+            this.children[index].setAttribute('slot', `item${index}`);
+            this.children[index].set('page', page);
+            this.children[index].set('idx', index);
+            this.time = setTimeout(() => {
+                this.set('sloted', true)
+            }, 60);
+        }
+    }
+    _reset(call, mlscs) {
+        console.log('reseted pages')
+        this.innerHTML = ''
+        this.pages = undefined
+        this.inForm = undefined
+        this.set('sloted', false)
+        window.onbeforeunload = function () { }
+        setTimeout(() => {
+            call()
+        }, mlscs)
     }
 }
 customElements.define(cmsPageCats.is, cmsPageCats);

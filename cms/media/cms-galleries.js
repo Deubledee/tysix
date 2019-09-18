@@ -1,7 +1,8 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import './cms-gallery-item';
-class cmsGalleries extends cmsMiddlePageTemplate {
+import { cmsMediaLib } from '../tools/cms-save-lib.js';
+class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     static get _getSilentAnchor() {
         return html`            
         <a href="[[rootPath]]media/images/add-gallery">
@@ -45,45 +46,6 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             </template>
         </dom-repeat>
         `}
-    static get _getNavside() {
-        return html`
-        <dom-repeat repeat items="[[inform]]" as="detail">
-            <template>
-                <div class="flexsidecenter">
-                    <aside>
-                        <span>
-                            [[info]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[GalleryCount]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[imageCount]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideright">
-                    <aside>
-                        <span>
-                        <b> [[detail.GalleryCount]] </b>
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        <b> [[detail.imageCount]] </b>
-                        </span>
-                    </aside>
-                </div>
-            </template>
-        </dom-repeat>
-        `
-    }
     static get is() { return 'cms-galleries'; }
 
     static get properties() {
@@ -177,18 +139,7 @@ class cmsGalleries extends cmsMiddlePageTemplate {
             this.add = false
         }
     }
-    _getGalleries(data) {
-        if (data === true || data === 'true') {
-            this.translator._DBW.getMediaGalleries((done) => {
-                let temp = done, arr = []
-                for (let par in temp) {
-                    arr.push(temp[par])
-                }
-                this.set('galleries', arr)
-            }, this.translator.__DEV)
-        }
-        this.removeChild(this.children[0])
-    }
+
     log(data) {
         console.log(data)
     }

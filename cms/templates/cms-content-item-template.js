@@ -9,6 +9,9 @@ export class cmsContentItemTemplate extends PolymerElement {
         :host {
             position: relative;
         }
+        div[arow] {
+            background: unset;
+        }
         ${this._getStyles}
         paper-button[id="label"]{
             height: var(--app-content-button-height);
@@ -224,7 +227,7 @@ export class cmsContentItemTemplate extends PolymerElement {
     _inputState() {
         if (this.oninputing === true) {
             this.$.cancel.classList.remove('diferent');
-            this.saveButton.classList.remove('diferent');
+            // this.saveButton.classList.remove('diferent');
             this.oninputing = false
             this.editing++
             this.canceled = false;
@@ -245,7 +248,7 @@ export class cmsContentItemTemplate extends PolymerElement {
             this.oninputing = true
             this.editing = 0
             window.onbeforeunload = function () { };
-            this.saveButton.classList.add('diferent');
+            // this.saveButton.classList.add('diferent');
         }
         if (this.editing > 1) {
             this.editing--;
@@ -257,7 +260,7 @@ export class cmsContentItemTemplate extends PolymerElement {
         this.oninputing = true
         this.$.cancel.classList.add('diferent');
         window.onbeforeunload = function () { };
-        this.saveButton.classList.add('diferent');
+        //  this.saveButton.classList.add('diferent');
         //   this.anchor.classList.remove('diferent');
     }
 }

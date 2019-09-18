@@ -1,14 +1,15 @@
-import { cmsContentTemplate } from '../templates/cms-content-template';
+import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html } from '@polymer/polymer/polymer-element.js';
+import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
 const ModeloInfo = "W3siYXV0aG9yIjp7InVpZCI6IiIsIm5hbWUiOiIifSwiY2hpbGRyZW4iOltdLCJkYXRlQ3JlYXRlZCI6IiIsImlkIjoiIiwibGFzdE1vZGlmaWVkIjpbXSwicGFyZW50IjoiIiwidG9BcnRpY2xlIjoiIiwidG9wIjoiIiwiY2hpbGRyZW5Db3VudCI6MCwicmVtb3ZlZCI6ZmFsc2UsInJlbW92ZWRDaGlsZHJlbiI6W119XQ=="
 class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
     static get _getPath() {
         return html`   
-         <div class="path" tgglelang$="[[tgglelang]]"> 
-            <h3>[[query.topparentname]] </h3>
-            <h4>[[query.topparenttype]] </h4>
+         <div class="path"> 
+            <h5>[[_getpreaty(query.topparentname)]] </h5>
         </div>`
     }
     static get _getSideInfo() {
@@ -261,6 +262,12 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
+    _getpreaty(str) {
+        if (!!str) {
+            let STR = str.split('/')
+            return STR.join(' - ')
+        }
+    }
     _routePageChanged(routeData, query, active) {
         if (!!query.parent) {
             this.nova = false
@@ -277,7 +284,13 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             if (!!query.added) {
                 this.added = (query.added === 'true' || query.added === true)
             }
+            this.closestr = `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.parent}&reset=false`
             if (routeData.page === 'add-subcategory-pages') {
+                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
+                        detail: 6000, bubbles: true, composed: true
+                    }));
+                });
                 if (this.add === true) {
                     if (typeof this.time === 'number')
                         clearTimeout(this.time)
@@ -294,11 +307,16 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 }
             }
             if (routeData.page === 'edit-subcategory-pages') {
+                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
+                        detail: 600, bubbles: true, composed: true
+                    }));
+                });
                 this.set('content', []);
-                this.$.saveButton.classList.add('diferent')
-                if (!!this.added) {
-                    this.$.saveButton.classList.remove('diferent')
-                }
+                /*  this.$.saveButton.classList.add('diferent')
+                  if (!!this.added) {
+                      this.$.saveButton.classList.remove('diferent')
+                  }*/
                 if (!!query.parent) {
                     let cont = JSON.parse(localStorage[`cats${parentName}${parentIndex}`])
                     this._getPageInfo(`cats${parentName}${parentIndex}`)
@@ -368,8 +386,8 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         this.inform = [inform]
         if (!!cont && this.add === true) {
             cont[0].children.push(this.query.name)
-            cont[0].childrenCount = cont[0].childrenCount++
-            this.updateSubcatParentInfo(cont[0], this.query.content, this.inform[0].parent)
+            cont[0].childrenCount = cont[0].children.length
+            this.updateSubcatParentInfo(cont[0], this.query.content, this.query.topparent)
         }
     }
     _setInfo(inform, data) {
@@ -395,7 +413,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 inform.id = this.query.name
                 inform.removed = false
                 inform.path = this.query.topparentname
-                inform.toArticle = false
+                inform.toArticle = 'B'
                 inform.top = top
                 inform.dateCreated = data.toLocaleString().replace(',', '')
             }

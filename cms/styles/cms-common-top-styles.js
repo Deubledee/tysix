@@ -26,7 +26,6 @@ $_documentContainer.innerHTML = `
     }
 
     article[centerListItem],
-    nav,
     section , 
     article[centerImageItem]{
         display: var(--app-flex)
@@ -100,11 +99,11 @@ $_documentContainer.innerHTML = `
         height: var(--app-content-nav-padding-left);
     }
 
-    .NP {
+    .NP, .B {
         color: var(--app-not-published-color)
     }
 
-    .P {
+    .P, .A{
         color: var(--app-published-color)
     }
 
@@ -113,32 +112,22 @@ $_documentContainer.innerHTML = `
         text-decoration: var(--app-none);
         color: inherit
     }
-
-    nav {
-        padding: var(--app-default-padding, 10px);
-        padding-left: var(--app-content-nav-padding-left)
-    }
-
     .navtop {
+        display: flex;
         flex-direction: var(--app-flexrow);
         flex-wrap: wrap;
         height: 800px;
-        padding: 103px;
         max-width: 100%;
+        padding: 10%;
     }    
     .topLabel{
-        background: #3f4756;
-        background: -moz-linear-gradient(top, #3f4756 4%,#686969 58%, #8d9099 85%,#bfc0c4 100%);
-        background: -webkit-linear-gradient(top, #3f4756 4%,#686969 58%, #8d9099 85%,#bfc0c4 100%);
-        background: linear-gradient(to bottom, #3f4756 4%,#686969 58%, #8d9099 85%,#bfc0c4 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4756', endColorstr='#bfc0c4',GradientType=0 );
-        /* position: inherit; */
+        background: var(--app-item-backgound-color);
         padding-left: 31px;
     }
     .topLabel a{
         text-decoration: none;
         font-weight: 500;
-        color: var(--app-scrollbar-color);;
+        color: var(--paper-blue-grey-500);
     }
     .navtop section {
         padding: unset;
@@ -178,7 +167,7 @@ $_documentContainer.innerHTML = `
     }
 
     paper-button{
-        height: var(--app-content-button-height)
+        height: var(--paper-font-title_-_font-size)
     }
 
     article[centerListItem] paper-button{
@@ -204,7 +193,7 @@ $_documentContainer.innerHTML = `
 
     paper-tabs {
         font-size: var(--app-content-paper-tabs-font-size);
-        padding-top: var(--app-content-paper-tabs-padding-top)
+      /*  padding-top: var(--app-content-paper-tabs-padding-top)*/
     }
 
     nav[center] {
@@ -212,14 +201,11 @@ $_documentContainer.innerHTML = `
         letter-spacing: var(--app-content-navcenter-letter-spacing)
     }
 
-   cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
+   /*cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
         top: var(--app-content-page-viewertop);
-    }
+    }*/
     shop-image.bigger{
         height: var(--app-content-article-height)
-    }
-    .navpages {
-        display: var(--app-listitem);
     }
     .strech{
         width: 75%

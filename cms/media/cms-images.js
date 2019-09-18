@@ -3,27 +3,19 @@ import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import '../media/cms-image';
 import './cms-image-item'
 class cmsImages extends cmsMiddlePageTemplate {
-    static get _getShoutAnchor() {
-        let template = document.createElement('template')
-        template.innerHTML = `      
-            <div>
-                <a id="reset" href="[[rootPath]]media/images[[Seach]]">                
-                    <paper-icon-button  icon="arrow-back" aria-label="Go back">
-                    </paper-icon-button>
-                </a>  
-                <paper-button id="saveButton" class="diferent" aria-label="mode-save">
-                    [[Save]]
-                </paper-button>
-            </div> `
-        return template
-    }
 
+    static get _topLabel() {
+        return html`       
+            <h3 class="higherh3">[[query.gallery]]</h3>       
+            <h5 class="higherh5"> [[images]] </h5> 
+        `
+    }
     static get _getSilentAnchor() {
         return html`
             <a href="[[rootPath]]media/images/add-images?&add=true">
                 <paper-tab name=" add-category-pages">                        
                     <span class="spanpadding"> 
-                    [[ADD]] [[images]]
+                    [[ADD]] 
                     </span>
                     <paper-icon-button-light>
                         <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
@@ -33,8 +25,43 @@ class cmsImages extends cmsMiddlePageTemplate {
         `
     }
     static get _getBottom() {
-        return html`  
-        `
+        return html`                         
+        <section class="flexchildbotom noFlex">
+            <div class="center">   
+                <h4>  [[Imag]]   </h4>     
+            </div>  
+        </section>
+
+        <section class="flexchildbotom noFlex">
+            <div class="center">   
+                <h4> 
+                [[title]]    </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
+            <div class="center">   
+                <h4> 
+                [[dateCreated]]    </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
+            <div class="center">  
+                <h4> 
+                [[Gallery]]     </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
+            <div class="center">  
+                <h4> 
+                [[url]]      </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
+            <div class="center">  
+                <h4> 
+                [[delete]]   [[add]]     </h4>     
+            </div>  
+        </section>`
     }
     static get _getTable() {
         let template = html`
@@ -53,69 +80,6 @@ class cmsImages extends cmsMiddlePageTemplate {
                 </cms-image>
             </div>`
         return template
-    }
-    static get _getNavside() {
-        return html`
-        <dom-repeat repeat items="[[inform]]" as="detail">
-            <template>
-                <div class="flexsidecenter">
-                    <aside>
-                        <span>
-                            [[info]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[datecreated]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideright">
-                    <aside>
-                        <span>
-                        <b> [[detail.author]] </b>
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        <b> [[detail.dateCreated]] </b>
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[gallery]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[itemCount]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideright">
-                    <aside>
-                        <span>
-                        <b> [[detail.gallery]] </b>
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        <b> [[detail.itemCount]] </b>
-                        </span>
-                    </aside>
-                </div>
-            </template>
-        </dom-repeat>
-        `
     }
     static get is() { return 'cms-images'; }
 
@@ -141,6 +105,21 @@ class cmsImages extends cmsMiddlePageTemplate {
             langs: {
                 type: Object,
                 value: {}
+            },
+            add: {
+                type: String,
+                notify: true,
+                computed: '_setLabelAdd(addTo)'
+            },
+            delete: {
+                type: String,
+                notify: true,
+                computed: '_setLabelDelete(addTo)'
+            },
+            addTo: {
+                type: Boolean,
+                value: false,
+                notify: true
             },
             Seach: {
                 type: String,
@@ -191,9 +170,9 @@ class cmsImages extends cmsMiddlePageTemplate {
     }
     ready() {
         super.ready()
-        this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-page-list-type-content', 'setLangObject')
+        this.translator.target('cms-image', 'setLangObject', (this._setLObj).bind(this))
+        this.translator.target('cms-image', 'changeLang', (this._setLang).bind(this), false)
+        this.translator.shoot('cms-image', 'setLangObject')
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -231,6 +210,20 @@ class cmsImages extends cmsMiddlePageTemplate {
         this.removed = false;
         this.set('inform', cont.info)
         return cont/**/
+    }
+    _setLabelAdd(data) {
+        if (data === false) {
+            return ''
+        } else {
+            return 'add'
+        }
+    }
+    _setLabelDelete(data) {
+        if (data === true) {
+            return ''
+        } else {
+            return 'delete'
+        }
     }
     reset() {
         this.routeData.page = ''

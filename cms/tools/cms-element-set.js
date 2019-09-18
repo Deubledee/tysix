@@ -25,6 +25,10 @@ class Setter {
         var clone = document.importNode(this.template.content, true);
         parent.appendChild(clone)
     }
+    cloneElement(parent, elem) {
+        this.template.innerHTML = elem
+        this.clone(parent)
+    }
     changeLang() {
         if (this.langs[this.lang]) {
             let obj = this.langs[this.lang];

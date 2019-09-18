@@ -1,49 +1,32 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer'
-import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
+import { cmsItemTemplate } from '../templates/cms-item-template';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
 import './cms-subcats-item'
 import '../styles/cms-comon-style_v3';
 const Modelo = "eyJhdXRob3IiOiIiLCJjaGlsZHJlbiI6W10sImRhdGVDcmVhdGVkIjoiIiwiaWQiOiIiLCJsYXN0TW9kaWZpZWQiOltdLCJwYXJlbnQiOiIiLCJ0b0FydGljbGUiOiIiLCJ0b3AiOiIiLCJjaGlsZHJlbkNvdW50IjowfQ=="
 
-export class cmsSubcats extends cmsItemImageTemplate {
-    static get _getMenu() {
-        return html`                          
-            <section class="flexchildbotomShort noFlex">
-                <div class="center">   
-                    <h4 title="[[item]]"> [[item]] </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotomShort noFlex">
-                <div class="center">   
-                    <h4 title="[[title]]"> [[title]] </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotomShort noFlex">
-                <div class="center">
-                    <h4 title="[[viewedit]]"> [[viewedit]] </h4>
-                </div>  
-            </section>
-            <section class="flexchildbotomShort noFlex">
-                <div class="center">  
-                    <h4 title="[[type]]"> 
-                    [[type]]     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotomShort noFlex">
-                <div class="center">  
-                    <h4 title="[[delete]]"> 
-                    [[delete]]   </h4>     
-                </div>  
-            </section>`
+export class cmsSubcats extends cmsItemTemplate {
+    static get _getStyles() {
+        return html` 
+        article[centerlistitem] paper-button{
+            ￼    height: auto;
+            ￼    max-height: 35px;
+            div[basis] }
+            {
+                flex-basis: 30%;
+            }
+               `
     }
-    static get _getItem() {
+    static get _getElement() {
         return html` 
         <slot name="item"></slot>  
+        <slot name="nocontent"></slot> 
         <dom-repeat items="[[content]]" as="item">
             <template>
                 [[_slottItem(item, index)]]
+            
             </template>                            
         </dom-repeat>        
         `}
@@ -128,9 +111,9 @@ export class cmsSubcats extends cmsItemImageTemplate {
     }
     ready() {
         super.ready();
-        this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-subcats', 'setLangObject')
+        /*  this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
+          this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
+          this.translator.shoot('cms-subcats', 'setLangObject')*/
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -147,6 +130,10 @@ export class cmsSubcats extends cmsItemImageTemplate {
         this.translator.changeLang.call(this)
     }
     _setContent(data) {
+        if (data === 'no content') {
+            this.translator.cloneElement(this, `<h1 slot="nocontent"> no content </h1>`)
+            return []
+        }
         if (!!data && data != 0) this.Parent = data[0].parent
         if (!this.content) return data
     }
@@ -186,9 +173,11 @@ export class cmsSubcats extends cmsItemImageTemplate {
         }/* */
     }
     __reset() {
+        console.log('reseted subcats here to')
         this._reset(() => { }, 0)
     }
     _reset(call, mlscs) {
+        console.log('reseted subcats')
         this.innerHTML = ''
         this.subSubCats = undefined
         this.set('sloted', false)

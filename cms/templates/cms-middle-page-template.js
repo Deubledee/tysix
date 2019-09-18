@@ -10,73 +10,76 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             }
             .navbottom{
                 height: auto
-            }
-            flexchildbotom{
-                
-            }
+            }            
             .flex{
                 height: auto
             }
             div[top] {                
-                padding-left: 10px;
-                padding-top: 6px;
+                /*padding-left: 10px;*/
                 height: 32px;
                 }
             div[silent]{
-                height: 38px;
-                border-radius: 4px;
-                /*background-color: var(--divider-color);*/
+                width: 174px;
+                box-sizing: border-box;
+                height: 47px;
+                background-color: var(--paper-blue-grey-700);
+                padding: 7px;
+                border-bottom: 3px solid var(--app-primary-color)
+            }
+            .navside{
+                flex-basis: 181px;
             }
             
+           h3, h5, h2{
+               margin-inline-start: -26px;
+            }
+
+            .higherh5{
+                background-color: var(--paper-cyan-700) 
+            } 
+            div[spinnercenter]{
+                position: absolute;
+                left: 50%;
+                top: 30%;
+            }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
         </app-route>
-           <slot name="spinner"></slot>
-        <nav top>          
-            <!--div top>
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                   
-                </iron-selector>
-            </div-->
-            <div silent>
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
-                    ${this._getSilentAnchor}
-                </iron-selector>
+            <div spinnercenter>
+                <slot name="spinner"></slot>  
             </div>
-        </nav>
-        <main class="flex">
+        <main class="flex">        
+            <nav class="navside">
+
+                <div class="navsidecontent">                
+                    <nav top> 
+                        ${this._topLabel}
+                    </nav> 
+                    <div silent>
+                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
+                            ${this._getSilentAnchor}
+                        </iron-selector>
+                    </div>
+                </div>
+
+            </nav>
             <div class="navbottom">
-                <div arow >
+                <div arow>
                     ${this._getBottom}
                 </div>
+            
                     ${this._getTable}
             </div>
-            <nav class="navside">
-             ${this._getNavside}
-            </nav>
         </main> 
         `;
     }
     static get is() { return 'cms-middle-page-template'; }
-    /*  static get _getShoutAnchor() {
-          return html`
-            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
-                <a>   
-                    < 
-                </a>            
-                <dom-repeat repeat items="[[breadcrumbs]]" as="page">
-                    <template>  
-                        <a href="[[_getStr(page)]]">  
-                            <paper-button  aria-label="Go back page">                   
-                            [[_getPage(page)]]
-                            </paper-button>               
-                        </a>    [[_getSlash(index)]]                
-                    </template>
-                </dom-repeat> 
-            </iron-selector> 
-                `
-      }*/
+    static get _topLabel() {
+        return html`       
+            <h2>[[categorypages]]</h2>               
+        `
+    }
     static get _getSilentAnchor() {
         return html`
             <a id="reset" href="[[rootPath]]content/">
@@ -129,66 +132,6 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         </section>
         `
     }
-
-    static get _getNavside() {
-        return html`
-        <dom-repeat repeat items="[[inForm]]" as="detail">
-            <template>
-                <div class="center-menu">
-                    <aside class="">
-                        <span>
-                            [[Info]] 
-                        </span>
-                    </aside>
-                </div>
-                <div class="collumn-left-menu">
-                    <aside>
-                        <span>
-                        [[categorycount]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="collumn-left-menu">
-                    <aside  class="asideBackgrc">
-                        <span>
-                            <b> [[detail.categoryCount]] </b>
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                        [[publishedpage]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[datepublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div rightSide>                            
-                    <dom-repeat repeat items="[[detail.published]]" as="published">
-                        <template>
-                            <section>
-                                <div published$="[[_getPublished(published.page)]]">
-                                    <aside class="asideBackgrc">
-                                            [[published.page]]
-                                    </aside>
-                                </div>
-                                <aside class="asideBackgrc">
-                                    <span>
-                                        [[published.datePublished]]
-                                    </span>
-                                </aside>
-                            </section>
-                        </template>
-                    </dom-repeat>
-                </div>
-            </template>
-        </dom-repeat>
-        `
-    }
     static get properties() {
         return {
             pages: {
@@ -199,20 +142,10 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 type: Boolean,
                 notify: true,
             },
-            hidebottom: {
-                type: Boolean,
-                value: false,
-                reflectToAttribute: true,
-            },
             confirm: {
                 type: Boolean,
                 notify: true,
                 value: false,
-            },
-            breadcrumbs: {
-                type: Array,
-                notify: true,
-                value: []
             },
         };
     }

@@ -12,7 +12,7 @@ export class cmsListTemplate extends PolymerElement {
         <style include="cms-comon-style_v3">
         :host {
             position: relative;
-        }       
+        }               
             ${this._getStyles}
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">

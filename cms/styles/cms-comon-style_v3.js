@@ -21,30 +21,35 @@ $_documentContainer.innerHTML = `
             }
 
             nav[top]{
-                color: var(--paper-blue-800);
-                background-color: var(--app-backgound-color);
-                height: 85px;
+                box-sizing: border-box;
+                color: var(--app-backgound-color);
+                background-color: #3f4756;
+                border-bottom: 1px solid var(--app-topnav-icon-color);
+                border-top: 1px solid var(--app-third-color);
+                text-align: center;
+                height: 73px;
+                width: 175px;;
             }
             .flexright,
-            .navside div {
+            .navsidecontent div {
                 word-break: break-word;
             }
             .flex {
                 @apply --layout-horizontal;
                 height: 1525px;
             }
-            .flexH,  div[container] {
+             div[container] {
                 @apply --layout-vertical;
+                padding-left: 5%
             }
             div[arow], div[bottom] {
                 box-sizing: border-box;
                 @apply --layout-horizontal;
             }
           div[arow]{
-                background: var(--paper-blue-grey-500);
                 height: 28px;
-                border-radius: 4px;
-            }    /* */        
+                background: var(--paper-cyan-700)
+            }    /* border-radius: 4px;  background: var(--paper-blue-grey-500)*/        
             h4{
                 margin-block-start: 0.33em;
             }
@@ -106,8 +111,7 @@ $_documentContainer.innerHTML = `
                 @apply --layout-flex-2;
             }
             .flexchildbotom{
-                flex-basis: 30%;
-                max-width: 75%;
+                width: 84%;
             }
             .flexchildbotomShort{
                 flex-basis: 30%;
@@ -120,22 +124,24 @@ $_documentContainer.innerHTML = `
                 max-width: 75%
             }
             .flexchildbotomFull{
-                flex-basis: 56px;
+                flex-basis: 80px;
             }
             .flexchildbotomFullExtra{
-                flex-basis: 211px;
+                flex-basis: 130px;
             }
             .noFlex{
                 flex-basis: 1px 
             }
             .navbottom,
-            .navside {
+            .navsidecontent {
                 box-sizing: border-box;
-                height: auto;
+                /*height: 604px;*/
             }
             .flexchildbotom3 {
                 @apply --layout-self-stretch;
                 @apply --layout-flex-3;
+                height: 328px;
+                border-radius: 4px;
             }
             .flexleft,
             .flexright {
@@ -148,29 +154,33 @@ $_documentContainer.innerHTML = `
                 max-width: 20%;
             }
             .navbottom {
-                max-width: 82%;
-                @apply --layout-flex;
-                padding: 8px;
-                padding-left: 6%;
-                padding-right: 6%;
+                width: 1048px;
             }
+
             .navside {
-                @apply --layout-vertical;
+                background-color: #3f4756;
+                height: 893px;
+            }
+            .navsidecontent {
+
+               @apply --layout-vertical;
                 @apply --layout-self-stretch;
                 @apply --layout-flex;
                 flex-direction: column;
-                max-width: 342px;
+                max-width: 180px;
+                color: var(--app-backgound-color);
+                background-color: #3f4756;
             }
-            .navside div {
+            .navsidecontent div {
                 @apply --layout-horizontal;
                 cursor: pointer;
                 margin-bottom: 6px
             }
-            .navside aside {
+            .navsidecontent aside {
                 @apply --layout-flex;
             }
 
-            .navside div[left] aside {
+            .navsidecontent div[left] aside {
                 box-shadow: 1px 1px 1px
             }
 
@@ -277,14 +287,21 @@ $_documentContainer.innerHTML = `
                 background-color: var(--content-color-default, #8098ad)
             }
 
-            aside[published=NP] {
+            div[published=NP] {
                 color: var(--app-not-published-color)
             }
 
-            aside[published="P"] {
+            div[published=P] {
                 color: var(--app-published-color)
             }
 
+            div[toarticle=B] {
+                color: var(--app-not-published-color)
+            }
+
+            div[toarticle=A] {
+                color: var(--app-published-color)
+            }
             .spanpadding {
                 padding: 4px;
                 font-size: 15px;
@@ -364,14 +381,15 @@ $_documentContainer.innerHTML = `
                 display: none !important
             }
            
-            #saveButton,
-            #cancelButton {
-                background-color: var(--app-scrollbar-color);
-                color: var(--app-published-color);
+            .saveButton{
+                color: var(--google-blue-300);
                 font-weight: bold;
-                max-width: 90px;
+                font-size: 11px;
+                font-style: italic;
+                max-width: 126px;
+                width: 110px;
                 letter-spacing: 2px;
-                height: 25px;
+                height: 60px;
             }
 
             .contenth4{
@@ -393,10 +411,6 @@ $_documentContainer.innerHTML = `
         
             article[centerListItem], article[centerImageItem]{
                 @apply --layout-horizontal;
-            }
-            article[centerListItem], 
-            article[centerImageItem]{
-                background-color: var(--app-item-backgound-color);
             }
             
             article[centerImageItem], article[centerImageItem]{
@@ -427,17 +441,28 @@ $_documentContainer.innerHTML = `
             article[centerListItem] span, article[centerImageItem] span {
                 word-break: break-word
             }
+            article[centerListItem] paper-button {
+                height: auto;
+                max-height: 35px;
+                text-transform: capitalize;
+            }
+            
+            article[centerListItem] {
+                word-break: keep-all;
+                border-radius: 4px;
+                font-size: 0.7em;
+                border-bottom: 1px solid var(--light-theme-divider-color);
+            }
+            article[centerListItem] paper-icon-button {
+                height: 3.6em;
+                top: -5px;
+            }
             .centerImage{
                 display: block;
                 margin-top: auto;
                 margin-bottom: auto;
                 box-shadow: unset;
-            }
-            paper-button{
-                padding: 0px;
-                text-decoration: var(--app-none);
-                color: inherit;
-            }
+            }          
             paper-button[langbtn]{
                 padding: 0px;
                 padding-top: 1px;
@@ -520,34 +545,34 @@ $_documentContainer.innerHTML = `
                     media queries
                 -                   -
             */
-            @media (min-width: 800px){
+          /*  @media (min-width: 800px){
                 .navbottom{
-                    padding-left: 6% 
+                    width: 1040px;
                 }
             }
            @media (min-width: 1400px){
                 .navbottom{
-                    padding-left: 16% 
+                    width: 1040px; 
                 }
             }
 
-            /* media queries for later
+             media queries for later
             @media (max-width: 480px){
                 .navbottom{
                     background-color: yellow;
-                    padding-left: 16% 
+                    width: 1040px;
                 }
             }
             @media (min-width: 400px){
                 .navbottom{
                     background-color: brown;
-                    padding-left: 16% 
+                    width: 1040px;
                 }
             }
             @media (max-width: 800px){
                 .navbottom{
                     background-color: grey;
-                    padding-left: 16% 
+                    width: 1040px;
                 }
             }*/
         </style>

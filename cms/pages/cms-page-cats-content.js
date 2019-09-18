@@ -1,5 +1,7 @@
-import { cmsContentTemplate } from '../templates/cms-content-template';
+import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html } from '@polymer/polymer/polymer-element.js';
+import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsPagesLib } from '../tools/cms-save-lib.js';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
 const ModeloInfo = "W3siUHVibGlzaGVkIjp7ImRhdGUiOiIiLCJwdWJsaXNoZWRCeSI6Ik4vQSIsInN0YXRlIjoiTi9QIn0sImF1dGhvciI6eyJpZCI6IiIsIm5hbWUiOiIifSwiZGF0ZUNyZWF0ZWQiOiIiLCJpZCI6IiIsInN1YkNhdGVnb3J5Q291bnQiOiIiLCJ0b0FydGljbGUiOmZhbHNlLCJ0eXBlIjoiIiwibGFzdE1vZGlmaWVkIjpbXX1d"
@@ -213,6 +215,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.set('saveButton', this.$.saveButton)
         this.$.image.addImage = (this.addImage).bind(this)
     }
+
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
             let langs = querySnapshot.data()
@@ -237,7 +240,13 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             if (!!query.added) {
                 this.added = (query.added === 'true' || query.added === true)
             }
+            this.closestr = 'content/pages'
             if (active === true && routeData.page === 'add-category-pages') {
+                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
+                        detail: 0, bubbles: true, composed: true
+                    }));
+                });
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
                     localStorage[`pagenewcontentinfo`] = atob(ModeloInfo)
@@ -251,10 +260,15 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 }
             }
             if (active === true && routeData.page === 'edit-category-pages') {
+                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
+                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
+                        detail: 0, bubbles: true, composed: true
+                    }));
+                });
                 this.set('content', []);
-                this.$.saveButton.classList.add('diferent')
+                //  this.$.saveButton.classList.add('diferent')
                 if (!!this.added) {
-                    this.$.saveButton.classList.remove('diferent')
+                    //  this.$.saveButton.classList.remove('diferent')
                 }
                 if (!!query.content) {
                     if (!!localStorage[`page${query.content}`]) {
@@ -276,7 +290,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     }
                 }
             }
-        }
+        } /**/
     }
     addImage() {
         if (this.add === false) {
@@ -342,9 +356,12 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 inform.Published.state = 'NP'
                 inform.author.id = this.user.uid
                 inform.author.name = this.user.displayName
-                inform.toArticle = false
+                inform.toArticle = 'B'
                 inform.removed = false
                 inform.dateCreated = data.toLocaleString().replace(',', '')
+            } else {
+                if (inform.type === "")
+                    inform.type = this.content[0][this.setContetnLang].type
             }
         }
         return inform

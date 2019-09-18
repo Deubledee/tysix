@@ -4,26 +4,28 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '../styles/cms-comon-style_v3';
 export class cmsItemTemplate extends PolymerElement {
     static get template() {
-        return html`   
-    ${this._getStyles}       
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>  
-    ${this._getElement}
-        `;
-    }
-    static get _getStyles() {
-        return html`
+        return html`  
         <style include="cms-comon-style_v3">    
         :host {
             position: relative;
             display: block;
         } 
+        ${this._getStyles}  
+        /* styles reside in cms-content*/
+        </style>      
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route> 
+            ${this._getElement}
+           
+        `;
+    }
+    static get _getStyles() {
+        return html` 
         article[centerlistitem] paper-button{
             ￼    height: auto;
             ￼    max-height: 35px;
             }
-                /* styles reside in cms-content*/
-        </style> `
+               `
     }
     static get _getElement() {
         return html`

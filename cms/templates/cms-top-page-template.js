@@ -10,6 +10,7 @@ export class cmsTopPageTemplate extends PolymerElement {
   static get template() {
     return html`
     <style include="cms-common-top-styles">
+    
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
@@ -104,17 +105,11 @@ export class cmsTopPageTemplate extends PolymerElement {
     return html`
     <cms-page-viewer name="pages" route="[[subroute]]">
     
-        <cms-page-cats slot="categories"user="[[user]]" route="[[subroute]]">
+        <cms-page-cats slot="categories"user="[[user]]" route="[[route]]">
         </cms-page-cats>
 
         <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
         </cms-page-subcats>
-
-        <cms-page-cats-content slot="add-cats" user="[[user]]" route="[[subroute]]">
-        </cms-page-cats-content>
-
-        <cms-subcats-content slot="add-subcats" user="[[user]]" route="[[subroute]]">
-        </cms-subcats-content>
 
     </cms-page-viewer>
 
@@ -162,6 +157,7 @@ export class cmsTopPageTemplate extends PolymerElement {
     return str
   }
   _getPage(item) {
+    console.log(item)
     let word, final
     if (item === 'cmshome') {
       word = item.split('')

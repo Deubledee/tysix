@@ -20,45 +20,6 @@ class cmsImage extends cmsItemImageTemplate {
             </template>                            
         </dom-repeat>`
     }
-    static get _getMenu() {
-        return html`                         
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4>  [[Imag]]   </h4>     
-                </div>  
-            </section>
-
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4> 
-                    [[title]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4> 
-                    [[dateCreated]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[Gallery]]     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[url]]      </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[delete]]   [[add]]     </h4>     
-                </div>  
-            </section>`
-    }
     static get is() { return 'cms-image'; }
 
     static get properties() {
@@ -92,16 +53,6 @@ class cmsImage extends cmsItemImageTemplate {
                 type: Boolean,
                 notify: true
             },
-            add: {
-                type: String,
-                notify: true,
-                computed: '_setLabelAdd(addTo)'
-            },
-            delete: {
-                type: String,
-                notify: true,
-                computed: '_setLabelDelete(addTo)'
-            },
             images: {
                 type: Array,
                 notify: true
@@ -133,9 +84,6 @@ class cmsImage extends cmsItemImageTemplate {
     }
     ready() {
         super.ready()
-        this.translator.target('cms-image', 'setLangObject', (this._setLObj).bind(this))
-        this.translator.target('cms-image', 'changeLang', (this._setLang).bind(this), false)
-        this.translator.shoot('cms-image', 'setLangObject')
     }
     toggle(data) {
         this.size = data
@@ -154,20 +102,7 @@ class cmsImage extends cmsItemImageTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _setLabelAdd(data) {
-        if (data === false) {
-            return ''
-        } else {
-            return 'add'
-        }
-    }
-    _setLabelDelete(data) {
-        if (data === true) {
-            return ''
-        } else {
-            return 'delete'
-        }
-    }
+
     _placeEventMethod(data) {
         data.onclick = (this._sendBackTo).bind(this)
     }
@@ -202,17 +137,17 @@ class cmsImage extends cmsItemImageTemplate {
         return arr;
     }
     getImage(data) {
-        let arr
-        if (data !== undefined) {
-            if (data['image']) {
-                arr = this._fromAray(data.image);
-            } else if (data instanceof Array) {
-                arr = this._fromAray(data)
-            } else {
-                arr = this._fromAray([data])
-            }
-            return arr
-        }
+        /*   let arr
+           if (data !== undefined) {
+               if (data['image']) {
+                   arr = this._fromAray(data.image);
+               } else if (data instanceof Array) {
+                   arr = this._fromAray(data)
+               } else {
+                   arr = this._fromAray([data])
+               }
+               return arr
+           }*/
     }
     deleteImage(data) {
         let arr = []

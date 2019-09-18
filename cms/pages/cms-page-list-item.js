@@ -1,17 +1,10 @@
 
 import { cmsItemTemplate } from '../templates/cms-item-template'
-import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { cmsPagesLib } from '../tools/cms-save-lib';
 class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
 
-    static get _getElement() {
-        return html`
-           
-    <slot name="table"></slot> 
-        `;
-    }
     static get is() { return 'cms-page-list-item'; }
     static get properties() {
         return {
@@ -36,21 +29,18 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                     <span> 
                         <paper-button> ${this.objInfo[0].id}</paper-button>
                     </span>
-                </div> 
-                
-                <div>                   
+                </div>                 
+                <div class="${this.objInfo[0].toArticle}">                   
                     <span> 
-                        <paper-button> ${this.objInfo[0].type} </paper-button>
+                        <paper-button> ${this.objInfo[0].toArticle} </paper-button>
                     </span>
-                </div>   
+                </div>  
 
                 <div class="${this.objInfo[0].Published.state}">                    
                     <span> 
                         <paper-button> ${this.objInfo[0].Published.state} </paper-button>
                     </span>
                 </div>
-
-
                 <div>
                     <paper-button>
                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>  
@@ -61,7 +51,6 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
                     </paper-button> 
                 </div>
-
                 <div>
                     <paper-button>
                         <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
@@ -69,6 +58,9 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                 </div>
             </article>`;
         this.translator.clone(this)
+        this.children[0].children[1].
+            children[0].addEventListener('click', (this._confirmToArticle).
+                bind(this));
         this.children[0].children[2].
             children[0].addEventListener('click', (this._confirmPublish).
                 bind(this));
@@ -94,18 +86,11 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
         this.$.spinner.active = !this.$.spinner.active;
     }
     showPage() {
-        let arr, cont
         if (!localStorage[`page${this.objInfo[0].id}`]) {
-            this.translator._DBW.getPageData((done2) => {
-                cont = [done2]
-                arr = this._setLangArr(cont[0])
-                localStorage.setItem(`page${this.objInfo[0].id}`, JSON.stringify(objdata))
-                window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.objInfo[0].id}&add=false&lang=${arr[0]}`);
-                window.dispatchEvent(new CustomEvent('location-changed'));
-            }, { name: this.objInfo[0].id, dataType: 'data' }, this.translator.__DEV)/* */
+            this.getPageData(this.objInfo[0].id)
         } else {
-            cont = JSON.parse(localStorage[`page${this.objInfo[0].id}`])
-            arr = this._setLangArr(cont[0])
+            let cont = JSON.parse(localStorage[`page${this.objInfo[0].id}`])
+            let arr = this._setLangArr(cont[0])
             window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.objInfo[0].id}&add=false&lang=${arr[0]}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
@@ -127,7 +112,7 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                 bubbles: true, composed: true,
                 detail: {
                     name: 'page: ' + this.page.id, method: (this.__delete).bind(this),
-                    argument: this.page.id, headderMsgKind: 'delete', type: 'page/category'
+                    argument: this.page.id, headderMsgKind: 'delete ?', type: 'page/category'
                 }
             }));
         });
@@ -137,8 +122,19 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: this.page.name, method: (this.__publish).bind(this),
-                    argument: '!!to be done!!', headderMsgKind: 'publish', type: 'categoryPage'
+                    name: this.page.id, method: console.log,                                  // (this.__publish).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'categoryPage'
+                }
+            }));
+        });
+    }
+    _confirmToArticle() {
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true,
+                detail: {
+                    name: this.page.id, method: console.log,
+                    argument: '!!to be done!!', headderMsgKind: 'send to articles ?', type: 'categoryPage'
                 }
             }));
         });

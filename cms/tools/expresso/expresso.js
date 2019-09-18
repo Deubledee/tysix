@@ -1,4 +1,4 @@
-import { Setter } from '/cms/tools/cms-element-set.js';
+import { Setter } from '../cms-element-set.js';
 export { expresso }
 class expresso extends Setter {
     constructor() {

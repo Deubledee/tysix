@@ -23,7 +23,6 @@ import '@polymer/iron-icons/maps-icons';
 import './styles/cms-common-styles_v2';
 import './styles/cms-common-styles';
 import './media/cms-image-item'
-import './tools/cms-confirm';
 setPassiveTouchGestures(true);
 setRootPath('/');
 class cmsControler extends PolymerElement {
@@ -35,7 +34,8 @@ class cmsControler extends PolymerElement {
         } 
         app-header,
         nav[toolbar] {
-            background-color: var(--app-primary-color)
+            background-color: var(--app-primary-color);
+            border-bottom: 0.5px solid var(--disabled-text-color);
         }
         .cart-btn-container,
         .sellector-list a,
@@ -120,7 +120,6 @@ class cmsControler extends PolymerElement {
           flex-direction: column
         }
         div[pages]{
-          min-height: 1470px;
           height: auto;
         }
         paper-dropdown-menu.styled {
@@ -142,6 +141,8 @@ class cmsControler extends PolymerElement {
   </app-location>
 
   <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
+  </app-route>
+  <app-route route="{{subroute}}" pattern="/:layer" tail="{{popOutRoute}}">
   </app-route>
   <div rows>
     <nav toolbar>
@@ -195,11 +196,11 @@ class cmsControler extends PolymerElement {
     </nav>
     <div pages>
       <iron-pages selected="[[page]]" attr-for-selected="name">
-            <article name="cmshome">
-              <h1> 
-                <b>Cms Home</b>
-              </h1>
-            </article>
+        <article name="cmshome">
+          <h1> 
+            <b>Cms Home</b>
+          </h1>
+        </article>
         <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]" >
         </cms-user-viewer>
 
@@ -219,9 +220,24 @@ class cmsControler extends PolymerElement {
         <li>a subir</li>
       </ul>
     </div>
-  </div>
-  <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery" user="[[user]]" lang="[[lang]]">
-  </cms-confirm>       
+  </div> 
+
+  <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name"> 
+
+    <cms-page-cats-content name="add-category-pages" user="[[user]]" route="[[popOutRoute]]">
+    </cms-page-cats-content>
+
+    <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
+    </cms-subcats-content>
+
+  </iron-pages> 
+
+  <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">    
+
+    <cms-confirm name="confirm" id="confirm" type="gallery" user="[[user]]" lang="[[lang]]">
+    </cms-confirm>
+
+  </iron-pages>  
         `;
   }
   static get is() { return 'cms-controler'; }
@@ -258,9 +274,16 @@ class cmsControler extends PolymerElement {
         type: Boolean,
         notify: true,
       },
+      popout: {
+        type: String,
+        observer: '_pageChanged'
+      },
       page: {
         type: String,
-        reflectToAttribute: true,
+        observer: '_pageChanged'
+      },
+      confirm: {
+        type: String,
         observer: '_pageChanged'
       },
       open: {
@@ -271,26 +294,30 @@ class cmsControler extends PolymerElement {
         type: Array,
         notify: true
       },
-      confirm: {
-        type: Boolean,
-        notify: true,
-        value: false
-      },
       routeData: Object,
       subroute: Object
     };
   }
   static get observers() {
     return [
-      '_routePageChanged(routeData, route)'
+      '_routePageChanged(routeData, route)',
+      '_routePopoutChanged(popOutRoute)'
     ];
   }
-  static connectedCallback() {
-    console.log('aloo');
+  connectedCallback() {
+    super.connectedCallback();
+    /* this._observer = new FlattenedNodesObserver(this, (info) => {
+         this.info = info;
+     });*/
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    //this._observer.disconnect();
   }
   ready() {
     super.ready();
     this.addEventListener('confirm', this.openConfirm);
+    this.addEventListener('closepopout', this._closeConfirm);
     this.translator.target('cms-controler', 'setLangObject', (this._setLObj).bind(this))
     this.translator.target('cms-controler', 'changeLang', (this.__setLang).bind(this), false)
     this.translator.shoot('cms-controler', 'setLangObject')
@@ -320,18 +347,30 @@ class cmsControler extends PolymerElement {
       this.set('lang', 'en');
     }
   }
-  _resetEvent() {
-    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
-      microTask, () => {
-        window.dispatchEvent(new CustomEvent('reset'))
-      }
-    )
-  }
   openConfirm(event) {
-    this.$.confirm.openConfirm(event);
-    this.confirm = !this.confirm;
+    this.confirm = 'confirm';
+    if (!this.$.confirm.openConfirm) {
+      setTimeout(() => {
+        this.$.confirm.openConfirm(event);
+      }, 500);
+    } else {
+      this.$.confirm.openConfirm(event);
+    }
   }
-  _routePageChanged(page, route) {
+  _closeConfirm() {
+    this.confirm = '';
+  }
+  _routePopoutChanged(popOutRoute) {
+    if (['/add-category-pages', '/edit-category-pages'].indexOf(popOutRoute.path) !== -1) {
+      this.popout = 'add-category-pages';
+    } else
+      if (['/add-subcategory-pages', '/edit-subcategory-pages'].indexOf(popOutRoute.path) !== -1) {
+        this.popout = 'add-subcategory-pages'
+      } else {
+        this.popout = ''
+      }
+  }
+  _routePageChanged(page) {
     if (this.page !== page.page && page.page == page.page) {
       if (!page.page) {
         this.page = 'cmshome';
@@ -343,6 +382,13 @@ class cmsControler extends PolymerElement {
         // this.page = 'view404';
       }
     }
+  }
+  _resetEvent() {
+    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+      microTask, () => {
+        window.dispatchEvent(new CustomEvent('reset'))
+      }
+    )
   }
   _pageChanged(page) {
     if (page === 'cmshome') {
@@ -363,6 +409,21 @@ class cmsControler extends PolymerElement {
     }
     if (page === 'view404') {
       import('./cms-404-warning');
+      return;
+    }
+    if (page === 'add-category-pages') {
+      import('./pages/cms-page-cats-content').then(item => {
+      });
+      return;
+    }
+    if (page === 'add-subcategory-pages') {
+      import('./sub-categories/cms-subcats-content').then(item => {
+      });
+      return;
+    }
+    if (page === 'confirm') {
+      import('./tools/cms-confirm').then(item => {
+      });
       return;
     }
   }

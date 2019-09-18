@@ -15,10 +15,7 @@ export class cmsItemImageTemplate extends PolymerElement {
         </style>    
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>          
-        <main class="flexH" small$="[[small]]">
-            <div arow size$="[[size]]" small$="[[small]]">    
-                ${this._getMenu}  
-            </div>
+        <main class="flexH" small$="[[small]]">          
             <div table size$="[[size]]" class="scroll">
                 ${this._getItem}   
             </div> 
@@ -38,7 +35,6 @@ export class cmsItemImageTemplate extends PolymerElement {
         } 
 
         div[arow]{
-            height: 55px;
             font-size: var(--app-images-article-font-size);
             /*box-shadow: 1px 1px 4px var(--disabled-text-color);*/
         }
