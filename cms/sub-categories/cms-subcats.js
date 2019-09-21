@@ -158,6 +158,7 @@ export class cmsSubcats extends cmsItemTemplate {
                 </div>                
                 `
             let content = btoa(JSON.stringify(this.subSubCats))
+            console.log(this.query)
             this.translator.template.innerHTML = str
             this.translator.clone(this)
             this.children[this.childElementCount - 1].children[0].lang = this.lang
@@ -167,10 +168,10 @@ export class cmsSubcats extends cmsItemTemplate {
             this.children[this.childElementCount - 1].children[0].user = this.user
             this.children[this.childElementCount - 1].children[0].subcat = item
             this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
-            this.time = setTimeout(() => {
-                this.set('sloted', true)
-            }, 60);
         }/* */
+        this.time = setTimeout(() => {
+            this.set('sloted', true)
+        }, 60);
     }
     __reset() {
         console.log('reseted subcats here to')

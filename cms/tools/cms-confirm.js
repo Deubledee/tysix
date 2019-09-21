@@ -11,88 +11,87 @@ class cmsConfirm extends PolymerElement {
         return html`
     <style  include="cms-comon-style_v3">
         nav[bottom2]{
-            @apply --layout-vertical;
             box-sizing: border-box;
             background-color: rgba(0, 0, 0, 0.45098039215686275);
             position: fixed;
             top: 0%;
             width: 100%;
             height: 100%;
-            padding: 118px;
+            padding-top: 118px
         }
-        nav[bottom2] div {
+        nav[bottom2] div[one],  nav[bottom2] div[tow]{
+            box-sizing: border-box;
             text-align: center;
             word-break: break-word;
             letter-spacing: 2px;
             color: #356ea1;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 5px;
-            width: auto;
-            padding: 34px;
         }
         nav[bottom2] div[one] {
+            flex-basis: 78px;
             height: auto;
-            color: var(--app-item-backgound-color);
             font-size: 26px;
-            text-shadow: 1px 1px 1px var(--google-blue-500);
         }
-        nav[bottom2]div[tow] {
-            width: 61%;
+        nav[bottom2] div[tow] {
+            padding: 11px;
         }
         h2 {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            text-shadow: 1px 1px 1px var(--light-theme-text-color);
-            width: 42%;
-            border-radius: 5px;
-            height: 35px;
+            padding-left: 14px;
+            border: 1px solid var(--divider-color);
+            border-radius: 7px;
+            background-color: var(--app-item-backgound-color);  
         }
         .typeKind{
+            margin-left: auto;
+            margin-right: auto;
+            width: 379px;
+            height: 275px;
+            box-sizing: border-box;
             color: var(--app-backgound-color);
-            font-size: 44px;
             font-variant: all-petite-caps;
-            text-shadow: 1px 1px 1px var(--paper-red-400);
             font-style: italic;
-            font-weight: 400;
             letter-spacing: 5px;
+            background-color: aliceblue;
+            padding: 14px;
+            border-radius: 17px;
         }
+
         .typeheader {
             color: var(--paper-deep-orange-600);
             font-size: 23px;
-            text-shadow: 3px 2px 2px var(--app-primary-color)
+        }
+        h4{
+            color: var(--google-blue-500);
+            text-align: center;
         }
        h2[pub="send to articles ?"],  h2[pub="publish ?"]{
-            color: #75ff32;
-            text-shadow: unset!important;
+           color: var(--paper-green-600);
          } 
-                
-        paper-button {
-            background-color: #e3e3e3
-        }
-        paper-button[right] {
-            float: right;
-        }
-        paper-button[left] {
-            float: left;
-        }        
+
+        div[btns]{
+            display: flex;
+            flex-direction: column;
+            height: 120px;
+        }    
     </style>
 
-    <nav id="navbottom" bottom2 >
-        <h2 class="typeKind" pub$="[[headderMsgKind]]"> [[headderMsg]] </h2>    
-        <h2 class="typeheader">[[type]]</h1>
-        <div one>
-            <h3>[[title]]</h3>
-        </div>
-        <div tow>
-            <paper-button left on-click="openConfirm">
-                cancel 
-            </paper-button>
-            <paper-button right on-click="execute">
-                confirm 
-            </paper-button>
-        </div>     
+    <nav id="navbottom" bottom2>
+        <div class="typeKind" >
+            <h2 class="typeheader" pub$="[[headderMsgKind]]"> [[headderMsg]] </h2>    
+            <h4>[[type]]: </h4>
+            <div btns>
+                <div one>
+                    <span kind>[[title]]</span>
+                </div>
+                <div tow>
+                    <paper-button left on-click="openConfirm">
+                        cancel 
+                    </paper-button>
+                    <paper-button right on-click="execute">
+                        confirm 
+                    </paper-button>
+                </div>   
+            </div> 
+        </div>  
     </nav>
     `}
 
@@ -174,20 +173,34 @@ class cmsConfirm extends PolymerElement {
         this.method(this.argument)
         this.closeOut()
     }
-    _cleanUnderscore(data) {
-        let cleaned = data
-        cleaned = cleaned.split('_').join(' ')
-        return cleaned
-    }
     openConfirm(event) {
         if (this.confirm === false) {
-            this.title = this._cleanUnderscore(event.detail.name)
-            this.method = event.detail.method;
-            this.argument = event.detail.argument || event
-            this.headderMsg = this[event.detail.headderMsgKind] || event.detail.headderMsgKind
-            this.headderMsgKind = event.detail.headderMsgKind
-            this.type = this[event.detail.type] || event.detail.type
-            this.confirm = true
+            if (!(typeof this[event.detail.name] === 'function') || !(typeof this[event.detail.name] === 'object')) {
+                this.title = event.detail.name
+                if (!(typeof this[event.detail.method] === 'function') || !(typeof this[event.detail.method] === 'object')) {
+                    this.method = event.detail.method;
+                    if (!(typeof this[event.detail.argument] === 'function') || !(typeof this[event.detail.argument] === 'object')) {
+                        this.argument = event.detail.argument || event
+                        if (!(typeof this[event.detail.type] === 'function') || !(typeof this[event.detail.type] === 'object')) {
+                            this.type = this[event.detail.type] || event.detail.type
+                            if (!(typeof this[event.detail.headderMsgKind] === 'function') || !(typeof this[event.detail.headderMsgKind] === 'object')) {
+                                this.headderMsg = this[event.detail.headderMsgKind] || event.detail.headderMsgKind
+                                this.headderMsgKind = event.detail.headderMsgKind
+                            }
+                            this.confirm = true
+                        } else {
+                            this.headderMsg = 'entry is typeof: ' + typeof this[event.detail.headderMsgKind] + ' put space & "!" or spcae & "?" or undescore  & msg"_MSG"'
+                            this.headderMsgKind = 'entry is typeof: ' + typeof this[event.detail.headderMsgKind] + ' put space "!" or spcae "?" or undescore & msg "_MSG"'
+                        }
+                    } else {
+                        this.type = 'entry is typeof: ' + typeof this[event.detail.type] + ' put space & "!" or spcae & "?" or undescore & msg "_MSG"'
+                    }
+                } else {
+                    this.method = 'entry is typeof: ' + typeof this[event.detail.method] + ' put space & "!" or spcae & "?" or undescore & msg "_MSG"'
+                }
+            } else {
+                this.title = 'entry is typeof: ' + typeof this[event.detail.name] + ' put space & "!" or spcae & "?" or undescore & msg "_MSG"'
+            }
         } else {
             this.closeOut()
         }

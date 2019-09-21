@@ -205,7 +205,6 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             this.updated = this.subcat.id === event.detail.update ? true : false
             setTimeout(() => {
                 this.routeData.page = "subcategory-pages"
-                this.query = { content: this.query.content }
                 if (this.childElementCount > 0 && this.children.item(this.children).tagName === "PAPER-SPINNER-LITE") {
                     this._subcatAdded(this._indexArr)
                 }

@@ -32,6 +32,7 @@ export class worker {
             collection(table.coll)
         return pagesRef.get();/**/
     }
+
     queryItemCollectionDocDev(table) {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
         return pagesRef.get(); /**/
@@ -46,6 +47,33 @@ export class worker {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0], table.query[1], (table.query[2] === 'true')).where(table.query2[0], table.query2[1], (table.query2[2] === 'true'))
         return pagesRef.get(); /**/
     }
+
+
+
+
+    queryCCDoc(table) {
+        var pagesRef = this.db.collection(table.name).where(table.query).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
+        return pagesRef.get();/**/
+    }
+
+    queryCCDocDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
+        return pagesRef.get(); /**/
+    }
+
+
+    mixQueryCCDoc(table) {
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0], table.query[1], table.query[2]).where(table.query2[0], table.query2[1], table.query2[2])
+        return pagesRef.get();/**/
+    }
+
+    mixQueryCCDocDev(table) {
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0], table.query[1], (table.query[2] === 'true')).where(table.query2[0], table.query2[1], (table.query2[2] === 'true'))
+        return pagesRef.get(); /**/
+    }
+
+
+
 
     /** */
 
@@ -204,6 +232,8 @@ export class worker {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc)
         return pagesRef.set(table.data);
     }
+
+
     queryDocItemCollectionCollection(table) {
         var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).where(table.query, table.condition, table.value)
         return pagesRef.get();

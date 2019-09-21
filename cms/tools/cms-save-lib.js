@@ -13,7 +13,7 @@ const cmsPagesLib = function (superClass) {
         _askPages(query) {
             getPages(query).then((done) => {
                 this._setAll(done);
-            }, __DEV).catch(error => {
+            }).catch(error => {
                 console.error(error)
             });
         }
@@ -249,19 +249,39 @@ const cmsMediaLib = function (superClass) {
         ready() {
             super.ready();
         }
-        _getGalleries(data) {
-            if (data === true || data === 'true') {
-                getGalleries().then(data => {
-                    let temp = data, arr = []
-                    for (let par in temp) {
-                        arr.push(temp[par])
-                    }
-                    this.set('galleries', arr)
-                }).catch(error => {
-                    console.log(error)
-                })
-            }
-            this.removeChild(this.children[0])
+        _getGalleries(query) {
+            getNRGalleries(query).then(data => {
+                this.checkSpinner()
+                this.set('galleries', data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+        _getAllGalleries() {
+            getRnNRGallerries().then(data => {
+                this.checkSpinner()
+                this.set('galleries', data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+        getGalleryImages(gallery, query) {
+            getGalleryImages(gallery, query).then(data => {
+                this.checkSpinner()
+                console.log(data)
+                // this.set('galleries', data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+        removeGallerie(data) {
+            removeGalleries(data).then(() => {
+                this.setter = true
+            })
+        }
+        checkSpinner() {
+            if (this.children.item(this.children).tagName === "PAPER-SPINNER-LITE")
+                this.removeChild(this.children[0])/**/
         }
     }
 }
@@ -270,7 +290,7 @@ export { cmsMediaLib }
 export { cmsPagesLib }
 export { cmsSubcatsLib }
 
-function getGalleries() {
+function getRnNRGallerries() {
     return new Promise((resolve, reject) => {
         _DBW.getMediaGalleries((done, err) => {
             if (done !== 'error') {
@@ -281,8 +301,66 @@ function getGalleries() {
             }
         }, __DEV)
     })
-
 }
+function getNRGalleries(query) {
+    return new Promise((resolve, reject) => {
+        _DBW.getGalleriesEqualTo((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                reject(err)
+            }
+        }, query.q, query.v, __DEV)
+    })
+}
+function getGalleryImages(gallery, query) {
+    return new Promise((resolve, reject) => {
+        _DBW.queryPageData((done) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                reject()
+                console.error(err)
+            }
+        }, { name: gallery, dataType: "data", query: query }, __DEV)
+    })
+}
+function removeGalleries(data) {
+    return new Promise((resolve, reject) => {
+        _DBW.removeMediaGallery((done, err) => {
+            if (done !== 'error') {
+                resolve()
+            } else {
+                reject()
+                console.error(err)
+            }
+        }, data, __DEV)
+    })
+}
+function queryGalleries(data) {
+    return new Promise((resolve, reject) => {
+
+    })
+}
+
+function getImages() {
+    return new Promise((resolve, reject) => {
+        _DBW.getMediaGalleriesData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                console.log(err);
+                reject(err)
+            }
+        }, { gallery: '' }, __DEV)
+    })
+}
+
+/* ************************************************************************************************ */
+/* *******************************************subcats********************************************** */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
 function removeSubcatInfo(parent, id, inform) {
     return new Promise((resolve, reject) => {
         _DBW.setPageData((done, err) => {

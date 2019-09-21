@@ -67,7 +67,6 @@ class cmsContent extends cmsTopPageTemplate {
     this.setBreadcrumbs(this.route, this.routeData)
   }
   _routePageChanged(route, page, query) {
-    console.log(route, page, query)
     if (!!route)
       if (route.prefix === "/content") {
         if (this.breadcrumbs.length > 0) {

@@ -111,8 +111,8 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: 'page: ' + this.page.id, method: (this.__delete).bind(this),
-                    argument: this.page.id, headderMsgKind: 'delete ?', type: 'page/category'
+                    name: this.page.id, method: (this.__delete).bind(this),
+                    argument: this.page.id, headderMsgKind: 'remove ?', type: 'page/category'
                 }
             }));
         });
@@ -122,8 +122,8 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: this.page.id, method: console.log,                                  // (this.__publish).bind(this),
-                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'categoryPage'
+                    name: this.page.id, method: console.log,// (this.__publish).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'page/category'
                 }
             }));
         });
@@ -134,7 +134,7 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                 bubbles: true, composed: true,
                 detail: {
                     name: this.page.id, method: console.log,
-                    argument: '!!to be done!!', headderMsgKind: 'send to articles ?', type: 'categoryPage'
+                    argument: '!!to be done!!', headderMsgKind: 'send to articles ?', type: 'page/category'
                 }
             }));
         });

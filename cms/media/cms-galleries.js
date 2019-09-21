@@ -1,14 +1,18 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
-import './cms-gallery-item';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
 class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
+    static get _topLabel() {
+        return html`       
+            <h2>[[Galleries]]</h2>               
+        `
+    }
     static get _getSilentAnchor() {
         return html`            
-        <a href="[[rootPath]]media/images/add-gallery">
+        <a href="[[rootPath]]media/galleries/add-gallery">
                 <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
                 </paper-icon-button>
-            [[ADD]] [[Galleries]]
+            [[ADD]] 
         </a>
         `
     }
@@ -16,12 +20,17 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         return html`
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[Gallery]] </h4>
+                <h4> [[Gallery]]  [[viewEdit]]</h4>
             </div>
-        </section>    
+        </section>     
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[viewEdit]] </h4>
+                <h4> [[viewEdit]] images </h4>
+            </div>
+        </section> 
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[viewEdit]] Groups </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
@@ -35,14 +44,8 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         return html`
         <dom-repeat items="[[galleries]]" as="gallery">
             <template>                
-                <cms-gallery-item 
-                    route="{{route}}" 
-                    gallery="[[gallery]]" 
-                    images="{{images}}" 
-                    method="[[method]]"
-                    query="[[query]]"
-                    return-path="{{returnPath}}"> 
-                </cms-gallery-item>
+                [[putElement(index, gallery)]]
+                <slot name="item[[index]]"></slot>
             </template>
         </dom-repeat>
         `}
@@ -50,6 +53,10 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
 
     static get properties() {
         return {
+            route: {
+                type: Object,
+                notify: true
+            },
             lang: {
                 type: String,
                 observer: '__changeLang'
@@ -89,6 +96,10 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
                     return MyAppGlobals[window.cms]// MyAppGlobals.translator
                 }
             },
+            sloted: {
+                type: Boolean,
+                value: false
+            }
         }
     }
     static get observers() {
@@ -104,7 +115,6 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         this.translator.target('cms-galleries', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-galleries', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-galleries', 'setLangObject')
-        this._getGalleries(true)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -121,25 +131,28 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query, active) {
-        if (!!this.route) {
-            let arr2 = []
-            arr2.push('home')
-            //  arr2.push(this.route.prefix)
-            this.set('breadcrumbs', arr2)
-        }
-        if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === true) {
-            this.method = query.method
-            let string = !!query.parent ? `${query.addimageto}${query.parent}${query.content}` : `${query.addimageto}${query.content}`
-            this.contentto = JSON.parse(localStorage[string])
-            this.add = true/**/
-        }
-        if (active === true && ['galleries'].indexOf(routeData.page) !== -1 && 'addimageto' in query === false) {
-            this.addImageTo = ''
-            this.contentto = {}
-            this.add = false
+        if (['galleries'].indexOf(routeData.page) !== -1) {
+            this._getGalleries({ q: 'removed', v: false })
         }
     }
-
+    putElement(index, gallery) {
+        if (typeof this.time === 'number') {
+            clearTimeout(this.time)
+        }
+        if (this.sloted === false) {
+            let template = html`   
+                         <cms-gallery-item> 
+                        </cms-gallery-item>`;
+            var clone = document.importNode(template.content, true);
+            this.appendChild(clone);
+            let count = (this.childElementCount - 1)
+            this.children[count].setAttribute('slot', `item${count}`);
+            this.children[count].set('gallery', gallery);
+            this.time = setTimeout(() => {
+                this.set('sloted', true)
+            }, 60);
+        }
+    }
     log(data) {
         console.log(data)
     }

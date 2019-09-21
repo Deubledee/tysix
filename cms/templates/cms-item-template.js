@@ -12,11 +12,10 @@ export class cmsItemTemplate extends PolymerElement {
         } 
         ${this._getStyles}  
         /* styles reside in cms-content*/
-        </style>      
+        </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route> 
-            ${this._getElement}
-           
+        </app-route>             ${this._getElement}
+          
         `;
     }
     static get _getStyles() {

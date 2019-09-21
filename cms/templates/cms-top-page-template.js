@@ -14,11 +14,10 @@ export class cmsTopPageTemplate extends PolymerElement {
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
+    ${this._getLayer2Route}  
     <main> 
         <div class="divtop">
-          <!--section class="title2"-->
             ${this.topTitle}
-          <!--/section-->
         </div> 
         <nav class="navpages">
             <iron-pages selected="[[page]]" attr-for-selected="name">               
@@ -38,6 +37,9 @@ export class cmsTopPageTemplate extends PolymerElement {
 
       `;
   }
+  static get _getLayer2Route() {
+    return html` `
+  }
   static get topTitle() {
     return html`
     <div class="topLabel">     
@@ -47,7 +49,7 @@ export class cmsTopPageTemplate extends PolymerElement {
           </a>            
           <dom-repeat repeat items="[[breadcrumbs]]" as="page">
               <template>  
-                  <a href="[[_getStr(page)]][[queryContent]]">  
+                  <a href="[[_getStr(page)]][[_queryContent(index, page)]]">  
                       <paper-button  aria-label="Go back page">                   
                       [[_getPage(page)]]
                       </paper-button>               
@@ -151,13 +153,14 @@ export class cmsTopPageTemplate extends PolymerElement {
   }
   _getStr(item) {
     let str = ''
-    str = (item === '/content' || item === '/media' || item === '/users') ? `${item}/` : `${item}`
-    let count = item.split('/').length
-    this.queryContent = (count > 2) ? `?content=${this.query.content}&reset=false&update=${this.query.parent}` : ''
+    str = (item === '/content') ? `${item}/` : `${item}`
     return str
   }
+  _queryContent(index) {
+    if (index > 1)
+      return `?content=${this.query.content}&reset=false&update=${this.query.content}`
+  }
   _getPage(item) {
-    console.log(item)
     let word, final
     if (item === 'cmshome') {
       word = item.split('')

@@ -68,11 +68,7 @@ export class dataBaseworker {
         let obj = { name: 'articles' };
         getDocList.call(this, obj, done, dev)
     }
-    //pages
-    getAllPages(done, dev) {
-        let obj = { name: 'pages' };
-        getDocList.call(this, obj, done, dev)
-    }
+
 
     /****************************************************************************************************************************/
     /************************************************queries**********************************************************************/
@@ -123,9 +119,13 @@ export class dataBaseworker {
     }
 
     /****************************************************************************************************************************/
-    /****************************************************************************************************************************/
+    /*********************************************************pages**************************************************************/
     /****************************************************************************************************************************/
 
+    getAllPages(done, dev) {
+        let obj = { name: 'pages' };
+        getDocList.call(this, obj, done, dev)
+    }
     changePages(done, table, dev) {
         let obj = { name: 'pages', doc: table.name, data: table.update };
         updateContent.call(this, obj, done, dev)
@@ -183,25 +183,26 @@ export class dataBaseworker {
         let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.doc }
         deleteCollectionDoc.call(this, obj, done, dev)
     }
-    /* setSubcatsData(done, table, dev) {
-         let obj = { name: 'pages', docName: table.name, coll: 'subCatsInfo', doc: table.info }
-         createDocItemCollection.call(this, obj, done, dev)
-     }*/
+
+
     //media
     writeMediaContent(done, table, dev) {
         let teble = { name: "media", doc: table.gallerie, data: { content: table.content } };
         updateContent.call(obj, done, dev)
+    }
+    getGalleriesEqualTo(done, query, value, dev) {
+        let obj = { name: 'media', docName: 'images', coll: 'galleries', query: query, value: value, condition: '==' };
+        queryItemCollectionDoc.call(this, obj, done, dev)
     }
     getMediaGalleries(done, dev) {
         let obj = { name: 'media', docName: 'images', coll: 'galleries' };
         getItemCollectionDoc.call(this, obj, done, dev)
     }
     setMediaGalleries(done, table, dev) {
-        let obj = { name: String, docName: String, doc: Object };
-        obj.name = 'media';
-        obj.docName = table.gallery;
+        let obj = { name: 'media', docName: 'images', coll: 'galleries' };
         obj.doc = table;
-        createDoc.call(this, obj, done, dev)
+        console.log('não retornou porque tu não fizeste ainda ;)')
+        // createDoc.call(this, obj, done, dev)
     }
     deleteMediaGallery(done, gallery, dev) {
         let obj = { name: 'media', docName: gallery }
@@ -215,6 +216,7 @@ export class dataBaseworker {
         let obj = { name: 'media', docName: 'images', coll: 'galleries', collDocName: table.gallery, collDocCollName: 'groups' }
         getDocItemCollectionCollection.call(this, obj, done, dev)
     }
+
     //other
     loginFire(user) {
         Worker.login(user);
@@ -361,6 +363,7 @@ function queryDocList(obj, done, dev) {
     if (dev === false) {
         Worker.queryDocList(obj)
             .then((querySnapshot) => {
+                this.categories = []
                 querySnapshot.forEach((doc) => {
                     this.categories.push(doc);
                 });
@@ -372,6 +375,7 @@ function queryDocList(obj, done, dev) {
     else {
         Worker.queryDocListDev(obj)
             .then((querySnapshot) => {
+                this.categories = []
                 querySnapshot.forEach((doc) => {
                     this.categories.push(doc);
                 });

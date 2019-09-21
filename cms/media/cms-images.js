@@ -1,9 +1,9 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
+import { cmsMediaLib } from '../tools/cms-save-lib.js';
 import '../media/cms-image';
 import './cms-image-item'
-class cmsImages extends cmsMiddlePageTemplate {
-
+class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
     static get _topLabel() {
         return html`       
             <h3 class="higherh3">[[query.gallery]]</h3>       
@@ -188,21 +188,30 @@ class cmsImages extends cmsMiddlePageTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(routeData, active, query) {
-        if (!!active && !!routeData.page && routeData.page === "view-images") {
-            this.slashed = false;
-            this.set('Seach', location.search)
-            this.set('add', false)
-            this.imageData
-            if ('addimageto' in query) {
-                this.set('add', true)
-                if ('indexarr' in query) {
-                    this.set('indexarr', query.indexarr.split(''))
-                    this.adTosub = query.adTosub
+    _routePageChanged(routeData, query) {
+        if (!!routeData.page && routeData.page === "view-images") {
+            if (!!query.gallery) {
+                this.gallery = query.gallery
+                try {
+                    this.getGalleryImages(this.gallery, `removed,==,false`)
                 }
-                this.set('contentto', query.content)
+                catch (err) {
+                    console.log(err)
+                }
             }
         }
+
+        /*     this.slashed = false;
+             this.set('Seach', location.search)
+             this.set('add', false)
+             if ('addimageto' in query) {
+                 this.set('add', true)
+                 if ('indexarr' in query) {
+                     this.set('indexarr', query.indexarr.split(''))
+                     this.adTosub = query.adTosub
+                 }
+                 this.set('contentto', query.content)
+             }*/
     }
     _setContent(cont) {
         console.log(cont)

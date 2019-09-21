@@ -82,14 +82,15 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
     }
     _routePageChanged(routeData, query) {
         let reset = (query.reset === 'true')
+        let removed = (query.removed === 'true')
         if (routeData.page === "pages") {
             if (!query.reset) {
                 if (this.pages.length < 1)
                     this._askPages({ q: 'removed', v: false });
             }
-            if (!!query.reset) {
-                if (reset === true) {
-                    this._contentChanged(query, reset)
+            if ((!!query.reset) || (query.removed)) {
+                if ((reset === true) || (removed === true)) {
+                    this._contentChanged(query, (reset || removed))
                 }
             }
         }

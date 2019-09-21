@@ -34,26 +34,19 @@ class cmsMedia extends cmsTopPageTemplate {
   static get viewPages() {
     return html`
       <article name="galleries">         
-        <cms-gallery-viewer route="{{subroute}}" lang="[[lang]]">        
+        <cms-gallery-viewer route="{{route}}" lang="[[lang]]">  
+
           <cms-galleries slot="galleries" id="galleries"            
-            route="{{subroute}}" 
-            images="{{Imags}}" 
-            add="{{add}}" 
-            contentto="{{contentto}}" 
-            return-path="{{returnPath}}">
+            route="{{route}}">
           </cms-galleries>
 
           <cms-images slot="images" id="images"            
-            route="{{subroute}}" 
-            image-data="{{Imags}}" 
-            add="[[add]]" 
-            contentto="[[contentto]]" 
-            return-path="[[returnPath]]">
+            route="{{route}}">
           </cms-images>
 
         </cms-gallery-viewer>
       </article>
-      <article name="playlists" route="{{subroute}}"> 
+      <article name="playlists" route="{{route}}"> 
             videos
       </article>
   `
@@ -77,6 +70,10 @@ class cmsMedia extends cmsTopPageTemplate {
           return MyAppGlobals[window.cms]// MyAppGlobals.translator
         }
       },
+      queryContent: {
+        type: String,
+        notify: true
+      },
       returnPath: {
         type: String,
         notify: true
@@ -95,10 +92,6 @@ class cmsMedia extends cmsTopPageTemplate {
         type: Boolean,
         notify: true
       },
-      Imags: {
-        type: Array,
-        notify: true
-      },
       add: {
         type: Boolean,
         value: false
@@ -113,7 +106,7 @@ class cmsMedia extends cmsTopPageTemplate {
 
   static get observers() {
     return [
-      '_routePageChanged(route, routeData, query)'
+      '_routePageChanged(route, routeData, query, layer2Data, layer2route)'
     ];
   }
   ready() {
@@ -147,21 +140,20 @@ class cmsMedia extends cmsTopPageTemplate {
         this.setBreadcrumbs(this.route, this.routeData)
       }
       if (!routeData.page) {
-        this.page = 'home';
+        this.page = 'galleries';
       }
       if (!!routeData && !!routeData.page) {
-        if (['search', 'galleries', 'playlists'].indexOf(routeData.page) !== -1) {
+        if (['search', 'galleries', 'playlists', "view-images"].indexOf(routeData.page) !== -1) {
           this.page = routeData.page;
         }
         else {
-          console.log('view404', routeData.page, query);
+          // console.log('view404', routeData.page, query);
         }
       }
     }
   }
   setBreadcrumbs(route, routeData) {
     this.set('breadcrumbs', [])
-    console.log('breadcrumbs', routeData)
     if (!routeData.page) {
       let arr2 = []
       this.page = 'home';
@@ -175,51 +167,35 @@ class cmsMedia extends cmsTopPageTemplate {
         arr2.push('/media')
         this.set('breadcrumbs', arr2)
       }
-      if (["/galleries/images",
-        "/galleries/add-gallery"].indexOf(route.path) !== -1) {
+      if (["/view-images"].indexOf(route.path) !== -1) {
         let arr2 = []
         arr2.push("cmshome")
         arr2.push("/media")
         arr2.push("/media/galleries")
         this.set("breadcrumbs", arr2)
       }
-      if (["/galleries/images/add-image"].indexOf(route.path) !== -1) {
+      if (["/view-videos"].indexOf(route.path) !== -1) {
         let arr2 = []
         arr2.push("cmshome")
         arr2.push("/media")
         arr2.push("/media/galleries")
-        arr2.push("/media/galleries/images")
         this.set("breadcrumbs", arr2)
       }
-      /* if (["/galleries/images",
-         "/galleries/add-gallery"].indexOf(route.path) !== -1) {
-         let arr2 = []
-         arr2.push("cmshome")
-         arr2.push("/media")
-         arr2.push("/media/galleries")
-         this.set("breadcrumbs", arr2)
-       }
- 
-       if (["/videos/view-videos",
-         "/videos/add-videos",
-         "/videos/add-playlist"].indexOf(route.path) !== -1) {
-         let arr2 = []
-         arr2.push('cmshome')
-         arr2.push('/media')
-         arr2.push('/media/videos')
-         this.set('breadcrumbs', arr2)
-       }*/
     }
   }
-
+  _getStr(item) {
+    let str = ''
+    str = (item === '/media') ? `${item}/` : `${item}`
+    return str
+  }
+  _queryContent(index) {
+    if (index > 1)
+      return `?reset=false&update=${this.query.gallery}`
+  }
   _pageChanged(page) {
     if (page !== undefined) {
       if (page === 'galleries') {
-        import('./media/cms-gallery-viewer').then(module => {
-          return;
-        }).catch(error => {
-          console.log(error);
-        });
+        import('./media/cms-gallery-viewer')
         return;
       }
       if (page === 'articles') {

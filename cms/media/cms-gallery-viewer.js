@@ -1,5 +1,6 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template.js';
+import './cms-gallery-item';
 
 class cmsGalleryViewer extends cmsViewerTemplate {
     static get _getSilentAnchor() {
@@ -11,11 +12,11 @@ class cmsGalleryViewer extends cmsViewerTemplate {
     }
     static get _getPages() {
         return html`
-        <article name="home">  
+        <article name="galleries">  
             <slot name="galleries"></slot>  
         </article>
 
-        <article name="view-edit-images">  
+        <article name="view-images">  
             <slot name="images"></slot>  
         </article>`
     }
@@ -41,48 +42,13 @@ class cmsGalleryViewer extends cmsViewerTemplate {
             '_routePageChanged(route, routeData, query)'
         ];
     }
-    _routePageChanged(route, page, query) {
-        if (route.prefix === '/media/galleries') {
-            if (page !== undefined && 'page' in page) {
-                if (route.path === "") {
-                    this.routeData.page = ''
-                    page.page = ''
-                }
-                if (!page.page) {
-                    this.page = 'home';
-                } else
-                    if (['galleries'].indexOf(page.page) !== -1) {
-                        this.page = 'home';
+    _routePageChanged(route, routeData, query) {
+        console.log(route, routeData)
+        if (['galleries', 'view-images'].indexOf(routeData.page) !== -1) {
+            this.page = routeData.page;
+        }
+    }
 
-                    } else
-                        if (['view-images'].indexOf(page.page) !== -1) {
-                            this.page = 'view-edit-images';
-                        } else
-                            if (['view-images', 'galleries', 'add-gallery', 'edit-gallery'].indexOf(page.page) !== -1) {
-                                this.page = page.page;
-                            } else {
-                                this.page = 'view404';
-                            }
-            }
-            else
-                if (page instanceof Object === true) {
-                    this.page = 'home';
-                }
-        }
-    }
-    __reset(event) {
-        if (['categorypages'].indexOf(event.detail) !== -1) {
-            let template = html`<cms-galleries slot="galleries">
-                          </cms-galleries>`;
-            let clone = document.importNode(template.content, true);
-            clone.route = this.route;
-            clone.lang = this.lang;
-            if (this.childElementCount < 5) {
-                this.appendChild(clone);
-                this.$.reset.click();
-            }
-        }
-    }
     _pageChanged(page) {
         if (page !== undefined) {
             if (page === 'home' || page === 'galleries') {
@@ -90,7 +56,7 @@ class cmsGalleryViewer extends cmsViewerTemplate {
                 });
                 return;
             }
-            if (page === 'view-edit-images') {
+            if (page === 'view-images') {
                 import('./cms-images').then(item => {
                 });
                 return;

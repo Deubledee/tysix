@@ -341,12 +341,12 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         if (this.add === false) {
             let string = `addimageto=cats&content=${this.content[0][this.query.lang].categoryName}&method=editSubCats&parent=${this.parent}&indexarr=${this._indexArr}&adTosub=${this.add}`
             localStorage.setItem(`cats${this.parent}${this.content[0][this.query.lang].categoryName}`, JSON.stringify(this.content))
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
+            window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
             localStorage.setItem(`subcatnotsaved`, JSON.stringify(this.content))
             let string = `addimageto=cats&method=editSubCats&content=notsaved`
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
+            window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
         window.onbeforeunload = function (e) {

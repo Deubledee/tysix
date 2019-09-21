@@ -296,12 +296,12 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         if (this.add === false) {
             localStorage[`page${this.query.content}`] = JSON.stringify(this.content)
             let string = `addimageto=page&method=editPages&content=${this.query.content}`
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
+            window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
             localStorage[`pagenotsaved`] = JSON.stringify(this.content)
             let string = `addimageto=page&method=editPages&content=notsaved`
-            window.history.pushState({}, null, `${this.rootPath}media/images/galleries?${string}`);
+            window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
         window.onbeforeunload = function (e) {

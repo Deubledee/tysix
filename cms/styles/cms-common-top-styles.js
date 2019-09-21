@@ -119,6 +119,7 @@ $_documentContainer.innerHTML = `
         height: 800px;
         max-width: 100%;
         padding: 10%;
+        background-color: var(--app-secondary-text-color);
     }    
     .topLabel{
         background: var(--app-item-backgound-color);
@@ -135,9 +136,8 @@ $_documentContainer.innerHTML = `
         flex-basis: 30%;
     }
     .navtop iron-icon {
-        color: black;
+        color: var(--google-blue-300);
         margin-left: 10px;
-        /*height: var(--app-tollbar-default-font-size)*/
     }
 
     section {
@@ -181,14 +181,13 @@ $_documentContainer.innerHTML = `
     }
 
     .button {
-        color: var(--app-backgound-color);
-        text-shadow: 1px 2px 2px black;
-        min-width: var(--app-content-paper-button-minwidth);
+        color: var(--app-content-section-span-color);
         width: 279px;
         font-size: 35px;
-        background-color: var(--app-item-backgound-color);
-        box-shadow: 1px 2px 3px var(--disabled-text-color);
+        background-color: var(--app-backgound-color);
         height: 137px;
+        border: 1px solid var(--dark-theme-secondary-color);
+        border-radius: 15px;
     }
 
     paper-tabs {

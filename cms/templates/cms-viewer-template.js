@@ -50,6 +50,7 @@ export class cmsViewerTemplate extends PolymerElement {
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
     active="{{active}}">
+    ${this._getLayer2Route}    
     </app-route>
         ${this._getSilentAnchor}
     <main id="main">
@@ -69,6 +70,9 @@ export class cmsViewerTemplate extends PolymerElement {
         <a id="reset" href="[[rootPath]]content/pages/">
         </a>
     </iron-selector>`
+    }
+    static get _getLayer2Route() {
+        return html` `
     }
     static get _getPages() {
         return html`
