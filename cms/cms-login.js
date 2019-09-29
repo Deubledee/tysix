@@ -196,39 +196,6 @@ class cmsLogin extends PolymerElement {
             this.set('notLogedIn', true);
             console.log(err);
         });
-        window.addEventListener('update-user', (event) => {
-            let string = `http://localhost:3000/update?obj=${JSON.stringify(event.detail)}&uid=${this._getUid()}`;
-            console.log(event.detail, string);
-            reuest(string, (items) => {
-                console.log('update sucssessfull', JSON.parse(items));
-                let content = JSON.parse(items);
-                if (content.accepted === 'admin') {
-                    window.dispatchEvent(new CustomEvent('user-updated', {
-                        detail: this
-                            .removeSensitiveData(JSON.parse(items))
-                    }));
-                }
-                else {
-                    window.dispatchEvent(new CustomEvent('app-error', {
-                        detail: content.error
-                    }));
-                }
-            }, 'POST', '');
-        });
-        window.addEventListener('ask-for-users', ((event) => {
-            let string = `http://localhost:3000/admin?uid=${this._getUid()}`;
-            if (this._getProperty('user') !== null) {
-                console.log();
-            }
-            reuest(string, (items) => {
-                console.log(items)
-                let content = JSON.parse(items);
-                //  if (content.accepted === 'admin') {
-                window.dispatchEvent(new CustomEvent('user-list', {
-                    detail: content
-                }));
-            }, 'POST', '');
-        }).bind(this));
     }
     _getUid() {
         let user = this._getProperty('user');
@@ -239,7 +206,7 @@ class cmsLogin extends PolymerElement {
             'email': this.email,
             'pwd': this.pwd
         };
-        this.translator._DBW.loginFire(obj);
+        this.translator.loginFire(obj);
         this.email = '';
         this.pwd = '';
     };
@@ -253,17 +220,9 @@ class cmsLogin extends PolymerElement {
             }
         });
     }
-    removeSensitiveData(categories) {
-        let finalString = [], obj = {};
-        for (let par in categories) {
-            if (['passwordHash', 'passwordSalt', 'metadata',
-                'providerData', 'tokensValidAfterTime'].
-                indexOf(par.toString()) === -1) {
-                obj[par.toString()] = categories[par];
-            }
-            finalString.push(obj);
-        }
-        return finalString;
-    }
 }
 customElements.define(cmsLogin.is, cmsLogin);
+
+
+
+

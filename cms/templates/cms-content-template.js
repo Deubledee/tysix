@@ -60,13 +60,7 @@ export class cmsContentTemplate extends PolymerElement {
     .navside {
         display: none;
     }
-    div[langdiv] section {
-        display: flex;
-        flex-flow: nowrap;
-        flex-direction: row-reverse;
-        border-right: 1px solid var(--disabled-text-color);
-        color: var(--app-published-color);
-    }
+
     div[goback]{
         height: 38px;
         display: flex;
@@ -93,38 +87,49 @@ export class cmsContentTemplate extends PolymerElement {
         flex-basis: 100%;
     }    
     div[inputlang] {
-        padding: 17px;
         box-sizing: border-box;
         position: absolute;
         top: 110px;
         left: 68%;
-        /* display: none; */
         background-color: var(--app-backgound-color);
         width: 419px;
         z-index: 10;
         height: 155px;
         padding: 17px;
-        padding-top: 43px;
-        /* border: 1px solid var(--light-theme-divider-color); */
         box-shadow: 0px 1px 7px var(--disabled-text-color);
         border-radius: 8px;
     }
     div[langdiv]{
+        position: relative;
+        top: 1px;
         margin-top: 30px;
         display: flex;
         flex-direction: row;
-        flex-basis: 35px;
-        background-color: var(--app-backgound-color);
+        flex-basis: 28px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        width: auto;
+        padding-left: 58px;
+    }   
+    div[langdiv] section {
         border: 1px solid var(--divider-color);
-        border-radius: 9px;
+        border-bottom: unset;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+        color: var(--disabled-text-color);
+        font-weight: 600;
+        background-color: var(--app-backgound-color);
     }
     .langdivsection{
+        display: flex;
         border-radius: unset!important; 
         box-shadow: unset!important;
         width: 110px;
         height: 60px;
     }
     .langdivsectionnpaddingtop {
+        display: flex;
+        flex-direction: row-reverse;
         padding-top: 6px;
         flex-basis: 7%;
     }
@@ -208,29 +213,48 @@ export class cmsContentTemplate extends PolymerElement {
     .upright, .upleft{
         top: 15px;
         height: 27px;
-        border-right-color: var(--dark-theme-secondary-color);
-        border-right-style: ridge;
-        border-right-width: 1px;
-        width: 1px;
+        width: 27px;
+        -webkit-transition: box-shadow 1s ease-out;
+        -moz-transition: box-shadow 1s ease-out;
+        transition: box-shadow 1s ease-out;
     }
     .upright{
         position: relative;
-        right: -13px;
         margin-left: auto;
-        transform: rotateZ(46deg)
+        transform: rotateZ(46deg);
+        box-shadow: 2px -2px 4px var(--light-theme-divider-color);
+        right: 22px;   
+    }
+    .upright[hovererd]{
+        -webkit-transition: box-shadow 1s ease-out;
+        -moz-transition: box-shadow 1s ease-out;
+        transition: box-shadow 1s ease-out;
+        transform: rotateZ(-45deg);
+        box-shadow: -2px -2px 4px var(--paper-light-blue-100)   
     }
     .upleft{
         position: relative;
-        right: 19px;
         margin-right: auto;
         margin-left: auto;
-        transform: rotateZ(-46deg);;
+        transform: rotateZ(-45deg);
+        box-shadow: -2px -2px 4px var(--light-theme-divider-color);
+        right: -1px;
+    }
+    .upleft[hovererd]{
+        -webkit-transition: box-shadow 1s ease-out;
+        -moz-transition: box-shadow 1s ease-out;
+        transition: box-shadow 1s ease-out;
+        transform: rotateZ(45deg);
+        box-shadow: 2px -2px 4px var(--paper-light-blue-100);
     }
     paper-button[aria-label="lang"]{
         top: 11px;
         left: 8px;
         color: var(--app-content-section-span-color);
         font-weight: 500;
+    }
+    .btnx{
+        height: 44px; 
     }
         ${this._getStyles}
     </style>
@@ -244,44 +268,38 @@ export class cmsContentTemplate extends PolymerElement {
                         [[infoState]]
                         ${this._getSideInfo}
                     </nav>
-                    <nav buttons>
-                        <div class="langdivsection borderright"> 
-                            <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]">
-                                <div class="upright">
+                    <nav buttons>  
+
+                        <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" on-click="_cancelhoverd" title="close">
+                            <div class="langdivsection borderright" on-mouseover="_hoverd" on-mouseout="_hoverd">        
+                                <div class="upleft" hovererd$="[[hovererd]]">
                                 </div>
-                                <div class="upleft">
+                                <div class="upright" hovererd$="[[hovererd]]">
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
+
                         <div class="rightblock"> 
                             <div class="langdivsection marginalize borderleft"> 
                                 <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
                                     [[Save]]
                                 </paper-button>
                             </div> 
-                            <section class="langdivsection marginalize borderleft">
-                                <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
-                                    <a class="anchorish" id="adlang"  on-click="_newLang">                                            
-                                        <paper-button aria-label="lang"> 
-                                            <span>Add lang</span>
-                                        </paper-button>
-                                    </a>           
-                                </iron-selector>
-                            </section>
+                            ${this._getLangButton}
                         </div>
                     </nav> 
-                    <div placerbottom> 
-                        <div langdiv> 
-                            ${this._getLangAnchor}
-                        </div>  
+                    <div placerbottom>
                         <div path> 
                             ${this._getPath} 
                             <div inputlang tgglelang$="[[!tgglelang]]"> 
-                                    <cms-content-item
-                                        item="[[itemlang]]"
-                                        save-button="[[saveButton]]"
-                                        res="{{addLangResponse}}">
-                                    </cms-content-item>     
+                                <div class="btnx">
+                                ${this._getXbutton}
+                                </div>
+                                <cms-content-item
+                                    item="[[itemlang]]"
+                                    save-button="[[saveButton]]"
+                                    res="{{addLangResponse}}">
+                                </cms-content-item>     
                                 <div class="closed" warning$="[[warning]]">
                                     <h5>
                                         [[warningMsg]] 
@@ -291,7 +309,10 @@ export class cmsContentTemplate extends PolymerElement {
                                     </a>                        
                                 </div>                                               
                             </div>
-                        </div>      
+                        </div> 
+                        <div langdiv> 
+                            ${this._getLangAnchor}
+                        </div>                               
                         <div class="flex">
                             <nav class="navbottom" id="bottom">                    
                                 ${this._getContentItems}
@@ -307,12 +328,31 @@ export class cmsContentTemplate extends PolymerElement {
     static get _getStyles() {
         return html``
     }
+    static get _getLangButton() {
+        return html` 
+        <section class="langdivsection marginalize borderleft">
+            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+                <a class="anchorish" id="adlang"  on-click="_newLang">                                            
+                    <paper-button aria-label="lang"> 
+                        <span>Add lang</span>
+                    </paper-button>
+                </a>           
+            </iron-selector>
+        </section>`
+    }
+    static get _getXbutton() {
+        return html` 
+        <paper-button class="exex" on-click="_newLang">
+            x
+        </paper-button> 
+         `
+    }
     static get _getLangAnchor() {
         return html`            
         <dom-repeat repeat items="[[pageLangs]]" as="pagelang">
             <template>
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">
-                    <paper-button class="exex" on-click="_openConfirm">
+                    <paper-button class="exex exexsmall" on-click="_openConfirm">
                             x
                     </paper-button>
                     <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
@@ -332,8 +372,8 @@ export class cmsContentTemplate extends PolymerElement {
 
     static get _getContentItems() {
         return html`
-                <div container >
-                    <div bottom hidebottom$="[[hidebottom]]">
+                <div container>
+                    <div bottom>
                         <dom-repeat repeat items="[[inputVal]]" as="item">
                             <template>
                                 <section class="flexchildbotomFull">
@@ -449,7 +489,12 @@ export class cmsContentTemplate extends PolymerElement {
                 notify: true,
                 reflectToAttribute: true,
             },
-
+            hovererd: {
+                type: Boolean,
+                value: false,
+                notify: true,
+                reflectToAttribute: true,
+            },
         }
     }
     ready() {
@@ -457,6 +502,15 @@ export class cmsContentTemplate extends PolymerElement {
     }
     onSave() {
         return 0
+    }
+    _hoverd(evt) {
+        this.set('hovererd', !this.hovererd)
+    }
+    _cancelhoverd() {
+        let time = setTimeout(() => {
+            this.hovererd = !1
+            clearTimeout(time)
+        }, 120);
     }
     _setContent(lang, content) {
         this.content = content

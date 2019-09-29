@@ -29,7 +29,14 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             .navside{
                 flex-basis: 181px;
             }
-            
+            .schooch{
+                margin-left: 42px; 
+            }
+            .smaller{
+                height: 29px;
+                min-width: 35px;
+                padding: 0 0;
+            }
            h3, h5, h2{
                margin-inline-start: -26px;
             }

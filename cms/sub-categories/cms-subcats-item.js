@@ -292,8 +292,8 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
         }
     }
     __store() {
-        localStorage.setItem(`cats${this.subcat.parent}${this.subcat.id}`, JSON.stringify([this.content]))
-        localStorage.setItem(`cats${this.subcat.parent}${this.subcat.id}info`, JSON.stringify([this.subcat]))
+        localStorage.setItem(`cats-${this.subcat.parent}-${this.subcat.id}`, JSON.stringify([this.content]))
+        localStorage.setItem(`cats-${this.subcat.parent}-${this.subcat.id}-info`, JSON.stringify([this.subcat]))
     }
     _setContent(content) {
         this.set('content', content);
@@ -336,12 +336,6 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
         }
         if (index === index2) {
             this.__checkEqual(data, temp, index2)
-        }
-    }
-    deSpin() {
-        if (this.spinOut === false) {
-            this.removeChild(this.children[0])
-            this.spinOut = true
         }
     }
     _getObjArr(content) {

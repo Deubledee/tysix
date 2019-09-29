@@ -40,8 +40,7 @@ class cmsMedia extends cmsTopPageTemplate {
             route="{{route}}">
           </cms-galleries>
 
-          <cms-images slot="images" id="images"            
-            route="{{route}}">
+          <cms-images slot="images" id="images" route="{{route}}">
           </cms-images>
 
         </cms-gallery-viewer>
@@ -55,6 +54,10 @@ class cmsMedia extends cmsTopPageTemplate {
 
   static get properties() {
     return {
+      route: {
+        type: Object,
+        notify: true
+      },
       lang: {
         type: String,
         notify: true
@@ -140,15 +143,18 @@ class cmsMedia extends cmsTopPageTemplate {
         this.setBreadcrumbs(this.route, this.routeData)
       }
       if (!routeData.page) {
-        this.page = 'galleries';
+        this.page = 'home';
       }
       if (!!routeData && !!routeData.page) {
-        if (['search', 'galleries', 'playlists', "view-images"].indexOf(routeData.page) !== -1) {
-          this.page = routeData.page;
-        }
-        else {
-          // console.log('view404', routeData.page, query);
-        }
+        if (["view-images"].indexOf(routeData.page) !== -1) {
+          this.page = 'galleries';
+        } else
+          if (['search', 'galleries', 'playlists'].indexOf(routeData.page) !== -1) {
+            this.page = routeData.page;
+          }
+          else {
+            // console.log('view404', routeData.page, query);
+          }
       }
     }
   }
@@ -167,7 +173,7 @@ class cmsMedia extends cmsTopPageTemplate {
         arr2.push('/media')
         this.set('breadcrumbs', arr2)
       }
-      if (["/view-images"].indexOf(route.path) !== -1) {
+      if (["/view-images", "/view-images/add-images", "/view-images/edit-images"].indexOf(route.path) !== -1) {
         let arr2 = []
         arr2.push("cmshome")
         arr2.push("/media")

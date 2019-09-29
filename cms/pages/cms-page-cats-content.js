@@ -1,5 +1,3 @@
-import { microTask } from '@polymer/polymer/lib/utils/async';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsPagesLib } from '../tools/cms-save-lib.js';
@@ -177,11 +175,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 value: {},
                 observer: '_setContentTextValue'
             },
-            hidebottom: {
-                type: Boolean,
-                value: false,
-                reflectToAttribute: true,
-            },
             content: {
                 type: Object,
                 notify: true,
@@ -242,38 +235,28 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             }
             this.closestr = 'content/pages'
             if (active === true && routeData.page === 'add-category-pages') {
-                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
-                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
-                        detail: 0, bubbles: true, composed: true
-                    }));
-                });
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
-                    localStorage[`pagenewcontentinfo`] = atob(ModeloInfo)
+                    localStorage[`page-new-content-info`] = atob(ModeloInfo)
                     let obj = cont.images.content
                     this.imageLabel = 'images'
                     this.set('imageArr', obj)
                     this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
                     this._setContent('lang', [cont])
-                    this._getPageInfo(`pagenewcontent`)
+                    this._getPageInfo(`page-new-content-`)
                     this.set('pageLangs', [])
                 }
             }
             if (active === true && routeData.page === 'edit-category-pages') {
-                this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
-                    this.dispatchEvent(new CustomEvent('scrollpageholder', {
-                        detail: 0, bubbles: true, composed: true
-                    }));
-                });
                 this.set('content', []);
                 //  this.$.saveButton.classList.add('diferent')
                 if (!!this.added) {
                     //  this.$.saveButton.classList.remove('diferent')
                 }
                 if (!!query.content) {
-                    if (!!localStorage[`page${query.content}`]) {
-                        let cont = JSON.parse(localStorage[`page${query.content}`])
-                        this._getPageInfo(`page${query.content}`)
+                    if (!!localStorage[`page-${query.content}`]) {
+                        let cont = JSON.parse(localStorage[`page-${query.content}`])
+                        this._getPageInfo(`page-${query.content}-`)
                         if (this.add === false) {
                             this.set('inputVal', [])
                             this.set('textareaVal', [])
@@ -294,13 +277,13 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
     addImage() {
         if (this.add === false) {
-            localStorage[`page${this.query.content}`] = JSON.stringify(this.content)
-            let string = `addimageto=page&method=editPages&content=${this.query.content}`
+            localStorage[`page-${this.query.content}-info`] = JSON.stringify(this.content)
+            let string = `add=true&type=page&content=${this.query.content}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
-            localStorage[`pagenotsaved`] = JSON.stringify(this.content)
-            let string = `addimageto=page&method=editPages&content=notsaved`
+            localStorage[`page-not-saved`] = JSON.stringify(this.content)
+            let string = `add=true&type=page&content=page-not-saved`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }

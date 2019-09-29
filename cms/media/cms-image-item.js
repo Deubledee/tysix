@@ -1,12 +1,16 @@
-import { cmsItemTemplate } from '../templates/cms-item-template'
+import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/polymer-element';
-export class cmsImageItem extends cmsItemTemplate {
+import '../../src/shop-image';
+import { cmsItemTemplate } from '../templates/cms-item-template';
+import { cmsMediaLib } from '../tools/cms-save-lib.js';
+export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsItemTemplate)) {
     static get _getElement() {
         return html`
         <dom-repeat repeat items="[[content]]" as="item">
             <template>                
-                <article centerImageItem>
-                    <div class="padding">
+                <div centerImageItem>
+                    <article class="padding">
                         <shop-image
                             class="bigger"
                             aria-label="image"
@@ -14,35 +18,43 @@ export class cmsImageItem extends cmsItemTemplate {
                             src="[[item.url]]" 
                             alt="[[item.title]]">
                         </shop-image> 
-                    </div>
-                    <div class="padding" title="[[item.title]]">
-                        [[item.title]]
-                    </div>
-                    <div class="padding" title="[[item.dateAdded]]">
-                        [[item.dateAdded]]
-                    </div>
-                    <div class="padding" title="[[item.gallery]]"> 
-                            [[item.gallery]]
-                    </div>
-                    <div class="padding" title="[[item.url]]">
-                        [[item.url]] 
-                    </div>
-                    <div class="padding">
-                        <paper-button title="[[this.add]]" on-click="_add" value$="item-[[idx]]">
+                    </article>
+                    <article class="padding" title="[[item.title]]">
+                        <paper-button title="[[this.title]]">
+                            [[item.title]]
+                        </article>
+                    </paper-button>
+                    <article class="padding" title="[[item.addedTo]]">
+                        <paper-button title="[[this.addedTo]]">
+                            [[item.addedTo]]
+                        </paper-button>
+                    </article>
+                    <article class="padding" title="[[item.gallery]]"> 
+                        <paper-button title="[[this.add]]" >
+                                [[item.gallery]]
+                        </paper-button>
+                    </article>
+                    <article class="padding" title="[[item.url]]">
+                        <paper-button title="[[this.add]]">
+                            [[item.url]] 
+                        </article>
+                    </paper-button>
+                    <article class="padding">
                             [[this.add]]
                             <dom-if if="[[add]]">
                                 <template>
-                                    <paper-icon-button icon="av:library-add" aria-label="add">
-                                    </paper-icon-button>
+                                    <paper-button title="[[this.add]]" on-click="_checUncheckkAdd">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
+                                    </paper-button>
                                 </template>
                             </dom-if>                            
                             <dom-if if="[[!add]]">
                                 <template>
-                                    <paper-icon-button icon="av:not-interested" aria-label="delete">
-                                    </paper-icon-button>
+                                    <paper-button title="[[this.add]]" on-click="_checkDelete">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="delete" checked="{{checked::checked}}">
+                                    </paper-button>
                                 </template>
                             </dom-if>
-                        </paper-button>
                     </div>
                 </article> 
             </template>                            
@@ -51,6 +63,18 @@ export class cmsImageItem extends cmsItemTemplate {
     static get is() { return 'cms-image-item'; }
     static get properties() {
         return {
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
+                }
+            },
+            toAdd: {
+                type: Array,
+                notify: true,
+                value: []
+            },
             image: {
                 type: Object,
                 notify: true,
@@ -59,10 +83,8 @@ export class cmsImageItem extends cmsItemTemplate {
                 type: String,
                 reflectToAttribute: true
             },
-            res: {
-                type: Object,
-                notify: true,
-                value: {}
+            checked: {
+                type: Boolean
             },
             content: {
                 type: Array,
@@ -80,72 +102,24 @@ export class cmsImageItem extends cmsItemTemplate {
         super.ready();
     }
     _putRow(item) {
-        if (this.resetButton !== undefined) {
-            /* let reset = this.resetButton.onclick
-             this.resetButton.onclick = {}*/
-            this.resetButton.addEventListener('click', () => {
-                if (this.addButton !== undefined) this.addButton.classList.remove('added')
-                reset()
-            }, false)
-        }
+        this.set('add', (this.query.add ? (this.query.add === 'true') : false))
         return [item]
     }
-    _getIcon(add) {
-        if (add === true) {
-            return `
-                <paper-icon-button icon="av:library-add" aria-label="add">
-                </paper-icon-button>`
+
+    _checUncheckkAdd() {
+        if (this.checked === true) {
+            this.toAdd = this.toAdd.filter((item, idx) => { if (this.idx !== idx) { return item } })
+        } else {
+            this.toAdd.splice(this.idx, 0, this.image);
         }
-        if (add === false) {
-            return `
-                <paper-icon-button icon="av:not-interested" aria-label="delete">
-                </paper-icon-button>`
-        }
-    }
-    _addImage(image) {
-        this.res = JSON.parse(localStorage[`${this.query.addimageto}${this.query.parent}${this.query.content}`])
-        let images = this.res[0].images.content
-        images.push(image)
-        localStorage[`${this.query.addimageto}${this.query.parent}${this.query.content}`] = JSON.stringify(this.res)
-        if (this.saveButton.classList.contains('diferent') === true) {
-            this.saveButton.classList.remove('diferent')
-            this.resetButton.classList.add('diferent')
-        }
+        this.checked = !this.checked
     }
 
+    _checkDelete(event) {
+        console.log(event)
+    }
     _removeImage(image) {
-        if (this.toContent instanceof Array) {
-            this.toContent.image.s
-        } else {
-            this.toContent.image.push(image)
-        }
-        if (this.saveButton.classList.contains('diferent') === true) {
-            this.saveButton.classList.remove('diferent')
-        }
-    }
-    __add(event) {
-        this.set('addButton', event.srcElement)
-        if (this.addButton.classList.contains('added') === false) {
-            let save = this.saveButton.onclick
-            this.saveButton.onclick = {}
-            this.saveButton.onclick = () => {
-                this.addButton.classList.remove('added')
-                save()
-            }
-            this.addButton.classList.add('added')
-            this._addImage(this.image)
-        } else {
-            this.addButton.classList.remove('added')
-            this._removeImage(this.idx)
-        }
-    }
-    _add(event) {
-        if (this.add === false) {
-            this.delete(event)
-        }
-        if (this.add === true) {
-            this.__add(event)
-        }
+
     }
     _getTitle(add) {
         if (add === true) {

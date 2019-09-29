@@ -96,6 +96,10 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
                     return MyAppGlobals[window.cms]// MyAppGlobals.translator
                 }
             },
+            spinOut: {
+                type: Boolean,
+                value: false
+            },
             sloted: {
                 type: Boolean,
                 value: false

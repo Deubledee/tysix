@@ -230,6 +230,12 @@ class cmsControler extends PolymerElement {
     <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
     </cms-subcats-content>
 
+    <cms-galleries-content name="add-gallery" user="[[user]]" route="[[popOutRoute]]">
+    </cms-galleries-content>
+
+    <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
+    </cms-images-content>
+
   </iron-pages> 
 
   <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">    
@@ -366,9 +372,15 @@ class cmsControler extends PolymerElement {
     } else
       if (['/add-subcategory-pages', '/edit-subcategory-pages'].indexOf(popOutRoute.path) !== -1) {
         this.popout = 'add-subcategory-pages'
-      } else {
-        this.popout = ''
-      }
+      } else
+        if (['/add-gallery', '/edit-gallery'].indexOf(popOutRoute.path) !== -1) {
+          this.popout = 'add-gallery'
+        } else
+          if (['/add-images', '/edit-images'].indexOf(popOutRoute.path) !== -1) {
+            this.popout = 'add-images'
+          } else {
+            this.popout = ''
+          }
   }
   _routePageChanged(page) {
     if (this.page !== page.page && page.page == page.page) {
@@ -418,6 +430,16 @@ class cmsControler extends PolymerElement {
     }
     if (page === 'add-subcategory-pages') {
       import('./sub-categories/cms-subcats-content').then(item => {
+      });
+      return;
+    }
+    if (page === 'add-gallery') {
+      import('./media/cms-gallery-content').then(item => {
+      });
+      return;
+    }
+    if (page === 'add-images') {
+      import('./media/cms-images-content').then(item => {
       });
       return;
     }

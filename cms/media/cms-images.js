@@ -1,9 +1,10 @@
+import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
-import '../media/cms-image';
-import './cms-image-item'
-class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
+import './cms-image-item';
+class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsMiddlePageTemplate)) {
     static get _topLabel() {
         return html`       
             <h3 class="higherh3">[[query.gallery]]</h3>       
@@ -12,7 +13,7 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     static get _getSilentAnchor() {
         return html`
-            <a href="[[rootPath]]media/images/add-images?&add=true">
+            <a href="[[rootPath]]media/view-images/add-images?gallery=[[query.gallery]]&add=true">
                 <paper-tab name=" add-category-pages">                        
                     <span class="spanpadding"> 
                     [[ADD]] 
@@ -57,27 +58,30 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
             </div>  
         </section>
         <section class="flexchildbotom noFlex">
-            <div class="center">  
-                <h4> 
-                [[delete]]   [[add]]     </h4>     
+            <div class="center flex schooch">
+                <paper-button class="smaller">
+                    <input title="[[image.uploaded]]" type="checkbox" on-click="_selectAll" aria-label="check-all">
+                </paper-button>  
+                <paper-button class="smaller" on-click="_saveAndBack">
+                    [[delete]] 
+                </paper-button>     
             </div>  
         </section>`
     }
     static get _getTable() {
         let template = html`
             <div table> 
-                <cms-image 
-                    add-to="{{add}}" 
-                    ad-tosub="[[adTosub]]" 
-                    to-content="[[contentto]]" 
-                    indexarr="[[indexarr]]"
-                    return-path="[[returnPath]]"
-                    save-button="[[saveButton]]" 
-                    reset-button="[[resetButton]]"
-                    lang="[[lang]]" 
-                    route="[[route]]"
-                    images="[[contents]]">
-                </cms-image>
+                <dom-repeat repeat items="[[IMAGES]]" as="image">
+                    <template>
+                        <cms-image-item  
+                            query="[[query]]"
+                            image="[[image]]" 
+                            checked="[[checked]]"
+                            to-add="{{toAdd}}"
+                            idx="[[index]]"
+                        </cms-image-item>
+                    </template>                            
+                </dom-repeat>
             </div>`
         return template
     }
@@ -85,6 +89,10 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
 
     static get properties() {
         return {
+            route: {
+                type: Object,
+                notify: true
+            },
             translator: {
                 type: Object,
                 notify: true,
@@ -92,12 +100,6 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
                     return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
-            hidebottom: {
-                type: Boolean,
-                value: true,
-                reflectToAttribute: true,
-            },
-            indexarr: Array,
             lang: {
                 type: String,
                 notify: true
@@ -106,10 +108,19 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
                 type: Object,
                 value: {}
             },
-            add: {
-                type: String,
+            IMAGES: {
+                type: Array,
+                notify: true
+            },
+            toAdd: {
+                type: Array,
                 notify: true,
-                computed: '_setLabelAdd(addTo)'
+                value: []
+            },
+            checked: {
+                type: Boolean,
+                value: false,
+                notify: true
             },
             delete: {
                 type: String,
@@ -121,55 +132,23 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
                 value: false,
                 notify: true
             },
-            Seach: {
-                type: String,
-                notify: true,
-                value: ''
-            },
-            route: {
-                type: Object,
-                notify: true
-            },
-            add: {
+            spinOut: {
                 type: Boolean,
-                notify: true
-            },
-            adTosub: {
-                type: Boolean,
-                notify: true
-            },
-            returnPath: {
-                type: String,
-                notify: true,
-            },
-            contentto: {
-                type: Object,
-                notify: true
-            },
-            resetButton: Object,
-            saveButton: Object,
-            imageData: {
-                type: Array,
-                notify: true
-            },
-            user: {
-                type: Object,
-                notify: true,
-            },
-            contents: {
-                type: Array,
-                notify: true,
-                computed: '_setContent(imageData)'
+                value: false
             },
         }
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, active, query)'
+            '_routePageChanged(routeData, query)'
         ];
     }
     ready() {
         super.ready()
+        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+        </paper-spinner-lite>`
+        this.spinOut = false
+        this.translator.clone(this)
         this.translator.target('cms-image', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-image', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-image', 'setLangObject')
@@ -190,38 +169,49 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     _routePageChanged(routeData, query) {
         if (!!routeData.page && routeData.page === "view-images") {
+            if (!!query.add) {
+                this.addTo = true
+                console.log()
+            }
             if (!!query.gallery) {
                 this.gallery = query.gallery
-                try {
-                    this.getGalleryImages(this.gallery, `removed,==,false`)
-                }
-                catch (err) {
-                    console.log(err)
-                }
+                this.getGalleryImages(this.gallery, `removed,==,false`)
             }
         }
+    }
 
-        /*     this.slashed = false;
-             this.set('Seach', location.search)
-             this.set('add', false)
-             if ('addimageto' in query) {
-                 this.set('add', true)
-                 if ('indexarr' in query) {
-                     this.set('indexarr', query.indexarr.split(''))
-                     this.adTosub = query.adTosub
-                 }
-                 this.set('contentto', query.content)
-             }*/
+    _selectAll() {
+        if (this.checked === false) {
+            this.checked = true
+            this.toAdd = this.IMAGES
+        } else
+            if (this.checked === true) {
+                this.toAdd = []
+                this.checked = false
+            } else {
+                throw 'not the right type!! Expected Boolean got: ' + typeof this.checked
+            }
+    }
+
+    _saveAndBack() {
+        if (this.query.type === 'page') {
+            let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
+            let topush = sendBackArray.images.content
+            topush.concat(this.toAdd)
+            sendBackArray.images.content = topush
+            localStorage[`${this.query.type}-${this.query.content}`] = JSON.stringify(sendBackArray)
+            console.log(content)
+        }
+        if (this.query.type === 'cats') {
+            let content = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
+            console.log(content)
+        }
     }
     _setContent(cont) {
-        console.log(cont)
-        this.slashed = false;
-        this.removed = false;
-        this.set('inform', cont.info)
-        return cont/**/
+        return cont
     }
     _setLabelAdd(data) {
-        if (data === false) {
+        if (data === true) {
             return ''
         } else {
             return 'add'
@@ -229,7 +219,7 @@ class cmsImages extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     _setLabelDelete(data) {
         if (data === true) {
-            return ''
+            return 'add'
         } else {
             return 'delete'
         }

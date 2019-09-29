@@ -1,6 +1,52 @@
-import { worker } from '/cms/tools/firebaseWorker.js';
+import { worker } from './firebaseWorker';
 const Worker = new worker();
 //Class
+export class MediaDB {
+    //media
+    writeGalleryContent(done, table, dev) {
+        let teble = { name: "galleries", doc: table.gallerie, data: { content: table.content } };
+        updateContent.call(obj, done, dev)
+    }
+
+    getGalleriesEqualTo(done, query, value, dev) {
+        let obj = { name: 'galleries', query: query, value: value, condition: '==' };
+        queryDocList.call(this, obj, done, dev)
+    }
+    getPlaylistsEqualTo(done, query, value, dev) {
+        let obj = { name: 'playlists', query: query, value: value, condition: '==' };
+        queryDocList.call(this, obj, done, dev)
+    }
+    getGalleries(done, dev) {
+        let obj = { name: 'galleries' };
+        getDocList.call(this, obj, done, dev)
+    }
+    getPlaylists(done, dev) {
+        let obj = { name: 'playlists' };
+        getDocList.call(this, obj, done, dev)
+    }
+    setGalleries(done, table, dev) {
+        let obj = { name: 'galleries' };
+        obj.doc = table;
+        createDoc.call(this, obj, done, dev)
+    }
+    deleteGallery(done, gallery, dev) {
+        let obj = { name: 'media', docName: gallery }
+        deleteDoc.call(this, obj, done, dev)
+    }
+    getGalleryData(done, table, dev) {
+        let obj = { name: 'galleries', docName: table.name, coll: 'data', query: table.query, condition: table.condition, value: table.value }
+        queryItemCollectionDoc.call(this, obj, done, dev)
+    }
+    getGalleryGroups(done, table, dev) {
+        let obj = { name: 'galleries', collDocName: table.gallery, collDocCollName: 'groups' }
+        queryItemCollectionDoc.call(this, obj, done, dev)
+    }
+    setGalleryData(done, table, dev) {
+        let obj = { name: 'galleries', docName: table.name, coll: 'data', doc: table.doc, data: table.data }
+        createItemCollectionDoc.call(this, obj, done, dev)
+    }
+}
+
 export class dataBaseworker {
     constructor() {
         this.categories = [];
@@ -184,38 +230,6 @@ export class dataBaseworker {
         deleteCollectionDoc.call(this, obj, done, dev)
     }
 
-
-    //media
-    writeMediaContent(done, table, dev) {
-        let teble = { name: "media", doc: table.gallerie, data: { content: table.content } };
-        updateContent.call(obj, done, dev)
-    }
-    getGalleriesEqualTo(done, query, value, dev) {
-        let obj = { name: 'media', docName: 'images', coll: 'galleries', query: query, value: value, condition: '==' };
-        queryItemCollectionDoc.call(this, obj, done, dev)
-    }
-    getMediaGalleries(done, dev) {
-        let obj = { name: 'media', docName: 'images', coll: 'galleries' };
-        getItemCollectionDoc.call(this, obj, done, dev)
-    }
-    setMediaGalleries(done, table, dev) {
-        let obj = { name: 'media', docName: 'images', coll: 'galleries' };
-        obj.doc = table;
-        console.log('não retornou porque tu não fizeste ainda ;)')
-        // createDoc.call(this, obj, done, dev)
-    }
-    deleteMediaGallery(done, gallery, dev) {
-        let obj = { name: 'media', docName: gallery }
-        deleteDoc.call(this, obj, done, dev)
-    }
-    getMediaGalleriesData(done, table, dev) {
-        let obj = { name: 'media', docName: 'images', coll: 'galleries', collDocName: table.gallery, collDocCollName: 'data' }
-        getDocItemCollectionCollection.call(this, obj, done, dev)
-    }
-    getMediaGalleriesGroups(done, table, dev) {
-        let obj = { name: 'media', docName: 'images', coll: 'galleries', collDocName: table.gallery, collDocCollName: 'groups' }
-        getDocItemCollectionCollection.call(this, obj, done, dev)
-    }
 
     //other
     loginFire(user) {

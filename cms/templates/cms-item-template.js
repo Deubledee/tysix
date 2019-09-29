@@ -14,7 +14,8 @@ export class cmsItemTemplate extends PolymerElement {
         /* styles reside in cms-content*/
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>             ${this._getElement}
+        </app-route>
+         ${this._getElement}
           
         `;
     }
@@ -54,14 +55,14 @@ export class cmsItemTemplate extends PolymerElement {
     _putRow(data) {
         let template = document.createElement('template')
         let str = `
-        <article centerListItem slot="table">            
-            <div>
+        <div centerListItem slot="table">            
+            <article>
                 <paper-button>
                     <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
                     <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                 </paper-button> 
-            </div> 
-        </article>`;
+            </article> 
+        </div>`;
         /*  template.innerHTML = str
           let clone = document.importNode(template.content, true);
           this.appendChild(clone)

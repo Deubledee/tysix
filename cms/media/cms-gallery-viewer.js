@@ -43,7 +43,6 @@ class cmsGalleryViewer extends cmsViewerTemplate {
         ];
     }
     _routePageChanged(route, routeData, query) {
-        console.log(route, routeData)
         if (['galleries', 'view-images'].indexOf(routeData.page) !== -1) {
             this.page = routeData.page;
         }

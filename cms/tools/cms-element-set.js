@@ -21,6 +21,9 @@ class Setter {
             })
         })
     }
+    loginFire(obj) {
+        DBW.loginFire(obj);
+    }
     clone(parent) {
         var clone = document.importNode(this.template.content, true);
         parent.appendChild(clone)

@@ -3,8 +3,6 @@ export class worker {
         this.db = firebase.firestore();
         this.auth = firebase.auth;
     }
-
-
     /**queries */
 
     queryDocList(table) {
@@ -27,7 +25,7 @@ export class worker {
     }
 
     queryItemCollectionDoc(table) {
-        var pagesRef = this.db.collection(table.name).where(table.query)
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
         doc(table.docName).
             collection(table.coll)
         return pagesRef.get();/**/
@@ -47,9 +45,6 @@ export class worker {
         var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0], table.query[1], (table.query[2] === 'true')).where(table.query2[0], table.query2[1], (table.query2[2] === 'true'))
         return pagesRef.get(); /**/
     }
-
-
-
 
     queryCCDoc(table) {
         var pagesRef = this.db.collection(table.name).where(table.query).doc(table.docName).collection(table.coll).where(table.query, table.condition, table.value)
@@ -122,14 +117,12 @@ export class worker {
     }
     //collection 
     createItemCollectionDoc(table) {
-        var pagesRef = this.db.collection(table.name).
-            doc(table.docName).collection(table.coll).
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).
             doc(table.doc);
         return pagesRef.set(table.data);
     }
     createItemCollectionDocDev(table) {
-        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').
-            collection(table.name).doc(table.docName).collection(table.coll).
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).
             doc(table.doc)
         return pagesRef.set(table.data);
     }

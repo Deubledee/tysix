@@ -1,15 +1,11 @@
+import { microTask } from '@polymer/polymer/lib/utils/async';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsContentTemplate } from '../templates/cms-content-template';
-import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
+import { cmsMediaLib } from '../tools/cms-save-lib.js';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
-const ModeloInfo = "W3siYXV0aG9yIjp7InVpZCI6IiIsIm5hbWUiOiIifSwiY2hpbGRyZW4iOltdLCJkYXRlQ3JlYXRlZCI6IiIsImlkIjoiIiwibGFzdE1vZGlmaWVkIjpbXSwicGFyZW50IjoiIiwidG9BcnRpY2xlIjoiIiwidG9wIjoiIiwiY2hpbGRyZW5Db3VudCI6MCwicmVtb3ZlZCI6ZmFsc2UsInJlbW92ZWRDaGlsZHJlbiI6W119XQ=="
-class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
-    static get _getPath() {
-        return html`   
-         <div class="path"> 
-            <h5>[[_getpreaty(query.topparentname)]] </h5>
-        </div>`
-    }
+const ModeloInfo = "W3siUHVibGlzaGVkIjp7ImRhdGUiOiIiLCJwdWJsaXNoZWRCeSI6Ik4vQSIsInN0YXRlIjoiTi9QIn0sImF1dGhvciI6eyJpZCI6IiIsIm5hbWUiOiIifSwiZGF0ZUNyZWF0ZWQiOiIiLCJpZCI6IiIsInN1YkNhdGVnb3J5Q291bnQiOiIiLCJ0b0FydGljbGUiOmZhbHNlLCJ0eXBlIjoiIiwibGFzdE1vZGlmaWVkIjpbXX1d"
+class cmsGalleyContent extends cmsMediaLib(cmsContentTemplate) {
     static get _getSideInfo() {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
@@ -56,7 +52,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                         </span>
                     </aside>
                 </div>
-
                 <div class="row-menu">
                     <aside>
                         <span>
@@ -78,21 +73,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                     <aside class="asideBackgrc">
                         <span>
                             [[cat.dateCreated]]
-                        </span>
-                    </aside>
-                </div>
-
-                <div class="row-menu-especial">
-                    <aside>
-                        <span>
-                        children Count 
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu-especial">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.children.length]]
                         </span>
                     </aside>
                 </div>
@@ -137,8 +117,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             </template>
         </dom-repeat>`
     }
-
-    static get is() { return 'cms-subcats-content'; }
+    static get is() { return 'cms-page-cats-content'; }
     static get properties() {
         return {
             user: {
@@ -198,6 +177,11 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 value: {},
                 observer: '_setContentTextValue'
             },
+            hidebottom: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
+            },
             content: {
                 type: Object,
                 notify: true,
@@ -210,19 +194,11 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             },
             Model: {
                 type: Object,
-                value: {}
+                value: {
+                }
             },
-            newlangstate: {
-                Boolean,
-                value: false
-            },
-            time: Number,
-            nova: {
-                type: Boolean,
-                value: false,
-                notify: true,
-                reflectToAttribute: true,
-            },
+            langStr: String,
+            time: Number
         }
     }
     static get observers() {
@@ -239,13 +215,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         this.set('saveButton', this.$.saveButton)
         this.$.image.addImage = (this.addImage).bind(this)
     }
-    _setValues(data) {
-        this.set('temp', data)
-        for (let par in data) {
-            this.set('itemText', data[par])
-        }
-        this._setLabels(data)
-    }
+
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
             let langs = querySnapshot.data()
@@ -260,21 +230,9 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _getpreaty(str) {
-        if (!!str) {
-            let STR = str.split('/')
-            return STR.join(' - ')
-        }
-    }
+
     _routePageChanged(routeData, query, active) {
-        if (!!query.parent) {
-            this.nova = false
-            this.add = this.query.adTosub
-            let parentName = this.query.content
-            let parentIndex = query.parent
-            this.set("parentName", parentName)
-            let indexArr = (!!this.query.indexarr) === false ? parentIndex : this.query.indexarr
-            this.set("_indexArr", indexArr)
+        if (!!routeData.page) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true' || query.add === true)
@@ -282,59 +240,50 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             if (!!query.added) {
                 this.added = (query.added === 'true' || query.added === true)
             }
-
-            this.closestr = `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.parent}&reset=false`
-            if (routeData.page === 'add-subcategory-pages') {
+            if (active === true && routeData.page === 'add-category-pages') {
                 if (this.add === true) {
-                    if (typeof this.time === 'number')
-                        clearTimeout(this.time)
-                    this._reset()
-                    let cont = JSON.parse((atob(Modelo)))
+                    let cont = JSON.parse(atob(Modelo))
+                    localStorage[`pagenewcontentinfo`] = atob(ModeloInfo)
                     let obj = cont.images.content
-                    localStorage.setItem(`subcat-new-content-info`, atob(ModeloInfo))
                     this.imageLabel = 'images'
                     this.set('imageArr', obj)
-                    this.set('str', `content/pages/add-subcategory-pages?content=subcatnotsaved`)
-                    this._setContent('lang', [cont])
-                    this.set('pageLangs', [])
-                    this._getPageInfo(`subcat-new-content-`)
+                    this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
+                    this._getPageInfo(`pagenewcontent`)
                 }
             }
-            if (routeData.page === 'edit-subcategory-pages') {
+            if (active === true && routeData.page === 'edit-category-pages') {
+
                 this.set('content', []);
-                /*  this.$.saveButton.classList.add('diferent')
-                  if (!!this.added) {
-                      this.$.saveButton.classList.remove('diferent')
-                  }*/
-                if (!!query.parent) {
-                    let cont = JSON.parse(localStorage[`cats-${parentName}-${parentIndex}`])
-                    this._getPageInfo(`cats-${parentName}-${parentIndex}-`)
-                    if (this.add === false || this.added === true) {
-                        this.set('inputVal', [])
-                        this.set('textareaVal', [])
-                        arr = this._setLangArr(cont[0])
-                        this.set('pageLangs', arr)
-                        let obj = cont[0].images.content
-                        this.imageLabel = 'images'
-                        this.set('imageArr', obj)
-                        this.set('str', `content/pages/edit-subcategory-pages${location.search}`)
-                        if (!!query.lang) {
-                            this.__setLAng(query.lang, cont)
+                //  this.$.saveButton.classList.add('diferent')
+                if (!!this.added) {
+                    //  this.$.saveButton.classList.remove('diferent')
+                }
+                if (!!query.content) {
+                    if (!!localStorage[`page${query.content}`]) {
+                        let cont = JSON.parse(localStorage[`page${query.content}`])
+                        this._getPageInfo(`page${query.content}`)
+                        if (this.add === false) {
+                            this.set('inputVal', [])
+                            this.set('textareaVal', [])
+                            let obj = cont[0].images.content
+                            this.imageLabel = 'images'
+                            this.set('imageArr', obj)
+                            this.set('str', `content/pages/edit-category-pages${location.search}`)
                         }
                     }
                 }
             }
-        }
+        } /**/
     }
     addImage() {
         if (this.add === false) {
-            let string = `add=true&type=subcat&content=${this.inform[0].id}&parent=&${this.inform[0].parent}`
-            localStorage.setItem(`cats-${this.inform[0].id}-${this.inform[0].parent}`, JSON.stringify(this.content))
+            localStorage[`page${this.query.content}`] = JSON.stringify(this.content)
+            let string = `addimageto=page&method=editPages&content=${this.query.content}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
-            localStorage.setItem(`subcat-not-saved`, JSON.stringify(this.content))
-            let string = `add=true&type=subcat&content=subcat-not-saved`
+            localStorage[`pagenotsaved`] = JSON.stringify(this.content)
+            let string = `addimageto=page&method=editPages&content=notsaved`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
@@ -349,22 +298,21 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         }
     }
     onSave() {
+        let data = new Date(), inform
         if (!!this.newlangstate) {
             this.add = true
         }
-        let top = (this.query.top === "true")
-        let data = new Date(), inform
-        let cont = (top === false) ? JSON.parse(localStorage[`cats-${this.query.content}-${this.query.topparent}-info`]) : undefined
+        // let cont = (add === false) ? JSON.parse(localStorage[`cats${this.query.content}${this.query.topparent}info`]) : undefined
         inform = this.inform.pop()
-        let noLang = this._lastModified(this._setInfo(inform, data), data, cont, this.query.name)
+        let noLang = this._lastModified(this._setInfo(inform, data), data)
         if (!!noLang) return
         if (!this.removelang) {
-            this.saveSubcats()
+            this.savePages()
         } else {
-            this.removeSubcatsLang()
+            // this.removeSubcatsLang()
         }
     }
-    _lastModified(inform, data, cont, name) {
+    _lastModified(inform, data) {
         if (!inform) return 1
         if (this.add === true)
             inform.lastModified.push({
@@ -373,59 +321,44 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 date: data.toLocaleString().replace(',', '')
             });
         this.inform = [inform]
-        if (!!cont && this.add === true) {
-            cont[0].children.push(this.query.name)
-            cont[0].childrenCount = cont[0].children.length
-            this.updateSubcatParentInfo(cont[0], this.query.content, this.query.topparent)
-        }
     }
     _setInfo(inform, data) {
-        let top = (this.query.top === "true")
         if (!this.newlangstate) {
             if (this.add === true) {
-                if (!this.content[0].lang.lang) {
-                    alert('insert lang first')
+                if (!this.content[0].lang.lang && !this.content[0].lang.categoryName) {
+                    alert('insert Lang & Category Name first')
                     return undefined
                 }
                 this.content[0][this.content[0].lang.lang] = this.content[0].lang
+                inform.id = this.content[0][this.content[0].lang.lang].categoryName
+                inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName)
+                inform.type = this.content[0][this.content[0].lang.lang].type
                 delete this.content[0].lang
-                inform.ref = btoa(this.query.content) + '-' + btoa(Math.ceil(Math.random(Math.ceil(Math.random() * 20)) * 10000) +
-                    Math.ceil(Math.random(Math.ceil(Math.random() * 30)) * 10000))
-                inform.Published = {}
                 inform.Published.date = 'NP'
                 inform.Published.publishedBy = 'N/A'
                 inform.Published.state = 'NP'
-                inform.Published.unPublishedBy = 'N/A'
-                inform.author.uid = this.user.uid
+                inform.author.id = this.user.uid
                 inform.author.name = this.user.displayName
-                inform.parent = this.query.content
-                inform.id = this.query.name
-                inform.removed = false
-                inform.path = this.query.topparentname
                 inform.toArticle = 'B'
-                inform.top = top
+                inform.removed = false
                 inform.dateCreated = data.toLocaleString().replace(',', '')
+            } else {
+                if (inform.type === "")
+                    inform.type = this.content[0][this.setContetnLang].type
             }
         }
         return inform
     }
     _reset() {
-        this.set('tgglelang', false)
-        this.set('removelang', false)
-        this.set('newlangstate', false)
-        this.set('addlang', false)
-        this.set('newLang', '')
-        this.set('removeArr', [])
-        this.set('pageLangs', [])
+        this.query = {}
+        this.routeData = {}
+        this.imageLabel = ''
         this.set('content', []);
         this.set('imageArr', [])
         this.set('inform', [])
         this.set('inputVal', [])
         this.set('textareaVal', [])
-        this.set('itemlang', []);
-        /* this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
-             window.dispatchEvent(new CustomEvent('reset-list-type', {}));
-         });*/
+        this.set('add', 0);
     }
 }
-customElements.define(cmsSubcatsContent.is, cmsSubcatsContent);
+customElements.define(cmsPageCatsContent.is, cmsPageCatsContent);

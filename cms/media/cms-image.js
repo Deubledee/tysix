@@ -6,7 +6,7 @@ import { microTask } from '@polymer/polymer/lib/utils/async';
 class cmsImage extends cmsItemImageTemplate {
     static get _getItem() {
         return html` 
-        <dom-repeat repeat items="[[content]]" as="item">
+        <dom-repeat repeat items="[[images]]" as="item">
             <template>
                 <cms-image-item  
                     route="[[route]]"
@@ -72,11 +72,6 @@ class cmsImage extends cmsItemImageTemplate {
                 type: Object,
                 observer: '_placeEventMethod'
             },
-            content: {
-                type: Array,
-                notify: true,
-                computed: 'getImage(images)'
-            }
         };
     }
     _log(data) {

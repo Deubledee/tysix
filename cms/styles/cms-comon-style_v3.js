@@ -404,31 +404,31 @@ $_documentContainer.innerHTML = `
 
             .padding,
             article,
-            article[centerListItem], article[centerImageItem] {
+            article[centerListItem], div[centerImageItem] {
                 box-sizing: var(--app-default-box-sizing)
 
             }
         
-            article[centerListItem], article[centerImageItem]{
+            article[centerListItem], div[centerImageItem]{
                 @apply --layout-horizontal;
             }
             
-            article[centerImageItem], article[centerImageItem]{
+           div[centerImageItem]{
                 display: var(--app-flex)
             }        
                 
             article[centerListItem],
             section[title2],
-            article[centerImageItem] {
+            div[centerImageItem] {
                 text-align: var(--app-default-text-align)
             }
 
-            article[centerImageItem]  {
+            div[centerImageItem]  {
                 height: 37px;
                 margin-bottom: 4px
             }
 
-            article[centerListItem] div, article[centerImageItem] div {
+            article[centerListItem] div, div[centerImageItem] article {
                 @apply --layout-flex;
                 font-size: 10px;
             }
@@ -438,7 +438,7 @@ $_documentContainer.innerHTML = `
                 white-space: nowrap;
                 text-overflow: ellipsis           
             }
-            article[centerListItem] span, article[centerImageItem] span {
+            article[centerListItem] span, div[centerImageItem] span {
                 word-break: break-word
             }
             article[centerListItem] paper-button {
@@ -470,20 +470,24 @@ $_documentContainer.innerHTML = `
                 border-top-left-radius: 11px;
                 border-top-right-radius: 11px;
                 min-width: 29px;
+                text-transform: capitalize;
             }
             paper-button.exex{
                 position: relative;
+                top: -11px;
+                right: 8px;
+                border-radius: 31%;
+                min-width: 15px;
+                max-height: 14px;
+                color: var(--light-theme-disabled-color);
+                cursor: pointer;
+                font-size: 9px;
+                background-color: #e7e9ea;
+            }
+            paper-button.exexsmall{
                 top: -5px;
                 right: -1px;
-                border-radius: 31%;
-                padding: 2px;
-                min-width: 15px;
-                max-height: 10px;
-                height: 13px;
-                color: gray;
-                cursor: pointer;
-                font-size: 8px;
-                background-color: aliceblue;
+                background-color: transparent;
             }
             paper-button.strech {
                 width: 177px;

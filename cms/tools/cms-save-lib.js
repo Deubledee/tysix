@@ -1,6 +1,9 @@
-import { dataBaseworker } from './dataBaseWorker';
+import { dataBaseworker, MediaDB } from './dataBaseWorker';
 const _DBW = new dataBaseworker()
+const _MEDIADBW = new MediaDB()
 const __DEV = true
+var storageRef = firebase.storage().ref();
+
 const cmsPagesLib = function (superClass) {
     return class extends superClass {
         static get is() { return 'cms-pages-lib'; }
@@ -23,7 +26,7 @@ const cmsPagesLib = function (superClass) {
                 let cont = [data]
                 let arr = this._setLangArr(cont[0])
                 let str = `content/pages/edit-category-pages?content=${ID}&add=false&lang=${arr[0]}`
-                localStorage.setItem(`page${ID}`, JSON.stringify(cont))
+                localStorage.setItem(`page-${ID}`, JSON.stringify(cont))
                 window.history.pushState({}, null, str);
                 window.dispatchEvent(new CustomEvent('location-changed'));
             })
@@ -117,7 +120,7 @@ const cmsSubcatsLib = function (superClass) {
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {
                 this._setContent(done)
-                this.deSpin()
+                checkSpinner.call(this)
             })
         }
         getChildrenSubcats(parent, subCatChildren) {
@@ -130,7 +133,7 @@ const cmsSubcatsLib = function (superClass) {
         getSubcatsData(parent, id) {
             getSubcatsData(parent, id).then((done) => {
                 this._setContent(done)
-                this.deSpin()
+                checkSpinner.call(this)
             })
         }
         __checkEqual(data, temp, index2) {
@@ -138,13 +141,13 @@ const cmsSubcatsLib = function (superClass) {
                 this.updated = true;
                 getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
-                    this.deSpin()
+                    checkSpinner.call(this)
                 })
 
             } else {
                 getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
-                    this.deSpin()
+                    checkSpinner.call(this)
                 })
             }
         }
@@ -152,13 +155,13 @@ const cmsSubcatsLib = function (superClass) {
             if (data[index2 - 1] === temp[index2 - 1]) {
                 _DBW.getSubcatsData((done) => {
                     this._setContent(done)
-                    this.deSpin()
+                    checkSpinner.call(this)
                     this._toggleChildren()
                 }, { name: this.parent, doc: this.subcat.id }, __DEV)
             } else {
                 _DBW.getSubcatsData((done) => {
                     this._setContent(done)
-                    this.deSpin()
+                    checkSpinner.call(this)
                 }, { name: this.parent, doc: this.subcat.id }, __DEV)
             }
         }
@@ -251,7 +254,7 @@ const cmsMediaLib = function (superClass) {
         }
         _getGalleries(query) {
             getNRGalleries(query).then(data => {
-                this.checkSpinner()
+                checkSpinner.call(this)
                 this.set('galleries', data)
             }).catch(error => {
                 console.log(error)
@@ -259,7 +262,7 @@ const cmsMediaLib = function (superClass) {
         }
         _getAllGalleries() {
             getRnNRGallerries().then(data => {
-                this.checkSpinner()
+                checkSpinner.call(this)
                 this.set('galleries', data)
             }).catch(error => {
                 console.log(error)
@@ -267,9 +270,21 @@ const cmsMediaLib = function (superClass) {
         }
         getGalleryImages(gallery, query) {
             getGalleryImages(gallery, query).then(data => {
-                this.checkSpinner()
-                console.log(data)
-                // this.set('galleries', data)
+                checkSpinner.call(this)
+                this.set('IMAGES', data)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+        setGalleryImages() {
+            let str = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
+            setGalleryData(this.IMAGES).then(() => {
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                setTimeout(() => {
+                    this._reset()
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }, 250)
             }).catch(error => {
                 console.log(error)
             })
@@ -279,9 +294,118 @@ const cmsMediaLib = function (superClass) {
                 this.setter = true
             })
         }
-        checkSpinner() {
-            if (this.children.item(this.children).tagName === "PAPER-SPINNER-LITE")
-                this.removeChild(this.children[0])/**/
+        /* upload  methods */
+        _checkValidity(evt) {
+            this.toUpload.push(evt.model.__data)
+            this.fromCheckBox = true
+        }
+        _upload() {
+            let promisseArray
+            if (this.IMAGES.length === this.uploadedItems.length) { alert('all heve been uploaded \n !!?SAVE?!!'); return }
+            this.pop = true
+            this.popMsg = 'uploading...'
+            if (!this.fromCheckBox && this.uploadedItems.length === 0) {
+                promisseArray = this._getTakeAway()
+            } else if (!this.fromCheckBox && this.uploadedItems.length > 0) {
+                promisseArray = this._getCheckedFalse()
+            } else if (!!this.fromCheckBox) {
+                promisseArray = this._getCheckedTrue()
+            }
+            Promise.race(promisseArray).then((this._promisseCallback).bind(this)).catch((error) => {
+                this.fromCheckBox = false
+                this.toUpload = []
+                alert('something whent wrong \n upload not possible..!!')
+                let time = setTimeout(() => {
+                    this.pop = false
+                    this.popMsg = 'loading...'
+                    clearTimeout(time)
+                }, 1000);
+                throw error
+            });
+        }
+        _promisseCallback() {
+            this.fromCheckBox = false
+        }
+        sendToStorage(tempobj, obj, idx) {
+            return new Promise((resolve, reject) => {
+                let meta = { 'contentType': obj.file.type }
+                storageRef.child(`${this.query.gallery}/${obj.title}`).getDownloadURL().then((url) => {
+                    this.num = this.num + 1
+                    tempobj[idx].uploaded = 'inBD'
+                    console.info('gallery/file name - already in storage - was not uploaded - %s/%s', tempobj[idx].gallery, tempobj[idx].title)
+                    this._checkPop(tempobj)
+                }).catch(() => {
+                    storageRef.child(`${this.query.gallery}/${obj.title}`).put(obj.file, meta).then((snapshot) => {
+                        this.num = this.num + 1
+                        console.info('error 404 expected if file not in DB')
+                        console.info('file added to storage', tempobj[idx].gallery, tempobj[idx].title)
+                        snapshot.ref.getDownloadURL().then((url) => {
+                            tempobj[idx].uploaded = 'uploaded'
+                            tempobj[idx].url = url
+                            this.uploadedItems.push(idx)
+                            resolve()
+                            this._checkPop(tempobj)
+                        }).catch((error) => {
+                            console.log(error)
+                            reject(error)
+                        });
+                    }).catch((error) => {
+                        reject(error)
+                    });
+                })
+            })
+        }
+
+        _checkPop(tempobj) {
+            if (this.num === this.toUpload.length) {
+                this.IMAGES = []
+                this.time = setTimeout(() => {
+                    clearTimeout(this.time)
+                    this.IMAGES = tempobj
+                    this.toUpload = []
+                    this.pop = false
+                    this.num = 0
+                    this.popMsg = 'loading...'
+                }, 250);
+                return
+            } else {
+                this.pop = true
+            }
+        }
+        _getTakeAway() {
+            let promisseArray = []
+            this.toUpload = this.IMAGES
+            this.set('totalCount', `${this.toUpload.length}`)
+            for (let i = 0; i < this.toUpload.length; i++) {
+                if (!this.toUpload[i]) { continue }
+                promisseArray.push(this.sendToStorage(this.IMAGES, this.toUpload[i], i))
+            }
+            return promisseArray
+        }
+        _getCheckedFalse() {
+            let promisseArray = []
+            this.toUpload = this.IMAGES.filter((item, idx) => {
+                if (this.uploadedItems.indexOf(idx) === -1) {
+                    item['idx'] = idx
+                    return item
+                }
+            })
+            this.set('totalCount', `${this.toUpload.length}`)
+            for (let i = 0; i < this.toUpload.length; i++) {
+                if (!this.toUpload[i]) { continue }
+                promisseArray.push(this.sendToStorage(this.IMAGES, this.toUpload[i], this.toUpload[i].idx))
+            }
+            return promisseArray
+        }
+        _getCheckedTrue() {
+            let promisseArray = []
+            this.set('totalCount', `${this.toUpload.length}`)
+            for (let i = 0; i < this.toUpload.length; i++) {
+                if (!this.toUpload[i]) { continue }
+                let image = this.toUpload[i].image, idx = this.toUpload[i].index
+                promisseArray.push(this.sendToStorage(this.IMAGES, image, idx))
+            }
+            return promisseArray
         }
     }
 }
@@ -290,9 +414,26 @@ export { cmsMediaLib }
 export { cmsPagesLib }
 export { cmsSubcatsLib }
 
+function setGalleryData(imageArr) {
+    let promisseArray = []
+    for (let i = 0; i < imageArr.length; i++) {
+        promisseArray.push(new Promise((resolve, reject) => {
+            _MEDIADBW.setGalleryData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    console.log(err);
+                    reject(err)
+                }
+            }, { name: imageArr[i].gallery, doc: imageArr[i].id, data: imageArr[i] }, __DEV)
+        }))
+    }
+    return Promise.race(promisseArray)
+}
+
 function getRnNRGallerries() {
     return new Promise((resolve, reject) => {
-        _DBW.getMediaGalleries((done, err) => {
+        _MEDIADBW.getGalleries((done, err) => {
             if (done !== 'error') {
                 resolve(done)
             } else {
@@ -304,30 +445,38 @@ function getRnNRGallerries() {
 }
 function getNRGalleries(query) {
     return new Promise((resolve, reject) => {
-        _DBW.getGalleriesEqualTo((done, err) => {
+        _MEDIADBW.getGalleriesEqualTo((done, err) => {
             if (done !== 'error') {
-                resolve(done)
+                let arr = []
+                done.forEach(item => {
+                    arr.push(item.data())
+                    localStorage.setItem(`galleries-${item.data().id}`, JSON.stringify(item.data()))
+                })
+                resolve(arr)
             } else {
                 reject(err)
             }
         }, query.q, query.v, __DEV)
     })
 }
-function getGalleryImages(gallery, query) {
+function getGalleryImages(gallery, q) {
     return new Promise((resolve, reject) => {
-        _DBW.queryPageData((done) => {
+        let query, condition, value
+        [query, condition, value] = q.split(',')
+        value = (value === 'true') || !(value === 'false')
+        _MEDIADBW.getGalleryData((done) => {
             if (done !== 'error') {
                 resolve(done)
             } else {
                 reject()
                 console.error(err)
             }
-        }, { name: gallery, dataType: "data", query: query }, __DEV)
+        }, { name: gallery, dataType: "data", query: query, condition: condition, value: value }, __DEV)
     })
 }
 function removeGalleries(data) {
     return new Promise((resolve, reject) => {
-        _DBW.removeMediaGallery((done, err) => {
+        _MEDIADBW.deleteGallery((done, err) => {
             if (done !== 'error') {
                 resolve()
             } else {
@@ -337,6 +486,14 @@ function removeGalleries(data) {
         }, data, __DEV)
     })
 }
+function checkSpinner() {
+    if (this.spinOut === false) {
+        if (this.children.item(this.children).tagName === "PAPER-SPINNER-LITE")
+            this.removeChild(this.children[0])
+        this.spinOut = true
+    }
+}
+
 function queryGalleries(data) {
     return new Promise((resolve, reject) => {
 

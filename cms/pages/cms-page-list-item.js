@@ -74,7 +74,7 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             children[0].addEventListener('click', (this._openConfirm).
                 bind(this));
         // objdata.
-        localStorage.setItem(`page${data.id}info`, JSON.stringify(this.objInfo))
+        localStorage.setItem(`page-${data.id}-info`, JSON.stringify(this.objInfo))
     }
     _getPagename(cats) {
         return cats;
@@ -89,7 +89,7 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
         if (!localStorage[`page${this.objInfo[0].id}`]) {
             this.getPageData(this.objInfo[0].id)
         } else {
-            let cont = JSON.parse(localStorage[`page${this.objInfo[0].id}`])
+            let cont = JSON.parse(localStorage[`page-${this.objInfo[0].id}`])
             let arr = this._setLangArr(cont[0])
             window.history.pushState({}, null, `content/pages/edit-category-pages?content=${this.objInfo[0].id}&add=false&lang=${arr[0]}`);
             window.dispatchEvent(new CustomEvent('location-changed'));

@@ -74,19 +74,21 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     ready() {
         super.ready()
+        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
+        </paper-spinner-lite>`
+        this.spinOut = false
+        this.translator.clone(this)
     }
     _putRow(data) {
         let template = `
              <article centerListItem slot="table">
                  <div>
-                     <span> 
-                         <paper-button>
-                             ${data.id}
-                         </paper-button>
-                         <paper-button>
-                            <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
-                         </paper-button>
-                     </span>
+                    <paper-button>
+                        ${data.id}
+                    </paper-button>
+                    <paper-button>
+                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                    </paper-button>
                  </div>
                  <div>
                      <paper-button>
@@ -106,11 +108,15 @@ class cmsGalleryItem extends cmsItemTemplate {
 
         this.translator.template.innerHTML = template
         this.translator.clone(this)
-        this.children[this.childElementCount - 1].children[1].
-            children[0].addEventListener('click', (this._showImages).
-                bind(this));
-        this.children[this.childElementCount - 1].children[3].
-            children[0].addEventListener('click', (this._openConfirm).bind(this));
+
+        /*  this.children[this.childElementCount - 1].children[0].children[0].
+              addEventListener('click', (this._showImages).bind(this))*/
+
+        this.children[this.childElementCount - 1].children[1].children[0].
+            addEventListener('click', (this._showImages).bind(this))
+
+        this.children[this.childElementCount - 1].children[3].children[0].
+            addEventListener('click', (this._openConfirm).bind(this))
     }
     _showImages() {
         this.default()
@@ -120,8 +126,8 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     default() {
         console.log(this.query)
-        let string = /*!!location.search ?
-              `/media/view-images${location.search}&gallery=${this.gallery.id}` :*/
+        let string = !!location.search ?
+            `/media/view-images${location.search}&gallery=${this.gallery.id}` :
             `/media/view-images?gallery=${this.gallery.id}`
         window.history.pushState({}, null, string);
         window.dispatchEvent(new CustomEvent('location-changed'));/**/
