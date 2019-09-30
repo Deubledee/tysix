@@ -122,13 +122,13 @@ $_documentContainer.innerHTML = `
         background-color: var(--app-secondary-text-color);
     }    
     .topLabel{
-        background: var(--app-item-backgound-color);
+        background: rgb(74, 83, 99);;
         padding-left: 31px;
     }
     .topLabel a{
         text-decoration: none;
         font-weight: 500;
-        color: var(--paper-blue-grey-500);
+        color: var(--divider-color);
     }
     .navtop section {
         padding: unset;

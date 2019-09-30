@@ -24,11 +24,13 @@ $_documentContainer.innerHTML = `
                 box-sizing: border-box;
                 color: var(--app-backgound-color);
                 background-color: #3f4756;
-                border-bottom: 1px solid var(--app-topnav-icon-color);
+                border-bottom: 1px solid var(--dark-theme-disabled-color);
                 border-top: 1px solid var(--app-third-color);
                 text-align: center;
                 height: 73px;
-                width: 175px;;
+                width: 175px;
+                text-transform: capitalize;
+                flex-basis: 90px;
             }
             .flexright,
             .navsidecontent div {
@@ -40,16 +42,16 @@ $_documentContainer.innerHTML = `
             }
              div[container] {
                 @apply --layout-vertical;
-                padding-left: 5%
             }
             div[arow], div[bottom] {
                 box-sizing: border-box;
                 @apply --layout-horizontal;
             }
           div[arow]{
-                height: 28px;
-                background: var(--paper-cyan-700)
-            }    /* border-radius: 4px;  background: var(--paper-blue-grey-500)*/        
+            height: 30px;
+            background: #d0d0d0;
+            border: 2px solid var(--app-backgound-color);      
+          }
             h4{
                 margin-block-start: 0.33em;
             }
@@ -83,18 +85,20 @@ $_documentContainer.innerHTML = `
                 flex-direction: var(--app-flexcolumn);
                 margin-top: 8px;
                 padding: 8px;
+                height: 800px;
+                overflow: auto;
             }
 
             div[table]::-webkit-scrollbar-track {
-                background-color: var(--app-scrollbar-color)
+                background-color: transparent
             }
 
             div[table]::-webkit-scrollbar {
-                width: 5px
+                width: 1px
             }
 
             div[table]::-webkit-scrollbar-thumb {
-                background-color: var(--app-primary-text-color)
+                background-color: transparent
             }
 
             div[content] {
@@ -128,6 +132,7 @@ $_documentContainer.innerHTML = `
             }
             .flexchildbotomFullExtra{
                 flex-basis: 130px;
+                font-weight: 700;
             }
             .noFlex{
                 flex-basis: 1px 
@@ -142,7 +147,9 @@ $_documentContainer.innerHTML = `
                 @apply --layout-flex-3;
                 height: 328px;
                 border-radius: 4px;
+                color: var(--app-content-section-span-color);
             }
+
             .flexleft,
             .flexright {
                 cursor: pointer;
@@ -154,7 +161,7 @@ $_documentContainer.innerHTML = `
                 max-width: 20%;
             }
             .navbottom {
-                width: 1048px;
+               flex: 1;
             }
 
             .navside {
@@ -172,16 +179,8 @@ $_documentContainer.innerHTML = `
                 background-color: #3f4756;
             }
             .navsidecontent div {
-                @apply --layout-horizontal;
                 cursor: pointer;
                 margin-bottom: 6px
-            }
-            .navsidecontent aside {
-                @apply --layout-flex;
-            }
-
-            .navsidecontent div[left] aside {
-                box-shadow: 1px 1px 1px
             }
 
             .center-menu, 
@@ -201,7 +200,7 @@ $_documentContainer.innerHTML = `
                 width: 104px;
             }
             .flexleft {
-                color: var(--google-blue-700);    
+                color: var(--app-content-section-span-color);;    
                 flex-basis: 220px;
                 display: flex;
                 flex-flow: nowrap;
@@ -210,7 +209,7 @@ $_documentContainer.innerHTML = `
             .center {
                 max-height: 42px;
                 @apply --layout-flex;
-                color: var(--app-backgound-color);
+                color: var(--paper-blue-grey-500);
                 text-align: center;
             }            
             .row-menu, .row-menu-especial {
@@ -479,7 +478,7 @@ $_documentContainer.innerHTML = `
                 border-radius: 31%;
                 min-width: 15px;
                 max-height: 14px;
-                color: var(--light-theme-disabled-color);
+                color: var(--light-theme-divider-color);
                 cursor: pointer;
                 font-size: 9px;
                 background-color: #e7e9ea;

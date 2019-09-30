@@ -18,45 +18,46 @@ export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cms
                             src="[[item.url]]" 
                             alt="[[item.title]]">
                         </shop-image> 
-                    </article>
-                    <article class="padding" title="[[item.title]]">
-                        <paper-button title="[[this.title]]">
-                            [[item.title]]
                         </article>
-                    </paper-button>
-                    <article class="padding" title="[[item.addedTo]]">
-                        <paper-button title="[[this.addedTo]]">
-                            [[item.addedTo]]
+                        <article class="padding" title="[[item.title]]">
+                            <paper-button title="[[this.title]]">
+                                [[item.title]]
+                            </article>
                         </paper-button>
-                    </article>
-                    <article class="padding" title="[[item.gallery]]"> 
-                        <paper-button title="[[this.add]]" >
-                                [[item.gallery]]
-                        </paper-button>
-                    </article>
-                    <article class="padding" title="[[item.url]]">
-                        <paper-button title="[[this.add]]">
-                            [[item.url]] 
+                        <article class="padding" title="[[item.addedTo]]">
+                            <paper-button title="[[this.addedTo]]">
+                                [[item.addedTo]]
+                            </paper-button>
                         </article>
-                    </paper-button>
-                    <article class="padding">
+                        <article class="padding" title="[[item.gallery]]"> 
+                            <paper-button title="[[this.add]]" >
+                                    [[item.gallery]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.url]]">
+                            <paper-button title="[[this.add]]">
+                                [[item.url]] 
+                            </article>
+                        </paper-button>
+                        <article class="padding">
                             [[this.add]]
-                            <dom-if if="[[add]]">
-                                <template>
-                                    <paper-button title="[[this.add]]" on-click="_checUncheckkAdd">
-                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
-                                    </paper-button>
-                                </template>
-                            </dom-if>                            
-                            <dom-if if="[[!add]]">
-                                <template>
-                                    <paper-button title="[[this.add]]" on-click="_checkDelete">
-                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="delete" checked="{{checked::checked}}">
-                                    </paper-button>
-                                </template>
-                            </dom-if>
+                        <dom-if if="[[add]]">
+                            <template>
+                                <paper-button title="[[this.add]]" on-click="_checkUncheckAdd">
+                                    <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
+                                </paper-button>
+                            </template>
+                        </dom-if>                            
+                        <dom-if if="[[!add]]">
+                            <template>
+                                <paper-button title="[[this.add]]" on-click="_checkDelete">
+                                    <input title="[[image.uploaded]]" type="checkbox" aria-label="remove" checked="{{checked::checked}}">
+                                </paper-button>
+                            </template>
+                        </dom-if>
                     </div>
-                </article> 
+                </article>                 
+                        
             </template>                            
         </dom-repeat>`
     }
@@ -102,11 +103,14 @@ export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cms
         super.ready();
     }
     _putRow(item) {
-        this.set('add', (this.query.add ? (this.query.add === 'true') : false))
-        return [item]
+        if (!!this.query) {
+            this.set('add', !!this.query.add ? true : false)
+        }
+        if (!!item) {
+            return [item]
+        }
     }
-
-    _checUncheckkAdd() {
+    _checkUncheckAdd() {
         if (this.checked === true) {
             this.toAdd = this.toAdd.filter((item, idx) => { if (this.idx !== idx) { return item } })
         } else {
@@ -114,7 +118,6 @@ export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cms
         }
         this.checked = !this.checked
     }
-
     _checkDelete(event) {
         console.log(event)
     }

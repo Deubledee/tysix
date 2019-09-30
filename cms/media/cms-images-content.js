@@ -301,29 +301,28 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     static get _getLangAnchor() {
         return html`   
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
-                        <paper-button langbtn aria-label="langbutton">
-                           browse pc
-                        </paper-button>
-                    </a>
+                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">  
+                    <paper-button langbtn aria-label="langbutton" on-click="_openFiles">
+                        browse pc
+                    </paper-button>
+                    <input hidden="true" type="file" id="imagefiles">
                 </section>   
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
+                    <a href="[[rootPath]][[str]]" >
                         <paper-button langbtn aria-label="langbutton">
                            from url
                         </paper-button>
                     </a>
                 </section>   
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
+                    <a href="[[rootPath]][[str]]" >
                         <paper-button langbtn aria-label="langbutton">
                            from FaceBoock
                         </paper-button>
                     </a>
                 </section>   
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
+                    <a href="[[rootPath]][[str]]" >
                         <paper-button langbtn aria-label="langbutton">
                            from dropShiping
                         </paper-button>
@@ -457,6 +456,10 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 notify: true,
                 value: []
             },
+            itemsIn: {
+                type: Boolean,
+                value: false
+            },
             translator: {
                 type: Object,
                 notify: true,
@@ -589,9 +592,10 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             if (routeData.page === 'add-images') {
                 if (this.add === true) {
                     localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
-                    this.set('str', `media/view-images/add-images?gallery=${this.query.gallery}`)
                     this._getPageInfo(`images-${this.query.gallery}-new-content-`)
+                    this.closestr = `media/view-images/${location.search}`
                 }
+
             }
             if (routeData.page === 'edit-images') {
                 if (!!this.added) {
@@ -611,10 +615,17 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         } /**/
     }
     /***** */
+    _openFiles() {
+        this.$.imagefiles.click()
+        this.$.imagefiles.onchange = evt => {
+            this.handleFiles(evt.srcElement.files)
+        }
+    }
 
     handleFiles(files) {
         let arr = this.IMAGES || [], time
         this.pop = true
+        this.itemsIn = true
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
             let imageType = /image.*/;
@@ -692,18 +703,9 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     _setInfo(IMAGs, data) {
         let objrr = IMAGs
+        // if(IMAGs)
         let IMAGES = objrr.map(image => {
-            let obj = {}
-            for (let [par, value] of Object.entries(image)) {
-                if (par.toString() !== 'localSource' && par.toString() !== 'file') {
-                    if (!!image['uploaded'] && image['uploaded'] !== 'inBD') {
-                        obj[par] = value
-                    }
-                }
-            }
-            if (!obj['uploaded']) {
-                obj['uploaded'] = 'not uploaded'
-            }
+            let obj = image
             obj.author.id = this.user.uid
             obj.author.name = this.user.displayName
             obj.removed = false
@@ -714,7 +716,15 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     removeInStorage() {
         let temparr = this.IMAGES
+        console.log(temparr)
         temparr = temparr.filter(item => { if (item.uploaded !== 'inBD') return item })
+        console.log(temparr)
+        let IMAGES = temparr.map(image => {
+            delete image.localSource
+            delete image.file
+            return image
+        })
+        console.log(IMAGES)
         return temparr
     }
     _reset() {

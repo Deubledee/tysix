@@ -44,11 +44,10 @@ const cmsPagesLib = function (superClass) {
             })
         }
         savePages() {
-            console.log(this.inform[0])
-            if (this.add === true)
+            if (this.add === true) {
+                console.log(this.add)
                 if (!!this.inform[0].id) {
                     let id = [this.inform[0].id]
-                    console.log(id)
                     window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
                     saveAdded(this.inform[0].id, this.inform[0]).then(data => {
                         if (data !== 'error')
@@ -62,23 +61,24 @@ const cmsPagesLib = function (superClass) {
                                 }, 500)
                             })
                     })
-                } else {
-                    console.log(this.inform)
                 }
-            if (this.add === false)
-                if (!!this.inform[0].id) {
-                    let id = [this.inform[0].id]
-                    window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
-                    saveChanged(id[0], this.inform[0], Object.keys(this.content[0])).then(data => {
-                        saveChangedData('data', id[0], this.content[0]).then(data => {
-                            window.onbeforeunload = function () { };
-                            this.editing = 0;
-                            setTimeout(() => {
-                                window.dispatchEvent(new CustomEvent('location-changed'));
-                                localStorage.clear()
-                            }, 500)
-                        })/* */
-                    })
+            } else
+                if (this.add === false) {
+                    console.log(this.add)
+                    if (!!this.inform[0].id) {
+                        let id = [this.inform[0].id]
+                        window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
+                        saveChanged(id[0], this.inform[0], Object.keys(this.content[0])).then(data => {
+                            saveChangedData('data', id[0], this.content[0]).then(data => {
+                                window.onbeforeunload = function () { };
+                                this.editing = 0;
+                                setTimeout(() => {
+                                    window.dispatchEvent(new CustomEvent('location-changed'));
+                                    localStorage.clear()
+                                }, 500)
+                            })/* */
+                        })
+                    }
                 }
         }
     }
@@ -277,7 +277,8 @@ const cmsMediaLib = function (superClass) {
             })
         }
         setGalleryImages() {
-            let str = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
+            let str = !!this.query.type ? `media/view-images${location.search}&update=${this.query.gallery}` :
+                `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}`
             setGalleryData(this.IMAGES).then(() => {
                 window.history.pushState({}, null, str)
                 window.onbeforeunload = function () { };
@@ -301,27 +302,31 @@ const cmsMediaLib = function (superClass) {
         }
         _upload() {
             let promisseArray
-            if (this.IMAGES.length === this.uploadedItems.length) { alert('all heve been uploaded \n !!?SAVE?!!'); return }
-            this.pop = true
-            this.popMsg = 'uploading...'
-            if (!this.fromCheckBox && this.uploadedItems.length === 0) {
-                promisseArray = this._getTakeAway()
-            } else if (!this.fromCheckBox && this.uploadedItems.length > 0) {
-                promisseArray = this._getCheckedFalse()
-            } else if (!!this.fromCheckBox) {
-                promisseArray = this._getCheckedTrue()
+            if (this.itemsIn === true) {
+                if (this.IMAGES.length === this.uploadedItems.length) { alert('all heve been uploaded \n !!?SAVE?!!'); return }
+                this.pop = true
+                this.popMsg = 'uploading...'
+                if (!this.fromCheckBox && this.uploadedItems.length === 0) {
+                    promisseArray = this._getTakeAway()
+                } else if (!this.fromCheckBox && this.uploadedItems.length > 0) {
+                    promisseArray = this._getCheckedFalse()
+                } else if (!!this.fromCheckBox) {
+                    promisseArray = this._getCheckedTrue()
+                }
+                Promise.race(promisseArray).then((this._promisseCallback).bind(this)).catch((error) => {
+                    this.fromCheckBox = false
+                    this.toUpload = []
+                    alert('something whent wrong \n upload not possible..!!')
+                    let time = setTimeout(() => {
+                        this.pop = false
+                        this.popMsg = 'loading...'
+                        clearTimeout(time)
+                    }, 1000);
+                    throw error
+                });
+            } else {
+                alert('no items inserted \n !!!?DROP ITEMS?!!!! || !!!?SAVE?!!!!')
             }
-            Promise.race(promisseArray).then((this._promisseCallback).bind(this)).catch((error) => {
-                this.fromCheckBox = false
-                this.toUpload = []
-                alert('something whent wrong \n upload not possible..!!')
-                let time = setTimeout(() => {
-                    this.pop = false
-                    this.popMsg = 'loading...'
-                    clearTimeout(time)
-                }, 1000);
-                throw error
-            });
         }
         _promisseCallback() {
             this.fromCheckBox = false
@@ -331,14 +336,15 @@ const cmsMediaLib = function (superClass) {
                 let meta = { 'contentType': obj.file.type }
                 storageRef.child(`${this.query.gallery}/${obj.title}`).getDownloadURL().then((url) => {
                     this.num = this.num + 1
-                    tempobj[idx].uploaded = 'inBD'
-                    console.info('gallery/file name - already in storage - was not uploaded - %s/%s', tempobj[idx].gallery, tempobj[idx].title)
+                    tempobj[idx]['uploaded'] = 'inBD'
+                    //   console.info('gallery/file name - already in storage - was not uploaded - %s/%s', tempobj[idx].gallery, tempobj[idx].title)
+                    console.log(tempobj[idx]['uploaded'])
                     this._checkPop(tempobj)
                 }).catch(() => {
                     storageRef.child(`${this.query.gallery}/${obj.title}`).put(obj.file, meta).then((snapshot) => {
                         this.num = this.num + 1
-                        console.info('error 404 expected if file not in DB')
-                        console.info('file added to storage', tempobj[idx].gallery, tempobj[idx].title)
+                        /*   console.info('error 404 expected if file not in DB')
+                           console.info('file added to storage', tempobj[idx].gallery, tempobj[idx].title)*/
                         snapshot.ref.getDownloadURL().then((url) => {
                             tempobj[idx].uploaded = 'uploaded'
                             tempobj[idx].url = url
@@ -365,6 +371,7 @@ const cmsMediaLib = function (superClass) {
                     this.toUpload = []
                     this.pop = false
                     this.num = 0
+                    this.itemsIn = false
                     this.popMsg = 'loading...'
                 }, 250);
                 return

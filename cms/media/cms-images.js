@@ -13,16 +13,11 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     }
     static get _getSilentAnchor() {
         return html`
-            <a href="[[rootPath]]media/view-images/add-images?gallery=[[query.gallery]]&add=true">
-                <paper-tab name=" add-category-pages">                        
-                    <span class="spanpadding"> 
-                    [[ADD]] 
-                    </span>
-                    <paper-icon-button-light>
-                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                    </paper-icon-button-light>
-                </paper-tab>
-            </a>
+        <a href="[[rootPath]]media/view-images/add-images[[addStr]]">
+                <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
+                </paper-icon-button>
+            [[ADD]]
+        </a>
         `
     }
     static get _getBottom() {
@@ -60,7 +55,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         <section class="flexchildbotom noFlex">
             <div class="center flex schooch">
                 <paper-button class="smaller">
-                    <input title="[[image.uploaded]]" type="checkbox" on-click="_selectAll" aria-label="check-all">
+                    <input title="[[image.uploaded]]" type="checkbox" on-click="_selectAll" aria-label="check-all" checked="{{checked::checked}}">
                 </paper-button>  
                 <paper-button class="smaller" on-click="_saveAndBack">
                     [[delete]] 
@@ -168,10 +163,14 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query) {
+        this.IMAGES = []
+        this.addTo = false
+        this.checked = false
+        this.addStr = `?gallery=${this.query.gallery}&add=true`
         if (!!routeData.page && routeData.page === "view-images") {
             if (!!query.add) {
                 this.addTo = true
-                console.log()
+                this.addStr = location.search.toString()
             }
             if (!!query.gallery) {
                 this.gallery = query.gallery
@@ -192,19 +191,21 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
                 throw 'not the right type!! Expected Boolean got: ' + typeof this.checked
             }
     }
-
     _saveAndBack() {
         if (this.query.type === 'page') {
             let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
-            let topush = sendBackArray.images.content
-            topush.concat(this.toAdd)
-            sendBackArray.images.content = topush
+            let topush = sendBackArray[0].images.content
+            sendBackArray[0].images.content = topush.concat(this.toAdd)
             localStorage[`${this.query.type}-${this.query.content}`] = JSON.stringify(sendBackArray)
-            console.log(content)
+            let add = this.query.content === 'new-content' ? true : false
+            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&add=${add}`
+            window.history.pushState({}, null, string);
+            window.dispatchEvent(new CustomEvent('location-changed'))
+            return
         }
         if (this.query.type === 'cats') {
             let content = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
-            console.log(content)
+            return
         }
     }
     _setContent(cont) {

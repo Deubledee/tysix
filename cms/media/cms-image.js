@@ -5,20 +5,7 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 class cmsImage extends cmsItemImageTemplate {
     static get _getItem() {
-        return html` 
-        <dom-repeat repeat items="[[images]]" as="item">
-            <template>
-                <cms-image-item  
-                    route="[[route]]"
-                    add="[[addTo]]" 
-                    image="[[item]]" 
-                    save-button="[[saveButton]]"
-                    reset-button="[[resetButton]]"
-                    delete="[[_deleteImg()]]"
-                    idx="[[index]]">
-                </cms-image-item>
-            </template>                            
-        </dom-repeat>`
+        ``
     }
     static get is() { return 'cms-image'; }
 

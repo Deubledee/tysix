@@ -19,18 +19,19 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 height: 32px;
                 }
             div[silent]{
+                display: block;
                 width: 174px;
                 box-sizing: border-box;
                 height: 47px;
-                background-color: var(--paper-blue-grey-700);
-                padding: 7px;
-                border-bottom: 3px solid var(--app-primary-color)
+                background-color: rgb(57, 66, 82);
+                padding: 8px;
+                padding-left: 6%;
             }
             .navside{
-                flex-basis: 181px;
+                flex-basis: 176px;
             }
             .schooch{
-                margin-left: 42px; 
+                margin-left: auto; 
             }
             .smaller{
                 height: 29px;
@@ -42,12 +43,16 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             }
 
             .higherh5{
-                background-color: var(--paper-cyan-700) 
+                background-color: rgb(70, 85, 113);
+                margin-block-start: -1px;
             } 
             div[spinnercenter]{
                 position: absolute;
                 left: 50%;
                 top: 30%;
+            }
+            canvas{
+                display: none
             }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"

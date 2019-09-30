@@ -228,10 +228,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         if (!!routeData.page) {
             let arr = []
             if (!!query.add) {
-                this.add = (query.add === 'true' || query.add === true)
-            }
-            if (!!query.added) {
-                this.added = (query.added === 'true' || query.added === true)
+                this.add = (query.add === 'true')
             }
             this.closestr = 'content/pages'
             if (active === true && routeData.page === 'add-category-pages') {
@@ -245,14 +242,11 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     this._setContent('lang', [cont])
                     this._getPageInfo(`page-new-content-`)
                     this.set('pageLangs', [])
+                    return
                 }
             }
             if (active === true && routeData.page === 'edit-category-pages') {
                 this.set('content', []);
-                //  this.$.saveButton.classList.add('diferent')
-                if (!!this.added) {
-                    //  this.$.saveButton.classList.remove('diferent')
-                }
                 if (!!query.content) {
                     if (!!localStorage[`page-${query.content}`]) {
                         let cont = JSON.parse(localStorage[`page-${query.content}`])
@@ -269,6 +263,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                             if (!!query.lang) {
                                 this.__setLAng(query.lang, cont)
                             }
+                            return
                         }
                     }
                 }
@@ -278,7 +273,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     addImage() {
         if (this.add === false) {
             localStorage[`page-${this.query.content}-info`] = JSON.stringify(this.content)
-            let string = `add=true&type=page&content=${this.query.content}`
+            let string = `add=true&type=page&content=${this.query.content}&lang=${this.query.lang}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {

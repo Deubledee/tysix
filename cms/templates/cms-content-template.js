@@ -29,9 +29,9 @@ export class cmsContentTemplate extends PolymerElement {
         top: 0%;
         display: flex;
         flex-direction: column;
-        width: 1014px;
+        width: 900px;
         height: 100%;
-        background-color: rgba(241, 241, 241)
+        background-color: var(--app-secondary-text-color);
     }
     div[placertop]{
         display: block;
@@ -40,7 +40,6 @@ export class cmsContentTemplate extends PolymerElement {
         display: flex;
         flex-direction: column;
         padding-left: 5%;
-        padding-right: 5%;
     }
     div[path]{
         height: 30px;
@@ -102,7 +101,7 @@ export class cmsContentTemplate extends PolymerElement {
     div[langdiv]{
         position: relative;
         top: 1px;
-        margin-top: 30px;
+      /*  margin-top: 30px;*/
         display: flex;
         flex-direction: row;
         flex-basis: 28px;
@@ -146,6 +145,7 @@ export class cmsContentTemplate extends PolymerElement {
         border-radius: 12px;
         padding: 22px;
         padding-left: 17%;
+        padding-top: 50px;
         width: 816px;
     }
     div[langdiv] section[nova]{
@@ -198,18 +198,18 @@ export class cmsContentTemplate extends PolymerElement {
         float: right;
     }
     .borderright{
-        border-right: 1px solid grey;
-    }   
+        border-right: 1px solid var(--app-item-backgound-color)
+    } 
+    .borderleft{
+        border-left : 1px solid var(--app-item-backgound-color);
+    }  
     .xbuton{
         cursor: pointer;
         box-sizing: border-box;
         display: flex;
         flex-direction: row;
         padding-top: 2px;
-    }    
-    .borderleft{
-        border-left : 1px solid grey;
-    }
+    }     
     .upright, .upleft{
         top: 15px;
         height: 27px;
@@ -222,30 +222,51 @@ export class cmsContentTemplate extends PolymerElement {
         position: relative;
         margin-left: auto;
         transform: rotateZ(46deg);
-        box-shadow: 2px -2px 4px var(--light-theme-divider-color);
+        box-shadow: 2px -2px 1px var(--light-theme-divider-color);
         right: 22px;   
-    }
-    .upright[hovererd]{
-        -webkit-transition: box-shadow 1s ease-out;
-        -moz-transition: box-shadow 1s ease-out;
-        transition: box-shadow 1s ease-out;
-        transform: rotateZ(-45deg);
-        box-shadow: -2px -2px 4px var(--paper-light-blue-100)   
+        border-top-right-radius: 7px;   
+        border-top-left-radius: 7px;
+        -webkit-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
+        -moz-transition: box-shadow 1s ease-in, width 1s ease-in, , height 1s ease-in, right is ease-in;
+        transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
     }
     .upleft{
         position: relative;
         margin-right: auto;
         margin-left: auto;
         transform: rotateZ(-45deg);
-        box-shadow: -2px -2px 4px var(--light-theme-divider-color);
+        box-shadow: -2px -2px 1px var(--light-theme-divider-color);
         right: -1px;
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
+        -webkit-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
+        -moz-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
+        transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
+    }
+    .upright[hovererd]{
+        -webkit-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
+        -moz-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
+        transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
+        transform: rotateZ(-45deg);
+        box-shadow: -2px -2px 2px var(--paper-lime-700);
+        border-top-left-radius: 0px;
+        height: 20px;
+        width: 20px;
+        right: 34px;
     }
     .upleft[hovererd]{
-        -webkit-transition: box-shadow 1s ease-out;
-        -moz-transition: box-shadow 1s ease-out;
-        transition: box-shadow 1s ease-out;
+        -webkit-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
+        -moz-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
+        transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
         transform: rotateZ(45deg);
-        box-shadow: 2px -2px 4px var(--paper-light-blue-100);
+        border-top-right-radius: 0px;
+        box-shadow: 2px -2px 2px var(--paper-lime-700);
+        height: 20px;
+        width: 20px;
+        right: -4px;
+    }
+    cms-content-item{
+        
     }
     paper-button[aria-label="lang"]{
         top: 11px;

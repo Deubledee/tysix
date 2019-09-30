@@ -35,7 +35,7 @@ class cmsControler extends PolymerElement {
         app-header,
         nav[toolbar] {
             background-color: var(--app-primary-color);
-            border-bottom: 0.5px solid var(--disabled-text-color);
+            border-bottom: 1px solid var(--app-third-color);
         }
         .cart-btn-container,
         .sellector-list a,

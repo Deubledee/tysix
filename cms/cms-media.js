@@ -109,7 +109,7 @@ class cmsMedia extends cmsTopPageTemplate {
 
   static get observers() {
     return [
-      '_routePageChanged(route, routeData, query, layer2Data, layer2route)'
+      '_routePageChanged(route, routeData, query)'
     ];
   }
   ready() {
@@ -195,8 +195,15 @@ class cmsMedia extends cmsTopPageTemplate {
     return str
   }
   _queryContent(index) {
-    if (index > 1)
-      return `?reset=false&update=${this.query.gallery}`
+    let str
+    if (index > 1) {
+      if (!!this.query && !!this.query.type) {
+        str = `${location.search}`
+      } else {
+        str = `?reset=false&update=${this.query.gallery}`
+      }
+    }
+    return str
   }
   _pageChanged(page) {
     if (page !== undefined) {

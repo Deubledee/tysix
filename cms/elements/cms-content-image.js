@@ -1,7 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { Setter } from '../tools/cms-element-set';
 import '@polymer/iron-icons/editor-icons';
-import '../media/cms-image';
+import '../media/cms-gallery-item';
 import '../styles/cms-comon-style_v3';
 export class cmsContentImage extends PolymerElement {
     static get template() {
@@ -12,19 +12,49 @@ export class cmsContentImage extends PolymerElement {
         cms-image.top {
             top: 0px;
         }
+        div[backanover] {
+            height: 300px;
+            overflow: auto;
+            background: var(--app-item-backgound-color);
+        }
+
+        div[backanover]::-webkit-scrollbar-track {
+            background: var(--app-secondary-text-color)
+        }
+
+        div[backanover]::-webkit-scrollbar {
+            width: 7.5px
+        }
+
+        div[backanover]::-webkit-scrollbar-thumb {
+            background-color: var(--content-color-default, #8098ad)
+        }
         </style>        
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route> 
         <section class="flexchildbotom3">
-            <div left name="image">
+            <div>
                 <paper-button>
                     [[imageLabel]]
                 </paper-button>
                 <paper-icon-button  name="[[itemLabel]]" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
                 </paper-icon-button>           
             </div>
-                <cms-image class="small top" images="[[images]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
-                </cms-image>
+            <div backanover>  
+                <dom-repeat repeat items="[[images]]" as="item">
+                    <template>
+                        <cms-image-item  
+                            route="[[route]]"
+                            add="[[addTo]]" 
+                            image="[[item]]" 
+                            save-button="[[saveButton]]"
+                            reset-button="[[resetButton]]"
+                            delete="[[_deleteImg()]]"
+                            idx="[[index]]">
+                        </cms-image-item>
+                    </template>                            
+                </dom-repeat>       
+            </div>
         </section>
         `;
     }
