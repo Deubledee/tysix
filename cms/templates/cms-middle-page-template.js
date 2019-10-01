@@ -9,26 +9,28 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 display: var(--app-block)
             }
             .navbottom{
-                height: auto
+                height: auto;
+                padding: 10px;
             }            
-            .flex{
-                height: auto
+            .flex2{
+                display: flex;
+                flex-direction: column;
             }
             div[top] {                
                 /*padding-left: 10px;*/
                 height: 32px;
                 }
             div[silent]{
+                color: var(--paper-blue-grey-300);
                 display: block;
-                width: 174px;
                 box-sizing: border-box;
-                height: 47px;
-                background-color: rgb(57, 66, 82);
-                padding: 8px;
-                padding-left: 6%;
+                height: 56px;
+                padding: 15px;
+                border-right: 1px solid var(--divider-color);
             }
             .navside{
-                flex-basis: 176px;
+                flex-basis: 95px;
+                padding-top: 8px;
             }
             .schooch{
                 margin-left: auto; 
@@ -38,13 +40,13 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 min-width: 35px;
                 padding: 0 0;
             }
-           h3, h5, h2{
+           h3, h2{
                margin-inline-start: -26px;
             }
 
             .higherh5{
-                background-color: rgb(70, 85, 113);
-                margin-block-start: -1px;
+                margin-block-start: 0px;
+                margin-inline-start: 0px;
             } 
             div[spinnercenter]{
                 position: absolute;
@@ -61,18 +63,18 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <div spinnercenter>
                 <slot name="spinner"></slot>  
             </div>
-        <main class="flex">        
+        <main class="flex2">        
             <nav class="navside">
 
-                <div class="navsidecontent">                
-                    <nav top> 
-                        ${this._topLabel}
-                    </nav> 
+                <div class="navsidecontent">   
                     <div silent>
                         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
                             ${this._getSilentAnchor}
                         </iron-selector>
-                    </div>
+                    </div>              
+                    <nav top> 
+                        ${this._topLabel}
+                    </nav>
                 </div>
 
             </nav>

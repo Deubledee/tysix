@@ -593,7 +593,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 if (this.add === true) {
                     localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
                     this._getPageInfo(`images-${this.query.gallery}-new-content-`)
-                    this.closestr = `media/view-images/${location.search}`
+                    this.closestr = `media/view-images${location.search}`
                 }
 
             }

@@ -36,8 +36,7 @@ class cmsMedia extends cmsTopPageTemplate {
       <article name="galleries">         
         <cms-gallery-viewer route="{{route}}" lang="[[lang]]">  
 
-          <cms-galleries slot="galleries" id="galleries"            
-            route="{{route}}">
+          <cms-galleries slot="galleries" id="galleries" route="{{route}}">
           </cms-galleries>
 
           <cms-images slot="images" id="images" route="{{route}}">
@@ -137,11 +136,40 @@ class cmsMedia extends cmsTopPageTemplate {
     this.translator.changeLang.call(this)
     this.setBreadcrumbs(this.route, this.routeData)
   }
-  _routePageChanged(route, routeData, query) {
-    if (route.prefix === '/media') {
-      if (this.breadcrumbs.length > 0) {
-        this.setBreadcrumbs(this.route, this.routeData)
+
+  setBreadcrumbs(route, routeData) {
+    if (!routeData.page || !route.path === '/') {
+      let arr2 = []
+      this.page = 'home';
+      arr2.push('cmshome')
+      this.set('breadcrumbs', arr2)
+    }
+    if (!!routeData.page) {
+      if (['galleries', 'playlists', 'search'].indexOf(routeData.page) !== -1) {
+        let arr2 = []
+        arr2.push('cmshome')
+        this.set('breadcrumbs', arr2)
       }
+    }
+    if (["/view-images", , "/view-images/add-images", "/view-images/edit-images"].indexOf(route.path) !== -1) {
+      let arr2 = []
+      arr2.push("cmshome")
+      arr2.push("/media/galleries")
+      this.breadcrumbs = arr2
+    }
+    if (["/view-videos"].indexOf(route.path) !== -1) {
+      let arr2 = []
+      arr2.push("cmshome")
+      arr2.push("/media")
+      arr2.push("/media/galleries")
+      this.set("breadcrumbs", arr2)
+    }
+  }
+
+  _routePageChanged(route, routeData) {
+    if (route.prefix === '/media') {
+      this.set('breadcrumbs', [])
+      this.setBreadcrumbs(this.route, this.routeData)
       if (!routeData.page) {
         this.page = 'home';
       }
@@ -158,37 +186,7 @@ class cmsMedia extends cmsTopPageTemplate {
       }
     }
   }
-  setBreadcrumbs(route, routeData) {
-    this.set('breadcrumbs', [])
-    if (!routeData.page) {
-      let arr2 = []
-      this.page = 'home';
-      arr2.push('cmshome')
-      this.set('breadcrumbs', arr2)
-    }
-    if (!!routeData.page) {
-      if (['galleries', 'playlists', 'search'].indexOf(routeData.page) !== -1) {
-        let arr2 = []
-        arr2.push('cmshome')
-        arr2.push('/media')
-        this.set('breadcrumbs', arr2)
-      }
-      if (["/view-images", "/view-images/add-images", "/view-images/edit-images"].indexOf(route.path) !== -1) {
-        let arr2 = []
-        arr2.push("cmshome")
-        arr2.push("/media")
-        arr2.push("/media/galleries")
-        this.set("breadcrumbs", arr2)
-      }
-      if (["/view-videos"].indexOf(route.path) !== -1) {
-        let arr2 = []
-        arr2.push("cmshome")
-        arr2.push("/media")
-        arr2.push("/media/galleries")
-        this.set("breadcrumbs", arr2)
-      }
-    }
-  }
+
   _getStr(item) {
     let str = ''
     str = (item === '/media') ? `${item}/` : `${item}`

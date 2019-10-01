@@ -7,8 +7,8 @@ import './cms-image-item';
 class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsMiddlePageTemplate)) {
     static get _topLabel() {
         return html`       
-            <h3 class="higherh3">[[query.gallery]]</h3>       
-            <h5 class="higherh5"> [[images]] </h5> 
+            <h3 class="higherh3"> [[images]]</h3>       
+            <h5 class="higherh5"> gallery - [[query.gallery]] </h5> 
         `
     }
     static get _getSilentAnchor() {

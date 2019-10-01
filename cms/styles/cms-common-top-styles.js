@@ -5,8 +5,10 @@ $_documentContainer.innerHTML = `
 <dom-module id="cms-common-top-styles">
   <template>
     <style>
-    .divtop /*,.navtop*/ {
-        position: var(--app-default-position)
+    .divtop {
+        position: var(--app-default-position);
+        height: 25px;
+        box-shadow: 1px 1px 3px var(--disabled-text-color);
     }
 
     .divtop,
@@ -122,13 +124,12 @@ $_documentContainer.innerHTML = `
         background-color: var(--app-secondary-text-color);
     }    
     .topLabel{
-        background: rgb(74, 83, 99);;
         padding-left: 31px;
     }
     .topLabel a{
         text-decoration: none;
         font-weight: 500;
-        color: var(--divider-color);
+        color: var(--app-content-section-span-color);
     }
     .navtop section {
         padding: unset;

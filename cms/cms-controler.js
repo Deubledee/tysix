@@ -31,53 +31,67 @@ class cmsControler extends PolymerElement {
     <style>
         :host {
             display: var(--app-block)
-        } 
+        }
+
         app-header,
         nav[toolbar] {
             background-color: var(--app-primary-color);
-            border-bottom: 1px solid var(--app-third-color);
         }
+
         .cart-btn-container,
         .sellector-list a,
         .sellector-list a.iron-selected {
             font-weight: var(--app-default-font-weight)
         }
-        :host {
-            display: var(--app-block)
+
+        .topcontainer,
+        div[rows] {
+            display: flex;
         }
+
+        div[rows] {
+            flex-direction: row;
+        }
+
+        .topcontainer {
+            flex-direction: column
+        }
+
+        div[pages] {
+            height: auto;
+            flex: 1;
+        }
+
         nav {
-            display: var(--app-flex);
-            flex-flow: var(--app-flexrow);
-            flex-grow: var(--app-flexgrowshrink);
             color: var(--app-secondary-text-color)
         }
+
         .sellector-list a,
         nav[toolbar] {
-            display: var(--app-block);
             color: var(--app-secondary-text-color)
         }
-        nav div {
-            flex-grow: var(--app-flexgrowshrink)
-        }
+
         nav[toolbar] {
-          height: 28px;
-          padding: var(--app-default-padding);
-          font-size: var(--app-tollbar-default-font-size);
+            font-size: var(--app-tollbar-default-font-size);
+            flex-basis: 130px;
         }
+
         paper-icon-button {
             color: var(--app-secondary-text-color);
             height: 30px;
         }
+
         .sellector-list {
             margin: var(--app-tollbar-sellector-list-margin)
         }
+
         .sellector-list a {
-          position: relative;
-          /* padding: var(--app-tollbar-sellector-list-padding); */
-          text-decoration: var(--app-none);
-          line-height: var(--app-tollbar-sellector-list-line-height);
-          top: -3px;
+            position: relative;
+            text-decoration: var(--app-none);
+            line-height: var(--app-tollbar-sellector-list-line-height);
+            top: -3px;
         }
+
         .cart-btn-container,
         .content-wrapper {
             display: var(--app-flex);
@@ -87,12 +101,14 @@ class cmsControler extends PolymerElement {
         .sellector-list a.iron-selected {
             color: var(--app-content-title-text-color)
         }
+
         .content-wrapper {
             top: var(--app-tollbar-content-wrapper-top);
-            flex-direction: var(--app-flexrow);
-            max-width: var(--app-tollbar-content-wrapper-max-width);
-            padding-left: var(--app-tollbar-content-wrapper-padding-left)
+            flex-direction: var(--app-flexcolumn);
+            /*  max-width: var(--app-tollbar-content-wrapper-max-width);
+            padding-left: var(--app-tollbar-content-wrapper-padding-left)*/
         }
+
         .cart-btn-container {
             flex-flow: var(--app-flexrow);
             top: var(--app-tollbar-cart-btn-top);
@@ -100,150 +116,159 @@ class cmsControler extends PolymerElement {
             float: var(--app-tollbar-cart-btn-float);
             height: var(--app-tollbar-cart-btn-height)
         }
+
         span[role] {
             color: var(--app-dropDwonMenu-icon-color)
         }
+
         .user-badge {
             margin-top: var(--app-tollbar-user-badge-margin-top)
         }
+
         cms-image-viewer.diferent {
             --main-style: {
                 position: (--app-unset-position);
                 margin-left: -46px
             }
         }
+
         .background {
             background-color: var(--app-secondary-text-color)
         }
-        div[rows]{
-          display: flex;
-          flex-direction: column
-        }
-        div[pages]{
-          height: auto;
-        }
+
         paper-dropdown-menu.styled {
             width: 82px;
             box-sizing: border-box;
             color: var(--app-primary-color);
-            --paper-dropdown-menu-input:{
-              color: #df8018
+
+            --paper-dropdown-menu-input: {
+                color: #df8018
             }
+
             --paper-dropdown-menu-icon: {
                 color: var(--app-dropDwonMenu-icon-color, red)
             }
         }
+
         .color {
-            color: blue!important;/*var(-app-content-title-text-color)*/
+            color: blue !important;
+            /*var(-app-content-title-text-color)*/
+        }
+
+        .inline {
+            display: inline-flex;
         }
     </style>
-  <app-location route="{{route}}">
-  </app-location>
 
-  <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
-  </app-route>
-  <app-route route="{{subroute}}" pattern="/:layer" tail="{{popOutRoute}}">
-  </app-route>
-  <div rows>
-    <nav toolbar>
-      <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
-          <div class="content-wrapper">
-              <nav>
-                  <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
-                  </div>
-              </nav>
-              <nav>
-                  <paper-icon-button icon="social:pages" aria-label="content">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="content" href="[[rootPath]]content/">[[content]]</a>
-                  </div>
-              </nav>
-              <nav>
-                  <paper-icon-button icon="social:person-outline" aria-label="users">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="users" href="[[rootPath]]users/">[[users]]</a>
-                  </div>
-              </nav>
-              <nav>
-                  <paper-icon-button icon="image:photo-library" aria-label="galleries">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/">[[galleries]]</a>
-                  </div>
-              </nav>
-          </div>
-      </iron-selector>
-      <div class="cart-btn-container">
-        <div class="background">
-          <paper-dropdown-menu class="styled" label="[[language]]" value="{{lang}}">
-            <paper-tabs slot="dropdown-content" class="dropdown-content">
-              <paper-tab class="color">pt</paper-tab>
-              <paper-tab>en</paper-tab>
-            </paper-tabs>
-          </paper-dropdown-menu>
+    <app-location route="{{route}}"> </app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
+    </app-route>
+    <app-route route="{{subroute}}" pattern="/:layer" tail="{{popOutRoute}}">
+    </app-route>
+    
+    <div calss="topcontainer">
+        <div rows>
+            <nav toolbar>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
+                    <div class="content-wrapper">
+                        <nav class="inline">
+                            <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
+                            <div>
+                                <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
+                            </div>
+                        </nav>
+                        <nav class="inline">
+                            <paper-icon-button icon="social:pages" aria-label="content">
+                            </paper-icon-button>
+                            <div>
+                                <a on-click="_resetEvent" name="content" href="[[rootPath]]content/">[[content]]</a>
+                            </div>
+                        </nav>
+                        <nav class="inline">
+                            <paper-icon-button icon="social:person-outline" aria-label="users">
+                            </paper-icon-button>
+                            <div>
+                                <a on-click="_resetEvent" name="users" href="[[rootPath]]users/">[[users]]</a>
+                            </div>
+                        </nav>
+                        <nav class="inline">
+                            <paper-icon-button icon="image:photo-library" aria-label="galleries">
+                            </paper-icon-button>
+                            <div>
+                                <a on-click="_resetEvent" name="media" id="media"
+                                    href="[[rootPath]]media/">[[galleries]]</a>
+                            </div>
+                        </nav>
+                    </div>
+                </iron-selector>
+                <div>
+                    <div class="background">
+                        <paper-dropdown-menu class="styled" label="[[language]]" value="{{lang}}">
+                            <paper-tabs slot="dropdown-content" class="dropdown-content">
+                                <paper-tab class="color">pt</paper-tab>
+                                <paper-tab>en</paper-tab>
+                            </paper-tabs>
+                        </paper-dropdown-menu>
+                    </div>
+                    <div>
+                        <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
+                    </div>
+                    <div class="user-badge">
+                        <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
+                    </div>
+                </div>
+            </nav>
+            <div pages>
+                <iron-pages selected="[[page]]" attr-for-selected="name">
+                    <article name="cmshome">
+                        <h1>
+                            <b>Cms Home</b>
+                        </h1>
+                    </article>
+                    <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
+                    </cms-user-viewer>
+
+                    <cms-content route="[[subroute]]" name="content" user="[[user]]">
+                    </cms-content>
+
+                    <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
+                    </cms-media>
+
+                    <my-view404 name="view404"></my-view404>
+                </iron-pages>
+            </div>
         </div>
+
         <div>
-          <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
+            <ul>
+                <li>sera</li>
+                <li>sempre</li>
+                <li>a subir</li>
+            </ul>
         </div>
-        <div class="user-badge">
-          <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
-        </div>
-      </div>
-    </nav>
-    <div pages>
-      <iron-pages selected="[[page]]" attr-for-selected="name">
-        <article name="cmshome">
-          <h1> 
-            <b>Cms Home</b>
-          </h1>
-        </article>
-        <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]" >
-        </cms-user-viewer>
-
-        <cms-content route="[[subroute]]" name="content" user="[[user]]">
-        </cms-content>
-
-        <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
-        </cms-media>
-
-        <my-view404 name="view404"></my-view404>
-      </iron-pages>
     </div>
-    <div>
-      <ul>
-        <li>sera</li>
-        <li>sempre</li>
-        <li>a subir</li>
-      </ul>
-    </div>
-  </div> 
+    <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name">
 
-  <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name"> 
+        <cms-page-cats-content name="add-category-pages" user="[[user]]" route="[[popOutRoute]]">
+        </cms-page-cats-content>
 
-    <cms-page-cats-content name="add-category-pages" user="[[user]]" route="[[popOutRoute]]">
-    </cms-page-cats-content>
+        <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
+        </cms-subcats-content>
 
-    <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
-    </cms-subcats-content>
+        <cms-galleries-content name="add-gallery" user="[[user]]" route="[[popOutRoute]]">
+        </cms-galleries-content>
 
-    <cms-galleries-content name="add-gallery" user="[[user]]" route="[[popOutRoute]]">
-    </cms-galleries-content>
+        <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
+        </cms-images-content>
 
-    <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
-    </cms-images-content>
+    </iron-pages>
 
-  </iron-pages> 
+    <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">
 
-  <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">    
+        <cms-confirm name="confirm" id="confirm" type="gallery" user="[[user]]" lang="[[lang]]">
+        </cms-confirm>
 
-    <cms-confirm name="confirm" id="confirm" type="gallery" user="[[user]]" lang="[[lang]]">
-    </cms-confirm>
-
-  </iron-pages>  
+    </iron-pages>
         `;
   }
   static get is() { return 'cms-controler'; }
