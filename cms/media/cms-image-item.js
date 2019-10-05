@@ -5,61 +5,78 @@ import '../../src/shop-image';
 import { cmsItemTemplate } from '../templates/cms-item-template';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
 export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsItemTemplate)) {
+    static get _getStyles() {
+        return html`         
+            .thirty{
+                height: 30px;
+                text-transform: lowercase; 
+            }
+               `
+    }
     static get _getElement() {
         return html`
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>                
-                <div centerImageItem>
-                    <article class="padding">
-                        <shop-image
-                            class="bigger"
-                            aria-label="image"
-                            title="[[item.title]]" 
-                            src="[[item.url]]" 
-                            alt="[[item.title]]">
-                        </shop-image> 
+            <dom-repeat repeat items="[[content]]" as="item">
+                <template>                
+                    <div centerImageItem>
+                        <article class="padding">
+                            <shop-image
+                                class="bigger"
+                                aria-label="image"
+                                title="[[item.title]]" 
+                                src="[[item.url]]" 
+                                alt="[[item.title]]">
+                            </shop-image> 
                         </article>
                         <article class="padding" title="[[item.title]]">
-                            <paper-button title="[[this.title]]">
+                            <paper-button  class="thirty" title="[[this.title]]">
                                 [[item.title]]
-                            </article>
-                        </paper-button>
-                        <article class="padding" title="[[item.addedTo]]">
-                            <paper-button title="[[this.addedTo]]">
-                                [[item.addedTo]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.dateCreated]]">
+                            <paper-button  class="thirty" title="[[this.dateCreated]]">
+                                [[item.dateCreated]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.type]]">
+                            <paper-button class="thirty" title="[[this.type]]">
+                                [[item.type]]
                             </paper-button>
                         </article>
                         <article class="padding" title="[[item.gallery]]"> 
-                            <paper-button title="[[this.add]]" >
+                            <paper-button class="thirty" title="[[this.add]]" >
                                     [[item.gallery]]
                             </paper-button>
                         </article>
+                        <article class="padding" title="[[item.addedTo]]">
+                            <paper-button class="thirty" title="[[this.add]]">
+                                [[item.addedTo]] 
+                            </paper-button>
+                        </article>
                         <article class="padding" title="[[item.url]]">
-                            <paper-button title="[[this.add]]">
+                            <paper-button class="thirty" title="[[this.add]]">
                                 [[item.url]] 
-                            </article>
-                        </paper-button>
+                            </paper-button>
+                        </article>
                         <article class="padding">
                             [[this.add]]
-                        <dom-if if="[[add]]">
-                            <template>
-                                <paper-button title="[[this.add]]" on-click="_checkUncheckAdd">
-                                    <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
-                                </paper-button>
-                            </template>
-                        </dom-if>                            
-                        <dom-if if="[[!add]]">
-                            <template>
-                                <paper-button title="[[this.add]]" on-click="_checkDelete">
-                                    <input title="[[image.uploaded]]" type="checkbox" aria-label="remove" checked="{{checked::checked}}">
-                                </paper-button>
-                            </template>
-                        </dom-if>
-                    </div>
-                </article>                 
-                        
-            </template>                            
-        </dom-repeat>`
+                            <dom-if if="[[add]]">
+                                <template>
+                                    <paper-button title="[[this.add]]" on-click="_checkUncheckAdd">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
+                                    </paper-button>
+                                </template>
+                            </dom-if>                            
+                            <dom-if if="[[!add]]">
+                                <template>
+                                    <paper-button title="[[this.add]]" on-click="_checkDelete">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="remove" checked="{{checked::checked}}">
+                                    </paper-button>
+                                </template>
+                            </dom-if>
+                        </article>  
+                    </div> 
+                </template>                            
+            </dom-repeat>`
     }
     static get is() { return 'cms-image-item'; }
     static get properties() {
@@ -79,10 +96,6 @@ export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cms
             image: {
                 type: Object,
                 notify: true,
-            },
-            value: {
-                type: String,
-                reflectToAttribute: true
             },
             checked: {
                 type: Boolean

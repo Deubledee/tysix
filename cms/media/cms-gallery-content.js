@@ -340,6 +340,7 @@ class cmsGalleyContent extends cmsMediaLib(cmsContentTemplate) {
                 inform.author.id = this.user.uid
                 inform.author.name = this.user.displayName
                 inform.toArticle = 'B'
+                inform.addedTo
                 inform.removed = false
                 inform.dateCreated = data.toLocaleString().replace(',', '')
             } else {

@@ -10,16 +10,22 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
     static get _getSilentAnchor() {
         return html`    
                 <a href="" on-click="_addSubCategory">
-                    <paper-icon-button  name="[[itemLabel]]" icon="av:library-add"   aria-label="mode-edit">
-                    </paper-icon-button> 
-                       [[ADD]]
+                    <div class="add-btn-group" title="[[ADD]]">
+                        <div class="add-btn-group-item group-item-top-left" ></div>
+
+                        <div class="add-btn-group-item group-item-top-right"></div>
+
+                        <div class="add-btn-group-item group-item-bottom-left"></div>
+
+                        <div class="add-btn-group-item group-item-bottom-right"></div>
+                    </div> 
                 </a>            
         `
     }
     static get _topLabel() {
         return html`       
-            <h3 class="higherh3">[[query.content]]</h3>       
-            <h5 class="higherh5"> [[subcatLabel]] </h5> 
+            <h3 class="higherh3">[[subcatLabel]]</h3>       
+            <h5 class="higherh5"> category - [[query.content]]  </h5> 
         `
     }
     static get _getTable() {

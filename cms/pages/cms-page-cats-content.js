@@ -225,10 +225,15 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
 
     _routePageChanged(routeData, query, active) {
+        console.log(query)
         if (!!routeData.page) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
+                this.added = !!query.added
+            }
+            if (!!query.added) {
+                this.added = (query.added === 'true')
             }
             this.closestr = 'content/pages'
             if (active === true && routeData.page === 'add-category-pages') {
@@ -251,7 +256,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     if (!!localStorage[`page-${query.content}`]) {
                         let cont = JSON.parse(localStorage[`page-${query.content}`])
                         this._getPageInfo(`page-${query.content}-`)
-                        if (this.add === false) {
+                        if (this.add === false || this.added === true) {
                             this.set('inputVal', [])
                             this.set('textareaVal', [])
                             arr = this._setLangArr(cont[0])
@@ -277,8 +282,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
-            localStorage[`page-not-saved`] = JSON.stringify(this.content)
-            let string = `add=true&type=page&content=page-not-saved`
+            localStorage[`page-new-content`] = JSON.stringify(this.content)
+            let string = `add=true&type=page&content=new-content`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }

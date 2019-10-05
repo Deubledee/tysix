@@ -9,8 +9,13 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 display: var(--app-block)
             }
             .navbottom{
-                height: auto;
+                flex-basis: 600px;
                 padding: 10px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 80%;
+                border-radius: 10px;
+                box-shadow: 0px 1.5px 4px var(--secondary-text-color);
             }            
             .flex2{
                 display: flex;
@@ -24,12 +29,11 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 color: var(--paper-blue-grey-300);
                 display: block;
                 box-sizing: border-box;
-                height: 56px;
-                padding: 15px;
-                border-right: 1px solid var(--divider-color);
+                height: 39px;
+                border-right: 1px solid var(--divider-color);;
             }
             .navside{
-                flex-basis: 95px;
+                flex-basis: 80px;
                 padding-top: 8px;
             }
             .schooch{
@@ -40,21 +44,54 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 min-width: 35px;
                 padding: 0 0;
             }
-           h3, h2{
-               margin-inline-start: -26px;
+            .back-a-litle{
+                margin-inline-start: -18px;
             }
-
+            .higherh3{
+                margin-block-end: -1px;
+                margin-block-start: 2px;
+            }
             .higherh5{
-                margin-block-start: 0px;
-                margin-inline-start: 0px;
+                margin-block-start: -2px;
+                margin-block-end: 0px;
+                color: var(--light-primary-color);
+                flex-basis: auto;
+                letter-spacing: 0.2px;
             } 
             div[spinnercenter]{
                 position: absolute;
                 left: 50%;
                 top: 30%;
             }
-            canvas{
-                display: none
+            .add-btn-group{
+                display: flex;
+                flex-direction: row;
+                flex-flow: wrap;
+                box-sizing: border-box;
+                width: 75px;
+                padding: 19px;
+                padding-top: 3px; 
+            }
+            .add-btn-group-item{
+                color: var(--app-item-backgound-color);
+                flex-basis: 15px;
+                height: 15px;;
+            }
+            .group-item-top-left{
+                border-right: 2px solid;
+                border-bottom: 2px solid; 
+            }
+            .group-item-top-right{
+                border-left: 2px solid;
+                border-bottom: 2px solid; 
+            }
+            .group-item-bottom-left{
+                border-top: 2px solid;
+                border-right: 2px solid;  
+            }
+            .group-item-bottom-right{
+                border-top: 2px solid;
+                border-left: 2px solid; 
             }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"

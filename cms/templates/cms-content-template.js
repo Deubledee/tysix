@@ -12,7 +12,9 @@ export class cmsContentTemplate extends PolymerElement {
     <style include="cms-comon-style_v3">
     :host {
         position: relative;
-    }   
+        /*font-family: DeliciousRoman;*/
+    }  
+
     main{
         width: 1100px  
     }                  
@@ -25,11 +27,10 @@ export class cmsContentTemplate extends PolymerElement {
     }   
     div[background]{
         margin-left: auto;
-        margin-right: auto;
         top: 0%;
         display: flex;
         flex-direction: column;
-        width: 900px;
+        width: 969px;
         height: 100%;
         background-color: var(--app-secondary-text-color);
     }
@@ -39,7 +40,7 @@ export class cmsContentTemplate extends PolymerElement {
     div[placerbottom]{
         display: flex;
         flex-direction: column;
-        padding-left: 5%;
+        padding-left: 9%;
     }
     div[path]{
         height: 30px;

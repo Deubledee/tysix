@@ -510,6 +510,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             IMAGES: {
                 type: Array,
                 notify: true,
+                value: []
             },
             hovered: {
                 type: Boolean,
@@ -623,34 +624,40 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
 
     handleFiles(files) {
-        let arr = this.IMAGES || [], time
+        let arr = this.IMAGES
+        let time
         this.pop = true
         this.itemsIn = true
+        console.log(this.IMAGES, arr)
+        let count = parseInt(this.query.count)
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
             let imageType = /image.*/;
             if (!file.type.match(imageType)) { continue; }
             let reader = new FileReader();
-            let obj = []
-            obj = JSON.parse(atob(ModeloInfo))
+            let obj = JSON.parse(atob(ModeloInfo))
             obj[0].gallery = this.query.gallery
             obj[0].title = file.name
             obj[0].lastModifiedDate = file.lastModifiedDate
             obj[0].type = file.type
-            obj[0].id = `image${i}`
+            obj[0].id = `image${count++}`
             obj[0].file = file
+            obj[0].addedTo = 'N/Ad'
             reader.onload = (evt) => {
                 if (typeof time === 'number')
                     clearTimeout(time)
                 obj[0].localSource = evt.target.result
                 arr.push(obj[0])
+                this.IMAGES = []
+                console.log(this.IMAGES, arr)
                 time = setTimeout(() => {
-                    this.IMAGES = !!this.IMAGES ? [] : this.IMAGES
                     this.set('IMAGES', arr)
+                    console.log(this.IMAGES, arr)
                     this.pop = false
                     clearTimeout(time)
                 }, 500);
             }
+
             reader.readAsDataURL(file);
         }
     }
@@ -710,21 +717,22 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             obj.author.name = this.user.displayName
             obj.removed = false
             obj.dateCreated = data.toLocaleString().replace(',', '')
+            let length = obj.addedTo.split(' ').length
+            if (length === 0) {
+                obj.addedTo = 'N/A'
+            }
             return obj
         })
         return IMAGES
     }
     removeInStorage() {
         let temparr = this.IMAGES
-        console.log(temparr)
         temparr = temparr.filter(item => { if (item.uploaded !== 'inBD') return item })
-        console.log(temparr)
-        let IMAGES = temparr.map(image => {
+        temparr = temparr.map(image => {
             delete image.localSource
             delete image.file
             return image
         })
-        console.log(IMAGES)
         return temparr
     }
     _reset() {

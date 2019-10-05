@@ -8,7 +8,7 @@ export class cmsItemTemplate extends PolymerElement {
         <style include="cms-comon-style_v3">    
         :host {
             position: relative;
-            display: block;
+            display: block;            
         } 
         ${this._getStyles}  
         /* styles reside in cms-content*/

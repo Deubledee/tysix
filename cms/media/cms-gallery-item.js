@@ -3,31 +3,43 @@ import '@polymer/app-route/app-route';
 import '@polymer/paper-input/paper-input.js';
 import { microTask } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsItemTemplate } from '../templates/cms-item-template';
-import { Setter } from '../tools/cms-element-set';
+import { html } from '@polymer/polymer/polymer-element';
 import './cms-gallery-item';
-const Consts = new Setter()
-
 class cmsGalleryItem extends cmsItemTemplate {
-    static get template() {
+    static get _getElement() {
         return html`
-        <style>    
-        :host {
-            position: relative;
-            display: block;
-        } 
-                /* styles reside in cms-content*/
-        </style>        
-        <app-location route="{{route}}">
-        </app-location> 
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route> 
-        <slot name="table"></slot> 
-            `;
+            <dom-repeat repeat items="[[galleryArray]]" as="item">
+                <template>  
+                    <div centerImageItem>
+                        <article class="padding">
+                            <paper-button>
+                               [[item.id]]
+                               <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                            </paper-button>
+                        </article>  
+                        <article class="padding">
+                            <paper-button on-click="_showImages">
+                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show">
+                                </paper-icon-button> 
+                            </paper-button>
+                        </article> 
+                        <article class="padding">
+                            <paper-button>
+                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                            </paper-button>
+                        </article> 
+                        <article class="padding">
+                            <paper-button on-click="_openConfirm">
+                                <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
+                                </paper-icon-button>   
+                            </paper-button> 
+                        </article>  
+                    </div> 
+                </template>                            
+            </dom-repeat>`;
     }
     static get is() { return 'cms-gallery-item'; }
-
     static get properties() {
         return {
             route: {
@@ -60,9 +72,13 @@ class cmsGalleryItem extends cmsItemTemplate {
                 value: {}
             },
             gallery: {
+                type: Object,
+                notify: true
+            },
+            galleryArray: {
                 type: Array,
                 notify: true,
-                observer: '_putRow'
+                computed: '_putRow(gallery)'
             },
             noItem: {
                 type: Array,
@@ -79,44 +95,10 @@ class cmsGalleryItem extends cmsItemTemplate {
         this.spinOut = false
         this.translator.clone(this)
     }
-    _putRow(data) {
-        let template = `
-             <article centerListItem slot="table">
-                 <div>
-                    <paper-button>
-                        ${data.id}
-                    </paper-button>
-                    <paper-button>
-                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
-                    </paper-button>
-                 </div>
-                 <div>
-                     <paper-button>
-                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
-                     </paper-button>
-                 </div> 
-                 <div>
-                     <paper-button>
-                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
-                     </paper-button>
-                 </div> 
-                 <div>
-                     <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
-                     </paper-icon-button>      
-                 </div>
-             </article>`;
 
-        this.translator.template.innerHTML = template
-        this.translator.clone(this)
-
-        /*  this.children[this.childElementCount - 1].children[0].children[0].
-              addEventListener('click', (this._showImages).bind(this))*/
-
-        this.children[this.childElementCount - 1].children[1].children[0].
-            addEventListener('click', (this._showImages).bind(this))
-
-        this.children[this.childElementCount - 1].children[3].children[0].
-            addEventListener('click', (this._openConfirm).bind(this))
+    _putRow(item) {
+        console.log(item)
+        return [item]
     }
     _showImages() {
         this.default()

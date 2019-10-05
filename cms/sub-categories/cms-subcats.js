@@ -139,8 +139,7 @@ export class cmsSubcats extends cmsItemTemplate {
     }
     _addChild(data) {
         if (data === true) {
-            this.Parent = this.query.content || this.query.parent
-            let string = `${this.rootPath}content/pages/add-subcategory-pages?parent=${this.Parent}&name=${this.childElementCount}&topparentname=${this.Parent}&add=${this.add}&top=true`
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.query.content}&parent=${this.childElementCount}&topparentname=${this.query.content}&add=${this.add}&top=true`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
             this.add = false

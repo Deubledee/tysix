@@ -6,17 +6,23 @@ import { cmsMediaLib } from '../tools/cms-save-lib.js';
 import './cms-image-item';
 class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsMiddlePageTemplate)) {
     static get _topLabel() {
-        return html`       
-            <h3 class="higherh3"> [[images]]</h3>       
+        return html`  
+            <h3 class="higherh3 back-a-litle"> [[images]]</h3>       
             <h5 class="higherh5"> gallery - [[query.gallery]] </h5> 
         `
     }
     static get _getSilentAnchor() {
         return html`
         <a href="[[rootPath]]media/view-images/add-images[[addStr]]">
-                <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button>
-            [[ADD]]
+            <div class="add-btn-group" title="[[ADD]]">
+                <div class="add-btn-group-item group-item-top-left" ></div>
+
+                <div class="add-btn-group-item group-item-top-right"></div>
+
+                <div class="add-btn-group-item group-item-bottom-left"></div>
+
+                <div class="add-btn-group-item group-item-bottom-right"></div>
+            </div> 
         </a>
         `
     }
@@ -41,9 +47,21 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             </div>  
         </section>
         <section class="flexchildbotom noFlex">
+            <div class="center">   
+                <h4> 
+                [[TYPE]]    </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
             <div class="center">  
                 <h4> 
                 [[Gallery]]     </h4>     
+            </div>  
+        </section>
+        <section class="flexchildbotom noFlex">
+            <div class="center">  
+                <h4> 
+                [[AddedTo]]     </h4>     
             </div>  
         </section>
         <section class="flexchildbotom noFlex">
@@ -105,7 +123,13 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             },
             IMAGES: {
                 type: Array,
-                notify: true
+                notify: true,
+                value: [],
+            },
+            addStr: {
+                type: String,
+                notify: true,
+                computed: '_computeUrl(IMAGES)'
             },
             toAdd: {
                 type: Array,
@@ -166,11 +190,10 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         this.IMAGES = []
         this.addTo = false
         this.checked = false
-        this.addStr = `?gallery=${this.query.gallery}&add=true`
+        this.addStr = `?gallery=${this.query.gallery}&add=trueI&count=${this.IMAGES.length}`
         if (!!routeData.page && routeData.page === "view-images") {
             if (!!query.add) {
                 this.addTo = true
-                this.addStr = location.search.toString()
             }
             if (!!query.gallery) {
                 this.gallery = query.gallery
@@ -198,7 +221,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             sendBackArray[0].images.content = topush.concat(this.toAdd)
             localStorage[`${this.query.type}-${this.query.content}`] = JSON.stringify(sendBackArray)
             let add = this.query.content === 'new-content' ? true : false
-            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&add=${add}`
+            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=${add}`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
             return
@@ -207,9 +230,6 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             let content = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
             return
         }
-    }
-    _setContent(cont) {
-        return cont
     }
     _setLabelAdd(data) {
         if (data === true) {
@@ -224,6 +244,9 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         } else {
             return 'delete'
         }
+    }
+    _computeUrl(IMAGES) {
+        return `${location.search.toString()}&count=${IMAGES.length}`
     }
     reset() {
         this.routeData.page = ''

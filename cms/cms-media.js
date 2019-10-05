@@ -1,6 +1,16 @@
 import { cmsTopPageTemplate } from './templates/cms-top-page-template';
 import { html } from '@polymer/polymer/polymer-element.js';
+
 class cmsMedia extends cmsTopPageTemplate {
+  static get topTitle() {
+    return html`
+      <a href="[[_getStr2(page)]][[_queryContent2(index, page)]]">  
+          <paper-button  aria-label="Go back page">                   
+          [[_getPage2(page)]]
+          </paper-button>               
+      </a> 
+        `
+  }
   static get topPages() {
     return html`
       <section>
@@ -136,40 +146,11 @@ class cmsMedia extends cmsTopPageTemplate {
     this.translator.changeLang.call(this)
     this.setBreadcrumbs(this.route, this.routeData)
   }
-
-  setBreadcrumbs(route, routeData) {
-    if (!routeData.page || !route.path === '/') {
-      let arr2 = []
-      this.page = 'home';
-      arr2.push('cmshome')
-      this.set('breadcrumbs', arr2)
-    }
-    if (!!routeData.page) {
-      if (['galleries', 'playlists', 'search'].indexOf(routeData.page) !== -1) {
-        let arr2 = []
-        arr2.push('cmshome')
-        this.set('breadcrumbs', arr2)
-      }
-    }
-    if (["/view-images", , "/view-images/add-images", "/view-images/edit-images"].indexOf(route.path) !== -1) {
-      let arr2 = []
-      arr2.push("cmshome")
-      arr2.push("/media/galleries")
-      this.breadcrumbs = arr2
-    }
-    if (["/view-videos"].indexOf(route.path) !== -1) {
-      let arr2 = []
-      arr2.push("cmshome")
-      arr2.push("/media")
-      arr2.push("/media/galleries")
-      this.set("breadcrumbs", arr2)
-    }
-  }
-
   _routePageChanged(route, routeData) {
     if (route.prefix === '/media') {
-      this.set('breadcrumbs', [])
-      this.setBreadcrumbs(this.route, this.routeData)
+      if (this.breadcrumbs.length > 0) {
+        this.setBreadcrumbs(this.route, this.routeData)
+      }
       if (!routeData.page) {
         this.page = 'home';
       }
@@ -186,13 +167,41 @@ class cmsMedia extends cmsTopPageTemplate {
       }
     }
   }
-
-  _getStr(item) {
+  setBreadcrumbs(route, routeData) {
+    if (typeof this.time === 'number') clearTimeout(this.time)
+    this.time = setTimeout(() => {
+      if (route.path === '/') {
+        let arr2 = []
+        arr2.push('cmshome')
+        this.set('breadcrumbs', arr2)
+      }
+      if (!!routeData.page) {
+        if (['galleries', 'playlists', 'search'].indexOf(routeData.page) !== -1) {
+          let arr2 = []
+          arr2.push('cmshome')
+          this.set('breadcrumbs', arr2)
+        }
+      }
+      if (["/view-images", "/view-images/add-images", "/view-images/edit-images"].indexOf(route.path) !== -1) {
+        let arr2 = []
+        arr2.push("cmshome")
+        arr2.push("/media/galleries")
+        this.breadcrumbs = arr2
+      }
+      if (["/view-videos"].indexOf(route.path) !== -1) {
+        let arr2 = []
+        arr2.push("cmshome")
+        arr2.push("/media/galleries")
+        this.set("breadcrumbs", arr2)
+      }
+    }, 120);
+  }
+  _getStr2(item) {
     let str = ''
     str = (item === '/media') ? `${item}/` : `${item}`
     return str
   }
-  _queryContent(index) {
+  _queryContent2(index) {
     let str
     if (index > 1) {
       if (!!this.query && !!this.query.type) {
@@ -202,6 +211,24 @@ class cmsMedia extends cmsTopPageTemplate {
       }
     }
     return str
+  }
+  _getPage2(item) {
+    let word
+    if (item === 'cmshome') {
+      word = item.split('')
+      word[0] = word[0].toUpperCase()
+      word = word.join('')
+      this.translator.changeItemTitleLang.call(this, word.toString(), 'word')
+    } else {
+      word = item.split('/')
+      word.shift()
+      word = word.pop()
+      word = word.split('')
+      word[0] = word[0].toUpperCase()
+      word = word.join('')
+      this.translator.changeItemTitleLang.call(this, word.toString(), 'word')/**/
+    }
+    return this.word
   }
   _pageChanged(page) {
     if (page !== undefined) {

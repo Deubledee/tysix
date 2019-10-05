@@ -8,7 +8,9 @@ $_documentContainer.innerHTML = `
     .divtop {
         position: var(--app-default-position);
         height: 25px;
-        box-shadow: 1px 1px 3px var(--disabled-text-color);
+        margin-block-end: 4px;
+        border-bottom: 1px solid var(--google-grey-300);
+        padding-top: 2px;
     }
 
     .divtop,
@@ -59,7 +61,7 @@ $_documentContainer.innerHTML = `
     article[centerListItem] {
         word-break: keep-all;
         border-radius: 4px;
-        font-size: 0.7em;
+        font-size: 0.9em;
         border-bottom: 1px solid var(--light-theme-divider-color);
     }
 
@@ -68,7 +70,7 @@ $_documentContainer.innerHTML = `
         font-size: var(--app-content-font-size, x-small);
     }
     article[centerListItem] paper-icon-button{
-        height: 3.6em;
+        height: 2.6em;
         top: -5px;
     }
     article[centerListItem] div, article[centerImageItem] div {
@@ -168,7 +170,8 @@ $_documentContainer.innerHTML = `
     }
 
     paper-button{
-        height: var(--paper-font-title_-_font-size)
+        height: var(--paper-font-title_-_font-size);
+        text-transform: lowercase;
     }
 
     article[centerListItem] paper-button{

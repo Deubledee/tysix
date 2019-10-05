@@ -10,9 +10,15 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     static get _getSilentAnchor() {
         return html`            
         <a href="[[rootPath]]media/galleries/add-gallery">
-                <paper-icon-button icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button>
-            [[ADD]] 
+            <div class="add-btn-group" title="[[ADD]]">
+                <div class="add-btn-group-item group-item-top-left" ></div>
+
+                <div class="add-btn-group-item group-item-top-right"></div>
+
+                <div class="add-btn-group-item group-item-bottom-left"></div>
+
+                <div class="add-btn-group-item group-item-bottom-right"></div>
+            </div> 
         </a>
         `
     }
