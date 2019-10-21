@@ -25,6 +25,7 @@ const cmsPagesLib = function (superClass) {
             getPageData(ID).then(data => {
                 let cont = [data]
                 let arr = this._setLangArr(cont[0])
+                console.log(arr[0])
                 let str = `content/pages/edit-category-pages?content=${ID}&add=false&lang=${arr[0]}`
                 localStorage.setItem(`page-${ID}`, JSON.stringify(cont))
                 window.history.pushState({}, null, str);

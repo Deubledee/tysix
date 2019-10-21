@@ -1,10 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { PaperButtonBehavior, PaperButtonBehaviorImpl } from '@polymer/paper-behaviors/paper-button-behavior.js';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import {
+    PolymerElement,
+    html
+} from '@polymer/polymer/polymer-element';
+import {
+    PaperButtonBehavior,
+    PaperButtonBehaviorImpl
+} from '@polymer/paper-behaviors/paper-button-behavior.js';
+import {
+    mixinBehaviors
+} from '@polymer/polymer/lib/legacy/class.js';
 import '@polymer/iron-input/iron-input.js';
 export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBehaviorImpl], PolymerElement) {
     static get template() {
-        return html`
+        return html `
         <style include="paper-material-styles">
             :host {
                 @apply --layout-inline;
@@ -148,7 +156,9 @@ export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBe
         </div>  
         `
     }
-    static get is() { return 'cms-input'; }
+    static get is() {
+        return 'cms-input';
+    }
     static get properties() {
         return {
             raised: {
@@ -188,7 +198,9 @@ export class cmsInput extends mixinBehaviors([PaperButtonBehavior, PaperButtonBe
         super.ready();
         this.onkeydown = (evt) => {
             this.noink = true
-            setTimeout(() => { this.noink = false }, 60)
+            setTimeout(() => {
+                this.noink = false
+            }, 60)
         }
     }
     _setTextArea(data) {

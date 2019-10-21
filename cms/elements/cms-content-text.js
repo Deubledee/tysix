@@ -1,9 +1,13 @@
-import { html } from '@polymer/polymer/polymer-element';
-import { cmsContentItemTemplate } from '../templates/cms-content-item-template';
+import {
+    html
+} from '@polymer/polymer/polymer-element';
+import {
+    cmsContentItemTemplate
+} from '../templates/cms-content-item-template';
 import '@polymer/iron-autogrow-textarea';
 export class cmsContentText extends cmsContentItemTemplate {
     static get _getStyles() {
-        return html`        
+        return html `        
         div[inputs] {
             /*background-color: #dadfe2;*/
             height: 0px;
@@ -37,7 +41,7 @@ export class cmsContentText extends cmsContentItemTemplate {
         }`
     }
     static get _getElement() {
-        return html`        
+        return html `        
             <div class="flexright">
                 <div inputs name="[[itemLabel]]"> 
                     <cms-input settextarea="true" class="larger keyboard-focus" id="inpt1" on-click="edit" name="[[itemLabel]]" raised="[[raised]]"> 
@@ -49,7 +53,9 @@ export class cmsContentText extends cmsContentItemTemplate {
             </div>`
     }
 
-    static get is() { return 'cms-content-text'; }
+    static get is() {
+        return 'cms-content-text';
+    }
     static get properties() {
         return {
             lang: {
@@ -67,8 +73,8 @@ export class cmsContentText extends cmsContentItemTemplate {
             translator: {
                 type: Object,
                 notify: true,
-                value: function () {
-                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
+                value: function() {
+                    return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             }
         };
@@ -81,6 +87,7 @@ export class cmsContentText extends cmsContentItemTemplate {
         this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
         this.translator.shoot('cms-content-item', 'setLangObject')
+        window.addEventListener('flat', (this._getFlat).bind(this), false)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {

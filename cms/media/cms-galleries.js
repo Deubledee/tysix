@@ -9,7 +9,7 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     static get _getSilentAnchor() {
         return html`            
-        <a href="[[rootPath]]media/galleries/add-gallery">
+        <a on-click="_newGall">
             <div class="add-btn-group" title="[[ADD]]">
                 <div class="add-btn-group-item group-item-top-left" ></div>
 
@@ -23,7 +23,10 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         `
     }
     static get _getBottom() {
-        return html`
+        return html`       
+        <div class="count">
+            <span> [[galleries.length]] </span>
+        </div>
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[Gallery]]  [[viewEdit]]</h4>
@@ -144,6 +147,9 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         if (['galleries'].indexOf(routeData.page) !== -1) {
             this._getGalleries({ q: 'removed', v: false })
         }
+    }
+    _newGall() {
+
     }
     putElement(index, gallery) {
         if (typeof this.time === 'number') {

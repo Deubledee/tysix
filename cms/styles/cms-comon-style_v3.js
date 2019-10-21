@@ -137,6 +137,7 @@ $_documentContainer.innerHTML = `
 
             .flexchildbotomFull {
                 flex-basis: 80px;
+                width: 155px;
             }
 
             .flexchildbotomFullExtra {
@@ -208,11 +209,11 @@ $_documentContainer.innerHTML = `
 
             .flexleft {
                 color: var(--app-content-section-span-color);
-                ;
                 flex-basis: 220px;
                 display: flex;
                 flex-flow: nowrap;
                 flex-direction: row;
+                width: 210px;
             }
 
             .center {
@@ -358,22 +359,7 @@ $_documentContainer.innerHTML = `
                 display: block;
                 flex-basis: 92%;
             }
-
-            section[title] {
-                width: 25%;
-                flex-basis: 34px;
-                cursor: pointer;
-                text-align: center;
-                height: 52px;
-                border-radius: 10px;
-                margin-left: auto;
-                margin-right: auto;
-                color: #787676;
-                font-size: 55px;
-                text-align: center;
-                /*  text-shadow: 3px 3px 2px #ababab;*/
-            }
-
+            
             paper-spinner {
                 left: 47%;
                 ;
@@ -406,6 +392,7 @@ $_documentContainer.innerHTML = `
                 width: 110px;
                 letter-spacing: 2px;
                 height: 60px;
+                text-transform: lowercase;
             }
 
             .contenth4 {
@@ -500,22 +487,22 @@ $_documentContainer.innerHTML = `
 
             paper-button.exex {
                 position: relative;
+                background-color: var(--divider-color);
                 top: -11px;
                 right: 8px;
                 border-radius: 31%;
                 min-width: 15px;
                 max-height: 14px;
-                color: var(--light-theme-divider-color);
+                color: var(--secondary-text-color);
                 cursor: pointer;
                 font-size: 9px;
-                background-color: #e7e9ea;
+                padding-top: 7px;
             }
 
             paper-button.exexsmall {
                 top: -5px;
                 right: -1px;
-                background-color: transparent;
-            }
+                background-color: transparent;            }
 
             paper-button.strech {
                 width: 177px;

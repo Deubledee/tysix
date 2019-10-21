@@ -27,7 +27,10 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         `
     }
     static get _getBottom() {
-        return html`                         
+        return html`  
+        <div class="count">
+            <span> [[IMAGES.length]] </span>
+        </div>                       
         <section class="flexchildbotom noFlex">
             <div class="center">   
                 <h4>  [[Imag]]   </h4>     

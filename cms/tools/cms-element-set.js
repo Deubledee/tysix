@@ -14,8 +14,7 @@ class Setter {
             DBW.authStateChanged((user, err) => {
                 if (user !== 0) {
                     resolve(user)
-                }
-                else {
+                } else {
                     reject(err)
                 }
             })

@@ -1,4 +1,3 @@
-
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
@@ -8,7 +7,7 @@ const ModeloInfo = "W3siYWRkZWRUbyI6IiIsImF1dGhvciI6e30sImRhdGVDcmVhdGVkIjoiIiwi
 class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsContentTemplate)) {
 
     static get _getStyles() {
-        return html`
+        return html `
             .langdivsectionnpaddingtop {
                 display: block;
                 padding-top: 6px;
@@ -16,6 +15,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 text-align: center;
             }
             div[bottom] {
+                flex-direction: column;
                 padding-left: unset;
                 padding: 6%;
                 padding-top: 39px;
@@ -28,6 +28,8 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 padding: 26px;
                 cursor: pointer;
                 flex: unset;
+                width: auto;
+                height: 345px;
                 -webkit-transition: padding 0.5s ease-out;
                 -moz-transition: padding 0.5s ease-out;
                 transition: padding 0.5s ease-out;
@@ -290,17 +292,17 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             `
     }
     static get _getLangButton() {
-        return html``
+        return html ``
     }
     static get _getXbutton() {
-        return html` 
+        return html ` 
         <paper-button class="exex" on-click="_addTitle">
             x
         </paper-button> 
          `
     }
     static get _getLangAnchor() {
-        return html`   
+        return html `   
                 <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">  
                     <paper-button langbtn aria-label="langbutton" on-click="_openFiles">
                         browse pc
@@ -330,7 +332,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 </section>  `
     }
     static get _getContentItems() {
-        return html`
+        return html `
         <div container>
             <div bottom>
                 <div class="collorindex">
@@ -463,8 +465,8 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             translator: {
                 type: Object,
                 notify: true,
-                value: function () {
-                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
+                value: function() {
+                    return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             },
             lang: {
@@ -485,7 +487,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             itemlang: {
                 type: Object,
                 notify: true,
-                value: function () { return { 'addTitle': '' } }
+                value: function() { return { 'addTitle': '' } }
             },
             hidebottom: {
                 type: Boolean,
@@ -504,8 +506,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             },
             Model: {
                 type: Object,
-                value: {
-                }
+                value: {}
             },
             IMAGES: {
                 type: Array,
@@ -584,38 +585,38 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query) {
-        if (!!routeData.page) {
-            let arr = []
-            if (!!query.add) {
-                this.add = (query.add === 'true')
-            }
-            this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
-            if (routeData.page === 'add-images') {
-                if (this.add === true) {
-                    localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
-                    this._getPageInfo(`images-${this.query.gallery}-new-content-`)
-                    this.closestr = `media/view-images${location.search}`
+            if (!!routeData.page) {
+                let arr = []
+                if (!!query.add) {
+                    this.add = (query.add === 'true')
                 }
+                this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
+                if (routeData.page === 'add-images') {
+                    if (this.add === true) {
+                        localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
+                        this._getPageInfo(`images-${this.query.gallery}-new-content-`)
+                        this.closestr = `media/view-images${location.search}`
+                    }
 
-            }
-            if (routeData.page === 'edit-images') {
-                if (!!this.added) {
-                    this.inform = []
-                    this._getPageInfo(`images-new-content-`)
                 }
-                if (!!query.content) {
-                    if (!!localStorage[`images-${query.content}-info`]) {
-                        this._getPageInfo(`images-${query.content}-`)
-                        if (this.add === false) {
-                            this.set('inputVal', [])
-                            this.set('str', `media/view-images/add-images${location.search}`)
+                if (routeData.page === 'edit-images') {
+                    if (!!this.added) {
+                        this.inform = []
+                        this._getPageInfo(`images-new-content-`)
+                    }
+                    if (!!query.content) {
+                        if (!!localStorage[`images-${query.content}-info`]) {
+                            this._getPageInfo(`images-${query.content}-`)
+                            if (this.add === false) {
+                                this.set('inputVal', [])
+                                this.set('str', `media/view-images/add-images${location.search}`)
+                            }
                         }
                     }
                 }
-            }
-        } /**/
-    }
-    /***** */
+            } /**/
+        }
+        /***** */
     _openFiles() {
         this.$.imagefiles.click()
         this.$.imagefiles.onchange = evt => {
@@ -710,7 +711,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     _setInfo(IMAGs, data) {
         let objrr = IMAGs
-        // if(IMAGs)
+            // if(IMAGs)
         let IMAGES = objrr.map(image => {
             let obj = image
             obj.author.id = this.user.uid

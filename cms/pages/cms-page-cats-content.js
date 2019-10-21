@@ -21,7 +21,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                         <span>
                             [[publishedby]]
                         </span>
-                    </aside>
+                    </aside>.str
                     <aside>
                         <span>
                             [[publiShed]]
@@ -115,7 +115,9 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             </template>
         </dom-repeat>`
     }
-    static get is() { return 'cms-page-cats-content'; }
+    static get is() {
+        return 'cms-page-cats-content';
+    }
     static get properties() {
         return {
             user: {
@@ -145,7 +147,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
+                    return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             },
             lang: {
@@ -156,6 +158,12 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             langs: {
                 type: Object,
                 value: {}
+            },
+            getdown: {
+                type: Boolean,
+                reflectToAttribute: true,
+                notify: true,
+                value: false,
             },
             addLangResponse: {
                 type: Object,
@@ -187,8 +195,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             },
             Model: {
                 type: Object,
-                value: {
-                }
+                value: {}
             },
             langStr: String,
             time: Number
@@ -218,25 +225,32 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     _setLang(res, lang) {
         this.lang = lang
         res.call(this);
+        this._checkLabel()
     }
     __changeLang() {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
+        this._checkLabel()
     }
-
+    _checkLabel() {
+        if (this.add === true) {
+            this.translator.changeItemTitleLang.call(this, 'addPage', 'navLabel')
+        } else {
+            this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
+        }
+    }
     _routePageChanged(routeData, query, active) {
-        console.log(query)
         if (!!routeData.page) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
-                this.added = !!query.added
             }
             if (!!query.added) {
                 this.added = (query.added === 'true')
             }
+            if (!!this.langs[this.lang]) this._checkLabel()
             this.closestr = 'content/pages'
-            if (active === true && routeData.page === 'add-category-pages') {
+            if (routeData.page === 'add-category-pages') {
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
                     localStorage[`page-new-content-info`] = atob(ModeloInfo)
@@ -264,7 +278,9 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                             let obj = cont[0].images.content
                             this.imageLabel = 'images'
                             this.set('imageArr', obj)
-                            this.set('str', `content/pages/edit-category-pages${location.search}`)
+                            let strg = location.search
+                            strg = strg.split('lang=')[0]
+                            this.set('str', `content/pages/edit-category-pages${strg}lang=`)
                             if (!!query.lang) {
                                 this.__setLAng(query.lang, cont)
                             }
@@ -273,7 +289,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     }
                 }
             }
-        } /**/
+        }
     }
     addImage() {
         if (this.add === false) {
@@ -298,11 +314,11 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         }
     }
     onSave() {
-        let data = new Date(), inform
+        let data = new Date(),
+            inform
         if (!!this.newlangstate) {
             this.add = true
         }
-        // let cont = (add === false) ? JSON.parse(localStorage[`cats${this.query.content}${this.query.topparent}info`]) : undefined
         inform = this.inform.pop()
         let noLang = this._lastModified(this._setInfo(inform, data), data)
         if (!!noLang) return
@@ -350,8 +366,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         return inform
     }
     _reset() {
-        this.query = {}
-        this.routeData = {}
         this.imageLabel = ''
         this.set('content', []);
         this.set('imageArr', [])
@@ -360,5 +374,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.set('textareaVal', [])
         this.set('add', 0);
     }
+
 }
 customElements.define(cmsPageCatsContent.is, cmsPageCatsContent);

@@ -4,7 +4,9 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '../elements/cms-content-image';
 import '../elements/cms-content-item';
+import '../elements/cms-pop-input';
 import '../elements/cms-content-text';
+import '../elements/cms-lang-tab-item';
 import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
     static get template() {
@@ -23,7 +25,7 @@ export class cmsContentTemplate extends PolymerElement {
         position: fixed;
         top: 0%;
         width: 100%;
-        height: 100%;
+        height: 100vh;
     }   
     div[background]{
         margin-left: auto;
@@ -31,7 +33,7 @@ export class cmsContentTemplate extends PolymerElement {
         display: flex;
         flex-direction: column;
         width: 969px;
-        height: 100%;
+        height: 100vh;
         background-color: var(--app-secondary-text-color);
     }
     div[placertop]{
@@ -40,7 +42,6 @@ export class cmsContentTemplate extends PolymerElement {
     div[placerbottom]{
         display: flex;
         flex-direction: column;
-        padding-left: 9%;
     }
     div[path]{
         height: 30px;
@@ -85,40 +86,24 @@ export class cmsContentTemplate extends PolymerElement {
     }
     .path{
         flex-basis: 100%;
-    }    
-    div[inputlang] {
-        box-sizing: border-box;
-        position: absolute;
-        top: 110px;
-        left: 68%;
-        background-color: var(--app-backgound-color);
-        width: 419px;
-        z-index: 10;
-        height: 155px;
-        padding: 17px;
-        box-shadow: 0px 1px 7px var(--disabled-text-color);
-        border-radius: 8px;
     }
     div[langdiv]{
         position: relative;
-        top: 1px;
-      /*  margin-top: 30px;*/
+        top: 6px;
+        border-bottom: 6px solid var(--app-backgound-color);
         display: flex;
         flex-direction: row;
-        flex-basis: 28px;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        width: auto;
-        padding-left: 58px;
-    }   
-    div[langdiv] section {
-        border: 1px solid var(--divider-color);
-        border-bottom: unset;
-        border-top-right-radius: 8px;
-        border-top-left-radius: 8px;
-        color: var(--disabled-text-color);
-        font-weight: 600;
-        background-color: var(--app-backgound-color);
+        width: 800px;
+        height: 36px;
+        margin-left: auto;
+        z-index: 2;
+        margin-right: auto;;
+    }      
+    .titleactive{
+        position: relative;
+        height: 20px;
+        top: 10px;
+        background-color:var(--paper-grey-200);
     }
     .langdivsection{
         display: flex;
@@ -126,28 +111,27 @@ export class cmsContentTemplate extends PolymerElement {
         box-shadow: unset!important;
         width: 110px;
         height: 60px;
-    }
-    .langdivsectionnpaddingtop {
-        display: flex;
-        flex-direction: row-reverse;
-        padding-top: 6px;
-        flex-basis: 7%;
-    }
-    div[tgglelang]{
-        display: none;
-    }
+    }  
     .anchorish{
         cursor: pointer; 
     }
     div[bottom]{
         background-color: var(--app-backgound-color);
-        flex-direction: column;
-        border: 1px solid var(--divider-color);
+        flex-direction: row;
+        box-shadow: 0px 1px 4px var(--disabled-text-color);
         border-radius: 12px;
         padding: 22px;
-        padding-left: 17%;
         padding-top: 50px;
         width: 816px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 10px;
+    }
+    div[bottom] article{
+        flex-basis: 50%;
+        padding-inline-start: 50px;
+        display: flex;
+        flex-direction: column;
     }
     div[langdiv] section[nova]{
         color: var(--paper-grey-300);;
@@ -156,37 +140,7 @@ export class cmsContentTemplate extends PolymerElement {
     div[langdiv] paper-button[nova]{
         color: var(--paper-blue-300);
         background-color: var(--paper-blue-300);;
-    }
-    section[class="langdivsectionnpaddingtop"] a{
-        height: 16px;
-        width: 54px;  
-    }
-    div.closed{
-        position: absolute;
-        display: none
-    }
-    div[warning]{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        color: var(--paper-pink-700);
-       /* background-color: grey;*/
-    }
-    div[warning] h5{
-        flex-basis: 66%;
-        margin-block-start: 1.4em;
-    }
-    div[warning] h5, div[warning] h6{
-        letter-spacing: 0.1em;
-    }
-    div[warning] h6 {
-        margin-block-start: 1.3em;
-    }
-    div[warning]  a{
-        flex-basis: 6%;
-        color: var(--paper-grey-600);
-    }  
+    } 
     div[save]{
         flex-basis: 70%;
         display: block;  
@@ -265,20 +219,14 @@ export class cmsContentTemplate extends PolymerElement {
         height: 20px;
         width: 20px;
         right: -4px;
-    }
+    } 
     cms-content-item{
         
     }
-    paper-button[aria-label="lang"]{
-        top: 11px;
-        left: 8px;
-        color: var(--app-content-section-span-color);
-        font-weight: 500;
+    cms-lang-tab-item {
+        margin-right: 3px
     }
-    .btnx{
-        height: 44px; 
-    }
-        ${this._getStyles}
+    ${this._getStyles}
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
@@ -291,7 +239,6 @@ export class cmsContentTemplate extends PolymerElement {
                         ${this._getSideInfo}
                     </nav>
                     <nav buttons>  
-
                         <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" on-click="_cancelhoverd" title="close">
                             <div class="langdivsection borderright" on-mouseover="_hoverd" on-mouseout="_hoverd">        
                                 <div class="upleft" hovererd$="[[hovererd]]">
@@ -301,7 +248,15 @@ export class cmsContentTemplate extends PolymerElement {
                             </div>
                         </a>
 
-                        <div class="rightblock"> 
+                        <div class="rightblock">  
+                            <div class="langdivsection marginalize"> 
+                                <paper-button id="saveButton" class="saveButton" aria-label="mode-save">
+                                    [[navLabel]]
+                                </paper-button>
+                            </div>
+                        </div>
+
+                        <div class="rightblock">  
                             <div class="langdivsection marginalize borderleft"> 
                                 <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
                                     [[Save]]
@@ -309,37 +264,30 @@ export class cmsContentTemplate extends PolymerElement {
                             </div> 
                             ${this._getLangButton}
                         </div>
+
                     </nav> 
                     <div placerbottom>
                         <div path> 
                             ${this._getPath} 
-                            <div inputlang tgglelang$="[[!tgglelang]]"> 
-                                <div class="btnx">
+                            <cms-pop-input tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
                                 ${this._getXbutton}
-                                </div>
                                 <cms-content-item
+                                    slot="input" 
                                     item="[[itemlang]]"
                                     save-button="[[saveButton]]"
                                     res="{{addLangResponse}}">
-                                </cms-content-item>     
-                                <div class="closed" warning$="[[warning]]">
-                                    <h5>
-                                        [[warningMsg]] 
-                                    </h5>   
-                                    <a href="https://www.metamodpro.com/browser-language-codes" target="_blank">
+                                </cms-content-item>  
+                                <a slot="anchor" href="https://www.metamodpro.com/browser-language-codes" target="_blank">
                                     <h6>  more info </h6> 
-                                    </a>                        
-                                </div>                                               
-                            </div>
+                                </a>                                              
+                            </cms-pop-input>
                         </div> 
                         <div langdiv> 
                             ${this._getLangAnchor}
-                        </div>                               
-                        <div class="flex">
-                            <nav class="navbottom" id="bottom">                    
-                                ${this._getContentItems}
-                            </nav>
-                        </div> 
+                        </div>
+                        <nav class="navbottom" id="bottom">                    
+                            ${this._getContentItems}
+                        </nav>
                     </div> 
                 </div> 
             </div> 
@@ -364,74 +312,64 @@ export class cmsContentTemplate extends PolymerElement {
     }
     static get _getXbutton() {
         return html` 
-        <paper-button class="exex" on-click="_newLang">
+        <paper-button slot="button" class="exex" on-click="_newLang">
             x
         </paper-button> 
          `
     }
+
+
     static get _getLangAnchor() {
         return html`            
-        <dom-repeat repeat items="[[pageLangs]]" as="pagelang">
+        <dom-repeat id="model" repeat items="[[pageLangs]]" as="pagelang">
             <template>
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">
-                    <paper-button class="exex exexsmall" on-click="_openConfirm">
+                <cms-lang-tab-item route="[[route]]" str="[[str]]" pagelang="[[pagelang]]">
+                    <paper-button slot="button" class="exex exexsmall" on-click="_openConfirm">
                             x
                     </paper-button>
-                    <a href="[[rootPath]][[str]]&lang=[[pagelang]]" >
-                        <paper-button langbtn aria-label="langbutton">
-                            [[pagelang]]
-                        </paper-button>
-                    </a>
-                </section>
+                </cms-lang-tab-item>
             </template>
         </dom-repeat> `
     }
+
+
     static get _getPath() {
         return html`   
          <div  class="path">          
         </div>`
     }
-
     static get _getContentItems() {
         return html`
-                <div container>
-                    <div bottom>
-                        <dom-repeat repeat items="[[inputVal]]" as="item">
-                            <template>
-                                <section class="flexchildbotomFull">
-                                    <cms-content-item
-                                        editing="[[editing]]"
-                                        item="[[item]]"
-                                        save-button="[[saveButton]]"
-                                        res="{{inputResponse}}">
-                                    </cms-content-item>
-                                </section>
-                            </template>
-                        </dom-repeat>
-                        <dom-repeat repeat items="[[textareaVal]]" as="item">
-                            <template>
-                                <section class="flexchildbotomFullExtra">
-                                    <cms-content-text
-                                        editing="[[editing]]"
-                                        item="[[item]]"
-                                        save-button="[[saveButton]]"
-                                        res="{{textAreaResponse}}">
-                                    </cms-content-text>
-                                </section>
-                            </template>
-                        </dom-repeat>
-                        <section class="flexchildbotom">
-                            <cms-content-image id="image"
-                                editing="[[editing]]"
-                                item-label="[[imageLabel]]"
-                                images="[[imageArr]]"
-                                _deleteImg="[[deleteImg]]"  
-                    </cms-content-image>
-                </section>
-
-                    </div>
-            </div >
-                `;
+        <div bottom on-click="_seeFlat">
+            <article>
+                <dom-repeat repeat items="[[inputVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotomFull">
+                            <cms-content-item editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
+                                res="{{inputResponse}}">
+                            </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+            <article>
+                <dom-repeat repeat items="[[textareaVal]]" as="item">
+                    <template>
+                        <section class="flexchildbotomFullExtra">
+                            <cms-content-text editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
+                                res="{{textAreaResponse}}">
+                            </cms-content-text>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+        </div>
+        <div bottom>
+            <section class="flexchildbotom">
+                <cms-content-image id="image" editing="[[editing]]" item-label="[[imageLabel]]" images="[[imageArr]]" _deleteImg="[[deleteImg]]">
+                </cms-content-image>
+            </section>
+        </div>`;
     }
     static get _getSideInfo() {
         return html`
@@ -482,9 +420,11 @@ export class cmsContentTemplate extends PolymerElement {
                             </dom-repeat>
                         </div>
                     </template>
-        </dom - repeat > `
+        </dom-repeat>`
     }
-    static get is() { return 'cms-content-template'; }
+    static get is() {
+        return 'cms-content-template';
+    }
     static get properties() {
         return {
             user: {
@@ -500,16 +440,30 @@ export class cmsContentTemplate extends PolymerElement {
                 value: 'No info available..',
                 notify: true
             },
+            warningMsg: {
+                type: String,
+                notify: true,
+                value: ''
+            },
+            warning: {
+                type: Boolean,
+                notify: true,
+                value: false,
+            },
             itemlang: {
                 type: Object,
                 notify: true,
-                value: function () { return { 'addlang': '' } }
+                value: function () {
+                    return {
+                        'addlang': ''
+                    }
+                }
             },
             tgglelang: {
                 type: Boolean,
-                value: false,
+                value: true,
                 notify: true,
-                reflectToAttribute: true,
+                observer: '_log'
             },
             hovererd: {
                 type: Boolean,
@@ -521,6 +475,9 @@ export class cmsContentTemplate extends PolymerElement {
     }
     ready() {
         super.ready();
+    }
+    _log(data) {
+        console.log(data)
     }
     onSave() {
         return 0
@@ -542,6 +499,31 @@ export class cmsContentTemplate extends PolymerElement {
     }
     closeanchor(event) {
         if (event.srcElement.hasAttribute('placertop')) this.$.closeanchor.click()
+    }
+    _seeFlat(e) {
+        if (e.srcElement.tagName === 'DIV' || e.srcElement.tagName === 'ARTICLE') {
+            this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+                window.dispatchEvent(new CustomEvent('flat', {
+                    bubbles: true,
+                    composed: true
+                }));
+            });
+        }
+    }
+    _newLang() {
+        if (!!this.contetnLang) {
+            this.set('tgglelang', !this.tgglelang)
+            if (this.tgglelang === true) {
+                this.set('newlangstate', true)
+            } else {
+                this.warning = false
+                this.warningMsg = ''
+            }
+        }
+    }
+    __setLAng(lang, cont) {
+        this.set('contetnLang', lang)
+        this._setContent(lang, cont)
     }
     _getObjArr(content, item) {
         let obj,
@@ -616,16 +598,17 @@ export class cmsContentTemplate extends PolymerElement {
         if (!!this.content[0] && !!data && ('undefined' in data) === false) {
             let arr = Object.keys(data)
             if (data[arr[0]] !== undefined) {
-                let datalength = data[arr[0]].split(''), cont
+                let datalength = data[arr[0]].split(''),
+                    cont
                 datalength = datalength.length
                 this.time = setTimeout(() => {
                     if (datalength === 2) {
                         this.newLang = data.addlang
                         this.content[0][this.newLang] = {}
                         //   console.log(data, this.content[0])
-                        for (let par in this.content[0][this.setContetnLang]) {
+                        for (let par in this.content[0][this.contetnLang]) {
                             if (par.toString() !== 'undefined')
-                                this.content[0][this.newLang][par] = this.content[0][this.setContetnLang][par]
+                                this.content[0][this.newLang][par] = this.content[0][this.contetnLang][par]
                         }
                         this.set('pageLangs', [])
                         this.content[0][this.newLang].lang = this.newLang
@@ -636,8 +619,7 @@ export class cmsContentTemplate extends PolymerElement {
                             this.warning = false
                             this.warningMsg = ''
                         }, 250);
-                    }
-                    else {
+                    } else {
                         this.time2 = setTimeout(() => {
                             this.warning = true
                             this.warningMsg = 'lang must have two charecters ex: pt, en, fr'
@@ -660,38 +642,24 @@ export class cmsContentTemplate extends PolymerElement {
         let arr = this._setLangArr(this.content[0])
         this.pageLangs = []
         this.set('pageLangs', arr)
-        // this.$.saveButton.classList.remove('diferent')
         let evalu = !!(this.newlangstate)
         this.removelang = (evalu === true) ? false : true
     }
+
     _openConfirm(event) {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             this.dispatchEvent(new CustomEvent('confirm', {
-                bubbles: true, composed: true,
-                detail: { name: event.model.__data.pagelang, method: (this.__removelang).bind(this), argument: event, headderMsgKind: 'delete', type: 'sub-category-lang' }
+                bubbles: true,
+                composed: true,
+                detail: {
+                    name: event.model.__data.pagelang,
+                    method: (this.__removelang).bind(this),
+                    argument: event,
+                    headderMsgKind: 'delete',
+                    type: 'sub-category-lang'
+                }
             }));
         });
-    }
-    _nova(event, lang) {
-        if (!!this.newlangstate) {
-            let evalu = !!(lang === this.newLang)
-            return (evalu === true) ? true : false
-        }
-    }
-    _newLang() {
-        if (!!this.setContetnLang) {
-            this.set('tgglelang', !this.tgglelang)
-            if (this.tgglelang === true) {
-                this.set('newlangstate', true)
-            } else {
-                this.warning = false
-                this.warningMsg = ''
-            }
-        }
-    }
-    __setLAng(lang, cont) {
-        this.set('setContetnLang', lang)
-        this._setContent(lang, cont)
     }
     __reset() {
         this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {

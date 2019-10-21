@@ -24,7 +24,7 @@ export class cmsContentItemTemplate extends PolymerElement {
             font-size: 9px;  
         }
         </style> 
-        <div arow>
+        <div>
             <div class="flexleft" name="itemLabel">
                 <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
                     [[title]]
@@ -61,7 +61,9 @@ export class cmsContentItemTemplate extends PolymerElement {
                 </div>
             </div>`
     }
-    static get is() { return 'cms-content-item-template'; }
+    static get is() {
+        return 'cms-content-item-template';
+    }
     static get properties() {
         return {
             itemText: {
@@ -193,28 +195,38 @@ export class cmsContentItemTemplate extends PolymerElement {
     }
     _setButtons() {
         if (this.inedit === false) {
-            this.inedit = true;
-            this.inputObject.hidden = false;
-            this.raised = true
-            this.oninputing = true
-            if (this.texarea !== true) {
-                this.$.input.focus()
-            } else {
-                this.$.input.$.textarea.focus()
-            }
-            window.onbeforeunload = function () {
-                return "not without saving first :)";
-            };
+            this._getSharp()
+        } else {
+            this._getFlat()
         }
-        else {
-            this.inputObject.hidden = true;
-            this.inedit = false;
-            this.raised = false
-            if (this.editing === 0) {
-                this.inputObject.onkeydown = function () { };
-                window.onbeforeunload = function () { }
-            }
+    }
+    _seeSharp() {
+        if (this.raised === true) {
+            this._getFlat()
         }
+    }
+    _getFlat() {
+        this.inputObject.hidden = true;
+        this.inedit = false;
+        this.raised = false
+        if (this.editing === 0) {
+            this.inputObject.onkeydown = function () { };
+            window.onbeforeunload = function () { }
+        }
+    }
+    _getSharp() {
+        this.inedit = true;
+        this.inputObject.hidden = false;
+        this.raised = true
+        this.oninputing = true
+        if (this.texarea !== true) {
+            this.$.input.focus()
+        } else {
+            this.$.input.$.textarea.focus()
+        }
+        window.onbeforeunload = function () {
+            return "not without saving first :)";
+        };
     }
     inputing(event) {
         let value = event,

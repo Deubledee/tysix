@@ -41,7 +41,10 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
         `}
 
     static get _getBottom() {
-        return html`                      
+        return html`              
+        <div class="count">
+            <span> [[subSubCats.length]] </span>
+        </div>               
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4 title="[[title]]"> [[title]] </h4>   

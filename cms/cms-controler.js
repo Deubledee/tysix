@@ -68,6 +68,7 @@ class cmsControler extends PolymerElement {
           nav[toolbar] {
             font-size: var(--app-tollbar-default-font-size);
             flex-basis: 230px;
+            height: 100vh;
           }
           
            a {
@@ -173,13 +174,6 @@ class cmsControler extends PolymerElement {
                       <my-view404 name="view404"></my-view404>
                   </iron-pages>
               </div>
-          </div>
-          <div>
-              <ul>
-                  <li>sera</li>
-                  <li>sempre</li>
-                  <li>a subir</li>
-              </ul>
           </div>
       </div>
       <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name">

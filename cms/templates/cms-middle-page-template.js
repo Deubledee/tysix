@@ -93,6 +93,10 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 border-top: 2px solid;
                 border-left: 2px solid; 
             }
+            .count{
+                position: relative;
+                top: -15px;
+            }
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
@@ -149,7 +153,10 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             </div>
         `}
     static get _getBottom() {
-        return html`
+        return html`       
+        <div class="count">
+            <span> [[pages.length]] </span>
+        </div>
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[title]] </h4>

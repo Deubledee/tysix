@@ -138,7 +138,9 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         </dom-repeat>`
     }
 
-    static get is() { return 'cms-subcats-content'; }
+    static get is() {
+        return 'cms-subcats-content';
+    }
     static get properties() {
         return {
             user: {
@@ -168,7 +170,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 type: Object,
                 notify: true,
                 value: function () {
-                    return MyAppGlobals[window.cms]//MyAppGlobals.translator
+                    return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             },
             lang: {
@@ -266,7 +268,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             return STR.join(' - ')
         }
     }
-    _routePageChanged(routeData, query, active) {
+    _routePageChanged(routeData, query) {
         if (!!query.parent) {
             this.nova = false
             this.add = this.query.adTosub
@@ -301,11 +303,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 }
             }
             if (routeData.page === 'edit-subcategory-pages') {
-                this.set('content', []);
-                /*  this.$.saveButton.classList.add('diferent')
-                  if (!!this.added) {
-                      this.$.saveButton.classList.remove('diferent')
-                  }*/
                 if (!!query.parent) {
                     let cont = JSON.parse(localStorage[`cats-${parentName}-${parentIndex}`])
                     this._getPageInfo(`cats-${parentName}-${parentIndex}-`)
@@ -317,7 +314,9 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                         let obj = cont[0].images.content
                         this.imageLabel = 'images'
                         this.set('imageArr', obj)
-                        this.set('str', `content/pages/edit-subcategory-pages${location.search}`)
+                        let strg = location.search
+                        strg = strg.split('lang=')[0]
+                        this.set('str', `content/pages/edit-subcategory-pages${strg}lang=`)
                         if (!!query.lang) {
                             this.__setLAng(query.lang, cont)
                         }
@@ -353,7 +352,8 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             this.add = true
         }
         let top = (this.query.top === "true")
-        let data = new Date(), inform
+        let data = new Date(),
+            inform
         let cont = (top === false) ? JSON.parse(localStorage[`cats-${this.query.content}-${this.query.topparent}-info`]) : undefined
         inform = this.inform.pop()
         let noLang = this._lastModified(this._setInfo(inform, data), data, cont, this.query.name)
