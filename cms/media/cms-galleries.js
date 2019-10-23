@@ -1,11 +1,78 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
+import '../elements/cms-content-item';
+import '../elements/cms-pop-input';
 class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
+    static get _getStyles() {
+        return html`
+        :host{
+            position: relative,
+        }
+       /* ::slotted(*){
+            background-color: red
+        }*/
+        ::slotted(cms-gallery-item){
+            background-color: blue;
+            
+        }
+        div[path]{
+            height: 30px;
+            width: 300px;
+        }
+        div[path]{
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            font-style: italic;    
+            padding-left: 57px;
+            color: var(--app-content-section-span-color)    
+        }
+        div[path] h5 {
+            margin-block-start: 12px;
+            margin-block-end: 7px;
+        }
+        div[path] h6 {
+            margin-block-start: 12px;
+            margin-block-end: 7px;
+            color: var(--paper-blue-a200); 
+        }
+        .xbuton{
+            cursor: pointer;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            padding-top: 2px;
+        }  
+        paper-button.save-btn, .save-btn {
+            color: var(--google-blue-300);
+            height: 30px; 
+        }
+        .warning-color-2{
+            color: green
+        }
+        `
+    }
     static get _topLabel() {
         return html`       
-            <h2>[[Galleries]]</h2>               
-        `
+            <h2>[[Galleries]]</h2>    
+            <div path>
+                <cms-pop-input tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
+                    <paper-button slot="button" class="exex" on-click="_newGall">
+                        x
+                    </paper-button> 
+                    <cms-content-item
+                        slot="input" 
+                        item="[[itemlang]]"
+                        res="{{addLangResponse}}"
+                        raised="[[raised]]"
+                        >
+                    </cms-content-item>  
+                    <paper-button class="save-btn"  slot="anchor" on-click="_onSave">
+                        <h6 id="agasix" class="save-btn" >  save </h6> 
+                    </paper-button >                                              
+                </cms-pop-input>           
+            </div>`
     }
     static get _getSilentAnchor() {
         return html`            
@@ -22,6 +89,15 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         </a>
         `
     }
+    static get _getTable() {
+        return html`
+        <dom-repeat items="[[galleries]]" as="gallery">
+            <template>                
+                [[putElement(index, gallery)]]
+                <slot name="item[[index]]"></slot>
+            </template>
+        </dom-repeat>
+        `}
     static get _getBottom() {
         return html`       
         <div class="count">
@@ -49,20 +125,22 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         </section>  
         `
     }
-    static get _getTable() {
-        return html`
-        <dom-repeat items="[[galleries]]" as="gallery">
-            <template>                
-                [[putElement(index, gallery)]]
-                <slot name="item[[index]]"></slot>
-            </template>
-        </dom-repeat>
-        `}
     static get is() { return 'cms-galleries'; }
 
     static get properties() {
         return {
             route: {
+                type: Object,
+                notify: true
+            },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals[window.cms]// MyAppGlobals.translator
+                }
+            },
+            user: {
                 type: Object,
                 notify: true
             },
@@ -73,6 +151,26 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
             langs: {
                 type: Object,
                 value: {}
+            },
+            addLangResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setAddLangValue'
+            },
+            itemlang: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return {
+                        'addGall': ''
+                    }
+                }
+            },
+            warning: {
+                type: Boolean,
+                notify: true,
+                value: true,
             },
             returnPath: {
                 type: String,
@@ -94,16 +192,24 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
                 type: Array,
                 notify: true,
             },
+            gall: {
+                type: String,
+                notify: true,
+                value: ''
+            },
+            newGall: {
+                type: String,
+                notify: true,
+                value: ''
+            },
             galleries: {
                 type: Array,
                 notify: true
             },
-            translator: {
-                type: Object,
-                notify: true,
-                value: function () {
-                    return MyAppGlobals[window.cms]// MyAppGlobals.translator
-                }
+            tgglelang: {
+                type: Boolean,
+                value: true,
+                notify: true
             },
             spinOut: {
                 type: Boolean,
@@ -112,7 +218,12 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
             sloted: {
                 type: Boolean,
                 value: false
-            }
+            },
+            raised: {
+                type: Boolean,
+                notify: true,
+                value: false,
+            },
         }
     }
     static get observers() {
@@ -143,14 +254,63 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(routeData, query, active) {
-        if (['galleries'].indexOf(routeData.page) !== -1) {
+    _routePageChanged(routeData, query) {
+        if (['galleries'].indexOf(routeData.page) !== -1 || query.reset === 'true') {
             this._getGalleries({ q: 'removed', v: false })
         }
     }
-    _newGall() {
-
+    _setAddLangValue(data) {
+        if (typeof this.time === 'number') clearTimeout(this.time)
+        if (typeof this.time2 === 'number') clearTimeout(this.time2)
+        if (!!data && !('undefined' in data)) {
+            this.time = setTimeout(() => {
+                this.gall = data.addGall
+            }, 500)
+        }
     }
+
+    _newGall() {
+        this.tgglelang = !this.tgglelang
+        if (this.tgglelang) {
+            this.warningMsg = ''
+        }
+    }
+
+    _onSave() {
+        let count = this.gall.split('').length
+        if (count > 0) {
+            let data = new Date(), inform = {}
+            this._lastModified(this._setInfo(inform, data), data)
+            this._setGallery()
+        } else {
+            this.warningMsg = 'character count cannot be zero "0"'
+            setTimeout(() => {
+                this.warningMsg = ''
+            }, 1500)
+        }
+    }
+
+    _lastModified(inform, data) {
+        inform.lastModified = []
+        inform.lastModified.push({
+            uid: this.user.uid,
+            author: this.user.displayName,
+            date: data.toLocaleString().replace(',', '')
+        });
+        this.newGall = inform
+    }
+
+    _setInfo(inform, data) {
+        inform.author = {}
+        inform.id = this.gall
+        inform.type = 'gallerie'
+        inform.author.id = this.user.uid
+        inform.author.name = this.user.displayName
+        inform.removed = false
+        inform.dateCreated = data.toLocaleString().replace(',', '')
+        return inform
+    }
+
     putElement(index, gallery) {
         if (typeof this.time === 'number') {
             clearTimeout(this.time)

@@ -25,8 +25,7 @@ export class MediaDB {
         getDocList.call(this, obj, done, dev)
     }
     setGalleries(done, table, dev) {
-        let obj = { name: 'galleries' };
-        obj.doc = table;
+        let obj = { name: 'galleries', docName: table.name, doc: table.create }
         createDoc.call(this, obj, done, dev)
     }
     deleteGallery(done, gallery, dev) {

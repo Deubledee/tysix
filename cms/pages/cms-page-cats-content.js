@@ -293,13 +293,13 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
     addImage() {
         if (this.add === false) {
-            localStorage[`page-${this.query.content}-info`] = JSON.stringify(this.content)
-            let string = `add=true&type=page&content=${this.query.content}&lang=${this.query.lang}`
+            localStorage[`page-${this.query.content}`] = JSON.stringify(this.content)
+            let string = `type=page&content=${this.query.content}&lang=${this.query.lang}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
             localStorage[`page-new-content`] = JSON.stringify(this.content)
-            let string = `add=true&type=page&content=new-content`
+            let string = `type=page&content=new-content`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }
@@ -339,6 +339,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.inform = [inform]
     }
     _setInfo(inform, data) {
+        console.log(this.newlangstate, this.add)
         if (!this.newlangstate) {
             if (this.add === true) {
                 if (!this.content[0].lang.lang && !this.content[0].lang.categoryName) {

@@ -117,7 +117,7 @@ export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cms
     }
     _putRow(item) {
         if (!!this.query) {
-            this.set('add', !!this.query.add ? true : false)
+            this.set('add', !!this.query.type ? true : false)
         }
         if (!!item) {
             return [item]

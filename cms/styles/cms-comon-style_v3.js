@@ -206,14 +206,26 @@ $_documentContainer.innerHTML = `
                 height: 20px;
                 width: 104px;
             }*/
+            paper-button[id="label"]{
+                text-decoration: var(--app-none);
+                color: inherit;
+                -webkit-justify-content: left;
+                justify-content: left;
+                float: left;
+            }
+
+            .alt{
+                display: flex;                
+                flex-direction: column;
+                min-width: 200px;
+            }
+
+            .button-container{
+                flex-basis: 30px;
+            }
 
             .flexleft {
-                color: var(--app-content-section-span-color);
-                flex-basis: 220px;
-                display: flex;
-                flex-flow: nowrap;
-                flex-direction: row;
-                width: 210px;
+                color: var(--paper-blue-a200);
             }
 
             .center {
@@ -428,7 +440,6 @@ $_documentContainer.innerHTML = `
             }
 
             div[centerImageItem] {
-                height: 37px;
                 margin-bottom: 4px
             }
 

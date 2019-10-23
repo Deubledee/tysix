@@ -27,7 +27,10 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             <article centerListItem slot="table">
                 <div>   
                     <span> 
-                        <paper-button> ${this.objInfo[0].id}</paper-button>
+                        <paper-button> ${this.objInfo[0].id}</paper-button>                        
+                    </span>
+                    <span> 
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
                     </span>
                 </div>                 
                 <div class="${this.objInfo[0].toArticle}">                   
@@ -35,17 +38,11 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                         <paper-button> ${this.objInfo[0].toArticle} </paper-button>
                     </span>
                 </div>  
-
                 <div class="${this.objInfo[0].Published.state}">                    
                     <span> 
                         <paper-button> ${this.objInfo[0].Published.state} </paper-button>
                     </span>
-                </div>
-                <div>
-                    <paper-button>
-                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>  
-                    </paper-button> 
-                </div>  
+                </div> 
                 <div>
                     <paper-button>
                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
@@ -58,6 +55,15 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                 </div>
             </article>`;
         this.translator.clone(this)
+
+        this.children[0].children[0].
+            children[0].children[0].addEventListener('click', (this.showPage).
+                bind(this));
+
+        this.children[0].children[0].
+            children[1].children[0].addEventListener('click', (this.showPage).
+                bind(this));
+
         this.children[0].children[1].
             children[0].addEventListener('click', (this._confirmToArticle).
                 bind(this));
@@ -65,12 +71,9 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             children[0].addEventListener('click', (this._confirmPublish).
                 bind(this));
         this.children[0].children[3].
-            children[0].addEventListener('click', (this.showPage).
-                bind(this));
-        this.children[0].children[4].
             children[0].addEventListener('click', (this.showCats).
                 bind(this));
-        this.children[0].children[5].
+        this.children[0].children[4].
             children[0].addEventListener('click', (this._openConfirm).
                 bind(this));
         // objdata.

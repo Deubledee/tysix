@@ -97,6 +97,11 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 position: relative;
                 top: -15px;
             }
+            .putitcool{
+                margin-inline-end: 25px;
+                margin-inline-start: 30px;
+            }
+            ${this._getStyles}
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
             active="{{active}}">
@@ -130,6 +135,9 @@ export class cmsMiddlePageTemplate extends PolymerElement {
         `;
     }
     static get is() { return 'cms-middle-page-template'; }
+    static get _getStyles() {
+        return html``
+    }
     static get _topLabel() {
         return html`       
             <h2>[[categorypages]]</h2>               
@@ -158,8 +166,9 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <span> [[pages.length]] </span>
         </div>
         <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[title]] </h4>
+            <div class="center flex">
+                <h4 class="putitcool"> [[title]] </h4>               
+                <h4> [[viewedit]] </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
@@ -171,13 +180,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <div class="center">
                 <h4> [[published]] </h4>
             </div>
-        </section>                     
-            
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[viewedit]] </h4>
-            </div>
-        </section>  
+        </section>   
         <section class="flexchildbotom noFlex">
             <div class="center">
                 <h4> [[viewedit]] sub-cat </h4>

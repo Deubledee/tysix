@@ -32,7 +32,7 @@ export class cmsContentTemplate extends PolymerElement {
         top: 0%;
         display: flex;
         flex-direction: column;
-        width: 969px;
+        width: 983px;
         height: 100vh;
         background-color: var(--app-secondary-text-color);
     }
@@ -111,6 +111,7 @@ export class cmsContentTemplate extends PolymerElement {
         box-shadow: unset!important;
         width: 110px;
         height: 60px;
+        color: var(--google-blue-300);
     }  
     .anchorish{
         cursor: pointer; 
@@ -219,12 +220,14 @@ export class cmsContentTemplate extends PolymerElement {
         height: 20px;
         width: 20px;
         right: -4px;
-    } 
-    cms-content-item{
-        
-    }
+    }  
     cms-lang-tab-item {
         margin-right: 3px
+    }
+    cms-pop-input.abs{
+        position: absolute;
+        top: 110px;
+        left: 68%;
     }
     ${this._getStyles}
     </style>
@@ -269,12 +272,11 @@ export class cmsContentTemplate extends PolymerElement {
                     <div placerbottom>
                         <div path> 
                             ${this._getPath} 
-                            <cms-pop-input tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
+                            <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
                                 ${this._getXbutton}
                                 <cms-content-item
                                     slot="input" 
                                     item="[[itemlang]]"
-                                    save-button="[[saveButton]]"
                                     res="{{addLangResponse}}">
                                 </cms-content-item>  
                                 <a slot="anchor" href="https://www.metamodpro.com/browser-language-codes" target="_blank">
@@ -303,7 +305,7 @@ export class cmsContentTemplate extends PolymerElement {
         <section class="langdivsection marginalize borderleft">
             <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
                 <a class="anchorish" id="adlang"  on-click="_newLang">                                            
-                    <paper-button aria-label="lang"> 
+                    <paper-button class="saveButton" aria-label="lang"> 
                         <span>Add lang</span>
                     </paper-button>
                 </a>           
@@ -598,8 +600,7 @@ export class cmsContentTemplate extends PolymerElement {
         if (!!this.content[0] && !!data && ('undefined' in data) === false) {
             let arr = Object.keys(data)
             if (data[arr[0]] !== undefined) {
-                let datalength = data[arr[0]].split(''),
-                    cont
+                let datalength = data[arr[0]].split(''), cont
                 datalength = datalength.length
                 this.time = setTimeout(() => {
                     if (datalength === 2) {

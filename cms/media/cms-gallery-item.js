@@ -15,7 +15,6 @@ class cmsGalleryItem extends cmsItemTemplate {
                         <article class="padding">
                             <paper-button>
                                [[item.id]]
-                               <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
                             </paper-button>
                         </article>  
                         <article class="padding">
@@ -97,22 +96,20 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
 
     _putRow(item) {
-        console.log(item)
         return [item]
     }
     _showImages() {
         this.default()
         if (this[this.method] !== undefined) {
             this[this.method]()
-        }/**/
+        }
     }
     default() {
-        console.log(this.query)
         let string = !!location.search ?
             `/media/view-images${location.search}&gallery=${this.gallery.id}` :
             `/media/view-images?gallery=${this.gallery.id}`
         window.history.pushState({}, null, string);
-        window.dispatchEvent(new CustomEvent('location-changed'));/**/
+        window.dispatchEvent(new CustomEvent('location-changed'));
     }
     editArticles() {
         this.set('returnPath', 'content/articles/edit-articles')
@@ -125,7 +122,6 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     deleteGallerie(data) {
         console.log(data)
-
     }
     _openConfirm() {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,

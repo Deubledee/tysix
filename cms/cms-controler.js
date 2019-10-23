@@ -184,9 +184,6 @@ class cmsControler extends PolymerElement {
           <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
           </cms-subcats-content>
 
-          <cms-galleries-content name="add-gallery" user="[[user]]" route="[[popOutRoute]]">
-          </cms-galleries-content>
-
           <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
           </cms-images-content>
 
@@ -365,7 +362,7 @@ class cmsControler extends PolymerElement {
     }
   }
 
-  _open(evt) {
+  /*_open(evt) {
     let name = evt.srcElement.getAttribute('name')
     let open
     if (!!this.$[name]) {
@@ -398,7 +395,7 @@ class cmsControler extends PolymerElement {
     if (!!this.$[name]) {
       this.$[name].classList.remove('hovered')
     }
-  }
+  }*/
 
   openConfirm(event) {
     this.confirm = 'confirm';

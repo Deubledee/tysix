@@ -4,10 +4,24 @@ class expresso extends Setter {
     constructor() {
         super()
         this.set = new Object()
+        this.bindSet = new Object()
     }
+    /* data bind methods. example bellow */
+    setBinder(BID, callback) {
+        this.bindSet[BID] = { call: callback }
+    }
+    bindWith(BID, bindPar, value) {
+        this.bindSet[BID].call(bindPar, value)
+    }
+    bindData(bindPar, value) {
+        for (let par in this.bindSet) {
+            this.bindSet[par].call(bindPar, value)
+        }
+    }
+    /* translation methods */
     target(Evt, method, callback, TitleLang) {
         this.Evt = Evt
-        if ((typeof TitleLang === 'boolean') === false && TitleLang !== undefined) {
+        if (!!TitleLang && (typeof TitleLang === 'boolean') === false) {
             console.info('Booleans only please', TitleLang + ' not Boolean', Evt, method)
             return
         }
@@ -41,7 +55,7 @@ class expresso extends Setter {
         let method = this.method
         this.Evt = arguments[0] || this.Evt
         if (method === 'setLangObject') {
-            this.set[this.Evt].arr[method].methods.map((func) => {
+            this.set[this.Evt].arr[method].methods.forEach((func) => {
                 this.set[this.Evt].assets.then((querySnapshot) => {
                     func(this[method], querySnapshot)
                 }).catch(function (error) {
@@ -50,7 +64,7 @@ class expresso extends Setter {
             })
         }
         if (method === 'changeLang') {
-            this.set[this.Evt].arr[method].methods.map((func) => {
+            this.set[this.Evt].arr[method].methods.forEach((func) => {
                 if (this.set[this.Evt].arr[method].TitleLang === false) {
                     func(this[method], this.lang)
                 } else {
@@ -61,3 +75,31 @@ class expresso extends Setter {
         return 0
     }
 }
+/* data binder Example:
+
+    var binder = new expresso()
+
+    //in pop-input\\
+    ready(){
+        binder.setBinder('cmPopInputPageContent', (bindCallback).bind(this))
+            ||
+        //this.BID may be set by parent element
+          ex: this.children[index].BID = 'childname' + index\\
+        binder.setBinder(this.BID, (bindCallback).bind(this))
+    }
+
+    //standart for all. needs to be 'bind'ed \\
+    bindCallback(par, value) {
+        this[par] = value
+    }
+
+    //in cms-page-content\\
+    sendWarningToPop(warning){
+        bindWith('cmPopInputPageContent', 'warningMsg', warning)
+    }
+
+    //in cms-controler\\
+    routeAll(){
+        bindData('route', this.route)
+    }
+*/

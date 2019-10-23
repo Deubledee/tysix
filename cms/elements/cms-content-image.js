@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { Setter } from '../tools/cms-element-set';
 import '@polymer/iron-icons/editor-icons';
-import '../media/cms-gallery-item';
+import '../media/cms-image-item';
 import '../styles/cms-comon-style_v3';
 export class cmsContentImage extends PolymerElement {
     static get template() {
@@ -13,9 +12,9 @@ export class cmsContentImage extends PolymerElement {
             top: 0px;
         }
         div[backanover] {
-            height: 300px;
-            overflow: auto;
-            background: var(--app-item-backgound-color);
+            height: 272px;
+            overflow: auto;            
+            padding: 8PX
         }
 
         div[backanover]::-webkit-scrollbar-track {
@@ -64,6 +63,8 @@ export class cmsContentImage extends PolymerElement {
             images: {
                 type: Array,
                 notify: true,
+                value: [],
+                observer: '_log'
             },
             deleteImg: {
                 type: Object,
@@ -72,7 +73,6 @@ export class cmsContentImage extends PolymerElement {
             lang: {
                 type: String,
                 notify: true,
-                // observer: '__changeLang'
             },
             langs: {
                 type: Object,

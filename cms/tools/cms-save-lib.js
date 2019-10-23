@@ -38,6 +38,7 @@ const cmsPagesLib = function (superClass) {
             saveChanged(parent, cont).then(() => {
                 window.history.pushState({}, null, str)
                 window.onbeforeunload = function () { };
+                localStorage.clear()
                 setTimeout(() => {
                     window.dispatchEvent(new CustomEvent('location-changed'))
                     this.__reset()
@@ -55,6 +56,7 @@ const cmsPagesLib = function (superClass) {
                             saveAddedData('data', this.inform[0].id, this.content[0]).then(data => {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
+                                localStorage.clear()
                                 //this.$.saveButton.classList.add('diferent');
                                 setTimeout(() => {
                                     this.__reset();
@@ -73,6 +75,7 @@ const cmsPagesLib = function (superClass) {
                             saveChangedData('data', id[0], this.content[0]).then(data => {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
+                                localStorage.clear()
                                 setTimeout(() => {
                                     window.dispatchEvent(new CustomEvent('location-changed'));
                                     localStorage.clear()
@@ -173,6 +176,7 @@ const cmsSubcatsLib = function (superClass) {
                     saveAddedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
+                        localStorage.clear()
                         //  this.$.saveButton.classList.add('diferent');
                         setTimeout(() => {
                             this._reset();
@@ -186,6 +190,7 @@ const cmsSubcatsLib = function (superClass) {
                     saveChangedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
+                        localStorage.clear()
                         //     this.$.saveButton.classList.add('diferent')
                         setTimeout(() => {
                             this._reset();
@@ -201,6 +206,7 @@ const cmsSubcatsLib = function (superClass) {
             deleteSubcatData(this.inform[0].parent, this.inform[0].id, this.removeArr).then(() => {
                 window.history.pushState({}, null, str)
                 window.onbeforeunload = function () { };
+                localStorage.clear()
                 setTimeout(() => {
                     this._reset()
                     window.dispatchEvent(new CustomEvent('location-changed'))
@@ -222,6 +228,7 @@ const cmsSubcatsLib = function (superClass) {
                 window.onbeforeunload = function () { };
                 saveChangedSubcat(parent, this.subcat.id, this.subcat).then(() => {
                     window.onbeforeunload = function () { };
+                    localStorage.clear()
                     setTimeout(() => {
                         this._reset()
                         window.dispatchEvent(new CustomEvent('location-changed'))
@@ -247,16 +254,35 @@ const cmsSubcatsLib = function (superClass) {
 /* ************************************************************************************************ */
 /* ************************************************************************************************ */
 
-const cmsMediaLib = function (superClass) {
+const cmsMediaLib = function cmsMediaLib(superClass) {
     return class extends superClass {
         static get is() { return 'cms-media-lib'; }
         ready() {
             super.ready();
         }
+        _setGallery() {
+            setGalleries(this.gall, this.newGall).then(data => {
+                window.onbeforeunload = function () { };
+                this.galleries = []
+                this.sloted = false
+                this.innerHTML = ''
+                this.warningMsg = 'saved'
+                this.raised = false
+                setTimeout(() => {
+                    this.tgglelang = !this.tgglelang
+                    this._getGalleries({ q: 'removed', v: false })
+                    this.warningMsg = ''
+                    console.log('di it')
+                }, 250)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
         _getGalleries(query) {
             getNRGalleries(query).then(data => {
                 checkSpinner.call(this)
                 this.set('galleries', data)
+                console.log(this.galleries, 'di it')
             }).catch(error => {
                 console.log(error)
             })
@@ -422,6 +448,18 @@ export { cmsMediaLib }
 export { cmsPagesLib }
 export { cmsSubcatsLib }
 
+function setGalleries(gall, content) {
+    return new Promise((resolve, reject) => {
+        _MEDIADBW.setGalleries((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: gall, create: content }, __DEV)
+    })
+}
 function setGalleryData(imageArr) {
     let promisseArray = []
     for (let i = 0; i < imageArr.length; i++) {

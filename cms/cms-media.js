@@ -46,10 +46,10 @@ class cmsMedia extends cmsTopPageTemplate {
       <article name="galleries">         
         <cms-gallery-viewer route="{{route}}" lang="[[lang]]">  
 
-          <cms-galleries slot="galleries" id="galleries" route="{{route}}">
+          <cms-galleries slot="galleries" id="galleries" route="{{route}}" user="[[user]]">
           </cms-galleries>
 
-          <cms-images slot="images" id="images" route="{{route}}">
+          <cms-images slot="images" id="images" route="{{route}}" user="[[user]]">
           </cms-images>
 
         </cms-gallery-viewer>
@@ -64,6 +64,10 @@ class cmsMedia extends cmsTopPageTemplate {
   static get properties() {
     return {
       route: {
+        type: Object,
+        notify: true
+      },
+      user: {
         type: Object,
         notify: true
       },

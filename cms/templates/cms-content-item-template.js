@@ -13,25 +13,19 @@ export class cmsContentItemTemplate extends PolymerElement {
             background: unset;
         }
         ${this._getStyles}
-        paper-button[id="label"]{
-            height: var(--app-content-button-height);
-            text-decoration: var(--app-none);
-            color: inherit;
-            -webkit-justify-content: left;
-            justify-content: left
-        }
-        paper-button[id="cancel"]{
-            font-size: 9px;  
-        }
         </style> 
-        <div>
-            <div class="flexleft" name="itemLabel">
-                <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
-                    [[title]]
-                </paper-button>
-                <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                    [[cancel]]
-                </paper-button>
+        <div class="alt">
+            <div class="button-container">
+                <div class="flexleft" name="itemLabel">
+                    <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
+                        [[title]]
+                    </paper-button>
+                </div>
+                <div class="flexleft" name="itemLabel">
+                    <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
+                        [[cancel]]
+                    </paper-button>
+                </div>
             </div>
             ${this._getElement}
         </div>
@@ -110,10 +104,6 @@ export class cmsContentItemTemplate extends PolymerElement {
             cancelButton: {
                 type: Object,
             },
-            saveButton: {
-                type: Object,
-                value: {}
-            },
             res: {
                 type: Object,
                 notify: true,
@@ -123,7 +113,6 @@ export class cmsContentItemTemplate extends PolymerElement {
                 type: Object,
                 value: {},
                 notify: true,
-                // observer: '_log'
             },
             inedit: {
                 type: Boolean,
@@ -239,7 +228,6 @@ export class cmsContentItemTemplate extends PolymerElement {
     _inputState() {
         if (this.oninputing === true) {
             this.$.cancel.classList.remove('diferent');
-            // this.saveButton.classList.remove('diferent');
             this.oninputing = false
             this.editing++
             this.canceled = false;
@@ -260,7 +248,6 @@ export class cmsContentItemTemplate extends PolymerElement {
             this.oninputing = true
             this.editing = 0
             window.onbeforeunload = function () { };
-            // this.saveButton.classList.add('diferent');
         }
         if (this.editing > 1) {
             this.editing--;
@@ -272,8 +259,6 @@ export class cmsContentItemTemplate extends PolymerElement {
         this.oninputing = true
         this.$.cancel.classList.add('diferent');
         window.onbeforeunload = function () { };
-        //  this.saveButton.classList.add('diferent');
-        //   this.anchor.classList.remove('diferent');
     }
 }
 customElements.define(cmsContentItemTemplate.is, cmsContentItemTemplate);

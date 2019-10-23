@@ -7,11 +7,10 @@ import {
 export class cmsContentItem extends cmsContentItemTemplate {
 
     static get _getStyles() {
-        return html `        
+        return html`        
         div[inputs] {
-            /*background-color: #dadfe2;*/
             height: 22px;
-            width: 183px;
+            width: 42%;
         }
         input{
             position: relative;
@@ -48,7 +47,7 @@ export class cmsContentItem extends cmsContentItemTemplate {
     }
 
     static get _getElement() {
-        return html `        
+        return html`        
             <div class="flexright">
                 <div inputs name="[[itemLabel]]">  
                     <cms-input class="larger keyboard-focus" texarea$="[[texarea]]" id="inpt1" on-click="edit" 
@@ -68,27 +67,27 @@ export class cmsContentItem extends cmsContentItemTemplate {
         return 'cms-content-item';
     }
     static get properties() {
-            return {
-                lang: {
-                    type: String,
-                    notify: true,
-                },
-                langs: {
-                    type: Object,
-                    value: {}
-                },
-                translator: {
-                    type: Object,
-                    notify: true,
-                    value: function() {
-                        return MyAppGlobals[window.cms] //MyAppGlobals.translator
-                    }
+        return {
+            lang: {
+                type: String,
+                notify: true,
+            },
+            langs: {
+                type: Object,
+                value: {}
+            },
+            translator: {
+                type: Object,
+                notify: true,
+                value: function () {
+                    return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
-            };
-        }
-        /* _log(data) {
-             console.log(data)
-         }*/
+            }
+        };
+    }
+    /* _log(data) {
+         console.log(data)
+     }*/
     ready() {
         super.ready();
         this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))

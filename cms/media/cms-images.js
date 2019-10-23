@@ -195,7 +195,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         this.checked = false
         this.addStr = `?gallery=${this.query.gallery}&add=trueI&count=${this.IMAGES.length}`
         if (!!routeData.page && routeData.page === "view-images") {
-            if (!!query.add) {
+            if (!!query.type) {
                 this.addTo = true
             }
             if (!!query.gallery) {
@@ -218,22 +218,62 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             }
     }
     _saveAndBack() {
+        let topush, sendBackArray
         if (this.query.type === 'page') {
-            let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
-            let topush = sendBackArray[0].images.content
+
+            let topush, sendBackArray
+            sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
+
+
+            topush = sendBackArray[0].images.content
             sendBackArray[0].images.content = topush.concat(this.toAdd)
+
+
+
             localStorage[`${this.query.type}-${this.query.content}`] = JSON.stringify(sendBackArray)
+
+
+
             let add = this.query.content === 'new-content' ? true : false
+
             let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=${add}`
+
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
+
             return
         }
         if (this.query.type === 'cats') {
-            let content = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
+            sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
+
+            topush = content[0].images.content
+            sendBackArray[0].images.content = topush.concat(this.toAdd)
+
+            localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`] = JSON.stringify(sendBackArray)
+
+            let add = this.query.content === 'new-content' ? true : false
+
+            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=${add}`
+
+            window.history.pushState({}, null, string);
+            window.dispatchEvent(new CustomEvent('location-changed'))
+
             return
         }
     }
+
+    _sendBack(str1, str2) {
+        let topush, sendBackArray
+        sendBackArray = JSON.parse(localStorage[str1])
+        topush = sendBackArray[0].images.content
+        sendBackArray[0].images.content = topush.concat(this.toAdd)
+        localStorage[str1] = JSON.stringify(sendBackArray)
+
+        let add = this.query.content === 'new-content' ? true : false
+        window.history.pushState({}, null, str2);
+        window.dispatchEvent(new CustomEvent('location-changed'))
+    }
+
     _setLabelAdd(data) {
         if (data === true) {
             return ''

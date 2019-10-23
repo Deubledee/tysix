@@ -293,19 +293,23 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                     this._reset()
                     let cont = JSON.parse((atob(Modelo)))
                     let obj = cont.images.content
+
                     localStorage.setItem(`subcat-new-content-info`, atob(ModeloInfo))
+
                     this.imageLabel = 'images'
                     this.set('imageArr', obj)
                     this.set('str', `content/pages/add-subcategory-pages?content=subcatnotsaved`)
+
                     this._setContent('lang', [cont])
+
                     this.set('pageLangs', [])
                     this._getPageInfo(`subcat-new-content-`)
                 }
             }
             if (routeData.page === 'edit-subcategory-pages') {
                 if (!!query.parent) {
-                    let cont = JSON.parse(localStorage[`cats-${parentName}-${parentIndex}`])
-                    this._getPageInfo(`cats-${parentName}-${parentIndex}-`)
+                    let cont = JSON.parse(localStorage[`cats-${query.content}-${query.parent}`])
+                    this._getPageInfo(`cats-${query.content}-${query.parent}-`)
                     if (this.add === false || this.added === true) {
                         this.set('inputVal', [])
                         this.set('textareaVal', [])
@@ -327,13 +331,15 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
     }
     addImage() {
         if (this.add === false) {
-            let string = `add=true&type=subcat&content=${this.inform[0].id}&parent=&${this.inform[0].parent}`
+            let string = `type=cats&content=${this.inform[0].id}&parent=&${this.inform[0].parent}`
             localStorage.setItem(`cats-${this.inform[0].id}-${this.inform[0].parent}`, JSON.stringify(this.content))
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
-            localStorage.setItem(`subcat-not-saved`, JSON.stringify(this.content))
-            let string = `add=true&type=subcat&content=subcat-not-saved`
+            let string = `type=cats&content=new-content`
+            localStorage.setItem(`cats-new-content-${this.query.parent}`, JSON.stringify(this.content))
+
+
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }

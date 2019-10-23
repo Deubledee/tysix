@@ -2,14 +2,15 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 export class cmsPopInput extends PolymerElement {
     static get template() {
         return html`
-        <style>            
+        <style include="cms-comon-style_v3">       
+            :host{
+                position: absolute;
+            }     
             div[inputlang] {
+                position: absolute;
                 display: flex;
                 flex-direction: column;
                 box-sizing: border-box;
-                position: absolute;
-                top: 110px;
-                left: 68%;
                 background-color: var(--app-backgound-color);
                 width: 419px;
                 z-index: 10;
@@ -51,7 +52,9 @@ export class cmsPopInput extends PolymerElement {
             }
 
             .btnx{
-                height: 25px; 
+                height: 0px;
+                width: 7px;
+                flex-basis: 24%;
             }  
             
             div[tgglelang]{
