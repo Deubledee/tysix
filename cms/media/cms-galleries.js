@@ -11,11 +11,10 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         }
        /* ::slotted(*){
             background-color: red
-        }*/
-        ::slotted(cms-gallery-item){
-            background-color: blue;
-            
         }
+        ::slotted(cms-gallery-item){
+            background-color: blue;            
+        }*/
         div[path]{
             height: 30px;
             width: 300px;

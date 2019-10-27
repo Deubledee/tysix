@@ -45,40 +45,53 @@ const cmsPagesLib = function (superClass) {
                 }, 250)
             })
         }
+        _removeLang() {
+            let t = { content: this.query.content, type: 'data', langArr: this.removeArr }
+            window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
+            deletePageData(t).then(() => {
+                window.onbeforeunload = function () { };
+                this.editing = 0;
+                localStorage.clear()
+                setTimeout(() => {
+                    this.__reset();
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }, 500)
+                console.log('removed lang: %s')
+            }).catch(err => {
+                console.log('lang not removed: %s', err)
+
+            })
+        }
         savePages() {
             if (this.add === true) {
-                console.log(this.add)
                 if (!!this.inform[0].id) {
-                    let id = [this.inform[0].id]
                     window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
                     saveAdded(this.inform[0].id, this.inform[0]).then(data => {
-                        if (data !== 'error')
+                        if (data !== 'error') {
                             saveAddedData('data', this.inform[0].id, this.content[0]).then(data => {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
                                 localStorage.clear()
-                                //this.$.saveButton.classList.add('diferent');
                                 setTimeout(() => {
                                     this.__reset();
                                     window.dispatchEvent(new CustomEvent('location-changed'))
                                 }, 500)
                             })
+                        }
                     })
                 }
             } else
                 if (this.add === false) {
-                    console.log(this.add)
                     if (!!this.inform[0].id) {
-                        let id = [this.inform[0].id]
                         window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
-                        saveChanged(id[0], this.inform[0], Object.keys(this.content[0])).then(data => {
-                            saveChangedData('data', id[0], this.content[0]).then(data => {
+                        saveChanged(this.inform[0].id, this.inform[0], Object.keys(this.content[0])).then(() => {
+                            saveChangedData('data', this.inform[0].id, this.content[0]).then(() => {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
                                 localStorage.clear()
                                 setTimeout(() => {
+                                    this.__reset();
                                     window.dispatchEvent(new CustomEvent('location-changed'));
-                                    localStorage.clear()
                                 }, 500)
                             })/* */
                         })
@@ -317,6 +330,15 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                 console.log(error)
             })
         }
+
+        getFilesFromStorage(path) {
+            getFilesFromStorage(path).then(files => {
+                console.log(files)
+            }).catch(err => {
+                console.error(err)
+            })
+        }
+
         removeGallerie(data) {
             removeGalleries(data).then(() => {
                 this.setter = true
@@ -326,6 +348,10 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
         _checkValidity(evt) {
             this.toUpload.push(evt.model.__data)
             this.fromCheckBox = true
+        }
+        _listInStorage(path) {
+            getFilesFromStorage(path).then().catch()
+
         }
         _upload() {
             let promisseArray
@@ -364,14 +390,14 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                 storageRef.child(`${this.query.gallery}/${obj.title}`).getDownloadURL().then((url) => {
                     this.num = this.num + 1
                     tempobj[idx]['uploaded'] = 'inBD'
-                    //   console.info('gallery/file name - already in storage - was not uploaded - %s/%s', tempobj[idx].gallery, tempobj[idx].title)
-                    console.log(tempobj[idx]['uploaded'])
+                    console.info('gallery/file name - already in storage - was not uploaded - %s/%s', tempobj[idx].gallery, tempobj[idx].title)
+                    console.info(tempobj[idx]['uploaded'])
                     this._checkPop(tempobj)
                 }).catch(() => {
                     storageRef.child(`${this.query.gallery}/${obj.title}`).put(obj.file, meta).then((snapshot) => {
                         this.num = this.num + 1
-                        /*   console.info('error 404 expected if file not in DB')
-                           console.info('file added to storage', tempobj[idx].gallery, tempobj[idx].title)*/
+                        console.info('error 404 expected if file not in storage')
+                        console.info('file added to storage', tempobj[idx].gallery, tempobj[idx].title)
                         snapshot.ref.getDownloadURL().then((url) => {
                             tempobj[idx].uploaded = 'uploaded'
                             tempobj[idx].url = url
@@ -448,6 +474,19 @@ export { cmsMediaLib }
 export { cmsPagesLib }
 export { cmsSubcatsLib }
 
+function getFilesFromStorage(path) {
+    return new Promise((resolve, reject) => {
+        storageRef.child(path).listAll().then((res) => {
+            let arr
+            arr = res.items.map((itemRef) => {
+                return itemRef
+            });
+            resolve(arr)
+        }).catch(function (error) {
+            reject(err)
+        });
+    })
+}
 function setGalleries(gall, content) {
     return new Promise((resolve, reject) => {
         _MEDIADBW.setGalleries((done, err) => {
@@ -739,7 +778,23 @@ function saveChangedData(type, id, content) {
     }/**/
     return Promise.race(toPromisse)
 }
-
+function deletePageData(t) {
+    let toPromisse = []
+    for (let i = 0; i < t.langArr.length; i++) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.deletePageData((done, err) => {
+                console.log(done)
+                if (done !== 'error') {
+                    resolve(done)
+                }
+                else {
+                    reject(err)
+                }
+            }, { name: t.content, dataType: t.type, doc: t.langArr[i] }, __DEV)
+        }))
+    }
+    return Promise.race(toPromisse)
+}
 function saveAddedSubcat(parent, doc, inform) {
     return new Promise((resolve, reject) => {
         _DBW.setPageData((done, err) => {

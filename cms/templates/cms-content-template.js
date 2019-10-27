@@ -122,7 +122,6 @@ export class cmsContentTemplate extends PolymerElement {
         box-shadow: 0px 1px 4px var(--disabled-text-color);
         border-radius: 12px;
         padding: 22px;
-        padding-top: 50px;
         width: 816px;
         margin-left: auto;
         margin-right: auto;

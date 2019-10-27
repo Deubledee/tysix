@@ -207,6 +207,7 @@ export class dataBaseworker {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
         createItemCollectionDoc.call(this, obj, done, dev)
     }
+
     deletePageData(done, table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc }
         deleteCollectionDocData.call(this, obj, done, dev)
@@ -575,7 +576,7 @@ function deleteCollectionDocData(obj, done, dev) {
     if (dev === false) {
         Worker.deleteCollectionDocData(obj)
             .then(function () {
-                done("successfully deleted!", page);
+                done("successfully deleted!", obj.doc);
             }).catch(function (error) {
                 done("error", error);
             });
@@ -583,7 +584,7 @@ function deleteCollectionDocData(obj, done, dev) {
     else {
         Worker.deleteCollectionDocDataDev(obj)
             .then(function () {
-                done("successfully deleted!", page);
+                done("successfully deleted!", obj.doc);
             }).catch(function (error) {
                 done("error", error);
             });

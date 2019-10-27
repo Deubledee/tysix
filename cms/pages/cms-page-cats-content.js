@@ -314,19 +314,18 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         }
     }
     onSave() {
-        let data = new Date(),
-            inform
+        let data = new Date(), inform
         if (!!this.newlangstate) {
             this.add = true
         }
         inform = this.inform.pop()
         let noLang = this._lastModified(this._setInfo(inform, data), data)
         if (!!noLang) return
-        if (!this.removelang) {
-            this.savePages()
-        } else {
-            // this.removeSubcatsLang()
+        if (!!this.removelang) {
+            this._removeLang()
+            return
         }
+        this.savePages()
     }
     _lastModified(inform, data) {
         if (!inform) return 1
@@ -339,7 +338,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.inform = [inform]
     }
     _setInfo(inform, data) {
-        console.log(this.newlangstate, this.add)
         if (!this.newlangstate) {
             if (this.add === true) {
                 if (!this.content[0].lang.lang && !this.content[0].lang.categoryName) {

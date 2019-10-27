@@ -192,15 +192,18 @@ export class worker {
         return pagesRef
     }
 
-
+    //
     deleteCollectionDocData(table) {
-        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc)
-        return pagesRef.delete(table.data);
+        var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc).delete();
+        return pagesRef
     }
+
     deleteCollectionDocDataDev(table) {
-        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc)
-        return pagesRef.delete(table.data);
+        var pagesRef = this.db.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc).delete();
+        return pagesRef
     }
+
+    //
     createDocItemCollectionCollection(table) {
         var pagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc)
         return pagesRef.set(table.data);

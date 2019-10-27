@@ -61,18 +61,6 @@ $_documentContainer.innerHTML = `
                 margin-block-start: 0.33em;
             }
 
-            div[bottom][hidebottom] {
-                border: none;
-                height: 0px;
-                background-color: unset;
-            }
-
-            div[bottom][noborder] {
-                border: none;
-                height: auto;
-                margin-bottom: 30px;
-            }
-
             .center-menu,
             .center-menu-especial {
                 -webkit-flex: unset;

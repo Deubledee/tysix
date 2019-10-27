@@ -1,18 +1,32 @@
-import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsContentTemplate } from '../templates/cms-content-template';
+import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { html } from '@polymer/polymer/polymer-element.js';
+import '../elements/cms-content-item';
+import "../elements/cms-pop-input";
+import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
-import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js'
 const ModeloInfo = "W3siYWRkZWRUbyI6IiIsImF1dGhvciI6e30sImRhdGVDcmVhdGVkIjoiIiwiZnJvbURyb3BTaGlwIjoiIiwiZ2FsbGVyeSI6IiIsImdyb3VwIjoiICIsImlkIjoiIiwicmVtb3ZlZCI6IiIsInRpdGxlIjoiIiwidHlwZSI6IiIsInVybCI6IiJ9XQ=="
 class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsContentTemplate)) {
 
     static get _getStyles() {
-        return html `
+        return html`
             .langdivsectionnpaddingtop {
                 display: block;
                 padding-top: 6px;
                 flex-basis: 15%;
                 text-align: center;
+                color: var(--app-content-section-span-color);
+            }
+            paper-button[langbtn] {
+                background-color: var(--app-item-backgound-color);
+                height: 30px;
+                border-radius: 6px;
+                width: 125px;
+                padding-inline-start: 5px;
+                padding-inline-end: 5px
+            }
+            div[langdiv]{
+                height: 41px 
             }
             div[bottom] {
                 flex-direction: column;
@@ -292,47 +306,52 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             `
     }
     static get _getLangButton() {
-        return html ``
+        return html`
+                <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]">
+                    <paper-button slot="button" class="exex" on-click="getFilesFromStorage">
+                        x
+                    </paper-button> 
+                    <cms-content-item
+                        slot="input" 
+                        item="[[itemlang]]"
+                        res="{{addLangResponse}}">
+                    </cms-content-item>  
+                        <h6 slot="anchor">  ex: 'gallery name' 'pages', 'gallery name/folder' 'pages/guitars' </h6> 
+                </cms-pop-input>`
     }
     static get _getXbutton() {
-        return html ` 
+        return html` 
         <paper-button class="exex" on-click="_addTitle">
             x
         </paper-button> 
          `
     }
     static get _getLangAnchor() {
-        return html `   
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">  
-                    <paper-button langbtn aria-label="langbutton" on-click="_openFiles">
+        return html`   
+                <section class="langdivsectionnpaddingtop">  
+                    <paper-button langbtn aria-label="langbutton" on-click="_openFiles" title="browse pc">
                         browse pc
                     </paper-button>
                     <input hidden="true" type="file" id="imagefiles">
                 </section>   
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]" >
-                        <paper-button langbtn aria-label="langbutton">
-                           from url
+                <section class="langdivsectionnpaddingtop"> 
+                        <paper-button langbtn aria-label="langbutton" on-click="_openStoragePath" title="firesotre storage/google cloud storage">
+                           from storage
                         </paper-button>
-                    </a>
                 </section>   
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]" >
-                        <paper-button langbtn aria-label="langbutton">
-                           from FaceBoock
+                <section class="langdivsectionnpaddingtop">   
+                        <paper-button langbtn aria-label="langbutton" title="faceboock, twitter, instagram etc..">
+                           from social
                         </paper-button>
-                    </a>
                 </section>   
-                <section class="langdivsectionnpaddingtop" nova$="[[_nova(event, pagelang)]]">                    
-                    <a href="[[rootPath]][[str]]" >
-                        <paper-button langbtn aria-label="langbutton">
+                <section class="langdivsectionnpaddingtop">  
+                        <paper-button langbtn aria-label="langbutton" title="dropShiping">
                            from dropShiping
                         </paper-button>
-                    </a>
-                </section>  `
+                </section>`
     }
     static get _getContentItems() {
-        return html `
+        return html`
         <div container>
             <div bottom>
                 <div class="collorindex">
@@ -465,7 +484,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             translator: {
                 type: Object,
                 notify: true,
-                value: function() {
+                value: function () {
                     return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             },
@@ -487,7 +506,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             itemlang: {
                 type: Object,
                 notify: true,
-                value: function() { return { 'addTitle': '' } }
+                value: function () { return { 'addTitle': '' } }
             },
             hidebottom: {
                 type: Boolean,
@@ -585,38 +604,43 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query) {
-            if (!!routeData.page) {
-                let arr = []
-                if (!!query.add) {
-                    this.add = (query.add === 'true')
+        if (!!routeData.page) {
+            let arr = []
+            if (!!query.add) {
+                this.add = (query.add === 'true')
+            }
+            this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
+            if (routeData.page === 'add-images') {
+                if (this.add === true) {
+                    localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
+                    this._getPageInfo(`images-${this.query.gallery}-new-content-`)
+                    this.closestr = `media/view-images${location.search}`
                 }
-                this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
-                if (routeData.page === 'add-images') {
-                    if (this.add === true) {
-                        localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
-                        this._getPageInfo(`images-${this.query.gallery}-new-content-`)
-                        this.closestr = `media/view-images${location.search}`
-                    }
 
+            }
+            if (routeData.page === 'edit-images') {
+                if (!!this.added) {
+                    this.inform = []
+                    this._getPageInfo(`images-new-content-`)
                 }
-                if (routeData.page === 'edit-images') {
-                    if (!!this.added) {
-                        this.inform = []
-                        this._getPageInfo(`images-new-content-`)
-                    }
-                    if (!!query.content) {
-                        if (!!localStorage[`images-${query.content}-info`]) {
-                            this._getPageInfo(`images-${query.content}-`)
-                            if (this.add === false) {
-                                this.set('inputVal', [])
-                                this.set('str', `media/view-images/add-images${location.search}`)
-                            }
+                if (!!query.content) {
+                    if (!!localStorage[`images-${query.content}-info`]) {
+                        this._getPageInfo(`images-${query.content}-`)
+                        if (this.add === false) {
+                            this.set('inputVal', [])
+                            this.set('str', `media/view-images/add-images${location.search}`)
                         }
                     }
                 }
-            } /**/
-        }
-        /***** */
+            }
+        } /**/
+    }
+    /***** */
+    _openStoragePath() {
+
+
+        this.getFilesFromStorage(path)
+    }
     _openFiles() {
         this.$.imagefiles.click()
         this.$.imagefiles.onchange = evt => {
@@ -711,7 +735,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     _setInfo(IMAGs, data) {
         let objrr = IMAGs
-            // if(IMAGs)
+        // if(IMAGs)
         let IMAGES = objrr.map(image => {
             let obj = image
             obj.author.id = this.user.uid
