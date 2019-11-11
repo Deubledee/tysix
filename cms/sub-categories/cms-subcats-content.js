@@ -410,7 +410,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 inform.dateCreated = data.toLocaleString().replace(',', '')
                 if (!!parentInfo) {
                     parentInfo[0].children = []
-                    parentInfo[0].children.push(this.query.name)
+                    parentInfo[0].children.push(inform.id)
                     parentInfo[0].childrenCount = inform.children.length
                     this.updateSubcatParentInfo(parentInfo[0], this.query.content, this.query.parent)
                 }
