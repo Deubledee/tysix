@@ -63,8 +63,7 @@ export class cmsContentImage extends PolymerElement {
             images: {
                 type: Array,
                 notify: true,
-                value: [],
-                observer: '_log'
+                value: []
             },
             deleteImg: {
                 type: Object,

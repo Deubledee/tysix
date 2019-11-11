@@ -64,8 +64,7 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
                         slot="input" 
                         item="[[itemlang]]"
                         res="{{addLangResponse}}"
-                        raised="[[raised]]"
-                        >
+                        raised="[[raised]]">
                     </cms-content-item>  
                     <paper-button class="save-btn"  slot="anchor" on-click="_onSave">
                         <h6 id="agasix" class="save-btn" >  save </h6> 

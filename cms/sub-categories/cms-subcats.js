@@ -10,11 +10,12 @@ const Modelo = "eyJhdXRob3IiOiIiLCJjaGlsZHJlbiI6W10sImRhdGVDcmVhdGVkIjoiIiwiaWQi
 export class cmsSubcats extends cmsItemTemplate {
     static get _getStyles() {
         return html` 
-        article[centerlistitem] paper-button{
+            article[centerlistitem] paper-button{
             ￼    height: auto;
             ￼    max-height: 35px;
-            div[basis] }
-            {
+            }
+            
+            div[basis] {
                 flex-basis: 30%;
             }
                `
@@ -25,8 +26,7 @@ export class cmsSubcats extends cmsItemTemplate {
         <slot name="nocontent"></slot> 
         <dom-repeat items="[[content]]" as="item">
             <template>
-                [[_slottItem(item, index)]]
-            
+                [[_slottItem(item, index)]]            
             </template>                            
         </dom-repeat>        
         `}
@@ -111,9 +111,6 @@ export class cmsSubcats extends cmsItemTemplate {
     }
     ready() {
         super.ready();
-        /*  this.translator.target('cms-subcats', 'setLangObject', (this._setLObj).bind(this))
-          this.translator.target('cms-subcats', 'changeLang', (this._setLang).bind(this), false)
-          this.translator.shoot('cms-subcats', 'setLangObject')*/
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -139,7 +136,7 @@ export class cmsSubcats extends cmsItemTemplate {
     }
     _addChild(data) {
         if (data === true) {
-            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.query.content}&parent=${this.childElementCount}&topparentname=${this.query.content}&add=${this.add}&top=true`
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.query.content}&name=${this.childElementCount}&path=${this.query.content}&add=${this.add}&top=true`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
             this.add = false
@@ -157,7 +154,6 @@ export class cmsSubcats extends cmsItemTemplate {
                 </div>                
                 `
             let content = btoa(JSON.stringify(this.subSubCats))
-            console.log(this.query)
             this.translator.template.innerHTML = str
             this.translator.clone(this)
             this.children[this.childElementCount - 1].children[0].lang = this.lang
@@ -172,20 +168,12 @@ export class cmsSubcats extends cmsItemTemplate {
             this.set('sloted', true)
         }, 60);
     }
-    __reset() {
-        console.log('reseted subcats here to')
-        this._reset(() => { }, 0)
-    }
-    _reset(call, mlscs) {
-        console.log('reseted subcats')
+    _reset() {
         this.innerHTML = ''
-        this.subSubCats = undefined
+        this.subSubCats = []
         this.set('sloted', false)
         this.add = false
         window.onbeforeunload = function () { }
-        setTimeout(() => {
-            call()
-        }, mlscs)
     }
 }
 customElements.define(cmsSubcats.is, cmsSubcats);

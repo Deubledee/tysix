@@ -152,11 +152,8 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
     _routePageChanged(routeData, query) {
         if (routeData.page === "subcategory-pages" && (!!query.content || !!query.reset)) {
             let parent = query.content
-            console.log(document.querySelector('cms-controler'))
             if (this.lastpagesubs === parent && !query.reset) {
                 this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))
-
-                console.log('no reset')
                 return
             } else
                 if (this.lastpagesubs !== parent || (!!query.reset && query.reset === 'true')) {
@@ -166,12 +163,10 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
                     this.translator.clone(this)
                     localStorage.setItem('lastpagesubs', btoa(parent))
                     this.lastpagesubs = parent
-
-                    console.log(this.lastpagesubs, parent)
-                    this.$.subcats._reset(() => {
+                    this.$.subcats._reset()
+                    setTimeout(() => {
                         this.getTopSubcats(this.lastpagesubs)
-
-                    }, 550)
+                    }, 1000)
                 } else
                     if (!!query.reset && query.reset === 'false') {
                         window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))

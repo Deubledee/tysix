@@ -231,9 +231,10 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                 let parent = this.query.content
                 this.set("parent", parent)
                 this.set('subCatChildren', this.subcat.children)
+                this.updated = this.subcat.id === this.query.update ? true : false
                 if (!!this.query.reset)
                     this._setNewUpdated(data)
-                if (!this.query.reset)
+                if (!this.query.reset) /**/
                     this.getSubcat(this.parent, this.subcat.id)
             }
         }
@@ -249,7 +250,7 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             }
         }
         this.subcatLang = arr[0]
-        let string = `parent=${this.subcat.id}&content=${this.subcat.parent}&topparent=${pid}&topparentname=${this.subcat.path}&name=${this.content[this.catlang].categoryName}&top=${this.subcat.top}&add=false&lang=${this.subcatLang}`
+        let string = `parent=${this.subcat.id}&content=${this.subcat.parent}&topparent=${pid}&path=${this.subcat.path}&name=${this.subcat.id}&top=${this.subcat.top}&add=false&lang=${this.subcatLang}`
         this.add = (boll instanceof MouseEvent) === true ? false : boll
         this._changeColor()
         window.history.pushState({}, null, `${this.rootPath}content/pages/edit-subcategory-pages?${string}`);
@@ -286,7 +287,7 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                 name = `${this._indexArr}${this.subcat.children.length}`
             }
             this.add = true
-            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.subcat.parent}&name=${name}&topparentname=${this.subcat.path}/${this.content[this.catlang].categoryName}&parent=${this.subcat.id}&topparent=${this._indexArr}&topparenttype=${this.content[this.catlang].type}&top=false&add=${this.add}`
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.subcat.parent}&name=${name}&parent=${this.subcat.id}&path=${this.subcat.path}/${this.content[this.catlang].categoryName}&&topparenttype=${this.content[this.catlang].type}&top=false&add=${this.add}`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
         }
@@ -327,15 +328,15 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             temp = this.query.update.split('')
             index = (temp.length)
         }
-        if (!!this.query.new) {
-            temp = this.query.new.split('')
-            index = (temp.length)
-        }
+        /* if (!!this.query.new) {
+             temp = this.query.new.split('')
+             index = (temp.length)
+         }*/
         if (index > index2) {
             this.__checkBigger(data, temp, index2)
         }
         if (index === index2) {
-            this.__checkEqual(data, temp, index2)
+            this.__checkEqual()
         }
     }
     _getObjArr(content) {
@@ -402,22 +403,13 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             id = this.subcat.id.split('')
             id.pop()
             id = id.join('')
-            cont = (this.subcat.top === false) ? JSON.parse(localStorage[`cats${this.subcat.parent}${id}info`]) : undefined
+            cont = (this.subcat.top === false) ? JSON.parse(localStorage[`cats-${this.subcat.parent}-${id}-info`]) : undefined
         } else {
             cont = undefined
             id = this.subcat.id
         }
         this.subcat.removed = true
         this.removeSubcats(cont, parent, id)
-    }
-
-    _reset(call, mlscs) {
-        this.innerHTML = ''
-        this.subcatSubats = []
-        this.subCatChildren = ''
-        setTimeout(() => {
-            call()
-        }, mlscs)
     }
 }
 customElements.define(cmsSubcatsItem.is, cmsSubcatsItem);

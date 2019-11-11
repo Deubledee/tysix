@@ -210,11 +210,31 @@ class cmsSidebarItem extends PolymerElement {
             }
         }
     }
+    static get observers() {
+        return [
+            '_routePageChanged(route, routeData)'
+        ];
+    }
     ready() {
         super.ready();
         this.translator.target('cms-content', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-content', 'setLangObject')
+    }
+    _routePageChanged(route) {
+        let prefix = route.prefix.split('/')[1]
+        let title = this.content.title
+        prefix = prefix.toLowerCase()
+        title = title.toLowerCase()
+        if (prefix === title) {
+            setTimeout(() => {
+                this.open = true
+            }, 500);
+        } else {
+            setTimeout(() => {
+                this.open = false
+            }, 500);
+        }
     }
     _setLang(res, lang) {
         this.lang = lang

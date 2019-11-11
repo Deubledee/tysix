@@ -104,7 +104,8 @@ $_documentContainer.innerHTML = `
     }
 
     .NP, .B {
-        color: var(--app-not-published-color)
+        color: var(--app-not-published-color);
+
     }
 
     .P, .A{
@@ -171,7 +172,7 @@ $_documentContainer.innerHTML = `
 
     paper-button{
         height: var(--paper-font-title_-_font-size);
-        text-transform: lowercase;
+        text-transform: capitalize;
     }
 
     article[centerListItem] paper-button{

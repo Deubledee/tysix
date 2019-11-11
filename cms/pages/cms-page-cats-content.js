@@ -274,7 +274,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                             this.set('inputVal', [])
                             this.set('textareaVal', [])
                             arr = this._setLangArr(cont[0])
-                            this.set('pageLangs', arr)
                             let obj = cont[0].images.content
                             this.imageLabel = 'images'
                             this.set('imageArr', obj)
@@ -282,6 +281,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                             strg = strg.split('lang=')[0]
                             this.set('str', `content/pages/edit-category-pages${strg}lang=`)
                             if (!!query.lang) {
+                                if (query.lang !== 'lang')
+                                    this.set('pageLangs', arr)
                                 this.__setLAng(query.lang, cont)
                             }
                             return
@@ -294,12 +295,12 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     addImage() {
         if (this.add === false) {
             localStorage[`page-${this.query.content}`] = JSON.stringify(this.content)
-            let string = `type=page&content=${this.query.content}&lang=${this.query.lang}`
+            let string = `type=page&content=${this.query.content}&lang=${this.query.lang}&add=${this.add}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         } else {
             localStorage[`page-new-content`] = JSON.stringify(this.content)
-            let string = `type=page&content=new-content`
+            let string = `type=page&content=new-content&lang=lang&add=${this.add}`
             window.history.pushState({}, null, `${this.rootPath}media/galleries?${string}`);
             window.dispatchEvent(new CustomEvent('location-changed'));
         }

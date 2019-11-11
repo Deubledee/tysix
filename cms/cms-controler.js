@@ -138,7 +138,7 @@ class cmsControler extends PolymerElement {
                       </nav>
                       <dom-repeat repeat items="[[pageArray]]" as="page">
                         <template>  
-                          <cms-sidebar-item content="[[page]]" route="[[subroute]]">
+                          <cms-sidebar-item content="[[page]]" route="[[subroute]]" route="[[route]]">
                           </cms-sidebar-item>
                         </template>                            
                       </dom-repeat>                      

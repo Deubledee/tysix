@@ -276,7 +276,8 @@ export class cmsContentTemplate extends PolymerElement {
                                 <cms-content-item
                                     slot="input" 
                                     item="[[itemlang]]"
-                                    res="{{addLangResponse}}">
+                                    res="{{addLangResponse}}"
+                                    raised="[[raised]]">
                                 </cms-content-item>  
                                 <a slot="anchor" href="https://www.metamodpro.com/browser-language-codes" target="_blank">
                                     <h6>  more info </h6> 
@@ -463,8 +464,7 @@ export class cmsContentTemplate extends PolymerElement {
             tgglelang: {
                 type: Boolean,
                 value: true,
-                notify: true,
-                observer: '_log'
+                notify: true
             },
             hovererd: {
                 type: Boolean,
@@ -512,15 +512,15 @@ export class cmsContentTemplate extends PolymerElement {
         }
     }
     _newLang() {
-        if (!!this.contetnLang) {
-            this.set('tgglelang', !this.tgglelang)
-            if (this.tgglelang === true) {
-                this.set('newlangstate', true)
-            } else {
-                this.warning = false
-                this.warningMsg = ''
-            }
+        //   if (!!this.contetnLang) {
+        this.set('tgglelang', !this.tgglelang)
+        if (this.tgglelang === true) {
+            this.set('newlangstate', true)
+        } else {
+            this.warning = false
+            this.warningMsg = ''
         }
+        // }
     }
     __setLAng(lang, cont) {
         this.set('contetnLang', lang)

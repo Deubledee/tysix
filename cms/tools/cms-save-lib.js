@@ -39,9 +39,9 @@ const cmsPagesLib = function (superClass) {
                 window.history.pushState({}, null, str)
                 window.onbeforeunload = function () { };
                 localStorage.clear()
+                this.__reset()
                 setTimeout(() => {
                     window.dispatchEvent(new CustomEvent('location-changed'))
-                    this.__reset()
                 }, 250)
             })
         }
@@ -52,8 +52,8 @@ const cmsPagesLib = function (superClass) {
                 window.onbeforeunload = function () { };
                 this.editing = 0;
                 localStorage.clear()
+                this.__reset();
                 setTimeout(() => {
-                    this.__reset();
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 500)
                 console.log('removed lang: %s')
@@ -72,8 +72,8 @@ const cmsPagesLib = function (superClass) {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
                                 localStorage.clear()
+                                this.__reset();
                                 setTimeout(() => {
-                                    this.__reset();
                                     window.dispatchEvent(new CustomEvent('location-changed'))
                                 }, 500)
                             })
@@ -89,8 +89,8 @@ const cmsPagesLib = function (superClass) {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
                                 localStorage.clear()
+                                this.__reset();
                                 setTimeout(() => {
-                                    this.__reset();
                                     window.dispatchEvent(new CustomEvent('location-changed'));
                                 }, 500)
                             })/* */
@@ -132,12 +132,16 @@ const cmsSubcatsLib = function (superClass) {
                     }
                     this.subSubCats = 'no content'
                 }
+            }).catch(err => {
+                console.error(err)
             })
         }
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {
                 this._setContent(done)
                 checkSpinner.call(this)
+            }).catch(err => {
+                console.error(err)
             })
         }
         getChildrenSubcats(parent, subCatChildren) {
@@ -145,41 +149,42 @@ const cmsSubcatsLib = function (superClass) {
             getChildrenSubcats(parent, subCatChildren).then((done) => {
                 dataObj.push(done.pop())
                 this.dataObj = dataObj
+            }).catch(err => {
+                console.error(err)
             })/* */
         }
         getSubcatsData(parent, id) {
             getSubcatsData(parent, id).then((done) => {
                 this._setContent(done)
                 checkSpinner.call(this)
+            }).catch(err => {
+                console.error(err)
             })
         }
-        __checkEqual(data, temp, index2) {
-            if (data[index2 - 1] === temp[index2 - 1]) {
-                this.updated = true;
-                getSubcatsData(this.parent, this.subcat.id).then((done) => {
-                    this._setContent(done)
-                    checkSpinner.call(this)
-                })
-
-            } else {
-                getSubcatsData(this.parent, this.subcat.id).then((done) => {
-                    this._setContent(done)
-                    checkSpinner.call(this)
-                })
-            }
+        __checkEqual() {
+            getSubcatsData(this.parent, this.subcat.id).then((done) => {
+                this._setContent(done)
+                checkSpinner.call(this)
+            }).catch(err => {
+                console.error(err)
+            })
         }
         __checkBigger(data, temp, index2) {
             if (data[index2 - 1] === temp[index2 - 1]) {
-                _DBW.getSubcatsData((done) => {
+                getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
                     checkSpinner.call(this)
                     this._toggleChildren()
-                }, { name: this.parent, doc: this.subcat.id }, __DEV)
+                }).catch(err => {
+                    console.error(err)
+                })
             } else {
-                _DBW.getSubcatsData((done) => {
+                getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
                     checkSpinner.call(this)
-                }, { name: this.parent, doc: this.subcat.id }, __DEV)
+                }).catch(err => {
+                    console.error(err)
+                })
             }
         }
         saveSubcats() {
@@ -190,12 +195,11 @@ const cmsSubcatsLib = function (superClass) {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
                         localStorage.clear()
-                        //  this.$.saveButton.classList.add('diferent');
+                        this.__reset();
                         setTimeout(() => {
-                            this._reset();
                             window.dispatchEvent(new CustomEvent('location-changed'))
                         }, 500)
-                    }) /**/
+                    })
                 })
             }
             if (this.add === false) {
@@ -204,26 +208,24 @@ const cmsSubcatsLib = function (superClass) {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
                         localStorage.clear()
-                        //     this.$.saveButton.classList.add('diferent')
+                        this.__reset();
                         setTimeout(() => {
-                            this._reset();
                             window.dispatchEvent(new CustomEvent('location-changed'));
                         }, 500)
-                    })/* */
+                    })
                 })
-            }/**/
+            }
         }
         removeSubcatsLang() {
             let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&reset=true&update=${this.inform[0].id}`
-            // this.deleteSubcatData(this.inform[0].parent, this.inform[0].id, this.removeArr).then((item, id) => {
             deleteSubcatData(this.inform[0].parent, this.inform[0].id, this.removeArr).then(() => {
                 window.history.pushState({}, null, str)
                 window.onbeforeunload = function () { };
+                this.__reset()
                 localStorage.clear()
                 setTimeout(() => {
-                    this._reset()
                     window.dispatchEvent(new CustomEvent('location-changed'))
-                }, 250)/**/
+                }, 250)
             })
         }
         updateSubcatParentInfo(cont, parent, id) {
@@ -232,7 +234,7 @@ const cmsSubcatsLib = function (superClass) {
         removeSubcats(cont, parent, id) {
             let str
             if (!!cont) {
-                str = `${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true&update=${topparentname}`
+                str = `${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true&update=${id}`
                 cont[0].children = cont[0].children.filter(item => { if (item !== this.subcat.id) return item })
                 cont[0].childrenCount = cont[0].childrenCount--
                 cont[0].removedChildren.push(this.subcat.id)
@@ -243,7 +245,6 @@ const cmsSubcatsLib = function (superClass) {
                     window.onbeforeunload = function () { };
                     localStorage.clear()
                     setTimeout(() => {
-                        this._reset()
                         window.dispatchEvent(new CustomEvent('location-changed'))
                     }, 250)
                 })
@@ -253,10 +254,10 @@ const cmsSubcatsLib = function (superClass) {
                     window.history.pushState({}, null, str)
                     window.onbeforeunload = function () { };
                     setTimeout(() => {
-                        this._reset()
                         window.dispatchEvent(new CustomEvent('location-changed'))
                     }, 250)
                 })
+
             }
         }
     }
@@ -295,7 +296,6 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
             getNRGalleries(query).then(data => {
                 checkSpinner.call(this)
                 this.set('galleries', data)
-                console.log(this.galleries, 'di it')
             }).catch(error => {
                 console.log(error)
             })
@@ -316,6 +316,31 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                 console.log(error)
             })
         }
+
+        getFilesFromStorage() {
+            getFilesFromStorage(this.Path).then(files => {
+                let arr = []
+                files.map(file => {
+                    if (typeof this.time === 'number') clearTimeout(this.time)
+                    file.getDownloadURL().then(url => {
+                        arr.push({ localSource: url, uploaded: 'inBD' })
+                        this.time = setTimeout(() => {
+                            this.IMAGES = arr
+                            window.dispatchEvent(new CustomEvent('flat', {
+                                bubbles: true,
+                                composed: true
+                            }));
+                            setTimeout(() => {
+                                this._openStoragePath()
+                            }, 250);
+                        }, 250);
+                    })
+                })
+            }).catch(err => {
+                console.error(err)
+            })
+        }
+
         setGalleryImages() {
             let str = !!this.query.type ? `media/view-images${location.search}&update=${this.query.gallery}` :
                 `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}`
@@ -330,15 +355,6 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                 console.log(error)
             })
         }
-
-        getFilesFromStorage(path) {
-            getFilesFromStorage(path).then(files => {
-                console.log(files)
-            }).catch(err => {
-                console.error(err)
-            })
-        }
-
         removeGallerie(data) {
             removeGalleries(data).then(() => {
                 this.setter = true
@@ -348,10 +364,6 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
         _checkValidity(evt) {
             this.toUpload.push(evt.model.__data)
             this.fromCheckBox = true
-        }
-        _listInStorage(path) {
-            getFilesFromStorage(path).then().catch()
-
         }
         _upload() {
             let promisseArray
@@ -477,13 +489,13 @@ export { cmsSubcatsLib }
 function getFilesFromStorage(path) {
     return new Promise((resolve, reject) => {
         storageRef.child(path).listAll().then((res) => {
-            let arr
+            let arr, arr2 = []
             arr = res.items.map((itemRef) => {
                 return itemRef
             });
             resolve(arr)
         }).catch(function (error) {
-            reject(err)
+            reject(error)
         });
     })
 }
@@ -579,6 +591,7 @@ function checkSpinner() {
     }
 }
 
+///
 function queryGalleries(data) {
     return new Promise((resolve, reject) => {
 
@@ -598,10 +611,6 @@ function getImages() {
     })
 }
 
-/* ************************************************************************************************ */
-/* *******************************************subcats********************************************** */
-/* ************************************************************************************************ */
-/* ************************************************************************************************ */
 
 function removeSubcatInfo(parent, id, inform) {
     return new Promise((resolve, reject) => {
@@ -795,6 +804,11 @@ function deletePageData(t) {
     }
     return Promise.race(toPromisse)
 }
+
+/* ************************************************************************************************ */
+/* *******************************************subcats********************************************** */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
 function saveAddedSubcat(parent, doc, inform) {
     return new Promise((resolve, reject) => {
         _DBW.setPageData((done, err) => {
@@ -805,20 +819,21 @@ function saveAddedSubcat(parent, doc, inform) {
                 console.log(err);
                 reject(err)
             }
-        }, { name: parent, dataType: 'subCategories', doc: doc, data: inform }, __DEV);/* */
+        }, { name: parent, dataType: 'subCategories', doc: doc, data: inform }, __DEV);
     })
 }
 
 function saveAddedSubcatData(parent, name, content) {
     let toPromisse = []
     for (let par in content) {
-        toPromisse.push(new Promise((resolve, reject) => {
-            _DBW.setubcatsData((done, err) => {
-                if (done !== 'error') {
-                    resolve(done)
-                }
-            }, { page: parent, name: name, doc: par.toString(), data: content[par] }, __DEV); /* */
-        }))
+        if (!!par)
+            toPromisse.push(new Promise((resolve, reject) => {
+                _DBW.setubcatsData((done, err) => {
+                    if (done !== 'error') {
+                        resolve(done)
+                    }
+                }, { page: parent, name: name, doc: par.toString(), data: content[par] }, __DEV);
+            }))
     }
     return Promise.race(toPromisse)
 }
@@ -846,7 +861,7 @@ function saveChangedSubcatData(parent, docName, content) {
                     resolve(done)
                 }
             }, { name: parent, docName: docName, doc: par.toString(), data: content[par] },
-                __DEV) /* */
+                __DEV)
 
         }))
     }
@@ -863,13 +878,12 @@ function saveChangedSubcat(parent, doc, data) {
                 reject(err)
             }
         }, { name: parent, dataType: 'subCategories', doc: doc, data: data },
-            __DEV) /* */
-    })
+            __DEV)
+    }) /* */
 }
 function updateSubcatParentInfo(cont, parent, topparent) {
     _DBW.changePageData((done, err) => {
         if (done !== 'error') {
-            console.log(done)
         }
         else {
             console.error(err)
@@ -878,8 +892,12 @@ function updateSubcatParentInfo(cont, parent, topparent) {
 }
 function getTopSubcats(parent) {
     return new Promise((resolve, reject) => {
-        _DBW.mixQueryPageData((done) => {
-            resolve(done)
+        _DBW.mixQueryPageData((done, err) => {
+            if (!err) {
+                resolve(done)
+            } else {
+                reject(err)
+            }
         }, { name: parent, dataType: "subCategories", query: 'top,==,true', query2: `removed,==,false` }, __DEV)
     })
 }
@@ -896,6 +914,7 @@ function getChildrenSubcats(parent, subCatChildren) {
     }
     return Promise.race(toPromisseArray)
 }
+
 function getSubcatsData(parent, id) {
     return new Promise((resolve, reject) => {
         _DBW.getSubcatsData((done) => {

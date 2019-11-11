@@ -303,25 +303,40 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             .toupload{
                 color: var(--divider-color);
             }
+            cms-pop-input.abs2 {
+                position: absolute;
+                top: 173px;
+                left: 39%;   
+                --warningh5:{
+                    color: var(--disabled-text-color);
+                }
+            }
+            .color {
+                color: var(--app-content-section-span-color); 
+            }
             `
     }
     static get _getLangButton() {
         return html`
-                <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]">
-                    <paper-button slot="button" class="exex" on-click="getFilesFromStorage">
-                        x
-                    </paper-button> 
-                    <cms-content-item
-                        slot="input" 
-                        item="[[itemlang]]"
-                        res="{{addLangResponse}}">
-                    </cms-content-item>  
-                        <h6 slot="anchor">  ex: 'gallery name' 'pages', 'gallery name/folder' 'pages/guitars' </h6> 
-                </cms-pop-input>`
+                  <cms-pop-input class="abs2" tgglelang="{{toggleStorage}}" warning="[[warn]]" warning-msg="[[warnMsg]]">
+                        <paper-button slot="button" class="exex" on-click="_openStoragePath">
+                            x
+                        </paper-button> 
+                        <cms-content-item
+                            slot="input" 
+                            item="[[storagePath]]"
+                            res="{{addLangResponse}}">
+                        </cms-content-item>  
+                        <div slot="anchor">                            
+                            <paper-button classs="color" on-click="getFilesFromStorage">
+                                submit
+                            </paper-button>
+                        </div>
+                  </cms-pop-input>`
     }
     static get _getXbutton() {
         return html` 
-        <paper-button class="exex" on-click="_addTitle">
+        <paper-button slot="button" class="exex" on-click="_addTitle">
             x
         </paper-button> 
          `
@@ -503,25 +518,46 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 value: {},
                 observer: '_setAddLangValue'
             },
+            addLangResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setGetStorage'
+            },
             itemlang: {
                 type: Object,
                 notify: true,
                 value: function () { return { 'addTitle': '' } }
             },
-            hidebottom: {
+            storagePath: {
+                type: Object,
+                notify: true,
+                value: function () { return { 'addPath': '' } }
+            },
+            toggleStorage: {
                 type: Boolean,
+                notify: true,
+                value: true,
+            },
+            warnMsg: {
+                type: String,
+                notify: true,
+                value: `ex: 'gallery name' 'pages',\n 'gallery name/folder' 'pages/guitars'`
+            },
+            warn: {
+                type: Boolean,
+                notify: true,
+                value: true,
+            },
+            raised: {
+                type: Boolean,
+                notify: true,
                 value: false,
-                reflectToAttribute: true,
             },
             content: {
                 type: Array,
                 notify: true,
                 value: [],
-            },
-            tocontent: {
-                type: Object,
-                notify: true,
-                value: {},
             },
             Model: {
                 type: Object,
@@ -637,9 +673,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     /***** */
     _openStoragePath() {
-
-
-        this.getFilesFromStorage(path)
+        this.toggleStorage = !this.toggleStorage
     }
     _openFiles() {
         this.$.imagefiles.click()
@@ -653,7 +687,6 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         let time
         this.pop = true
         this.itemsIn = true
-        console.log(this.IMAGES, arr)
         let count = parseInt(this.query.count)
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
@@ -674,10 +707,8 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 obj[0].localSource = evt.target.result
                 arr.push(obj[0])
                 this.IMAGES = []
-                console.log(this.IMAGES, arr)
                 time = setTimeout(() => {
                     this.set('IMAGES', arr)
-                    console.log(this.IMAGES, arr)
                     this.pop = false
                     clearTimeout(time)
                 }, 500);
@@ -695,7 +726,6 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 this.itemlang = { addTitle: evt.model.__data.image.title }
             }
         }
-
     }
     _setAddLangValue(data) {
         if (typeof this.time === 'number') clearTimeout(this.time)
@@ -703,6 +733,16 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
             if (data.addTitle !== undefined) {
                 this.time = setTimeout(() => {
                     this.IMAGES[this.index].title = data.addTitle
+                }, 500)
+            }
+        }
+    }
+    _setGetStorage(data) {
+        if (typeof this.time === 'number') clearTimeout(this.time)
+        if (!!data && ('undefined' in data) === false) {
+            if (data.addPath !== undefined) {
+                this.time = setTimeout(() => {
+                    this.Path = data.addPath
                 }, 500)
             }
         }

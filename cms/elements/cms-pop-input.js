@@ -15,9 +15,9 @@ export class cmsPopInput extends PolymerElement {
                 width: 419px;
                 z-index: 10;
                 height: 155px;
-                padding: 17px;
+                padding: 9px;
                 box-shadow: 0px 1px 7px var(--disabled-text-color);
-                border-radius: 8px;;
+                border-radius: 8px;
             }
 
             div.closed{
@@ -25,17 +25,18 @@ export class cmsPopInput extends PolymerElement {
             }
 
             div[warning]{
-                width: 100%;
+                width: 90%;
                 display: flex;
                 flex-direction: row;
                 flex-wrap: nowrap;
-                color: var(--paper-pink-700);
-                padding-inline-start: 10%;
+                padding-inline-start: 10%
             }
 
             div[warning] h5{
                 flex-basis: 66%;
                 margin-block-start: 1.4em;
+                color: var(--paper-pink-700);
+                @apply --warningh5
             }
 
             div[warning] h5, div[warning] h6{
@@ -107,11 +108,18 @@ export class cmsPopInput extends PolymerElement {
                 value: true,
                 notify: true,
                 reflectToAttribute: true,
+                observer: '_resetInput'
             },
         }
     }
     ready() {
         super.ready();
+    }
+
+    _resetInput(data) {
+        if (data === true) {
+            this.children[1].itemText = ''
+        }
     }
 }
 customElements.define(cmsPopInput.is, cmsPopInput);

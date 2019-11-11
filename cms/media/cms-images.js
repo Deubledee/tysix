@@ -218,60 +218,25 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             }
     }
     _saveAndBack() {
-        let topush, sendBackArray
         if (this.query.type === 'page') {
-
-            let topush, sendBackArray
-            sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
-
-
-            topush = sendBackArray[0].images.content
-            sendBackArray[0].images.content = topush.concat(this.toAdd)
-
-
-
-            localStorage[`${this.query.type}-${this.query.content}`] = JSON.stringify(sendBackArray)
-
-
-
-            let add = this.query.content === 'new-content' ? true : false
-
-            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=${add}`
-
+            let string, storage
+            [string, storage] = generatePageData.call(this)
+            localStorage[`${this.query.type}-${this.query.content}`] = storage
             window.history.pushState({}, null, string);
-            window.dispatchEvent(new CustomEvent('location-changed'))
-
-            return
         }
         if (this.query.type === 'cats') {
-            sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`])
-
-            topush = content[0].images.content
-            sendBackArray[0].images.content = topush.concat(this.toAdd)
-
-            localStorage[`${this.query.type}-${this.query.parent}-${this.query.content}`] = JSON.stringify(sendBackArray)
-
-            let add = this.query.content === 'new-content' ? true : false
-
-            let string = `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=${add}`
-
+            let string, storage
+            [string, storage] = generateCatsdata.call(this, this.query.name)
+            localStorage[`${this.query.type}-${this.query.content}-${this.query.name}`] = storage
             window.history.pushState({}, null, string);
-            window.dispatchEvent(new CustomEvent('location-changed'))
-
-            return
         }
-    }
-
-    _sendBack(str1, str2) {
-        let topush, sendBackArray
-        sendBackArray = JSON.parse(localStorage[str1])
-        topush = sendBackArray[0].images.content
-        sendBackArray[0].images.content = topush.concat(this.toAdd)
-        localStorage[str1] = JSON.stringify(sendBackArray)
-
-        let add = this.query.content === 'new-content' ? true : false
-        window.history.pushState({}, null, str2);
-        window.dispatchEvent(new CustomEvent('location-changed'))
+        this.set('toAdd', undefined)
+        setTimeout(() => {
+            this.set('toAdd', [])
+            this.set('IMAGES', [])
+            window.dispatchEvent(new CustomEvent('location-changed'))
+        }, 250);
+        return
     }
 
     _setLabelAdd(data) {
@@ -298,3 +263,19 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     }
 }
 customElements.define(cmsImages.is, cmsImages);
+
+function* generateCatsdata(name) {
+    yield `/content/pages/edit-subcategory-pages?content=${this.query.content}&name=${name}&path=${this.query.path}&lang=${this.query.lang}&added=true&add=${this.query.add}&top=${this.query.top}&parent=${this.query.parent}`;
+    let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}-${name}`])
+    let topush = sendBackArray[0].images.content
+    sendBackArray[0].images.content = topush.concat(this.toAdd);
+    yield JSON.stringify(sendBackArray)
+}
+
+function* generatePageData() {
+    yield `/content/pages/edit-category-pages?content=${this.query.content}&lang=${this.query.lang}&added=true&add=${this.query.add}`
+    let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
+    let topush = sendBackArray[0].images.content
+    sendBackArray[0].images.content = topush.concat(this.toAdd)
+    yield JSON.stringify(sendBackArray)
+}
