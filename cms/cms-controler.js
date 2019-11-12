@@ -477,11 +477,11 @@ class cmsControler extends PolymerElement {
       });
       return;
     }
-    if (page === 'add-gallery') {
-      import('./media/cms-gallery-content').then(item => {
-      });
-      return;
-    }
+    /*  if (page === 'add-gallery') {
+        import('./media/cms-gallery-content').then(item => {
+        });
+        return;
+      }*/
     if (page === 'add-images') {
       import('./media/cms-images-content').then(item => {
       });

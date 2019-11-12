@@ -171,10 +171,10 @@ class cmsContent extends cmsTopPageTemplate {
         import("./pages/cms-page-viewer")
         return;
       }
-      if (page === "articles") {
-        import("./articles/cms-articles-viewer");
-        return;
-      }
+      /* if (page === "articles") {
+         import("./articles/cms-articles-view");
+         return;
+       }*/
       if (page === "view404") {
         import("./cms-404-warning");
         return;

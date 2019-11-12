@@ -59,22 +59,22 @@ class cmsArticlesViewer extends cmsViewerTemplate {
   }
   _pageChanged(page) {
     if (page !== undefined) {
-      if (page === 'home') {
-        import('./cms-article-list-type.js')
-        return;
-      }
-      if (page === 'view-articles') {
-        import('./cms-article-view.js')
-        return;
-      }
-      if (page === 'add-edit-articles') {
-        import('./cms-article-content.js')
-        return;
-      }
-      if (page === 'view404') {
-        import('../cms-404-warning');
-        return;
-      }
+      /*   if (page === 'home') {
+           import('./cms-article-list-type.js')
+           return;
+         }
+         if (page === 'view-articles') {
+           import('./cms-article-view.js')
+           return;
+         }
+         if (page === 'add-edit-articles') {
+           import('./cms-article-content.js')
+           return;
+         }
+         if (page === 'view404') {
+           import('../cms-404-warning');
+           return;
+         }*/
     }
   }
 }

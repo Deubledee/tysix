@@ -240,11 +240,8 @@ class cmsMedia extends cmsTopPageTemplate {
         import('./media/cms-gallery-viewer')
         return;
       }
-      if (page === 'articles') {
-        import('./cms-articles-viewer');
-        return;
-      }
-      /*    if (page === 'view404') {
+      /*  
+       if (page === 'view404') {
            import('./cms-404-warning');
            return;
          }*/
