@@ -56,7 +56,7 @@ export class cmsTopPageTemplate extends PolymerElement {
 
     </cms-page-viewer>
 
-    <cms-articles-viewer name="articles" user="[[user]]" route="[[subroute]]">
+    <cms-article-viewer name="articles" user="[[user]]" route="[[subroute]]">
 
         <cms-article-content slot="addart" user="[[user]]" route="[[subroute]]">
         </cms-article-content>
@@ -67,7 +67,7 @@ export class cmsTopPageTemplate extends PolymerElement {
         <cms-article-view slot="view" user="[[user]]" route="[[subroute]]">
         </cms-article-view>
 
-    </cms-articles-viewer>
+    </cms-article-viewer>
     `
   }
   static get is() { return 'cms-top-page-template'; }

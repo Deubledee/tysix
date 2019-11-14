@@ -1,6 +1,6 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsViewerTemplate } from '../templates/cms-viewer-template.js';
-class cmsArticlesViewer extends cmsViewerTemplate {
+class cmsArticleViewer extends cmsViewerTemplate {
   static get _getSilentAnchor() {
     return html`  
         <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
@@ -20,7 +20,7 @@ class cmsArticlesViewer extends cmsViewerTemplate {
             <slot name="view"></slot>
         </article>`
   }
-  static get is() { return 'cms-articles-viewer'; }
+  static get is() { return 'cms-article-viewer'; }
 
   static get observers() {
     return [
@@ -79,4 +79,4 @@ class cmsArticlesViewer extends cmsViewerTemplate {
   }
 }
 
-customElements.define(cmsArticlesViewer.is, cmsArticlesViewer);
+customElements.define(cmsArticleViewer.is, cmsArticleViewer);
