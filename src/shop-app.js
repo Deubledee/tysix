@@ -2,31 +2,28 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/paper-spinner/paper-spinner-lite';
 import { scroll } from '@polymer/app-layout/helpers/helpers.js';
-import '@polymer/paper-icon-button/paper-icon-button-light.js';
 import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-media-query/iron-media-query.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import './shop-category-data.js'0;
+import { cmsPagesLib, cmsSubcatsLib } from './tools/cms-save-lib';
 import './shop-home.js';
-import './shop-list.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
-import { dataBaseworker } from './cms/dataBaseWorker.js';
+
 // performance logging
 window.performance && performance.mark && performance.mark('shop-app - before register');
 
-class ShopApp extends PolymerElement {
+class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
   static get template() {
     return html`
     <style>
+
       :host {
         display: block;
         position: relative;
@@ -145,19 +142,6 @@ class ShopApp extends PolymerElement {
         @apply --layout-center-center;
       }
 
-      .user-badge {            
-        position: absolute;
-        top: 35px;
-        right: -54px;
-        width: 144px;
-        height: 20px;
-        font-size: 12px;
-        font-weight: 500;
-        pointer-events: none;
-        @apply --layout-vertical;
-        @apply --layout-center-center;
-      }
-
       .drawer-list {
         margin: 0 20px;
       }
@@ -216,7 +200,6 @@ class ShopApp extends PolymerElement {
         color: white;
         text-transform: uppercase;
       }
-
       /* small screen */
       @media (max-width: 767px) {
         :host {
@@ -234,62 +217,32 @@ class ShopApp extends PolymerElement {
 
     </style>
 
-    <shop-analytics key="UA-39334307-16"></shop-analytics>
-    <!--
-      shop-cart-data maintains the state of the user's shopping cart (in localstorage) and
-      calculates the total amount.
-    -->
-    <shop-cart-data id="cart" cart="{{cart}}" num-items="{{numItems}}" total="{{total}}"></shop-cart-data>
-    <!--
-    app-location and app-route elements provide the state of the URL for the app.
-  -->
     <app-location route="{{route}}"></app-location>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
     <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
-    <!--
-      shop-category-data provides the list of categories.
-    -->
-  <shop-category-data categories="{{categories}}"></shop-category-data>
+
+    <shop-cart-data id="cart" cart="{{cart}}" num-items="{{numItems}}" total="{{total}}"></shop-cart-data>
+
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
-      <app-toolbar id="toolbar">
-        <dom-if if="[[_shouldRenderDasboard]]">
-          <template>
-            <div class="cart-btn-container">
-              <a href="/admin" tabindex="-1">
-              <paper-icon-button-light>
-                <button title="dashboars">
-                  <iron-icon icon="dashboard"></iron-icon>
-                </button>
-              </paper-icon-button-light>
-              </a>          
-            </div>
-          </template>
-        </dom-if>
+      <app-toolbar>
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
-          <a class="back-btn" href="/[[categoryType]]/[[categoryName]]" tabindex="-1">
+          <a class="back-btn" href="/[[_getPathType(category.hasArticle)]]/[[categoryName]]" tabindex="-1">
             <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
           </a>
         </div>
-        <div class="logo" main-title="">
-          <a href="/home" aria-label="SHOP Home">
-            SHOP
-          </a>
-        </div>
-        <div class="cart-btn-container">      
-          <paper-icon-button on-click="" icon="perm-identity" aria-label\$=""></paper-icon-button> 
-          <div class="user-badge">[[user.email]]</div>      
-        </div>
-        <div class="cart-btn-container">      
-          <paper-icon-button on-click="reset" icon="refresh" aria-label\$=""></paper-icon-button>                
-        </div>        
+        <div class="logo" main-title=""><a href="/" aria-label="SHOP Home">SHOP</a></div>
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
-            <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>                      </a>
-         <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>         
+            <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>
+          </a>
+          <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>
         </div>
       </app-toolbar>
+      <slot name= "app">
+      </slot>
       <!-- Lazy-create the tabs for larger screen sizes. -->
       <div id="tabContainer" sticky\$="[[_shouldShowTabs]]" hidden\$="[[!_shouldShowTabs]]">
         <dom-if if="[[_shouldRenderTabs]]">
@@ -297,20 +250,16 @@ class ShopApp extends PolymerElement {
             <shop-tabs selected="[[categoryName]]" attr-for-selected="name">
               <dom-repeat items="[[categories]]" as="category" initial-count="4">
                 <template>
-                  <dom-if if="[[_renderListOnly(category.type)]]">
-                    <template>
-                      <shop-tab name="[[category.name]]">
-                        <a href="/[[category.type]]/[[category.name]]">[[category.title]]</a>
-                      </shop-tab>
-                    </template>
-                  </dom-if>
+                <shop-tab name="[[category.name]]">
+                  <a title="[[category.title]]" href="/[[_getPathType(category.hasArticle)]]/[[category.name]]" placeholder="[[category.placeholder]]">[[category.name]]</a>
+                </shop-tab>
                 </template>
               </dom-repeat>
             </shop-tabs>
           </template>
         </dom-if>
       </div>
-  </app-header>
+    </app-header>
 
     <!-- Lazy-create the drawer for small screen sizes. -->
     <dom-if if="[[_shouldRenderDrawer]]">
@@ -320,11 +269,7 @@ class ShopApp extends PolymerElement {
         <iron-selector role="navigation" class="drawer-list" selected="[[categoryName]]" attr-for-selected="name">
           <dom-repeat items="[[categories]]" as="category" initial-count="4">
             <template>
-              <dom-if if="[[_renderListOnly(category.type)]]">
-                  <template>
-                    <a name="[[category.name]]" href="/[[category.type]]/[[category.name]]">[[category.title]]</a>
-                  </template>
-              </dom-if>
+              <a name="[[category.name]]" title="[[category.title]]" href="/[[_getPathType(category.hasArticle)]]/[[category.name]]">[[category.name]]</a>
             </template>
           </dom-repeat>
         </iron-selector>
@@ -333,26 +278,37 @@ class ShopApp extends PolymerElement {
     </dom-if>
 
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
-        <!-- home view -->
-        <shop-home name="home" categories="[[categories]]"></shop-home>
-        <!-- list view of items in a category -->
-        <shop-list name="list" route="[[subroute]]" offline="[[offline]]"></shop-list>
-        <!-- detail view of one item -->
-        <shop-detail name="detail" route="[[subroute]]" offline="[[offline]]"></shop-detail>
-        <!-- cart view -->
-        <shop-cart name="cart" cart="[[cart]]" total="[[total]]"></shop-cart>
-        <!-- checkout view -->
-        <shop-checkout name="checkout" cart="[[cart]]" total="[[total]]" route="{{subroute}}"></shop-checkout>
-        <cms-login name="admin" user="{{user}}" DBW="[[DBW]]">
-          <cms-controler slot="app" route="[[route]]" categories="{{categories}}" DBW="[[DBW]]" lang=[[lang]]></cms-controler>
-        </cms-login>
+     
+      <div name="home">
+        <slot name="home" categories="[[categories]]"></slot>
+      </div>
+       
+      <div name="categories">
+        <slot name="cats"></slot>    
+      </div>
 
-        <shop-404-warning name="404"></shop-404-warning>
+      <div name="list">
+        <slot name="list"></slot>    
+      </div>
+
+      <div name="detail">
+        <slot name="detail" route="[[subroute]]" offline="[[offline]]"></slot>  
+      </div>
+     
+      <div name="cart">
+        <shop-cart name="cart" cart="[[cart]]" total="[[total]]"></shop-cart> 
+      </div>
+    
+      <div name="checkout">
+        <slot name="checkout" cart="[[cart]]" total="[[total]]" route="{{subroute}}"></slot>
+      </div>
+
+      <shop-404-warning name="404"></shop-404-warning>
     </iron-pages>
 
-    <footer id="footer">
-      <a href="https://github.com/Deubledee">Made by Deubledee</a>
-      <div class="demo-label">Development</div>
+    <footer>
+      <a href="https://www.polymer-project.org/3.0/toolbox/">Made by Polymer</a>
+      <div class="demo-label">Demo Only</div>
     </footer>
 
     <!-- a11y announcer -->
@@ -364,57 +320,58 @@ class ShopApp extends PolymerElement {
 
   static get properties() {
     return {
-      DBW: {
-        type: Object,
-        value: function () {
-          return new dataBaseworker()
-        },
-        notify: true
-      },
-      lang: {
-        type: String,
-        notify: true
-        // value: lang
-      },
       page: {
         type: String,
         reflectToAttribute: true,
         observer: '_pageChanged'
       },
-      user: {
+      BINDER: {
         type: Object,
-        notify: true
+        value: window.MyAppGlobals[window.cms]
       },
-      categoryPage: {
-        type: String,
-        notify: true
-      },
-      categories: {
-        type: Array,
-        notify: true
+      bind: {
+        type: Boolean,
+        value: true
       },
       numItems: {
         type: Number,
         value: 0
       },
-
+      type: String,
+      CATS: {
+        type: Array,
+        value: [],
+        observer: '_toBind'
+      },
+      SUBCATS: {
+        type: Array,
+        value: [],
+        observer: '_toBind'
+      },
+      subCategories: {
+        type: Array,
+        value: []
+      },
+      categories: {
+        type: Array,
+        value: []
+      },
       _shouldShowTabs: {
         computed: '_computeShouldShowTabs(page, smallScreen)'
       },
-
       _shouldRenderTabs: {
         computed: '_computeShouldRenderTabs(_shouldShowTabs, loadComplete)'
       },
-
       _shouldRenderDrawer: {
         computed: '_computeShouldRenderDrawer(smallScreen, loadComplete)'
-      }
+      },
+      time: Number
     }
   }
 
   static get observers() {
     return [
-      '_routePageChanged(routeData.page)'
+      '_routePageChanged(routeData, subroute)'
     ]
   }
 
@@ -422,22 +379,6 @@ class ShopApp extends PolymerElement {
     super();
     window.performance && performance.mark && performance.mark('shop-app.created');
   }
-
-  reset() {
-    let temp = this.categories
-    this.categories = [{}]
-    setTimeout(() => {
-      this.categories = temp
-    }, 500)
-  }
-
-  log(data) {
-    console.log(data)
-  }
-
-  /*catPage(page) {
-    return page
-  }*/
 
   ready() {
     super.ready();
@@ -456,101 +397,88 @@ class ShopApp extends PolymerElement {
       window.addEventListener('online', (e) => this._notifyNetworkStatus(e));
       window.addEventListener('offline', (e) => this._notifyNetworkStatus(e));
     });
+    // this._askPages({ q: 'removed', v: false });
   }
 
-  _renderListOnly(categoryType) {
-    if (categoryType === 'list') {
-      return true
-    } else {
-      return false
+  _setAll(data) {
+    data.forEach(item => {
+      this.numItems++
+      this.getPageData(item)
+    })
+  }
+
+  _routePageChanged(routeData, subroute) {
+    if (typeof this.time === 'number') clearTimeout(this.time)
+    if (routeData.page === '' || routeData.page === undefined) {
+      this.page = 'home';
+      this._setCategoriesIfNeeded(true, 120)
+      this._resetCategoriesIfNeeded()
     }
-  }
-
-  _shouldRenderDasboard() {
-    return true
-  }
-
-  _routePageChanged(page) {
+    if (routeData.page === 'list') {
+      this.page = routeData.page || 'list';
+    }
+    if (routeData.page === 'categories') {
+      this.page = 'home';
+      this._setSubCategories(subroute)
+    }
+    this.BINDER.bindData('route', subroute)
     this._listScrollTop = window.pageYOffset;
-    if (page === 'admin') {
-      this.$.toolbar.style.display = "none"
-      this.$.footer.style.display = "none"
-    } else {
-      this.$.toolbar.style.display = "var(--layout-horizontal_-_display)"
-      this.$.footer.style.display = "initial"
-    }
-
-    this.page = page || 'home';
-    // console.log(page, this.subroute)
-    // Close the drawer - in case the *route* change came from a link in the drawer.
-    this.drawerOpened = false;
-    //}
+    //  // Close the drawer - in case the *route* change came from a link in the drawer.
+    this.drawerOpened = false; /**/
   }
 
-  _pageChanged(page, oldPage) {
-    //  console.log(page, oldPage)
-    if (page != null) {
-      let cb = this._pageLoaded.bind(this, Boolean(oldPage));
-      switch (page) {
-        case 'list':
-          import('./shop-detail.js').then(cb);
-          break;
-        case 'cart':
-          import('./shop-cart.js').then(cb);
-          break;
-        case 'checkout':
-          import('./shop-checkout.js').then(cb);
-          break;
-        case 'admin':
-          import('./cms/cms-login.js').then(cb);
-          break;
-        default:
-          this._pageLoaded(Boolean(oldPage));
-      }
-    }
-  }
-
-  _pageLoaded(shouldResetLayout) {
-    this._ensureLazyLoaded();
-    if (shouldResetLayout) {
-      // The size of the header depends on the page (e.g. on some pages the tabs
-      // do not appear), so reset the header's layout only when switching pages.
-      timeOut.run(() => {
-        this.$.header.resetLayout();
-      }, 1);
-    }
-  }
-
-  _ensureLazyLoaded() {
-    // load lazy resources after render and set `loadComplete` when done.
-    if (!this.loadComplete) {
-      afterNextRender(this, () => {
-        import('./lazy-resources.js').then(() => {
-          // Register service worker if supported.
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', { scope: '/' });
+  _toBind(data) {
+    if (typeof this.time === 'number') clearTimeout(this.time)
+    if (data.length > 0) {
+      this.time = setTimeout(() => {
+        afterNextRender(this, () => {
+          let arr = this.parseCats(data)
+          this[this.type] = []
+          this[this.type] = arr
+          if (this.bind === true) {
+            this.BINDER.bindWith('shopHome', this.type, arr)
+            this.BINDER.bindData('route', this.route)
+            this.BINDER.bindData('offline', this.offline)
           }
-          this._notifyNetworkStatus();
-          this.loadComplete = true;
         });
+      }, 120);
+    }
+  }
+
+  _resetCategoriesIfNeeded() {
+    if (this.bind === false && this.categories.length > 0) {
+      this.bind = true
+      let cats = this.CATS
+      this.CATS = []
+      afterNextRender(this, () => {
+        this.CATS = cats
       });
     }
   }
 
-  _notifyNetworkStatus() {
-    let oldOffline = this.offline;
-    this.offline = !navigator.onLine;
-    // Show the snackbar if the user is offline when starting a new session
-    // or if the network status changed.
-    if (this.offline || (!this.offline && oldOffline === true)) {
-      if (!this._networkSnackbar) {
-        this._networkSnackbar = document.createElement('shop-snackbar');
-        this.root.appendChild(this._networkSnackbar);
-      }
-      this._networkSnackbar.innerHTML = this.offline ?
-        'You are offline' : 'You are online';
-      this._networkSnackbar.open();
-    }
+  _setCategoriesIfNeeded(bind, time) {
+    setTimeout(() => {
+      afterNextRender(this, () => {
+        if (this.categories.length === 0) {
+          this.bind = bind
+          this._askPages({ q: 'removed', v: false });
+        }
+      });
+    }, time)
+  }
+
+  _setSubCategories(subroute) {
+    let cat = subroute.path.split("/").slice(0).join('')
+    this.time = setTimeout(() => {
+      afterNextRender(this, () => {
+        this.getTopSubcats(cat)
+      });
+      this._setCategoriesIfNeeded(false, 1000)
+    }, 120);
+  }
+
+  _getPathType(hasArticle) {
+    return !!hasArticle ? 'list' : 'categories'
   }
 
   _toggleDrawer() {
@@ -571,21 +499,22 @@ class ShopApp extends PolymerElement {
   // Response by a11y announcing the section and syncronizing the category.
   _onChangeSection(event) {
     let detail = event.detail;
+
     // Scroll to the top of the page when navigating to a non-list page. For list view,
     // scroll to the last saved position only if the category has not changed.
     let scrollTop = 0;
-    // if (this.page === 'list') {
-    if (this.categoryName === detail.category) {
-      scrollTop = this._listScrollTop;
-    } else {
-      // Reset the list view scrollTop if the category changed.
-      this._listScrollTop = 0;
+    if (this.page === 'list') {
+      if (this.categoryName === detail.category) {
+        scrollTop = this._listScrollTop;
+      } else {
+        // Reset the list view scrollTop if the category changed.
+        this._listScrollTop = 0;
+      }
     }
-    // }
     // Use `Polymer.AppLayout.scroll` with `behavior: 'silent'` to disable header scroll
     // effects during the scroll.
     scroll({ top: scrollTop, behavior: 'silent' });
-    this.categoryType = detail.type || '';
+
     this.categoryName = detail.category || '';
 
     // Announce the page's title
@@ -655,14 +584,81 @@ class ShopApp extends PolymerElement {
       }
     }
   }
+  _pageChanged(page, oldPage) {
+    if (page != null) {
+      let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+      switch (page) {
+        case 'list':
+          import('./shop-list.js').then((this.listCb).bind(this, cb));
+          break;
+        case 'detail':
+          import('./shop-detail.js').then(cb);
+          break;
+        case 'cart':
+          import('./shop-cart.js').then(cb);
+          break;
+        case 'checkout':
+          import('./shop-checkout.js').then(cb);
+          break;
+        default:
+          this._pageLoaded(Boolean(oldPage));
+      }
+    }
+  }
+  listCb(oldPage) {
+    this._pageLoaded.bind(this, Boolean(oldPage));
+    this.BINDER.bindData('route', this.subroute)
+  }
+  _pageLoaded(shouldResetLayout) {
+    this._ensureLazyLoaded();
+    if (shouldResetLayout) {
+      // The size of the header depends on the page (e.g. on some pages the tabs
+      // do not appear), so reset the header's layout only when switching pages.
+      timeOut.run(() => {
+        this.$.header.resetLayout();
+      }, 1);
+    }
+  }
 
-  _onFallbackSelectionTriggered(e) {
-    console.log(e)
+  _ensureLazyLoaded() {
+    // load lazy resources after render and set `loadComplete` when done.
+    if (!this.loadComplete) {
+      afterNextRender(this, () => {
+        import('./lazy-resources.js').then(() => {
+          // Register service worker if supported.
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js', { scope: '/' });
+          }
+          this._notifyNetworkStatus();
+          this.loadComplete = true;
+        });
+      });
+    }
+  }
+
+  _notifyNetworkStatus() {
+    let oldOffline = this.offline;
+    this.offline = !navigator.onLine;
+    // Show the snackbar if the user is offline when starting a new session
+    // or if the network status changed.
+    if (this.offline || (!this.offline && oldOffline === true)) {
+      if (!this._networkSnackbar) {
+        this._networkSnackbar = document.createElement('shop-snackbar');
+        this.root.appendChild(this._networkSnackbar);
+      }
+      this._networkSnackbar.innerHTML = this.offline ?
+        'You are offline' : 'You are online';
+      this._networkSnackbar.open();
+    }
+  }
+
+
+  _onFallbackSelectionTriggered() {
     this.page = '404';
   }
 
   _computeShouldShowTabs(page, smallScreen) {
-    return (page === 'home' || page === 'list' || page === 'detail') && !smallScreen;
+    return (page === 'home' || page === 'categories' || page === 'list' || page === 'detail') && !smallScreen;
   }
 
   _computeShouldRenderTabs(_shouldShowTabs, loadComplete) {
@@ -676,6 +672,7 @@ class ShopApp extends PolymerElement {
   _computePluralizedQuantity(quantity) {
     return quantity + ' ' + (quantity === 1 ? 'item' : 'items');
   }
+
 }
 
 customElements.define(ShopApp.is, ShopApp);

@@ -1,123 +1,82 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { html as litHtml, render } from 'lit-html';
+import './elements/shop-category-item';
 import './shop-button.js';
-import './shop-image.js';
-import { dataBaseworker } from './cms/dataBaseWorker.js';
-const _DBW = new dataBaseworker();
-const __DEV = true
-const _STYLES = _DBW.getElementAssets('shop-home', __DEV)
-var STYLE = {};
-
-_STYLES.then((querySnapshot) => {
-  let style = querySnapshot.data()
-  STYLE = style.styles
-}).catch(function (error) {
-  console.error("Error reteaving assets: ", error);
-});
 
 class ShopHome extends PolymerElement {
   static get template() {
     return html`
-    <style include="shop-button">
+  <style include="shop-button">
+  .subcats,
+    .item {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
- /*     .image-link {
-        outline: none;
+    .subcats,    
+    .item:nth-of-type(3),
+    .item:nth-of-type(4) {
+      display: inline-block;
+      width: 50%;
+    }
+    .subcats{
+      width: 50%;
+    }
+      
+    .item:nth-of-type(3) > h2,
+    .item:nth-of-type(4) > h2 {
+      font-size: 1.1em;
+    }
+
+    .item:nth-of-type(3) > shop-button > a,
+      .item:nth-of-type(4) > shop-button > a {
+        padding: 8px 24px;
       }
+    
+    .spinnercenter {
+      margin-inline-start: 49%;
+      margin-block-start: 10%;
+    }
 
-      .image-link > shop-image::after {
-        display: block;
-        content: '';
-        position: absolute;
-        transition-property: opacity;
-        transition-duration: 0s;
-        transition-delay: 90ms;
-        pointer-events: none;
-        opacity: 0;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        bottom: 5px;
-        outline: #2196F3 auto 5px;
-        outline: -moz-mac-focusring auto 5px;
-        outline: -webkit-focus-ring-color auto 5px;
-      }
-
-      .image-link:focus > shop-image::after {
-        opacity: 1;
-      }
-
-      .item {
-        display: block;
-        text-decoration: none;
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      .item:nth-of-type(3),
-      .item:nth-of-type(4) {
-        display: inline-block;
-        width: 50%;
-      }
-
-      shop-image {
-        position: relative;
-        height: 320px;
-        overflow: hidden;
-        --shop-image-img: {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: -9999px;
-          right: -9999px;
-          max-width: none;
-        };
-      }
-
-      h2 {
-        font-size: 1.3em;
-        font-weight: 500;
-        margin: 32px 0;
-      }
-
-      .item:nth-of-type(3) > h2,
-      .item:nth-of-type(4) > h2 {
-        font-size: 1.1em;
-      }
-
-      @media (max-width: 767px) {
-        shop-image {
-          height: 240px;
-        }
-
-        h2 {
-          margin: 24px 0;
-        }
-
-        .item:nth-of-type(3) > shop-button > a,
-        .item:nth-of-type(4) > shop-button > a {
-          padding: 8px 24px;
-        }
-      }
-*/
     </style>
 
-    <dom-repeat items="[[categories]]">
-      <template strip-whitespace="">
-        <dom-if if="[[_renderListOnly(item.type)]]">
-          <template>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+
+    <div class="spinnercenter">
+        <slot name="spinner"></slot>  
+    </div>
+
+    <dom-if if="[[_shouldRenderCategories]]">
+      <template>
+      
+        <dom-repeat items="[[categories]]">
+          <template strip-whitespace="">
             <div class="item">
-              <a class="image-link" href\$="/list/[[item.name]]">
-                <shop-image src="[[_getImage(item.image)]]" alt="[[item.title]]" placeholder-img="[[item.placeholder]]"></shop-image>
-              </a>
-              <h2>[[item.title]]</h2>
-              <shop-button>
-                <a aria-label\$="[[item.title]] Shop Now" href\$="/list/[[item.name]]">Shop Now</a>
-              </shop-button>
+              <slot name="cat-[[item.name]]">
+              </slot>
             </div>
           </template>
-        </dom-if>
+        </dom-repeat>
+
       </template>
-    </dom-repeat>
-`;
+    </dom-if>
+
+    <dom-if if="[[!_shouldRenderCategories]]">
+      <template>
+      
+        <dom-repeat items="[[subCategories]]">
+          <template strip-whitespace="">
+            <div class="subcats">
+              <slot name="cat-[[item.name]]">
+              </slot>
+            </div>
+          </template>
+        </dom-repeat>
+      </template>
+    </dom-if>`;
   }
 
   static get is() { return 'shop-home'; }
@@ -125,36 +84,79 @@ class ShopHome extends PolymerElement {
   static get properties() {
     return {
       categories: {
-        type: Array
+        type: Array,
+        notify: true,
+        value: [],
+        observer: '_renderSlotedCats'
       },
-
+      subCategories: {
+        type: Array,
+        notify: true,
+        observer: '_renderSlotedCats'
+      },
+      BINDER: {
+        type: Object,
+        value: window.MyAppGlobals[window.cms]
+      },
+      _shouldRenderCategories: {
+        computed: '_computeShouldRenderCategories(route, routeData)'
+      },
       visible: {
         type: Boolean,
         observer: '_visibleChanged'
       }
-
     }
   }
 
+  _log(data) {
+    console.log(data)
+  }
+
   ready() {
-    super.ready()
-    this.addEventListener('confirm', this.openConfirm)
-    this.changeStyle()
+    super.ready();
+    this.BINDER.setBinder('shopHome', 'categories', (this.bindCallback).bind(this))
+    this.BINDER.setBinder('shopHome', 'route', (this.bindCallback).bind(this))
+    this.BINDER.setBinder('shopHome', 'subCategories', (this.bindCallback).bind(this))
   }
 
-  changeStyle() {
-    this.shadowRoot.firstElementChild.innerText += STYLE
+  bindCallback(par, value) {
+    this[par] = value
   }
 
-  _getImage(data) {
-    return data.pop().url
+  _computeShouldRenderCategories(route) {
+    const helloTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">
+      </paper-spinner-lite>`;
+    render(helloTemplate(), this)
+    if (!!route) {
+      if (route.path === "" || route.path === "/") {
+        let temp = this.categories
+        afterNextRender(this, () => {
+          this.categories = []
+          this.categories = temp
+        });
+        return true
+      }
+      if (route.prefix === "/categories") {
+        return false
+      }
+    }
   }
 
-  _renderListOnly(categoryType) {
-    if (categoryType === 'list') {
-      return true
-    } else {
-      return false
+  _getPathType() {
+    return !!this._shouldRenderCategories ? 'categories' : 'list'
+  }
+
+  _renderSlotedCats(items) {
+    if (items.length > 0) {
+      const helloTemplate = (data) => litHtml`${data.map((item) => {
+        return litHtml`
+          <shop-category-item slot="cat-${item.name}" data="${btoa(JSON.stringify(item))}" type="${this._getPathType()}">
+          </shop-category-item>
+        `
+      })}`;
+      afterNextRender(this, () => {
+        render(helloTemplate(items), this);
+      });
     }
   }
 

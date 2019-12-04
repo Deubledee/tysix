@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import './shop-category-data.js';
 import './shop-common-styles.js';
 import './shop-image.js';
 import './shop-list-item.js';
@@ -67,22 +66,11 @@ class ShopList extends PolymerElement {
 
     </style>
 
-    <!--
-      app-route provides the name of the category.
-    -->
+
     <app-route
         route="[[route]]"
         pattern="/:category"
         data="{{routeData}}"></app-route>
-
-    <!--
-      shop-category-data provides the category data for a given category name.
-    -->
-    <shop-category-data
-        id="categoryData"
-        category-name="[[routeData.category]]"
-        category="{{category}}"
-        failure="{{failure}}"></shop-category-data>
 
     <shop-image
         alt="[[category.title]]"
@@ -107,12 +95,12 @@ class ShopList extends PolymerElement {
     <!--
       shop-network-warning shows a warning message when the items can't be rendered due
       to network conditions.
-    -->
+    
     <shop-network-warning
         hidden$="[[!failure]]"
         offline="[[offline]]"
         on-try-reconnect="_tryReconnect"></shop-network-warning>
-
+-->
   </template>
   `;
   }
@@ -122,15 +110,15 @@ class ShopList extends PolymerElement {
   static get properties() {
     return {
 
-      category: {
-        type: Object,
-        // observer: 'setNotFail'
-      },
+      category: Object,
 
       route: Object,
 
       routeData: Object,
-
+      BINDER: {
+        type: Object,
+        value: window.MyAppGlobals[window.cms]
+      },
       visible: {
         type: Boolean,
         value: false
@@ -141,17 +129,10 @@ class ShopList extends PolymerElement {
         observer: '_offlineChanged'
       },
 
-      failure: Boolean
-
+      failure: Boolean,
+      time: Number
     }
   }
-
-  static get observers() {
-    return [
-      '_categoryChanged(category, visible)'
-    ]
-  }
-
   connectedCallback() {
     super.connectedCallback();
     this.isAttached = true;
@@ -160,6 +141,47 @@ class ShopList extends PolymerElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.isAttached = false;
+  }
+
+  static get observers() {
+    return [
+      '_categoryChanged(category, visible)',
+    ]
+  }
+
+  ready() {
+    super.ready();
+    this.BINDER.setBinder('shopList', 'route', (this.bindCallback).bind(this))
+  }
+
+  bindCallback(par, value) {
+    this[par] = value
+  }
+
+  _categoryChanged(category, visible) {
+    if (typeof this.time === 'number') {
+      clearTimeout(this.time)
+    }
+    if (category !== undefined) {
+      this.time = setTimeout(() => {
+        if (!visible) {
+          return;
+        }
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
+          microTask, () => {
+            if (category) {
+              // Notify the category and the page's title
+              this.dispatchEvent(new CustomEvent('change-section', {
+                bubbles: true, composed: true, detail: {
+                  category: category.name,
+                  title: category.title,
+                  image: category.image
+                }
+              }));
+            }
+          }); /* */
+      }, 250);
+    }
   }
 
   _getListItems(items) {
@@ -179,34 +201,6 @@ class ShopList extends PolymerElement {
     }
     let pluralizedQ = quantity === 1 ? 'item' : 'items';
     return '(' + quantity + ' ' + pluralizedQ + ')';
-  }
-
-  _categoryChanged(catego, visible) {
-    //console.log(this.routeData)
-    let category = this.routeData.category
-    this.failure = false
-    if (!visible) {
-      return;
-    }
-    //console.log(category)
-    this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer,
-      microTask, () => {
-        if (category) {
-          // Notify the category and the page's title
-          this.dispatchEvent(new CustomEvent('change-section', {
-            bubbles: true, composed: true, detail: {
-              category: category.name,
-              type: category.page,
-              title: category.title,
-              image: this.baseURI + category.image
-            }
-          }));
-        } else {
-          this.dispatchEvent(new CustomEvent('show-invalid-url-warning', {
-            bubbles: true, composed: true
-          }));
-        }
-      });
   }
 
   _tryReconnect() {
