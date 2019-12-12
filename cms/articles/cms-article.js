@@ -1,10 +1,11 @@
 import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsItemImageTemplate } from '../templates/cms-item-image-template';
+import { cmsItemTemplate } from '../templates/cms-item-template';
 import { Setter } from '../tools/cms-element-set';
 import './cms-article-item'
 const Consts = new Setter()
 Consts.assets = Consts.getAssets('cms-articles')
-class cmsArticle extends cmsItemImageTemplate {
+class cmsArticle extends cmsItemTemplate {
+
     static get _getStyles() {
         return html`        
         div[arow]{
@@ -17,50 +18,8 @@ class cmsArticle extends cmsItemImageTemplate {
         }
         `
     }
-    static get _getMenu() {
-        return html`                           
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[item]]">  [[item]]   </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[title]]"> 
-                    [[title]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">
-                    <h4 title="[[viewedit]]"> [[viewedit]] </h4>
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[stock]]"> 
-                    [[stock]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[type]]"> 
-                    [[type]]     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[published]]"> 
-                    [[published]] </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[delete]]"> 
-                    [[delete]]      </h4>     
-                </div>  
-            </section>`
-    }
-    static get _getItem() {
+
+    static get _getElement() {
         return html` 
         <dom-repeat repeat items="[[content]]" as="item">
             <template>
@@ -76,7 +35,6 @@ class cmsArticle extends cmsItemImageTemplate {
             lang: {
                 type: String,
                 notify: true,
-                //observer: '__changeLang'
             },
             langs: {
                 type: Object,
@@ -100,7 +58,9 @@ class cmsArticle extends cmsItemImageTemplate {
             }
         };
     }
-
+    _log(data) {
+        console.log(data)
+    }
     ready() {
         super.ready()
         this.translator.target('cms-articles', 'setLangObject', (this._setLObj).bind(this))
@@ -124,11 +84,8 @@ class cmsArticle extends cmsItemImageTemplate {
     __publish(data) {
         console.log(data)
     }
-    _deleteImg(data) {
-        console.log(data)
-    }
     _getArticle(data) {
-        return [data]
+        return data
     }
 }
 customElements.define(cmsArticle.is, cmsArticle);

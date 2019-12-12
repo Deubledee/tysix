@@ -188,15 +188,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 notify: true,
                 value: {},
             },
-            tocontent: {
-                type: Object,
-                notify: true,
-                value: {},
-            },
-            Model: {
-                type: Object,
-                value: {}
-            },
             langStr: String,
             time: Number
         }
@@ -211,8 +202,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.translator.target('cms-page-list-type-content', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
-        window.addEventListener('reset', (this._reset).bind(this))
-        this.set('saveButton', this.$.saveButton)
         this.$.image.addImage = (this.addImage).bind(this)
     }
 
@@ -316,9 +305,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
     onSave() {
         let data = new Date(), inform
-        if (!!this.newlangstate) {
-            this.add = true
-        }
         inform = this.inform.pop()
         let noLang = this._lastModified(this._setInfo(inform, data), data)
         if (!!noLang) return
@@ -326,6 +312,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             this._removeLang()
             return
         }
+        if (!!this.newlangstate) this.add = true
         this.savePages()
     }
     _lastModified(inform, data) {
@@ -355,6 +342,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 inform.Published.state = 'NP'
                 inform.author.id = this.user.uid
                 inform.author.name = this.user.displayName
+                inform.path = [inform.id]
                 inform.toArticle = 'B'
                 inform.removed = false
                 inform.dateCreated = data.toLocaleString().replace(',', '')

@@ -11,8 +11,14 @@ export class cmsContentImage extends PolymerElement {
         cms-image.top {
             top: 0px;
         }
+
+        .flexchildbotom3 {
+            height: unset;
+            max-height: 328px;
+        }
+
         div[backanover] {
-            height: 272px;
+            max-height: 272px;
             overflow: auto;            
             padding: 8PX
         }

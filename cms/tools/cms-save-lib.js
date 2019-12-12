@@ -1,6 +1,7 @@
-import { dataBaseworker, MediaDB } from './dataBaseWorker';
+import { dataBaseworker, MediaDB, CategoriesDB } from './dataBaseWorker';
 const _DBW = new dataBaseworker()
 const _MEDIADBW = new MediaDB()
+const _CATEGORIESDBW = new CategoriesDB
 const __DEV = true
 var storageRef = firebase.storage().ref();
 
@@ -16,9 +17,7 @@ const cmsPagesLib = function (superClass) {
         _askPages(query) {
             getPages(query).then((done) => {
                 this._setAll(done);
-            }).catch(error => {
-                console.error(error)
-            });
+            }).catch(standartErr)
         }
         getPageData(id) {
             var ID = id
@@ -30,7 +29,7 @@ const cmsPagesLib = function (superClass) {
                 localStorage.setItem(`page-${ID}`, JSON.stringify(cont))
                 window.history.pushState({}, null, str);
                 window.dispatchEvent(new CustomEvent('location-changed'));
-            })
+            }).catch(standartErr)
         }
         removePage(parent, cont) {
             let str = `${this.rootPath}content/pages?content=${parent}&removed=true`
@@ -43,7 +42,7 @@ const cmsPagesLib = function (superClass) {
                 setTimeout(() => {
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 250)
-            })
+            }).catch(standartErr)
         }
         _removeLang() {
             let t = { content: this.query.content, type: 'data', langArr: this.removeArr }
@@ -57,10 +56,7 @@ const cmsPagesLib = function (superClass) {
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 500)
                 console.log('removed lang: %s')
-            }).catch(err => {
-                console.log('lang not removed: %s', err)
-
-            })
+            }).catch(standartErr)
         }
         savePages() {
             if (this.add === true) {
@@ -78,7 +74,7 @@ const cmsPagesLib = function (superClass) {
                                 }, 500)
                             })
                         }
-                    })
+                    }).catch(standartErr)
                 }
             } else
                 if (this.add === false) {
@@ -94,7 +90,7 @@ const cmsPagesLib = function (superClass) {
                                     window.dispatchEvent(new CustomEvent('location-changed'));
                                 }, 500)
                             })/* */
-                        })
+                        }).catch(standartErr)
                     }
                 }
         }
@@ -130,44 +126,34 @@ const cmsSubcatsLib = function (superClass) {
                     if (child === "spinner") {
                         this.removeChild(this.children[0])
                     }
-                    this.subSubCats = 'no content'
+                    this.subSubCats = ''
                 }
-            }).catch(err => {
-                console.error(err)
-            })
+            }).catch(standartErr)
         }
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {
                 this._setContent(done)
                 checkSpinner.call(this)
-            }).catch(err => {
-                console.error(err)
-            })
+            }).catch(standartErr)
         }
         getChildrenSubcats(parent, subCatChildren) {
             let dataObj = []
             getChildrenSubcats(parent, subCatChildren).then((done) => {
                 dataObj.push(done.pop())
                 this.dataObj = dataObj
-            }).catch(err => {
-                console.error(err)
-            })/* */
+            }).catch(standartErr)
         }
         getSubcatsData(parent, id) {
             getSubcatsData(parent, id).then((done) => {
                 this._setContent(done)
                 checkSpinner.call(this)
-            }).catch(err => {
-                console.error(err)
-            })
+            }).catch(standartErr)
         }
         __checkEqual() {
             getSubcatsData(this.parent, this.subcat.id).then((done) => {
                 this._setContent(done)
                 checkSpinner.call(this)
-            }).catch(err => {
-                console.error(err)
-            })
+            }).catch(standartErr)
         }
         __checkBigger(data, temp, index2) {
             if (data[index2 - 1] === temp[index2 - 1]) {
@@ -175,16 +161,12 @@ const cmsSubcatsLib = function (superClass) {
                     this._setContent(done)
                     checkSpinner.call(this)
                     this._toggleChildren()
-                }).catch(err => {
-                    console.error(err)
-                })
+                }).catch(standartErr)
             } else {
                 getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
                     checkSpinner.call(this)
-                }).catch(err => {
-                    console.error(err)
-                })
+                }).catch(standartErr)
             }
         }
         saveSubcats() {
@@ -199,8 +181,8 @@ const cmsSubcatsLib = function (superClass) {
                         setTimeout(() => {
                             window.dispatchEvent(new CustomEvent('location-changed'))
                         }, 500)
-                    })
-                })
+                    }).catch(standartErr)
+                }).catch(standartErr)
             }
             if (this.add === false) {
                 saveChangedSubcat(this.inform[0].parent, this.inform[0].id, this.inform[0]).then(() => {
@@ -212,8 +194,8 @@ const cmsSubcatsLib = function (superClass) {
                         setTimeout(() => {
                             window.dispatchEvent(new CustomEvent('location-changed'));
                         }, 500)
-                    })
-                })
+                    }).catch(standartErr)
+                }).catch(standartErr)
             }
         }
         removeSubcatsLang() {
@@ -226,7 +208,7 @@ const cmsSubcatsLib = function (superClass) {
                 setTimeout(() => {
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 250)
-            })
+            }).catch(standartErr)
         }
         updateSubcatParentInfo(cont, parent, id) {
             updateSubcatParentInfo(cont, parent, id)
@@ -247,7 +229,7 @@ const cmsSubcatsLib = function (superClass) {
                     setTimeout(() => {
                         window.dispatchEvent(new CustomEvent('location-changed'))
                     }, 250)
-                })
+                }).catch(standartErr)
             } else {
                 str = `${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true`
                 saveChangedSubcat(parent, id, this.subcat).then(() => {
@@ -256,12 +238,13 @@ const cmsSubcatsLib = function (superClass) {
                     setTimeout(() => {
                         window.dispatchEvent(new CustomEvent('location-changed'))
                     }, 250)
-                })
+                }).catch(standartErr)
 
             }
         }
     }
 }
+
 
 /* ************************************************************************************************ */
 /* *******************************************media************************************************ */
@@ -288,33 +271,25 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                     this.warningMsg = ''
                     console.log('di it')
                 }, 250)
-            }).catch(error => {
-                console.log(error)
-            })
+            }).catch(standartErr)
         }
         _getGalleries(query) {
             getNRGalleries(query).then(data => {
                 checkSpinner.call(this)
                 this.set('galleries', data)
-            }).catch(error => {
-                console.log(error)
-            })
+            }).catch(standartErr)
         }
         _getAllGalleries() {
             getRnNRGallerries().then(data => {
                 checkSpinner.call(this)
                 this.set('galleries', data)
-            }).catch(error => {
-                console.log(error)
-            })
+            }).catch(standartErr)
         }
         getGalleryImages(gallery, query) {
             getGalleryImages(gallery, query).then(data => {
                 checkSpinner.call(this)
                 this.set('IMAGES', data)
-            }).catch(error => {
-                console.log(error)
-            })
+            }).catch(standartErr)
         }
 
         getFilesFromStorage() {
@@ -336,9 +311,7 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                         }, 250);
                     })
                 })
-            }).catch(err => {
-                console.error(err)
-            })
+            }).catch(standartErr)
         }
 
         setGalleryImages() {
@@ -351,13 +324,13 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
                     this._reset()
                     window.dispatchEvent(new CustomEvent('location-changed'))
                 }, 250)
-            }).catch(error => {
-                console.log(error)
-            })
+            }).catch(standartErr)
         }
         removeGallerie(data) {
             removeGalleries(data).then(() => {
                 this.setter = true
+            }).catch(error => {
+                console.log(error)
             })
         }
         /* upload  methods */
@@ -482,9 +455,248 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
     }
 }
 
-export { cmsMediaLib }
-export { cmsPagesLib }
-export { cmsSubcatsLib }
+export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib }
+
+//standart error callback function
+function standartErr(err) {
+    throw err
+}
+/* ************************************************************************************************ */
+/* *******************************************categories******************************************* */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+const cmscategoriesLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-media-lib'; }
+        ready() {
+            super.ready();
+        }
+
+        getCategories(query) {
+            getCategories(query).then(data => {
+                data.forEach(item => {
+                    console.log(item.data(), item.id)
+                })
+            }).catch(standartErr)
+        }
+
+        setCategories(id, inform) {
+            setCategory(id, inform).then(() => {
+                console.log('art saved')
+            }).catch(standartErr)
+        }
+
+        removeCategory(id) {
+            removeCategory(id).then(() => {
+                console.log('art removed')
+            }).catch(standartErr)
+        }
+    }
+}
+
+/* ************************************************************************************************ */
+/* *******************************************categories******************************************* */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+function getCategories(query) {
+    if (!query)
+        return new Promise((resolve, reject) => {
+            _CATEGORIESDBW.getCategories((done) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    reject(error)
+                }
+            }, __DEV)
+        })
+
+    if (query)
+        return new Promise((resolve, reject) => {
+            _CATEGORIESDBW.getCategoriesEqualTo((done, error) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    reject(error)
+                }
+            }, query.q, query.v, __DEV)
+        })
+}
+
+function setCategory(id, inform) {
+    return new Promise((resolve, reject) => {
+        _CATEGORIESDBW.setCategories((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                reject(err)
+            }
+        }, { name: id, create: inform }, __DEV);/* */
+    })
+}
+
+function removeCategory(data) {
+    return new Promise((resolve, reject) => {
+        _CATEGORIESDBW.deleteCategory((done, err) => {
+            if (done !== 'error') {
+                resolve()
+            } else {
+                reject()
+                console.error(err)
+            }
+        }, data, __DEV)
+    })
+}
+
+/* ************************************************************************************************ */
+/* *******************************************articles********************************************** */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+
+const cmsArticlesLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-media-lib'; }
+        ready() {
+            super.ready();
+        }
+        getArticles(query) {
+            getArticles(query).then(data => {
+                data.forEach(item => {
+                    getArticleData(item.id).then(art => {
+                        this._setContent(item.data(), art)
+                    }).catch(standartErr) /**/
+                })
+            }).catch(standartErr)
+        }
+        setArticle(id, inform) {
+            setArticle(id, inform).then(() => {
+                console.log('art saved')
+            }).catch(standartErr)
+        }
+        _setLangArr(cont) {
+            return _setLangArr(cont)
+        }
+    }
+}
+
+/* ************************************************************************************************ */
+/* *******************************************articles********************************************** */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+function getArticles(query) {
+    if (!query)
+        return new Promise((resolve, reject) => {
+            _DBW.getAllArticles((done) => {
+                resolve(done)
+            }, __DEV)
+        })
+
+    if (query)
+        return new Promise((resolve, reject) => {
+            _DBW.getArticlesEqualTo((done, error) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    reject(error)
+                }
+            }, query.q, query.v, __DEV)
+        })
+}
+function getArticleData(id) {
+    return new Promise((resolve, reject) => {
+        _DBW.getArticleData((done2) => {
+            resolve(done2)
+        }, { name: id, dataType: 'data' }, __DEV)/* */
+    })
+}
+
+function setArticle(id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setArticles((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                reject(err)
+            }
+        }, { name: id, create: inform }, __DEV);/* */
+    })
+}
+
+function saveAddedArticleData(type, id, content) {
+    let toPromisse = []
+    for (let par in content) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.setArticleData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                }
+            }, { name: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);/* */
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+function saveChangedArticle(id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.changePages((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: id, update: inform }, __DEV);/* */
+    })
+}
+
+function saveChangedArticleData(type, id, content) {
+    let toPromisse = []
+    console.log(type, id, content)
+    if (id !== 'undefined') {
+        for (let par in content) {
+            toPromisse.push(new Promise((resolve, reject) => {
+                _DBW.changePageData((done, err) => {
+                    if (done !== 'error') {
+                        resolve(true)
+                    }
+                }, { name: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);
+            }))
+        }/**/
+    }
+    return Promise.race(toPromisse)
+}
+function deleteArticleData(t) {
+    let toPromisse = []
+    for (let i = 0; i < t.langArr.length; i++) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.deletePageData((done, err) => {
+                console.log(done)
+                if (done !== 'error') {
+                    resolve(done)
+                }
+                else {
+                    reject(err)
+                }
+            }, { name: t.content, dataType: t.type, doc: t.langArr[i] }, __DEV)
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+
+/* ************************************************************************************************ */
+/* *******************************************galleries******************************************** */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+
+
 
 function getFilesFromStorage(path) {
     return new Promise((resolve, reject) => {
@@ -591,110 +803,6 @@ function checkSpinner() {
     }
 }
 
-///
-function queryGalleries(data) {
-    return new Promise((resolve, reject) => {
-
-    })
-}
-
-function getImages() {
-    return new Promise((resolve, reject) => {
-        _DBW.getMediaGalleriesData((done, err) => {
-            if (done !== 'error') {
-                resolve(done)
-            } else {
-                console.log(err);
-                reject(err)
-            }
-        }, { gallery: '' }, __DEV)
-    })
-}
-
-
-function removeSubcatInfo(parent, id, inform) {
-    return new Promise((resolve, reject) => {
-        _DBW.setPageData((done, err) => {
-            if (done !== 'error') {
-                resolve(done)
-            }
-            else {
-                console.log(err);
-                reject(err)
-            }
-        }, { name: parent, dataType: 'subCategories', doc: id, data: inform }, __DEV);/* */
-    })
-}
-
-function removeSubcatData(parent, id, content) {
-    let toPromisse = []
-    for (let par in this.content[0]) {
-        toPromisse.push(new Promise((resolve, reject) => {
-            _DBW.setubcatsData((done, err) => {
-                if (done !== 'error') {
-                    resolve(done)
-                }
-                else {
-                    reject(err)
-                }
-            }, { page: parent, name: id, doc: par.toString(), data: content[par] }, __DEV); /* */
-        }))
-    }
-    return Promise.race(toPromisse)
-}
-
-function deleteAdded() {
-    return new Promise((resolve, reject) => {
-        _DBW.deletePage((msg) => {
-            if (done !== 'error') {
-                resolve(true)
-            }
-            else {
-                console.log(err);
-                reject(err)
-            }
-            this.__reset()
-        }, data, __DEV);
-    })
-}
-
-function deleteAddedData(parent) {
-    return new Promise((resolve, reject) => {
-        _DBW.getPageDataSnapshot((done2) => {
-            if (done !== 'error') {
-                resolve(true)
-            }
-            else {
-                console.log(err);
-                reject(err)
-            }
-            if (done2.docs.length > 0)
-                done2.forEach(item => {
-                    item.ref.delete()
-                })
-        }, { name: parent, dataType: 'data' }, __DEV)
-    })
-}
-
-function deleteAddedDataĨtem(parent, itemArray) {
-    return new Promise((resolve, reject) => {
-        _DBW.getPageDataSnapshot((done2, err) => {
-            if (done2 !== 'error' && done2.docs.length > 0) {
-                let arr = itemArray.entries()
-                done2.forEach(item => {
-                    if (arr.next().value[1] === item.id) {
-                        item.ref.delete()
-                    }
-                })
-                resolve(true)
-            }
-            else {
-                console.log(err);
-                reject(err)
-            }
-        }, { name: parent, dataType: 'data' }, __DEV)
-    })
-}
 
 /**in use */
 
@@ -775,16 +883,18 @@ function saveChanged(id, inform) {
 
 function saveChangedData(type, id, content) {
     let toPromisse = []
-    for (let par in content) {
-        if (id !== 'undefined')
+    console.log(type, id, content)
+    if (id !== 'undefined') {
+        for (let par in content) {
             toPromisse.push(new Promise((resolve, reject) => {
                 _DBW.changePageData((done, err) => {
                     if (done !== 'error') {
                         resolve(true)
                     }
-                }, { docName: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);
+                }, { name: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);
             }))
-    }/**/
+        }/**/
+    }
     return Promise.race(toPromisse)
 }
 function deletePageData(t) {
@@ -928,5 +1038,111 @@ function getSubcat(parent, id) {
         _DBW.getSubcatsData((done) => {
             resolve(done)
         }, { name: parent, doc: id }, __DEV)
+    })
+}
+
+
+///
+function queryGalleries(data) {
+    return new Promise((resolve, reject) => {
+
+    })
+}
+
+function getImages() {
+    return new Promise((resolve, reject) => {
+        _DBW.getMediaGalleriesData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                console.log(err);
+                reject(err)
+            }
+        }, { gallery: '' }, __DEV)
+    })
+}
+
+
+function removeSubcatInfo(parent, id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setPageData((done, err) => {
+            if (done !== 'error') {
+                resolve(done)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: parent, dataType: 'subCategories', doc: id, data: inform }, __DEV);/* */
+    })
+}
+
+function removeSubcatData(parent, id, content) {
+    let toPromisse = []
+    for (let par in this.content[0]) {
+        toPromisse.push(new Promise((resolve, reject) => {
+            _DBW.setubcatsData((done, err) => {
+                if (done !== 'error') {
+                    resolve(done)
+                }
+                else {
+                    reject(err)
+                }
+            }, { page: parent, name: id, doc: par.toString(), data: content[par] }, __DEV); /* */
+        }))
+    }
+    return Promise.race(toPromisse)
+}
+
+function deleteAdded() {
+    return new Promise((resolve, reject) => {
+        _DBW.deletePage((msg) => {
+            if (done !== 'error') {
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+            this.__reset()
+        }, data, __DEV);
+    })
+}
+
+function deleteAddedData(parent) {
+    return new Promise((resolve, reject) => {
+        _DBW.getPageDataSnapshot((done2) => {
+            if (done !== 'error') {
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+            if (done2.docs.length > 0)
+                done2.forEach(item => {
+                    item.ref.delete()
+                })
+        }, { name: parent, dataType: 'data' }, __DEV)
+    })
+}
+
+function deleteAddedDataĨtem(parent, itemArray) {
+    return new Promise((resolve, reject) => {
+        _DBW.getPageDataSnapshot((done2, err) => {
+            if (done2 !== 'error' && done2.docs.length > 0) {
+                let arr = itemArray.entries()
+                done2.forEach(item => {
+                    if (arr.next().value[1] === item.id) {
+                        item.ref.delete()
+                    }
+                })
+                resolve(true)
+            }
+            else {
+                console.log(err);
+                reject(err)
+            }
+        }, { name: parent, dataType: 'data' }, __DEV)
     })
 }

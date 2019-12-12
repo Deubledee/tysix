@@ -199,6 +199,11 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 type: Array,
                 notify: true
             },
+            ARTICLES: {
+                type: Array,
+                value: [],
+                notify: true
+            },
             closed: {
                 type: Boolean,
                 notify: true,

@@ -96,12 +96,12 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
             }
             if ((!!query.reset) || (query.removed)) {
                 if ((reset === true) || (removed === true)) {
-                    this._contentChanged(query, (reset || removed))
+                    this._contentChanged()
                 }
             }
         }
     }
-    _contentChanged(query, reset) {
+    _contentChanged() {
         this.innerHTML = ''
         setTimeout(() => {
             if (this.spinOut === true) {

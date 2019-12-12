@@ -46,28 +46,15 @@ export class cmsTopPageTemplate extends PolymerElement {
 
   static get viewPages() {
     return html`
-    <cms-page-viewer name="pages" route="[[subroute]]">
-    
-        <cms-page-cats slot="categories"user="[[user]]" route="[[route]]">
-        </cms-page-cats>
+      <cms-page-viewer name="pages" route="[[subroute]]">      
+          <cms-page-cats slot="categories"user="[[user]]" route="[[route]]">
+          </cms-page-cats>
+          <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
+          </cms-page-subcats>
+      </cms-page-viewer>     
 
-        <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
-        </cms-page-subcats>
-
-    </cms-page-viewer>
-
-    <cms-article-viewer name="articles" user="[[user]]" route="[[subroute]]">
-
-        <cms-article-content slot="addart" user="[[user]]" route="[[subroute]]">
-        </cms-article-content>
-
-        <cms-article-list-type slot="categories" user="[[user]]" route="[[subroute]]">
-        </cms-article-list-type>
-
-        <cms-article-view slot="view" user="[[user]]" route="[[subroute]]">
-        </cms-article-view>
-
-    </cms-article-viewer>
+      <cms-article-view  name="articles" user="[[user]]" route="[[route]]">      
+      </cms-article-view>
     `
   }
   static get is() { return 'cms-top-page-template'; }

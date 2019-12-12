@@ -82,8 +82,7 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
             },
             subSubCats: {
                 type: Array,
-                notify: true,
-                value: []
+                notify: true
             },
             translator: {
                 type: Object,

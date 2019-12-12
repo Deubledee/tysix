@@ -450,9 +450,11 @@ $_documentContainer.innerHTML = `
             }
 
             article[centerListItem] paper-button {
+                text-overflow: ellipsis;
+                white-space: pre-line;
+                overflow: hidden;
                 height: auto;
-                max-height: 35px;
-                text-transform: capitalize;
+                max-height: 47px;
             }
 
             article[centerListItem] {

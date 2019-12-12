@@ -127,7 +127,7 @@ export class cmsSubcats extends cmsItemTemplate {
         this.translator.changeLang.call(this)
     }
     _setContent(data) {
-        if (data === 'no content') {
+        if (data === '') {
             this.translator.cloneElement(this, `<h1 slot="nocontent"> no content </h1>`)
             return []
         }
@@ -135,8 +135,11 @@ export class cmsSubcats extends cmsItemTemplate {
         if (!this.content) return data
     }
     _addChild(data) {
+        if (!!this.children[0] && this.children[0].tagName === "H1") {
+            this.removeChild(this.children[0])
+        }
         if (data === true) {
-            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.query.content}&name=${this.childElementCount}&path=${this.query.content}&add=${this.add}&top=true`
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.query.content}&name=${this.children.length}&path=${this.query.content}&add=${this.add}&top=true`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
             this.add = false

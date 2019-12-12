@@ -5,7 +5,6 @@ import { microTask } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { cmsItemTemplate } from '../templates/cms-item-template';
 import { html } from '@polymer/polymer/polymer-element';
-import './cms-gallery-item';
 class cmsGalleryItem extends cmsItemTemplate {
     static get _getElement() {
         return html`
@@ -100,9 +99,6 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     _showImages() {
         this.default()
-        if (this[this.method] !== undefined) {
-            this[this.method]()
-        }
     }
     default() {
         let string = !!location.search ?
@@ -110,15 +106,6 @@ class cmsGalleryItem extends cmsItemTemplate {
             `/media/view-images?gallery=${this.gallery.id}`
         window.history.pushState({}, null, string);
         window.dispatchEvent(new CustomEvent('location-changed'));
-    }
-    editArticles() {
-        this.set('returnPath', 'content/articles/edit-articles')
-    }
-    editPages() {
-        this.set('returnPath', 'content/pages/add-category-pages')
-    }
-    editSubCats() {
-        this.set('returnPath', 'content/pages/add-subcategory-pages')
     }
     deleteGallerie(data) {
         console.log(data)

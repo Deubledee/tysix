@@ -223,13 +223,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 value: true,
                 notify: true
             },
-            time: Number,
-            nova: {
-                type: Boolean,
-                value: false,
-                notify: true,
-                reflectToAttribute: true,
-            },
+            time: Number
         }
     }
     static get observers() {
@@ -275,7 +269,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
     }
     _routePageChanged(routeData, query) {
         if (!!routeData.page) {
-            this.nova = false
             this.add = this.query.adTosub
             let parentName = this.query.content
             let parentIndex = query.parent
@@ -351,12 +344,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             return ''
         };
     }
-    _getPublishedBy(publishedBy) {
-        if (publishedBy !== undefined && publishedBy.length > 0) {
-            let pubuser = publishedBy[0].name;
-            return pubuser;
-        }
-    }
     onSave() {
         if (!!this.newlangstate) {
             this.add = true
@@ -391,6 +378,8 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                     return undefined
                 }
                 this.content[0][this.content[0].lang.lang] = this.content[0].lang
+                let lang = [this.content[0].lang.lang]
+                lang = lang.pop()
                 delete this.content[0].lang
                 inform.ref = btoa(this.query.content) + '-' + btoa(Math.ceil(Math.random(Math.ceil(Math.random() * 20)) * 10000) +
                     Math.ceil(Math.random(Math.ceil(Math.random() * 30)) * 10000))
@@ -404,7 +393,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 inform.parent = this.query.content
                 inform.id = this.query.name
                 inform.removed = false
-                inform.path = this.query.path
+                inform.path = [this.query.path, this.content[0][lang].categoryName]
                 inform.toArticle = 'B'
                 inform.top = top
                 inform.dateCreated = data.toLocaleString().replace(',', '')

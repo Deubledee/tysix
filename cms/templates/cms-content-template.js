@@ -526,12 +526,13 @@ export class cmsContentTemplate extends PolymerElement {
         this.set('contetnLang', lang)
         this._setContent(lang, cont)
     }
-    _getObjArr(content, item) {
+    _getObjArr(content, withDescription) {
         let obj,
             arr = []
+        if (typeof withDescription !== 'boolean') return 'second argument expected to be a boolean'
         for (let par in content) {
             if (par !== 'image') {
-                if (!!item) {
+                if (!!withDescription) {
                     if (par !== 'description') {
                         obj = Object()
                         obj[par] = content[par]
@@ -549,28 +550,13 @@ export class cmsContentTemplate extends PolymerElement {
         return arr || []
     }
     _getPageInfo(str) {
-        let time
         this.infoState = 'getting info data..'
         if (!!localStorage[`${str}info`]) {
-            time = setTimeout(() => {
-                this.infoState = 'setting info data..'
-                clearTimeout(time)
-                time = setTimeout(() => {
-                    this.set('inform', JSON.parse(localStorage[`${str}info`]))
-                    this.infoState = ''
-                    clearTimeout(time)
-                }, 250);
-            }, 500);
+            this.set('inform', JSON.parse(localStorage[`${str}info`]))
+            this.infoState = ''
         } else {
-            time = setTimeout(() => {
-                this.infoState = 'no info data found..!!'
-                clearTimeout(time)
-                time = setTimeout(() => {
-                    this.infoState = '!!info not available..!!'
-                    this.set('inform', JSON.parse(localStorage[`${str}info`]))
-                    clearTimeout(time)
-                }, 250);
-            }, 500);
+            this.infoState = '!!info not available..!!'
+            this.set('inform', [])
         }
     }
     _setItemsValue(data) {

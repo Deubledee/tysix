@@ -27,7 +27,7 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
             <article centerListItem slot="table">
                 <div>   
                     <span> 
-                        <paper-button> ${this.objInfo[0].id}</paper-button>                        
+                        <paper-button class="button-normal"> ${this.objInfo[0].id}</paper-button>                        
                     </span>
                     <span> 
                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
@@ -44,12 +44,12 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
                     </span>
                 </div> 
                 <div>
-                    <paper-button>
+                    <paper-button class="button-normal">
                         <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
                     </paper-button> 
                 </div>
                 <div>
-                    <paper-button>
+                    <paper-button class="button-del">
                         <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
                     </paper-button> 
                 </div>

@@ -184,6 +184,9 @@ class cmsControler extends PolymerElement {
           <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
           </cms-subcats-content>
 
+          <cms-article-content name="add-articles" user="[[user]]" route="[[popOutRoute]]">
+          </cms-article-content>
+
           <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
           </cms-images-content>
 
@@ -362,41 +365,6 @@ class cmsControler extends PolymerElement {
     }
   }
 
-  /*_open(evt) {
-    let name = evt.srcElement.getAttribute('name')
-    let open
-    if (!!this.$[name]) {
-
-      open = this.$[name].classList.contains('open')
-      console.log(open, 'block')
-      if (!open) {
-        this.$[name].classList.add('open')
-        if (!!this.$[name + 'block'])
-          this.$[name + 'block'].classList.add('show')
-      }
-      else {
-        this.$[name].classList.remove('open')
-        console.log('block')
-        if (!!this.$[name + 'block'])
-          this.$[name + 'block'].classList.remove('show')
-      }
-    }
-  }
-
-  _overme(evt) {
-    let name = evt.srcElement.getAttribute('name')
-    if (!!this.$[name + 'hover']) {
-      this.$[name].classList.add('hovered')
-    }
-  }
-
-  _notoverme(evt) {
-    let name = evt.srcElement.getAttribute('name')
-    if (!!this.$[name]) {
-      this.$[name].classList.remove('hovered')
-    }
-  }*/
-
   openConfirm(event) {
     this.confirm = 'confirm';
     if (!this.$.confirm.openConfirm) {
@@ -410,6 +378,7 @@ class cmsControler extends PolymerElement {
   _closeConfirm() {
     this.confirm = '';
   }
+
   _routePopoutChanged(popOutRoute) {
     if (['/add-category-pages', '/edit-category-pages'].indexOf(popOutRoute.path) !== -1) {
       this.popout = 'add-category-pages';
@@ -422,9 +391,12 @@ class cmsControler extends PolymerElement {
         } else
           if (['/add-images', '/edit-images'].indexOf(popOutRoute.path) !== -1) {
             this.popout = 'add-images'
-          } else {
-            this.popout = ''
-          }
+          } else
+            if (['/add-articles', '/edit-articles'].indexOf(popOutRoute.path) !== -1) {
+              this.popout = 'add-articles'
+            } else {
+              this.popout = ''
+            }
   }
   _routePageChanged(page) {
     if (this.page !== page.page && page.page == page.page) {
@@ -477,11 +449,11 @@ class cmsControler extends PolymerElement {
       });
       return;
     }
-    /*  if (page === 'add-gallery') {
-        import('./media/cms-gallery-content').then(item => {
-        });
-        return;
-      }*/
+    if (page === 'add-articles') {
+      import('./articles/cms-article-content').then(item => {
+      });
+      return;
+    }
     if (page === 'add-images') {
       import('./media/cms-images-content').then(item => {
       });

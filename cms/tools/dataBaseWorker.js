@@ -1,10 +1,33 @@
 import { worker } from './firebaseWorker';
 const Worker = new worker();
-//Class
+
+export class CategoriesDB {
+    //Categories
+    getCategoriesEqualTo(done, query, value, dev) {
+        let obj = { name: 'categories', query: query, value: value, condition: '==' };
+        queryDocList.call(this, obj, done, dev)
+    }
+
+    getCategories(done, dev) {
+        let obj = { name: 'categories' };
+        getDocList.call(this, obj, done, dev)
+    }
+
+    setCategories(done, table, dev) {
+        let obj = { name: 'categories', docName: table.name, doc: table.create }
+        createDoc.call(this, obj, done, dev)
+    }
+
+    deleteCategory(done, gallery, dev) {
+        let obj = { name: 'categories', docName: gallery }
+        deleteDoc.call(this, obj, done, dev)
+    }
+}
+
 export class MediaDB {
     //media
     writeGalleryContent(done, table, dev) {
-        let teble = { name: "galleries", doc: table.gallerie, data: { content: table.content } };
+        let obj = { name: "galleries", doc: table.gallerie, data: { content: table.content } };
         updateContent.call(obj, done, dev)
     }
 
@@ -29,7 +52,7 @@ export class MediaDB {
         createDoc.call(this, obj, done, dev)
     }
     deleteGallery(done, gallery, dev) {
-        let obj = { name: 'media', docName: gallery }
+        let obj = { name: 'galleries', docName: gallery }
         deleteDoc.call(this, obj, done, dev)
     }
     getGalleryData(done, table, dev) {
@@ -92,35 +115,20 @@ export class dataBaseworker {
         let obj = { name: 'langs' };
         getDocList.call(this, obj, done, dev)
     }
-    //aticles
-    updateArticles(done, table, dev) {
-        let obj = { name: "articles", doc: table.name, data: { content: table.content } };
-        updateContent.call(this, obj, done, dev)
-    }
-    setArticles(done, table, dev) {
-        let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
-        createDoc.call(this, obj, done, dev)
-    }
-    deleteArticles(done, page, dev) {
-        let obj = { name: 'articles', docName: page }
-        deleteDoc.call(this, obj, done, dev)
-    }
-    getArticle(done, categoryObj, dev) {
-        let obj = { name: 'articles', doc: categoryObj.name };
-        getDoc.call(this, obj, done, dev)
-    }
-    getAllArticles(done, dev) {
-        let obj = { name: 'articles' };
-        getDocList.call(this, obj, done, dev)
-    }
+
 
 
     /****************************************************************************************************************************/
-    /************************************************queries**********************************************************************/
+    /***************************************************queries******************************************************************/
     /****************************************************************************************************************************/
 
     getPagesEqualTo(done, query, value, dev) {
         let obj = { name: 'pages', query: query, value: value, condition: '==' };
+        queryDocList.call(this, obj, done, dev)
+    }
+
+    getArticlesEqualTo(done, query, value, dev) {
+        let obj = { name: 'articles', query: query, value: value, condition: '==' };
         queryDocList.call(this, obj, done, dev)
     }
 
@@ -163,6 +171,39 @@ export class dataBaseworker {
         queryCollDoCollItem.call(this, obj, done, dev)
     }
 
+
+    //aticles
+    getAllArticles(done, dev) {
+        let obj = { name: 'articles' };
+        getDocList.call(this, obj, done, dev)
+    }
+    getArticle(done, table, dev) {
+        let obj = { name: 'articles', doc: table.name };
+        getDoc.call(this, obj, done, dev)
+    }
+
+    getArticleData(done, table, dev) {
+        let obj = { name: 'articles', docName: table.name, coll: table.dataType }
+        getItemCollectionDoc.call(this, obj, done, dev)
+    }
+
+    setArticles(done, table, dev) {
+        let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
+        cr
+        eateDoc.call(this, obj, done, dev)
+    }
+    setArticleData(done, table, dev) {
+        let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
+        createItemCollectionDoc.call(this, obj, done, dev)
+    }
+    updateArticles(done, table, dev) {
+        let obj = { name: "articles", doc: table.name, data: { content: table.content } };
+        updateContent.call(this, obj, done, dev)
+    }
+    deleteArticles(done, page, dev) {
+        let obj = { name: 'articles', docName: page }
+        deleteDoc.call(this, obj, done, dev)
+    }
     /****************************************************************************************************************************/
     /*********************************************************pages**************************************************************/
     /****************************************************************************************************************************/
@@ -229,8 +270,6 @@ export class dataBaseworker {
         let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.doc }
         deleteCollectionDoc.call(this, obj, done, dev)
     }
-
-
     //other
     loginFire(user) {
         Worker.login(user);
@@ -258,6 +297,7 @@ export class dataBaseworker {
         createDoc.call(obj, done, dev)
     }
 }
+
 //private methods
 function getDocList(obj, done, dev) {
     if (dev === false) {

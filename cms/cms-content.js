@@ -82,7 +82,7 @@ class cmsContent extends cmsTopPageTemplate {
           this.setBreadcrumbs(this.route, this.routeData)
         }
         if (page !== undefined && "page" in page) {
-          if (["articles", "pages", "search"].indexOf(page.page) !== -1) {
+          if (["articles", "pages"].indexOf(page.page) !== -1) {
             this.page = page.page;
             /* */
           }
@@ -172,7 +172,7 @@ class cmsContent extends cmsTopPageTemplate {
         return;
       }
       if (page === "articles") {
-        import("./articles/cms-article-viewer");
+        import("./articles/cms-article-view");
         return;
       }
       if (page === "view404") {

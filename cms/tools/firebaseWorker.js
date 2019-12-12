@@ -4,7 +4,6 @@ export class worker {
         this.auth = firebase.auth;
     }
     /**queries */
-
     queryDocList(table) {
         var pagesRef = this.db.collection(table.name).where(table.query, table.condition, table.value);
         return pagesRef.get();
@@ -19,6 +18,7 @@ export class worker {
         var pagesRef = this.db.collection(table.name).where(table.query[0], table.query[1], table.query[2]).where(table.query2[0], table.query2[1], table.query2[2]);
         return pagesRef.get();
     }
+
     mixQueryDocListDev(table) {
         var pagesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}`).where(table.query[0], table.query[1], table.query[2]).where(table.query2[0], table.query2[1], table.query2[2]);
         return pagesRef.get();

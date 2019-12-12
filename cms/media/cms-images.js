@@ -204,7 +204,6 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             }
         }
     }
-
     _selectAll() {
         if (this.checked === false) {
             this.checked = true
@@ -228,6 +227,12 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
             let string, storage
             [string, storage] = generateCatsdata.call(this, this.query.name)
             localStorage[`${this.query.type}-${this.query.content}-${this.query.name}`] = storage
+            window.history.pushState({}, null, string);
+        }
+        if (this.query.type === 'article') {
+            let string, storage
+            [string, storage] = generateArticleData.call(this)
+            localStorage[`${this.query.type}-${this.query.content}-media`] = storage
             window.history.pushState({}, null, string);
         }
         this.set('toAdd', undefined)
@@ -256,7 +261,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     _computeUrl(IMAGES) {
         return `${location.search.toString()}&count=${IMAGES.length}`
     }
-    reset() {
+    reset() { 
         this.routeData.page = ''
         this.slashed = true;
         this.imageData = []
@@ -277,5 +282,12 @@ function* generatePageData() {
     let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}`])
     let topush = sendBackArray[0].images.content
     sendBackArray[0].images.content = topush.concat(this.toAdd)
+    yield JSON.stringify(sendBackArray)
+}
+function* generateArticleData() {
+    yield `/content/articles/edit-articles?content=${this.query.content}&lang=${this.query.lang}&added=true&add=${this.query.add}`
+    let sendBackArray = JSON.parse(localStorage[`${this.query.type}-${this.query.content}-media`])
+    let topush = sendBackArray.images.content
+    sendBackArray.images.content = topush.concat(this.toAdd)
     yield JSON.stringify(sendBackArray)
 }

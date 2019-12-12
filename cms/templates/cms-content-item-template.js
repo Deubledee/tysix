@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/iron-input/iron-input';
-import '../media/cms-image';
 import '../elements/cms-input';
 export class cmsContentItemTemplate extends PolymerElement {
     static get template() {

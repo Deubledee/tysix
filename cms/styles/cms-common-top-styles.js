@@ -102,20 +102,24 @@ $_documentContainer.innerHTML = `
     shop-image {
         height: var(--app-content-nav-padding-left);
     }
-
-    .NP, .B {
+  
+    .button-normal {
+        color: var(--app-content-section-span-color);
+    }
+    .button-del {
         color: var(--app-not-published-color);
-
+    }
+    .NP, .B {
+        color: var(--app-not-published-color)!important;
     }
 
     .P, .A{
-        color: var(--app-published-color)
+        color: var(--app-published-color)!important
     }
 
     paper-button,
     section a {
         text-decoration: var(--app-none);
-        color: inherit
     }
     .navtop {
         display: flex;
@@ -193,8 +197,7 @@ $_documentContainer.innerHTML = `
         height: 137px;
         border: 1px solid var(--dark-theme-secondary-color);
         border-radius: 15px;
-    }
-
+    }  
     paper-tabs {
         font-size: var(--app-content-paper-tabs-font-size);
       /*  padding-top: var(--app-content-paper-tabs-padding-top)*/
