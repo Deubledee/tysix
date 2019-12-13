@@ -7,11 +7,10 @@ import {
 import '@polymer/iron-autogrow-textarea';
 export class cmsContentText extends cmsContentItemTemplate {
     static get _getStyles() {
-        return html `        
+        return html`        
         div[inputs] {
             /*background-color: #dadfe2;*/
             height: 0px;
-            width: 0px;
         }
         iron-autogrow-textarea.classy{
                 outline-style: none;
@@ -33,6 +32,17 @@ export class cmsContentText extends cmsContentItemTemplate {
                     height: 117px;
                 }               
         }
+        .flexleft, .flexright {
+            max-height: unset;
+        }
+        .flexright {
+            min-height: 134px;
+            max-width: unset;
+        }
+        span{
+            color: var(--paper-red-600);
+            font-weight: 400;
+        }
         cms-input.larger{
             --cms-input:{
                 width: 314px;
@@ -41,14 +51,15 @@ export class cmsContentText extends cmsContentItemTemplate {
         }`
     }
     static get _getElement() {
-        return html `        
+        return html`        
             <div class="flexright">
                 <div inputs name="[[itemLabel]]"> 
                     <cms-input settextarea="true" class="larger keyboard-focus" id="inpt1" on-click="edit" name="[[itemLabel]]" raised="[[raised]]"> 
                             [[itemText]]  
                             <iron-autogrow-textarea class="classy" id="input" autofocus="true" slot="input" value="{{itemText}}" id="a1"></iron-autogrow-textarea>
-                        </iron-input>    
+                        </iron-input>                            
                     </cms-input>  
+                    <span>* [[info]] </span>
                 </div>
             </div>`
     }
@@ -70,10 +81,14 @@ export class cmsContentText extends cmsContentItemTemplate {
                 type: Boolean,
                 value: true,
             },
+            info: {
+                type: String,
+                notify: true,
+            },
             translator: {
                 type: Object,
                 notify: true,
-                value: function() {
+                value: function () {
                     return MyAppGlobals[window.cms] //MyAppGlobals.translator
                 }
             }

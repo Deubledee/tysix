@@ -615,7 +615,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     ready() {
@@ -639,14 +639,14 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(routeData, query) {
-        if (!!routeData.page) {
+    _routePageChanged(page, query) {
+        if (!!page) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
             }
             this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
-            if (routeData.page === 'add-images') {
+            if (page === 'add-images') {
                 if (this.add === true) {
                     localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
                     this._getPageInfo(`images-${this.query.gallery}-new-content-`)
@@ -654,7 +654,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 }
 
             }
-            if (routeData.page === 'edit-images') {
+            if (page === 'edit-images') {
                 if (!!this.added) {
                     this.inform = []
                     this._getPageInfo(`images-new-content-`)

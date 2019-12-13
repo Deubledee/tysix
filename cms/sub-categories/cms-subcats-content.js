@@ -228,7 +228,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query, active)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     ready() {
@@ -267,8 +267,8 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             return STR.join(' - ')
         }
     }
-    _routePageChanged(routeData, query) {
-        if (!!routeData.page) {
+    _routePageChanged(page, query) {
+        if (!!page) {
             this.add = this.query.adTosub
             let parentName = this.query.content
             let parentIndex = query.parent
@@ -285,7 +285,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 this.parent = parseInt(this.query.parent)
             }
             this.closestr = this.query.content === 'new-content' ? `content/pages/subcategory-pages?content=${this.query.content}` : `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=false`
-            if (routeData.page === 'add-subcategory-pages') {
+            if (page === 'add-subcategory-pages') {
                 if (this.add === true) {
                     if (typeof this.time === 'number')
                         clearTimeout(this.time)
@@ -302,7 +302,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                     this._getPageInfo(`cats-${query.content}-${parent}-`)
                 }
             }
-            if (routeData.page === 'edit-subcategory-pages') {
+            if (page === 'edit-subcategory-pages') {
                 if (!!query.name) {
                     if (this.add === false || this.added === true) {
                         let cont = JSON.parse(localStorage[`cats-${query.content}-${query.name}`])

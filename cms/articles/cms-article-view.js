@@ -119,7 +119,7 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(route, routeData, query)'
+            '_routePageChanged(routeData.page)'
         ];
     }
     ready() {
@@ -144,9 +144,9 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(route, routeData, query) {
+    _routePageChanged(page) {
         if (typeof this.time === 'number') clearInterval(this.time)
-        if (!!routeData.page && routeData.page === "articles") {
+        if (!!page && page === "articles") {
             this.time = setTimeout(() => {
                 if (this.contents.length === 0) {
                     afterNextRender(this, () => {
@@ -155,12 +155,6 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
                 }
             }, 120);
         }
-        /*   if ((!!query.reset) || (query.removed)) {
-               if ((reset === true) || (removed === true)) {
-                   this._contentChanged()
-               }
-           }*/
-
     }
     _setContent(data, art) {
         let temp = this.contents, arr = []

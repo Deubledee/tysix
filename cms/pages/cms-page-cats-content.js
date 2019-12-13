@@ -194,7 +194,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query, active)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     ready() {
@@ -228,8 +228,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
         }
     }
-    _routePageChanged(routeData, query, active) {
-        if (!!routeData.page) {
+    _routePageChanged(page, query, active) {
+        if (!!page) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
@@ -239,7 +239,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             }
             if (!!this.langs[this.lang]) this._checkLabel()
             this.closestr = 'content/pages'
-            if (routeData.page === 'add-category-pages') {
+            if (page === 'add-category-pages') {
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
                     localStorage[`page-new-content-info`] = atob(ModeloInfo)
@@ -253,7 +253,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     return
                 }
             }
-            if (active === true && routeData.page === 'edit-category-pages') {
+            if (active === true && page === 'edit-category-pages') {
                 this.set('content', []);
                 if (!!query.content) {
                     if (!!localStorage[`page-${query.content}`]) {

@@ -39,12 +39,12 @@ class cmsGalleryViewer extends cmsViewerTemplate {
 
     static get observers() {
         return [
-            '_routePageChanged(route, routeData, query)'
+            '_routePageChanged(routeData.page)'
         ];
     }
-    _routePageChanged(route, routeData, query) {
-        if (['galleries', 'view-images'].indexOf(routeData.page) !== -1) {
-            this.page = routeData.page;
+    _routePageChanged(page) {
+        if (['galleries', 'view-images'].indexOf(page) !== -1) {
+            this.page = page;
         }
     }
 

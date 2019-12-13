@@ -121,7 +121,7 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     _log(data) {
@@ -148,8 +148,8 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(routeData, query) {
-        if (routeData.page === "subcategory-pages" && (!!query.content || !!query.reset)) {
+    _routePageChanged(page, query) {
+        if (page === "subcategory-pages" && (!!query.content || !!query.reset)) {
             let parent = query.content
             if (this.lastpagesubs === parent && !query.reset) {
                 this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))

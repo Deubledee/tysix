@@ -1,8 +1,8 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsArticlesLib } from '../tools/cms-save-lib.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import '../elements/cms-content-text'
+import '../elements/cms-dropdown-menu';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
 const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yeSI6IiIsImRpbWVudGlvbnMiOiIiLCJrZXl3b3JkcyI6W10sImxhc3RNb2RpZmVpZCI6W10sInByaWNlIjo4MDAsInByb21vdGlvbkNvZGUiOiIiLCJyZW1vdmVkIjpmYWxzZSwicmV0YWlsZXIiOiJzb2xpZG8iLCJzaGlwcGluZyI6IiIsInNoaXBwaW5nVGF4IjoiIiwic3RvY2siOjAsInN0b3JlV2FycmFudHkiOiIiLCJ0YXgiOiIiLCJ3ZWlnaHQiOiIifQ=="
 class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
@@ -14,7 +14,12 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
         .row-layout{
             flex-direction: row!important;
             flex-flow: wrap;
-            lex-basis: 99%!important;
+            flex-basis: 99%!important;
+        }
+        .flexchild-article {
+            flex-basis: 24%;
+            margin-block-end: 40px;
+            margin-inline-end: 120px;
         }
         `
     }
@@ -35,7 +40,7 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                 <dom-repeat repeat items="[[inputVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFull">
-                            <cms-content-item editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
+                            <cms-content-item editing="[[editing]]" item="[[item]]"
                                 res="{{inputResponse}}">
                             </cms-content-item>
                         </section>
@@ -46,7 +51,7 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                 <dom-repeat repeat items="[[textareaVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFullExtra">
-                            <cms-content-text editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
+                            <cms-content-text editing="[[editing]]" item="[[item]]"
                                 res="{{textAreaResponse}}">
                             </cms-content-text>
                         </section>
@@ -54,20 +59,88 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                 </dom-repeat>
             </article>
         </div>
+
+        <div bottom on-click="_seeFlat">
+            <article class="row-layout" on-click="_seeFlat">
+                <dom-repeat repeat items="[[dtDetails]]" as="item">
+                    <template>
+                        <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
+                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                                res="{{ifResponse}}">
+                            </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+        </div>
+        
         <div bottom imageplacer>
             <section class="flexchildbotom">
                 <cms-content-image id="image" editing="[[editing]]" item-label="[[imageLabel]]" images="[[imageArr]]" _deleteImg="[[deleteImg]]">
                 </cms-content-image>
             </section>
         </div>
+
+        <div bottom>
+     
+                    <cms-dropdown-menu items="[[category]]">
+                    
+                    </cms-dropdown-menu>
+                  
+       
+        </div>
+
+
         <div bottom on-click="_seeFlat">
-            <article class="row-layout">
+            <article class="row-layout" on-click="_seeFlat">
+                <dom-repeat repeat items="[[phDetails]]" as="item">
+                    <template>
+                        <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
+                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                                res="{{ifResponse}}">
+                            </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+        </div>
+
+        <div bottom on-click="_seeFlat">
+            <article class="row-layout" on-click="_seeFlat">
                 <dom-repeat repeat items="[[infoVals]]" as="item">
                     <template>
-                        <section class="flexchildbotomFull">
-                            <cms-content-item editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
-                                res="{{inputResponse}}">
+                        <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
+                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                                res="{{ifResponse}}">
                             </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+        </div>
+
+        <div bottom on-click="_seeFlat">
+            <article class="row-layout" on-click="_seeFlat">
+                <dom-repeat repeat items="[[shDetails]]" as="item">
+                    <template>
+                        <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
+                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                                res="{{ifResponse}}">
+                            </cms-content-item>
+                        </section>
+                    </template>
+                </dom-repeat>
+            </article>
+        </div>
+
+        <div bottom on-click="_seeFlat">
+            <article on-click="_seeFlat">
+                <dom-repeat repeat items="[[keywords]]" as="item">
+                    <template>
+                        <section on-click="_seeFlat" class="flexchildbotomFull">
+                            <cms-content-text info="separete with commas" editing="[[editing]]" item="[[item]]"
+                                res="{{kwResponse}}">
+                            </cms-content-text>
                         </section>
                     </template>
                 </dom-repeat>
@@ -85,13 +158,41 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                 notify: true,
                 value: []
             },
-            textarea: {
-                type: Boolean,
-                value: true,
-                notify: true
-            },
             textareaVal: {
-                type: String,
+                type: Array,
+                notify: true,
+                value: ''
+            },
+            infoVals
+                : {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            dtDetails
+                : {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            phDetails: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            shDetails: {
+                type: Array,
+                notify: true,
+                value: ''
+            },
+            keywords
+                : {
+                type: Array,
+                notify: true,
+                value: []
+            },
+            category: {
+                type: Array,
                 notify: true,
                 value: ''
             },
@@ -140,6 +241,24 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                 value: {},
                 observer: '_setContentTextValue'
             },
+            ifResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setInfomr'
+            },
+            catResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setInfomr'
+            },
+            kwResponse: {
+                type: Object,
+                notify: true,
+                value: {},
+                observer: '_setInfomrKw'
+            },
             content: {
                 type: Object,
                 notify: true,
@@ -151,7 +270,7 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query, active)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     ready() {
@@ -182,8 +301,8 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
             this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
         }
     }
-    _routePageChanged(routeData, query) {
-        if (!!routeData.page) {
+    _routePageChanged(page, query) {
+        if (!!page) {
             this._reset()
             let arr = []
             if (!!query.add) {
@@ -194,7 +313,7 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
             }
             if (!!this.langs[this.lang]) this._checkLabel()
             this.closestr = 'content/articles'
-            if (routeData.page === 'add-articles') {
+            if (page === 'add-articles') {
                 if (this.add === true) {
                     let cont = JSON.parse(atob(Modelo))
                     localStorage[`article-new-content-info`] = atob(ModeloInfo)
@@ -208,16 +327,13 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
                     return 0
                 }
             }
-            if (routeData.page === 'edit-articles') {
+            if (page === 'edit-articles') {
                 if (!!query.content) {
-                    let infoVals, cont, media, images, urlstring
-                    [cont, media, infoVals, images, urlstring] = generateData.call(this, query)
+                    let infoVals, cont, media, images, urlstring, phDetails, shDetails, dtDetails, keywords, category
+                    [cont, media, infoVals, images, urlstring,
+                        phDetails, shDetails, dtDetails, keywords, category] = generateData.call(this, query)
                     if (this.add === false || this.added === true) {
-                        this.set('str', `content/articles/edit-articles${urlstring}lang=`)
-                        this.set('media', media)
-                        this.set('imageArr', this.media.images.content)
-                        this.set('infoVals', this._getObjArr(infoVals, true))
-                        this.imageLabel = images
+                        this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
                         if (!!query.lang) {
                             if (query.lang !== 'lang') {
                                 arr = this._setLangArr(cont)
@@ -231,17 +347,18 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
             }
         }
     }
-
-    _getInforVals(inform) {
-        let infoVals = {}
-        for (let par in inform) {
-            if (par !== 'addedDate' && par !== 'addedBy' && par !== 'lastModified' && par !== 'Published', 'keywords') {
-                infoVals[par] = inform[par]
-            }
-        }
-        return infoVals
+    _setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images) {
+        this.set('str', `content/articles/edit-articles${urlstring}lang=`)
+        this.set('media', media)
+        this.set('imageArr', this.media.images.content)
+        this.set('infoVals', this._getObjArr(infoVals, true))
+        this.set('phDetails', this._getObjArr(phDetails, true))
+        this.set('shDetails', this._getObjArr(shDetails, true))
+        this.set('dtDetails', this._getObjArr(dtDetails, true))
+        this.set('category', this._getObjArr(category, true))
+        this.set('keywords', [{ keywords: keywords.keywords.join(', ') }])
+        this.imageLabel = images
     }
-
     addImage() {
         if (this.add === false) {
             localStorage[`article-${this.query.content}-media`] = JSON.stringify(this.media)
@@ -314,7 +431,7 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
         this.set('inputVal', '')
         this.set('infoVals', [])
         this.set('media', [])
-        this.set('textareaVal', '')
+        this.set('textareaVal', [])
         this.set('inform', [])
     }
 }
@@ -324,9 +441,82 @@ function* generateData(query) {
     yield JSON.parse(localStorage[`article-${query.content}-data`])
     yield JSON.parse(localStorage[`article-${query.content}-media`])
     this._getPageInfo(`article-${query.content}-`)
-    yield this._getInforVals(this.inform)
+    yield _getInforDetails(this.inform)
     yield 'images'
     let strg = location.search
     strg = strg.split('lang=')[0]
     yield strg
+    yield _getPhysicalDetails(this.inform)
+    yield _getShippingDEtails(this.inform)
+    yield _getDetails(this.inform)
+    yield _getKeywords(this.inform)
+    yield _getCatDetails(this.inform)
+}
+
+function _getInforDetails(details) {
+    let infoVals = {}
+    for (let par in details) {
+        if (
+            par !== 'REF' &&
+            par !== 'addedBy' &&
+            par !== 'lastModifeid' &&
+            par !== 'Published' &&
+            par !== 'shipping' &&
+            par !== 'shippingTax' &&
+            par !== 'price' &&
+            par !== 'category' &&
+            par !== 'removed' &&
+            par !== 'dimentions' &&
+            par !== 'stock' &&
+            par !== 'weight' &&
+            par !== 'keywords') {
+            infoVals[par] = details[par]
+        }
+    }
+    return infoVals
+}
+function _getPhysicalDetails(details) {
+    let phDetails = {}
+    for (let par in details) {
+        if (par === 'dimentions' || par === 'weight') {
+            phDetails[par] = details[par]
+        }
+    }
+    return phDetails
+}
+function _getShippingDEtails(details) {
+    let shDEtails = {}
+    for (let par in details) {
+        if (par === 'shipping' || par === 'shippingTax') {
+            shDEtails[par] = details[par]
+        }
+    }
+    return shDEtails
+}
+function _getDetails(details) {
+    let dtDetails = {}
+    for (let par in details) {
+        if (par === 'price' || par === 'stock') {
+            dtDetails[par] = details[par]
+        }
+    }
+    return dtDetails
+}
+function _getCatDetails(details) {
+    let catDetails = {}
+    for (let par in details) {
+        if (par === 'category') {
+            catDetails[par] = details[par]
+        }
+    }
+    return catDetails
+}
+function _getKeywords(details) {
+    let keywords = {}
+    for (let par in details) {
+        if (par === 'keywords') {
+            keywords[par] = details[par]
+        }
+    }
+    return keywords
 }

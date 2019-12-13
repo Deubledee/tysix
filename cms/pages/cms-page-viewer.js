@@ -3,7 +3,7 @@ class cmsPageViewer extends cmsViewerTemplate {
     static get is() { return 'cms-page-viewer'; }
     static get observers() {
         return [
-            '_routePageChanged(route, routeData, query)'
+            '_routePageChanged(route, routeData.page)'
         ];
     }
     ready() {
@@ -14,36 +14,17 @@ class cmsPageViewer extends cmsViewerTemplate {
     _pageholderScroller(event) {
         this.$.pageholder.scrollTo(event.detail, 0)
     }
-    _routePageChanged(route, page, query) {
+    _routePageChanged(route, page) {
         if (route.prefix === '/content/pages') {
-            if (page !== undefined && 'page' in page) {
-                if (route.path === '') {
-                    this.routeData.page = ''
-                    page.page = ''
-                }
-                if (!page.page) {
-                    this.page = 'home';
-                    // this.subcats = '';
-                }
-                else if (['subcategory-pages'].indexOf(page.page) !== -1) {
-                    //  this.subcats = ;
-                    this.page = 'subcategory-pages' //'home'
-                }
-                else if (['add-category-pages', 'edit-category-pages'].indexOf(page.page) !== -1) {
-                    // this.page = 'add-category-pages';
-                    // this.subcats = '';
-                }
-                else if (['edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page.page) !== -1) {
-                    // this.subcats = 'add-subcategory-pages';
-                    // this.page = 'home'
-                }
-                else {
-                    this.page = 'view404';
-                    this.subcats = 'view404';
-                }
-            }
-            else if (page instanceof Object === true) {
+            if (route.path === '/' || route.path === '') {
                 this.page = 'home';
+            }
+            else if (['subcategory-pages'].indexOf(page) !== -1) {
+                this.page = 'subcategory-pages' //'home'
+            }
+            else {
+                this.page = 'view404';
+                this.subcats = 'view404';
             }
         }
     }

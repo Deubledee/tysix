@@ -569,6 +569,24 @@ export class cmsContentTemplate extends PolymerElement {
             }
         }
     }
+    _setInfomr(data) {
+        if (!!this.content[0]) {
+            for (let par in data) {
+                if (par.toString() !== 'undefined') {
+                    this.inform[par] = data[par]
+                }
+            }
+        }
+    }
+    _setInfomrKw(data) {
+        if (!!this.content[0]) {
+            for (let par in data) {
+                if (par.toString() !== 'undefined') {
+                    this.inform[par] = data[par].split(' ').join('').split(',')
+                }
+            }
+        }
+    }
     _setContentTextValue(data) {
         if (!!this.content[0]) {
             for (let par in data) {

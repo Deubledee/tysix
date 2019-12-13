@@ -162,7 +162,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData, query)'
+            '_routePageChanged(routeData.page, query)'
         ];
     }
     ready() {
@@ -189,12 +189,12 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(routeData, query) {
+    _routePageChanged(page, query) {
         this.IMAGES = []
         this.addTo = false
         this.checked = false
         this.addStr = `?gallery=${this.query.gallery}&add=trueI&count=${this.IMAGES.length}`
-        if (!!routeData.page && routeData.page === "view-images") {
+        if (!!page && page === "view-images") {
             if (!!query.type) {
                 this.addTo = true
             }
@@ -261,7 +261,7 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     _computeUrl(IMAGES) {
         return `${location.search.toString()}&count=${IMAGES.length}`
     }
-    reset() { 
+    reset() {
         this.routeData.page = ''
         this.slashed = true;
         this.imageData = []
