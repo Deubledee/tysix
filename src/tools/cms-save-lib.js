@@ -27,6 +27,7 @@ const cmsPagesLib = function (superClass) {
                 this.type = 'categories'
                 categories.push({ data: data, hasArticle: hasArticle })
                 this.CATS = categories
+                // console.log(this.CATS)
             })
         }
         parseCats(obj) {

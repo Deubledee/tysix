@@ -402,7 +402,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
 
   _setAll(data) {
     data.forEach(item => {
-      this.numItems++
+      //this.numItems++
       this.getPageData(item)
     })
   }
@@ -411,7 +411,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     if (typeof this.time === 'number') clearTimeout(this.time)
     if (routeData.page === '' || routeData.page === undefined) {
       this.page = 'home';
-      this._setCategoriesIfNeeded(true, 120)
+      this._setCategoriesIfNeeded(true, 120, undefined)
       this._resetCategoriesIfNeeded()
     }
     if (routeData.page === 'list') {
@@ -419,11 +419,14 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     }
     if (routeData.page === 'categories') {
       this.page = 'home';
-      this._setSubCategories(subroute)
+      this._setCategoriesIfNeeded(true, 120, (this._setSubCategories).bind(this))
+    }
+    if (routeData.page === 'cart') {
+      this.page = routeData.page;
+
     }
     this.BINDER.bindData('route', subroute)
     this._listScrollTop = window.pageYOffset;
-    //  // Close the drawer - in case the *route* change came from a link in the drawer.
     this.drawerOpened = false; /**/
   }
 
@@ -445,6 +448,29 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     }
   }
 
+  _setCategoriesIfNeeded(bind, time, call) {
+    if (typeof this.time === 'numbeer') clearTimeout(this.time)
+    this.time = setTimeout(() => {
+      afterNextRender(this, () => {
+        if (this.categories.length === 0) {
+          this.bind = bind
+          this._askPages({ q: 'removed', v: false });
+          setTimeout(() => {
+            if (call !== undefined) {
+              afterNextRender(this, () => {
+                call(this.subroute)
+              });
+            }
+          }, 1000)
+        } else {
+          if (call !== undefined) {
+            call(this.subroute)
+          }
+        }
+      });
+    }, time)
+  }
+
   _resetCategoriesIfNeeded() {
     if (this.bind === false && this.categories.length > 0) {
       this.bind = true
@@ -456,24 +482,12 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     }
   }
 
-  _setCategoriesIfNeeded(bind, time) {
-    setTimeout(() => {
-      afterNextRender(this, () => {
-        if (this.categories.length === 0) {
-          this.bind = bind
-          this._askPages({ q: 'removed', v: false });
-        }
-      });
-    }, time)
-  }
-
   _setSubCategories(subroute) {
     let cat = subroute.path.split("/").slice(0).join('')
     this.time = setTimeout(() => {
       afterNextRender(this, () => {
         this.getTopSubcats(cat)
       });
-      this._setCategoriesIfNeeded(false, 1000)
     }, 120);
   }
 

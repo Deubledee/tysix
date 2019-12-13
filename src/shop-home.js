@@ -150,7 +150,7 @@ class ShopHome extends PolymerElement {
     if (items.length > 0) {
       const helloTemplate = (data) => litHtml`${data.map((item) => {
         return litHtml`
-          <shop-category-item slot="cat-${item.name}" data="${btoa(JSON.stringify(item))}" type="${this._getPathType()}">
+          <shop-category-item slot="cat-${item.name}" .category="${item}" type="${this._getPathType()}">
           </shop-category-item>
         `
       })}`;

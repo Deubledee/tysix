@@ -1,5 +1,4 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { html as litHtml, render } from 'lit-html';
 import '../shop-button.js';
 import '../shop-image.js';
@@ -26,13 +25,13 @@ class ShopCategoryItem extends PolymerElement {
     </style>    
     <slot name="spinner"></slot>  
     <div>
-        <slot name="image-anchor[[category.name]]">
+        <slot name="image-anchor-[[category.name]]">
         </slot>    
         <h2 title="[[category.title]]">
             [[category.name]]
         </h2>
         <shop-button>
-            <slot name="shop-anchor[[category.name]]">
+            <slot name="shop-btn-[[category.name]]">
             </slot>              
         </shop-button>
     </div>`;
@@ -45,12 +44,7 @@ class ShopCategoryItem extends PolymerElement {
             category: {
                 type: Object,
                 notify: true,
-                computed: '_parseData(data)',
                 observer: '_renderSlotedCatItems'
-            },
-            data: {
-                type: String,
-                notify: true
             },
             type: {
                 type: String,
@@ -67,19 +61,14 @@ class ShopCategoryItem extends PolymerElement {
         super.ready();
     }
 
-    _parseData(data) {
-        let final = JSON.parse(atob(data))
-        return final
-    }
 
     _renderSlotedCatItems(items) {
-        console.log(this.type)
         const helloTemplate = (data) => litHtml`       
-         <a slot="image-anchor${data.name}" title="${data.title}" class="image-link" href="/${this.type}/${data.name}">
+         <a slot="image-anchor-${data.name}" title="${data.title}" class="image-link" href="/${this.type}/${data.name}">
             <shop-image src="${data.image}" class="${this.type}" alt="${data.title}" placeholder-img="${data.placeholder}">
             </shop-image>
         </a>
-        <a class="${this.type}" slot="shop-anchor${data.name}" aria-label="${data.name} Shop Now" title="Shop Now ${data.title}" href="/${this.type}/${data.name}">
+        <a class="${this.type}" slot="shop-btn-${data.name}" aria-label="${data.name} Shop Now" title="Shop Now ${data.title}" href="/${this.type}/${data.name}">
             Shop Now
         </a> 
         `;
