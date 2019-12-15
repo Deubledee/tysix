@@ -276,13 +276,8 @@ export class worker {
         });
     }
     login(user) {
-        this.auth().signInWithEmailAndPassword(user.email, user.pwd)
-            .then((item) => {
-            }).catch(function (error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorMessage, errorCode);
-            });
+        let AUTH = this.auth().signInWithEmailAndPassword(user.email, user.pwd)
+        return AUTH
     }
     handleTransaction(table) {
         var sfDocRef = this.db.collection(table.name).doc(table.doc);

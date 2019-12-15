@@ -474,11 +474,7 @@ const cmscategoriesLib = function (superClass) {
         }
 
         getCategories(query) {
-            getCategories(query).then(data => {
-                data.forEach(item => {
-                    console.log(item.data(), item.id)
-                })
-            }).catch(standartErr)
+            return getCategories(query)
         }
 
         setCategories(id, inform) {
@@ -606,6 +602,7 @@ function getArticles(query) {
             }, query.q, query.v, __DEV)
         })
 }
+
 function getArticleData(id) {
     return new Promise((resolve, reject) => {
         _DBW.getArticleData((done2) => {

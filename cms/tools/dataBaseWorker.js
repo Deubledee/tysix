@@ -171,7 +171,6 @@ export class dataBaseworker {
         queryCollDoCollItem.call(this, obj, done, dev)
     }
 
-
     //aticles
     getAllArticles(done, dev) {
         let obj = { name: 'articles' };
@@ -181,12 +180,10 @@ export class dataBaseworker {
         let obj = { name: 'articles', doc: table.name };
         getDoc.call(this, obj, done, dev)
     }
-
     getArticleData(done, table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType }
         getItemCollectionDoc.call(this, obj, done, dev)
     }
-
     setArticles(done, table, dev) {
         let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
         cr
@@ -272,7 +269,7 @@ export class dataBaseworker {
     }
     //other
     loginFire(user) {
-        Worker.login(user);
+        return Worker.login(user);
     }
     authStateChanged(done) {
         Worker.authState(done);

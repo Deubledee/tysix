@@ -1,11 +1,11 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
-import { cmsArticlesLib } from '../tools/cms-save-lib.js';
+import { cmsArticlesLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
 import '../elements/cms-content-text'
 import '../elements/cms-dropdown-menu';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
 const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yeSI6IiIsImRpbWVudGlvbnMiOiIiLCJrZXl3b3JkcyI6W10sImxhc3RNb2RpZmVpZCI6W10sInByaWNlIjo4MDAsInByb21vdGlvbkNvZGUiOiIiLCJyZW1vdmVkIjpmYWxzZSwicmV0YWlsZXIiOiJzb2xpZG8iLCJzaGlwcGluZyI6IiIsInNoaXBwaW5nVGF4IjoiIiwic3RvY2siOjAsInN0b3JlV2FycmFudHkiOiIiLCJ0YXgiOiIiLCJ3ZWlnaHQiOiIifQ=="
-class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
+class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTemplate)) {
     static get _getStyles() {
         return html`
         div[placerbottom] {
@@ -304,7 +304,6 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
     _routePageChanged(page, query) {
         if (!!page) {
             this._reset()
-            let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
             }
@@ -315,34 +314,14 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
             this.closestr = 'content/articles'
             if (page === 'add-articles') {
                 if (this.add === true) {
-                    let cont = JSON.parse(atob(Modelo))
-                    localStorage[`article-new-content-info`] = atob(ModeloInfo)
-                    let obj = cont.images.content
-                    this.imageLabel = 'images'
-                    this.set('imageArr', obj)
-                    this.set('str', `content/articles/add-articles?content=pagenotsaved`)
-                    this._setContent('lang', [cont])
-                    this._getPageInfo(`article-new-content-`)
-                    this.set('pageLangs', [])
+                    this._setAddedContent()
                     return 0
                 }
             }
             if (page === 'edit-articles') {
                 if (!!query.content) {
-                    let infoVals, cont, media, images, urlstring, phDetails, shDetails, dtDetails, keywords, category
-                    [cont, media, infoVals, images, urlstring,
-                        phDetails, shDetails, dtDetails, keywords, category] = generateData.call(this, query)
-                    if (this.add === false || this.added === true) {
-                        this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
-                        if (!!query.lang) {
-                            if (query.lang !== 'lang') {
-                                arr = this._setLangArr(cont)
-                                this.set('pageLangs', arr)
-                            }
-                            this.__setLAng(query.lang, [cont])
-                        }
-                        return 0
-                    }
+                    this._setEditContent(query)
+                    return 0
                 }
             }
         }
@@ -355,9 +334,48 @@ class cmsArticleContent extends cmsArticlesLib(cmsContentTemplate) {
         this.set('phDetails', this._getObjArr(phDetails, true))
         this.set('shDetails', this._getObjArr(shDetails, true))
         this.set('dtDetails', this._getObjArr(dtDetails, true))
-        this.set('category', this._getObjArr(category, true))
+        this._getCatArr(category)
         this.set('keywords', [{ keywords: keywords.keywords.join(', ') }])
         this.imageLabel = images
+    }
+    _getCatArr(category) {
+        this.getCategories().then(data => {
+            category.items = []
+            data.forEach(item => {
+                category.items.push(item.data())
+            })
+            this.set('category', this._getObjArr(category, true))
+        }).catch(error => {
+            console.log(error)
+        })
+        return category
+    }
+    _setAddedContent() {
+        let cont = JSON.parse(atob(Modelo))
+        localStorage[`article-new-content-info`] = atob(ModeloInfo)
+        let obj = cont.images.content
+        this.imageLabel = 'images'
+        this.set('imageArr', obj)
+        this.set('str', `content/articles/add-articles?content=pagenotsaved`)
+        this._setContent('lang', [cont])
+        this._getPageInfo(`article-new-content-`)
+        this.set('pageLangs', [])
+    }
+    _setEditContent(query) {
+        let arr = []
+        let infoVals, cont, media, images, urlstring, phDetails, shDetails, dtDetails, keywords, category
+        [cont, media, infoVals, images, urlstring,
+            phDetails, shDetails, dtDetails, keywords, category] = generateData.call(this, query)
+        if (this.add === false || this.added === true) {
+            this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
+            if (!!query.lang) {
+                if (query.lang !== 'lang') {
+                    arr = this._setLangArr(cont)
+                    this.set('pageLangs', arr)
+                }
+                this.__setLAng(query.lang, [cont])
+            }
+        }
     }
     addImage() {
         if (this.add === false) {
@@ -457,7 +475,7 @@ function _getInforDetails(details) {
     let infoVals = {}
     for (let par in details) {
         if (
-            par !== 'REF' &&
+            par !== 'addedDate' &&
             par !== 'addedBy' &&
             par !== 'lastModifeid' &&
             par !== 'Published' &&

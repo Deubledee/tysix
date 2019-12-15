@@ -153,15 +153,11 @@ export class cmsContentItemTemplate extends PolymerElement {
     }
     _setValues(data) {
         this.$.cancel.classList.add('diferent');
-        if (data['reset'] === undefined) {
-            this.temp = this.item
-            for (let par in data) {
-                this.set('itemText', data[par])
-            }
-            this._setLabels(data)
-        } else {
-            this._reset()
+        this.temp = this.item
+        for (let par in data) {
+            this.set('itemText', data[par])
         }
+        this._setLabels(data)
     }
     _setLabels(data) {
         for (let par in data) {
