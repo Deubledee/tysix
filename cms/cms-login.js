@@ -159,8 +159,7 @@ class cmsLogin extends PolymerElement {
                 reflectToAttribute: true,
             },
             notLogedIn: {
-                type: Boolean,
-                observer: '_log'
+                type: Boolean
             },
             user: {
                 type: Object,
