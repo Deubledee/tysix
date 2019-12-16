@@ -13,12 +13,10 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { expresso } from "./tools/expresso/expresso.js"
 window.cms = Symbol('app')
-
 Object.defineProperty(window, "cms", {
     enumerable: false,
     writable: true
 });
-//window.MyAppGlobals.translator = 
 window.MyAppGlobals[window.cms] = new expresso();//window.MyAppGlobals.translator
 class cmsLogin extends PolymerElement {
     static get template() {
@@ -115,7 +113,7 @@ class cmsLogin extends PolymerElement {
      </app-location>
      <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
      </app-route> 
-     <main closed$="[[!closed]]">   
+     <!--main closed$="[[!closed]]"-->   
           <dom-if if="[[notLogedIn]]">
                <template>    
                     <nav>
@@ -125,11 +123,14 @@ class cmsLogin extends PolymerElement {
                          </div>
                     </nav>
                     <nav class="login">
-                    <paper-input always-float-label label="email" value="{{email}}"></paper-input>
-                    <paper-input always-float-label label="password" type="password" value="{{pwd}}"></paper-input>
-                    <paper-button class="diferent" on-click="setValues">
-                         login
-                    </paper-button>
+                        <paper-input always-float-label label="email" value="{{email}}">
+                        </paper-input>
+                        <paper-input always-float-label label="password" type="password" value="{{pwd}}">
+                        </paper-input>
+                        <paper-button class="diferent" on-click="setValues">
+                            login
+                        </paper-button>
+                        <h4>[[errorMessage]]</h4>
                     </nav>
                     <nav>
                          <span class="spanthree"> Developed by </span>     
@@ -137,7 +138,7 @@ class cmsLogin extends PolymerElement {
                     </nav>
                </template>
           </dom-if>
-     </main>
+     <!--/main-->
      <slot name="controler" class="slot" closed$="[[closed]]"></slot>
      `;
     }
@@ -158,8 +159,7 @@ class cmsLogin extends PolymerElement {
                 reflectToAttribute: true,
             },
             notLogedIn: {
-                type: Boolean,
-                value: false
+                type: Boolean
             },
             user: {
                 type: Object,
@@ -186,29 +186,38 @@ class cmsLogin extends PolymerElement {
             }
         };
     }
+    _log(data) {
+        console.log(data)
+    }
     ready() {
         super.ready();
-        this.translator.authStateChanged().then(data => {
-            this.closed = !this.closed;
+        this.set('notLogedIn', true);
+        const USER = this.translator.authStateChanged()
+        USER.then(data => {
             this._userAccepted(data);
         }).catch((err) => {
-            this.set('notLogedIn', true);
             console.log(err);
         });
-    }
-    _getUid() {
-        let user = this._getProperty('user');
-        return user.uid;
     }
     setValues() {
         let obj = {
             'email': this.email,
             'pwd': this.pwd
         };
-        this.translator.loginFire(obj);
-        this.email = '';
-        this.pwd = '';
+        this.set('errorMessage', ``)
+        this.translator.loginFire(obj).then((item) => {
+            this.set('notLogedIn', false)
+            this.email = ''
+            this.pwd = ''
+            this.set('errorMessage', `W  E L C O M E`)
+        }).catch((error) => {
+            this.set('notLogedIn', true);
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            this.set('errorMessage', `${errorMessage} ${errorCode}`)
+        });
     };
+
     _userAccepted(user) {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             if (['admin', 'dev', 'manager', 'advUser'].indexOf(user.role) > -1) {
@@ -216,6 +225,9 @@ class cmsLogin extends PolymerElement {
                     this.set('user', user);
                     this.children[0].set('user', user);
                 });
+                this.closed = !this.closed;
+                this.set('notLogedIn', false);
+                //  this._log('heere2')
             }
         });
     }

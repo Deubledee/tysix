@@ -14,14 +14,12 @@ class Setter {
             DBW.authStateChanged((user, err) => {
                 if (user !== 0) {
                     resolve(user)
-                } else {
-                    reject(err)
                 }
             })
         })
     }
     loginFire(obj) {
-        DBW.loginFire(obj);
+        return DBW.loginFire(obj);
     }
     clone(parent) {
         var clone = document.importNode(this.template.content, true);

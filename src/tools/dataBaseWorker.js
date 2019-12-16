@@ -233,7 +233,7 @@ export class dataBaseworker {
 
     //other
     loginFire(user) {
-        Worker.login(user);
+        return Worker.login(user);
     }
     authStateChanged(done) {
         Worker.authState(done);
