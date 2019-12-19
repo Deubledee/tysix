@@ -2,81 +2,29 @@ import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { html as litHtml, render } from 'lit-html';
 import './elements/shop-category-item';
+import './elements/shop-home-cats';
 import './shop-button.js';
 
 class ShopHome extends PolymerElement {
   static get template() {
     return html`
-  <style include="shop-button">
-  .subcats,
-    .item {
-      display: block;
-      text-decoration: none;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .subcats,    
-    .item:nth-of-type(3),
-    .item:nth-of-type(4) {
-      display: inline-block;
-      width: 50%;
-    }
-    .subcats{
-      width: 50%;
-    }
-      
-    .item:nth-of-type(3) > h2,
-    .item:nth-of-type(4) > h2 {
-      font-size: 1.1em;
-    }
-
-    .item:nth-of-type(3) > shop-button > a,
-      .item:nth-of-type(4) > shop-button > a {
-        padding: 8px 24px;
-      }
-    
+  <style include="shop-button">    
     .spinnercenter {
       margin-inline-start: 49%;
       margin-block-start: 10%;
     }
-
+    
     </style>
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-
     <div class="spinnercenter">
         <slot name="spinner"></slot>  
-    </div>
+    </div>      
+      <shop-home-cats categories="[[categories]]">
+        <!-- slots go here -->
+      </shop-home-cats> 
 
-    <dom-if if="[[_shouldRenderCategories]]">
-      <template>
-      
-        <dom-repeat items="[[categories]]">
-          <template strip-whitespace="">
-            <div class="item">
-              <slot name="cat-[[item.name]]">
-              </slot>
-            </div>
-          </template>
-        </dom-repeat>
-
-      </template>
-    </dom-if>
-
-    <dom-if if="[[!_shouldRenderCategories]]">
-      <template>
-      
-        <dom-repeat items="[[subCategories]]">
-          <template strip-whitespace="">
-            <div class="subcats">
-              <slot name="cat-[[item.name]]">
-              </slot>
-            </div>
-          </template>
-        </dom-repeat>
-      </template>
-    </dom-if>`;
+     `;
   }
 
   static get is() { return 'shop-home'; }
@@ -89,17 +37,9 @@ class ShopHome extends PolymerElement {
         value: [],
         observer: '_renderSlotedCats'
       },
-      subCategories: {
-        type: Array,
-        notify: true,
-        observer: '_renderSlotedCats'
-      },
       BINDER: {
         type: Object,
         value: window.MyAppGlobals[window.cms]
-      },
-      _shouldRenderCategories: {
-        computed: '_computeShouldRenderCategories(route, routeData)'
       },
       visible: {
         type: Boolean,
@@ -123,39 +63,27 @@ class ShopHome extends PolymerElement {
     this[par] = value
   }
 
-  _computeShouldRenderCategories(route) {
-    const helloTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">
+  _shouldRenderCategories(route) {
+
+  }
+
+  _getPathType(data) {
+    return !data.hasArticle ? 'categories' : 'list'
+  }
+
+  _renderSlotedCats(data) {
+    const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">
       </paper-spinner-lite>`;
-    render(helloTemplate(), this)
-    if (!!route) {
-      if (route.path === "" || route.path === "/") {
-        let temp = this.categories
-        afterNextRender(this, () => {
-          this.categories = []
-          this.categories = temp
-        });
-        return true
-      }
-      if (route.prefix === "/categories") {
-        return false
-      }
-    }
-  }
-
-  _getPathType() {
-    return !!this._shouldRenderCategories ? 'categories' : 'list'
-  }
-
-  _renderSlotedCats(items) {
-    if (items.length > 0) {
-      const helloTemplate = (data) => litHtml`${data.map((item) => {
+    render(spinnerTemplate(), this)
+    if (data.length > 0) {
+      const catItemTemplate = (items, b) => litHtml`${items.map((item, idx) => {
         return litHtml`
-          <shop-category-item slot="cat-${item.name}" .category="${item}" type="${this._getPathType()}">
+          <shop-category-item slot="cat-${item.name}" .homepage="${b}" .category="${item}" .index="${idx}" .type="${this._getPathType(item)}">
           </shop-category-item>
         `
       })}`;
       afterNextRender(this, () => {
-        render(helloTemplate(items), this);
+        render(catItemTemplate(data, true), this);
       });
     }
   }

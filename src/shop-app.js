@@ -12,6 +12,8 @@ import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
 import { cmsPagesLib, cmsSubcatsLib } from './tools/cms-save-lib';
 import './shop-home.js';
+import './shop-tabs';
+import './shop-tab';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
@@ -104,10 +106,10 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
 
       shop-tabs, shop-tab {
         --shop-tab-overlay: {
-          border-bottom: 2px solid var(--app-accent-color);
+          border-bottom: 2px solid var(--google-blue-700);
         };
       }
-
+      
       shop-tabs {
         height: 100%;
       }
@@ -123,7 +125,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
         font-size: 13px;
         font-weight: 500;
         text-decoration: none;
-        color: var(--app-primary-color);
+        color: var(--google-blue-700);
       }
 
       .cart-badge {
@@ -202,7 +204,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
       }
       /* small screen */
       @media (max-width: 767px) {
-        :host {
+     /*   :host {
           padding-top: 64px;
         }
 
@@ -213,12 +215,13 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
         :host([page=detail]) .menu-btn {
           display: none;
         }
-      }
+      }*/
 
     </style>
 
     <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
+    active="{{active}}"></app-route>
 
     <iron-media-query query="max-width: 767px" query-matches="{{smallScreen}}"></iron-media-query>
 
@@ -226,14 +229,17 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
 
     <app-header role="navigation" id="header" effects="waterfall" condenses="" reveals="">
       <app-toolbar>
+
         <div class="left-bar-item">
           <paper-icon-button class="menu-btn" icon="menu" on-click="_toggleDrawer" aria-label="Categories">
           </paper-icon-button>
-          <a class="back-btn" href="/[[_getPathType(category.hasArticle)]]/[[categoryName]]" tabindex="-1">
+          <a class="back-btn" href="/list/[[categoryName]]" tabindex="-1">
             <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
           </a>
         </div>
+
         <div class="logo" main-title=""><a href="/" aria-label="SHOP Home">SHOP</a></div>
+
         <div class="cart-btn-container">
           <a href="/cart" tabindex="-1">
             <paper-icon-button icon="shopping-cart" aria-label\$="Shopping cart: [[_computePluralizedQuantity(numItems)]]"></paper-icon-button>
@@ -241,17 +247,17 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
           <div class="cart-badge" aria-hidden="true" hidden\$="[[!numItems]]">[[numItems]]</div>
         </div>
       </app-toolbar>
-      <slot name= "app">
-      </slot>
+
       <!-- Lazy-create the tabs for larger screen sizes. -->
       <div id="tabContainer" sticky\$="[[_shouldShowTabs]]" hidden\$="[[!_shouldShowTabs]]">
+
         <dom-if if="[[_shouldRenderTabs]]">
           <template>
             <shop-tabs selected="[[categoryName]]" attr-for-selected="name">
               <dom-repeat items="[[categories]]" as="category" initial-count="4">
                 <template>
                 <shop-tab name="[[category.name]]">
-                  <a title="[[category.title]]" href="/[[_getPathType(category.hasArticle)]]/[[category.name]]" placeholder="[[category.placeholder]]">[[category.name]]</a>
+                  <a title="[[category.title]]" href="/[[_getPathType(category.hasArticle)]]/[[category.name]]?t=[[index]]" placeholder="[[category.placeholder]]">[[category.name]]</a>
                 </shop-tab>
                 </template>
               </dom-repeat>
@@ -280,7 +286,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
      
       <div name="home">
-        <slot name="home" categories="[[categories]]"></slot>
+        <slot name="home"></slot>
       </div>
        
       <div name="categories">
@@ -341,20 +347,21 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
       CATS: {
         type: Array,
         value: [],
-        observer: '_toBind'
+        notify: true
       },
       SUBCATS: {
         type: Array,
-        value: [],
-        observer: '_toBind'
+        observer: '_setSubcats'
       },
       subCategories: {
         type: Array,
+        notify: true,
         value: []
       },
       categories: {
         type: Array,
-        value: []
+        notify: true,
+        computed: '_setCats(CATS)'
       },
       _shouldShowTabs: {
         computed: '_computeShouldShowTabs(page, smallScreen)'
@@ -371,7 +378,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
 
   static get observers() {
     return [
-      '_routePageChanged(routeData, subroute)'
+      '_routePageChanged(routeData.page, subroute.path)'
     ]
   }
 
@@ -397,6 +404,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
       window.addEventListener('online', (e) => this._notifyNetworkStatus(e));
       window.addEventListener('offline', (e) => this._notifyNetworkStatus(e));
     });
+    localStorage.clear()
     // this._askPages({ q: 'removed', v: false });
   }
 
@@ -407,52 +415,77 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     })
   }
 
-  _routePageChanged(routeData, subroute) {
+  _routePageChanged(page) {
     if (typeof this.time === 'number') clearTimeout(this.time)
-    if (routeData.page === '' || routeData.page === undefined) {
+    if (page === '' || page === undefined) {
       this.page = 'home';
       this._setCategoriesIfNeeded(true, 120, undefined)
       this._resetCategoriesIfNeeded()
     }
-    if (routeData.page === 'list') {
-      this.page = routeData.page || 'list';
+    if (page === 'list') {
+      this.page = page || 'list';
+      this._setCategoriesIfNeeded(true, 120, undefined)
     }
-    if (routeData.page === 'categories') {
-      this.page = 'home';
+    if (page === 'categories') {
+      this.page = 'categories';
       this._setCategoriesIfNeeded(true, 120, (this._setSubCategories).bind(this))
     }
-    if (routeData.page === 'cart') {
-      this.page = routeData.page;
+    if (page === 'cart') {
+      this.page = page;
+      this._setCategoriesIfNeeded(true, 120, undefined)
 
     }
-    this.BINDER.bindData('route', subroute)
+    this.BINDER.bindData('route', this.subroute)
     this._listScrollTop = window.pageYOffset;
     this.drawerOpened = false; /**/
   }
 
-  _toBind(data) {
+  _setCats(data) {
+    if (typeof this.time === 'number') clearTimeout(this.time)
+    if (data.length > 0) {
+      let arr = this.parseCats(data)
+      this.time = setTimeout(() => {
+        afterNextRender(this, () => {
+          if (this.bind === true) {
+            this._bindDefault('shopHome', 'categories', arr)
+          }
+        });
+      }, 120);
+      return arr
+    }
+  }
+
+  _setSubcats(data) {
     if (typeof this.time === 'number') clearTimeout(this.time)
     if (data.length > 0) {
       this.time = setTimeout(() => {
         afterNextRender(this, () => {
-          let arr = this.parseCats(data)
-          this[this.type] = []
-          this[this.type] = arr
-          if (this.bind === true) {
-            this.BINDER.bindWith('shopHome', this.type, arr)
-            this.BINDER.bindData('route', this.route)
-            this.BINDER.bindData('offline', this.offline)
-          }
+          let tab = this.query.t
+          let cat = [this.categories[parseInt(tab)]]
+          let arr = localStorage[`cat-${cat[0].name}`] ? JSON.parse(atob(localStorage[`cat-${cat[0].name}`])) : this.parseCats(data),
+            arr2 = []
+          arr2.push(arr)
+          arr2.push(cat)
+          this._bindDefault('shopCategories', 'items', arr2)
+          if (!localStorage[`cat-${cat.name}`]) localStorage[`cat-${cat[0].name}`] = btoa(JSON.stringify(arr2))
         });
       }, 120);
     }
   }
 
+  _bindDefault(id, par, arr) {
+    this.BINDER.bindWith(id, par, arr)
+    this.BINDER.bindData('route', this.route)
+    this.BINDER.bindData('offline', this.offline)
+    this.type = ''
+  }
+
+
   _setCategoriesIfNeeded(bind, time, call) {
     if (typeof this.time === 'numbeer') clearTimeout(this.time)
     this.time = setTimeout(() => {
       afterNextRender(this, () => {
-        if (this.categories.length === 0) {
+        if (!this.categories) {
           this.bind = bind
           this._askPages({ q: 'removed', v: false });
           setTimeout(() => {
@@ -472,7 +505,7 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
   }
 
   _resetCategoriesIfNeeded() {
-    if (this.bind === false && this.categories.length > 0) {
+    if (this.bind === false && this.CATS.length > 0) {
       this.bind = true
       let cats = this.CATS
       this.CATS = []
@@ -486,7 +519,12 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     let cat = subroute.path.split("/").slice(0).join('')
     this.time = setTimeout(() => {
       afterNextRender(this, () => {
-        this.getTopSubcats(cat)
+        if (!localStorage[`cat-${cat}`]) {
+          this.getTopSubcats(cat)
+        } else {
+          let arr2 = JSON.parse(atob(localStorage[`cat-${cat}`]))
+          this._bindDefault('shopCategories', 'items', arr2)
+        }
       });
     }, 120);
   }
@@ -602,6 +640,9 @@ class ShopApp extends cmsSubcatsLib(cmsPagesLib(PolymerElement)) {
     if (page != null) {
       let cb = this._pageLoaded.bind(this, Boolean(oldPage));
       switch (page) {
+        case 'categories':
+          import('./shop-categories').then((this.listCb).bind(this, cb));
+          break;
         case 'list':
           import('./shop-list.js').then((this.listCb).bind(this, cb));
           break;

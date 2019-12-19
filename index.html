@@ -179,6 +179,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .image-link:focus>shop-image::after {
       opacity: 1;
     }
+
+    .greenpees {
+      color: var(--paper-blue-a200);
+      min-height: 73px;
+      font-size: 18px;
+    }
+
+    .redpees {
+      color: var(--google-blue-300);
+      font: initial;
+      font-size: 20px;
+    }
   </style>
 
 </head>
@@ -219,13 +231,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <cms-login>
     <!-- app -->
     <shop-app slot="controler" unresolved>
-      <shop-home name="ala" slot="home" id="home"></shop-home>
+      <shop-home slot="home" id="home"></shop-home>
+      <shop-categories slot="cats" id="home"></shop-categories>
       <shop-list slot="list" id="list"></shop-list>
       <shop-detail slot="detail" id="detail"></shop-detail>
       <shop-cart slot="cart" id="cart"></shop-cart>
       <shop-checkout slot="checkout" id="checkout"></shop-checkout>
-      <!-- no app -->
-
     </shop-app>
     <!-- no app -->
     <nav>

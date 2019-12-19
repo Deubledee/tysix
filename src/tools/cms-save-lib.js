@@ -22,6 +22,7 @@ const cmsPagesLib = function (superClass) {
         getPageData(item) {
             let ID = item.id, hasArticle = item.data().toArticle === 'A'
             getPageData(ID).then(data => {
+                this.loadComplete = true;
                 let categories = this.CATS
                 this.CATS = []
                 this.type = 'categories'
@@ -65,9 +66,9 @@ const cmsSubcatsLib = function (superClass) {
                 done.forEach(item => {
                     let ID = item.id, hasArticle = item.data().toArticle === 'A'
                     this.getSubcatsData(parent, ID).then((done) => {
-                        this.type = 'subCategories'
                         subCategories.push({ data: done, hasArticle: hasArticle })
                         this.SUBCATS = subCategories
+                        this.loadComplete = true;
                     }).catch(err => {
                         console.error(err)
                     })
