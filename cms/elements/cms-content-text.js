@@ -7,11 +7,7 @@ import {
 import '@polymer/iron-autogrow-textarea';
 export class cmsContentText extends cmsContentItemTemplate {
     static get _getStyles() {
-        return html`        
-        div[inputs] {
-            /*background-color: #dadfe2;*/
-            height: 0px;
-        }
+        return html` 
         iron-autogrow-textarea.classy{
                 outline-style: none;
                 resize: none;
@@ -59,7 +55,7 @@ export class cmsContentText extends cmsContentItemTemplate {
                             <iron-autogrow-textarea class="classy" id="input" autofocus="true" slot="input" value="{{itemText}}" id="a1"></iron-autogrow-textarea>
                         </iron-input>                            
                     </cms-input>  
-                    <span>* [[info]] </span>
+                    <span> [[info]] </span>
                 </div>
             </div>`
     }

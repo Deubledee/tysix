@@ -228,59 +228,27 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
         }
     }
-    _routePageChanged(page, query, active) {
-        if (!!page) {
-            let arr = []
-            if (!!query.add) {
-                this.add = (query.add === 'true')
-            }
-            if (!!query.added) {
-                this.added = (query.added === 'true')
-            }
-            if (!!this.langs[this.lang]) this._checkLabel()
-            this.closestr = 'content/pages'
-            if (page === 'add-category-pages') {
-                if (this.add === true) {
-                    let cont = JSON.parse(atob(Modelo))
-                    localStorage[`page-new-content-info`] = atob(ModeloInfo)
-                    let obj = cont.images.content
-                    this.imageLabel = 'images'
-                    this.set('imageArr', obj)
-                    this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
-                    this._setContent('lang', [cont])
-                    this._getPageInfo(`page-new-content-`)
-                    this.set('pageLangs', [])
-                    return
-                }
-            }
-            if (active === true && page === 'edit-category-pages') {
-                this.set('content', []);
-                if (!!query.content) {
-                    if (!!localStorage[`page-${query.content}`]) {
-                        let cont = JSON.parse(localStorage[`page-${query.content}`])
-                        this._getPageInfo(`page-${query.content}-`)
-                        if (this.add === false || this.added === true) {
-                            this.set('inputVal', [])
-                            this.set('textareaVal', [])
-                            arr = this._setLangArr(cont[0])
-                            let obj = cont[0].images.content
-                            this.imageLabel = 'images'
-                            this.set('imageArr', obj)
-                            let strg = location.search
-                            strg = strg.split('lang=')[0]
-                            this.set('str', `content/pages/edit-category-pages${strg}lang=`)
-                            if (!!query.lang) {
-                                if (query.lang !== 'lang')
-                                    this.set('pageLangs', arr)
-                                this.__setLAng(query.lang, cont)
-                            }
-                            return
-                        }
-                    }
-                }
+    _routePageChanged(page, query) {
+        if (!!query.add) {
+            this.add = (query.add === 'true')
+        }
+        if (!!query.added) {
+            this.added = (query.added === 'true')
+        }
+        if (!!this.langs[this.lang]) this._checkLabel()
+        this.closestr = 'content/pages'
+        if (page === 'add-category-pages') {
+            this._setAddedContent(query)
+        }
+        if (page === 'edit-category-pages') {
+            this._reset()
+            if (!!localStorage[`page-${query.content}`]) {
+                this._setEditContent(query)
+                return
             }
         }
     }
+
     addImage() {
         if (this.add === false) {
             localStorage[`page-${this.query.content}`] = JSON.stringify(this.content)
@@ -297,12 +265,40 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             return "you might have changes to be saved, are you sure you whant to leave?";
         };
     }
-    _getPublishedBy(publishedBy) {
-        if (publishedBy !== undefined && publishedBy.length > 0) {
-            let pubuser = publishedBy[0].name;
-            return pubuser;
+
+    _setAddedContent() {
+        if (this.add === true) {
+            let cont = JSON.parse(atob(Modelo))
+            localStorage[`page-new-content-info`] = atob(ModeloInfo)
+            let obj = cont.images.content
+            this.imageLabel = 'images'
+            this.set('imageArr', obj)
+            this.set('str', `content/pages/add-category-pages?content=pagenotsaved`)
+            this._setContent('lang', [cont])
+            this._getPageInfo(`page-new-content-`)
+            this.set('pageLangs', [])
+            return
         }
     }
+
+    _setEditContent(query) {
+        let strg = location.search
+        strg = strg.split('lang=')[0]
+        this.set('str', `content/pages/edit-category-pages${strg}lang=`)
+        this.imageLabel = 'images'
+        let arr, cont, images
+        this.set('imageArr', images)
+        if (this.add === false || this.added === true) {
+            [arr, cont, images] = generateData.call(this, query)
+            this.set('imageArr', images)
+            if (!!query.lang) {
+                if (query.lang !== 'lang')
+                    this.set('pageLangs', arr)
+                this.__setLAng(query.lang, cont)
+            }
+        }
+    }
+
     onSave() {
         let data = new Date(), inform
         inform = this.inform.pop()
@@ -360,8 +356,15 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.set('inform', [])
         this.set('inputVal', [])
         this.set('textareaVal', [])
-        this.set('add', 0);
     }
 
 }
 customElements.define(cmsPageCatsContent.is, cmsPageCatsContent);
+
+function* generateData(query) {
+    let cont = JSON.parse(localStorage[`page-${query.content}`])
+    yield this._setLangArr(cont[0])
+    yield cont
+    this._getPageInfo(`page-${query.content}-`)
+    yield cont[0].images.content
+}

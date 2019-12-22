@@ -275,7 +275,6 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             this.set("parentName", parentName)
             let indexArr = (!!this.query.indexarr) === false ? parentIndex : this.query.indexarr
             this.set("_indexArr", indexArr)
-            let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
                 this.parent = parseInt(this.query.parent)
@@ -286,43 +285,11 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             }
             this.closestr = this.query.content === 'new-content' ? `content/pages/subcategory-pages?content=${this.query.content}` : `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=false`
             if (page === 'add-subcategory-pages') {
-                if (this.add === true) {
-                    if (typeof this.time === 'number')
-                        clearTimeout(this.time)
-                    this.__reset()
-                    let cont = JSON.parse((atob(Modelo)))
-                    let obj = cont.images.content
-                    let parent = parseInt(this.query.name)
-                    localStorage.setItem(`cats-${this.query.content}-${parent}-info`, atob(ModeloInfo))
-                    this.imageLabel = 'images'
-                    this.set('imageArr', obj)
-                    this.set('str', `content/pages/add-subcategory-pages?content=${this.query.content}`)
-                    this._setContent('lang', [cont])
-                    this.set('pageLangs', [])
-                    this._getPageInfo(`cats-${query.content}-${parent}-`)
-                }
+                this._setAddedContent(query)
             }
             if (page === 'edit-subcategory-pages') {
                 if (!!query.name) {
-                    if (this.add === false || this.added === true) {
-                        let cont = JSON.parse(localStorage[`cats-${query.content}-${query.name}`])
-                        this._getPageInfo(`cats-${query.content}-${query.name}-`)
-                        this.set('inputVal', [])
-                        this.set('textareaVal', [])
-                        arr = this._setLangArr(cont[0])
-                        let obj = cont[0].images.content
-                        this.imageLabel = 'images'
-                        let strg = location.search
-                        strg = strg.split('lang=')[0]
-                        this.set('str', `content/pages/edit-subcategory-pages${strg}lang=`)
-                        if (!!query.lang) {
-                            if (query.lang !== 'lang')
-                                this.set('pageLangs', arr)
-                            this.__setLAng(query.lang, cont)
-                            this._setContent(query.lang, cont)
-                            this.set('imageArr', obj)
-                        }
-                    }
+                    this._setEditContent(query)
                 }
             }
         }
@@ -344,6 +311,41 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             return ''
         };
     }
+    _setAddedContent(query) {
+        if (this.add === true) {
+            if (typeof this.time === 'number')
+                clearTimeout(this.time)
+            this.__reset()
+            let cont = JSON.parse((atob(Modelo)))
+            let obj = cont.images.content
+            let parent = parseInt(this.query.name)
+            localStorage.setItem(`cats-${this.query.content}-${parent}-info`, atob(ModeloInfo))
+            this.imageLabel = 'images'
+            this.set('imageArr', obj)
+            this.set('str', `content/pages/add-subcategory-pages?content=${this.query.content}`)
+            this._setContent('lang', [cont])
+            this.set('pageLangs', [])
+            this._getPageInfo(`cats-${query.content}-${parent}-`)
+        }
+    }
+
+    _setEditContent(query) {
+        let strg = location.search
+        strg = strg.split('lang=')[0]
+        this.set('str', `content/pages/edit-subcategory-pages${strg}lang=`)
+        this.imageLabel = 'images'
+        let arr, cont, images
+        if (this.add === false || this.added === true) {
+            [arr, cont, images] = generateData.call(this, query)
+            this.set('imageArr', images)
+            if (!!query.lang) {
+                if (query.lang !== 'lang')
+                    this.set('pageLangs', arr)
+                this.__setLAng(query.lang, cont)
+            }
+        }
+    }
+
     onSave() {
         if (!!this.newlangstate) {
             this.add = true
@@ -408,23 +410,19 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         return inform
     }
     __reset() {
-        this.set('tgglelang', true)
-        this.set('removelang', false)
-        this.set('newlangstate', false)
-        this.set('addlang', false)
-        this.set('newLang', '')
-        this.set('removeArr', [])
-        this.set('pageLangs', [])
+        this.imageLabel = ''
         this.set('content', []);
         this.set('imageArr', [])
         this.set('inform', [])
         this.set('inputVal', [])
         this.set('textareaVal', [])
-        this.set('itemlang', []);
-        console.log('here')
-        /* this._debounceEvent = Debouncer.debounce(this._debounceEvent, microTask, () => {
-             window.dispatchEvent(new CustomEvent('reset-list-type', {}));
-         });*/
     }
 }
 customElements.define(cmsSubcatsContent.is, cmsSubcatsContent);
+function* generateData(query) {
+    let cont = JSON.parse(localStorage[`cats-${query.content}-${query.name}`])
+    yield this._setLangArr(cont[0])
+    yield cont
+    this._getPageInfo(`cats-${query.content}-${query.name}-`)
+    yield cont[0].images.content
+}

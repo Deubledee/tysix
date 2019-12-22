@@ -6,6 +6,7 @@ import '../sub-categories/cms-subcats'
 import '../sub-categories/cms-subcats-item'
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
+import { html as litHtml, render } from 'lit-html';
 export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
     static get _getSilentAnchor() {
         return html`    
@@ -149,29 +150,29 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(page, query) {
-        if (page === "subcategory-pages" && (!!query.content || !!query.reset)) {
-            let parent = query.content
-            if (this.lastpagesubs === parent && !query.reset) {
-                this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))
-                return
-            } else
-                if (this.lastpagesubs !== parent || (!!query.reset && query.reset === 'true')) {
-                    this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-                    </paper-spinner-lite>`
-                    this.spinOut = false
-                    this.translator.clone(this)
-                    localStorage.setItem('lastpagesubs', btoa(parent))
-                    this.lastpagesubs = parent
-                    this.$.subcats._reset()
-                    setTimeout(() => {
-                        this.getTopSubcats(this.lastpagesubs)
-                    }, 1000)
+        if (!query.reset) {
+            if (page === "subcategory-pages" && (!!query.content)) {
+                let parent = query.content
+                if (this.lastpagesubs === parent) {
+                    this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))
+                    return
                 } else
-                    if (!!query.reset && query.reset === 'false') {
-                        window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
+                    if (this.lastpagesubs !== parent) {
+                        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+                        render(spinnerTemplate(), this);
+                        localStorage.setItem('lastpagesubs', btoa(parent))
+                        this.lastpagesubs = parent
+                        this.$.subcats._reset()
+                        setTimeout(() => {
+                            this.getTopSubcats(this.lastpagesubs)
+                        }, 1000)
                     }
 
-        }
+            }
+        } else
+            if (!!query.reset && query.reset === 'false') {
+                window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
+            }
     }
     _addSubCategory(evt) {
         evt.preventDefault()

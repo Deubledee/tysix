@@ -74,17 +74,16 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                         <paper-icon-button on-click="_addChildren" icon="av:library-add" aria-label="mode-show"></paper-icon-button>
                     </div>  
                 <div class="subcat noFlex">
-                        <div on-click="__changeColorTimeout" class="flexleft">
-                            <paper-icon-button on-click="_toggleChildren" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
-                        </div>
-                        <div  id="subcats" class="diferent">
-                            <slot name="table"></slot> 
-                        </div>
-                    <dom-repeat repeat items="[[subcatSubats]]" as="item">
-                        <template> 
-                            [[_slottItem(item, index)]]
-                        </template>                            
-                    </dom-repeat>               
+                    <div on-click="__changeColorTimeout" class="flexleft">
+                        <paper-icon-button on-click="_toggleChildren" icon="editor:drag-handle" aria-label="mode-show"></paper-icon-button>
+                    </div>
+                    <div  id="subcats" class="diferent">                            
+                        <dom-repeat repeat items="[[subcatSubats]]" as="item">
+                            <template> 
+                                <slot name="item[[index]]"></slot> 
+                            </template>                            
+                        </dom-repeat>        
+                    </div>       
                 </div>  
             </div> 
         </div>
@@ -125,6 +124,7 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             subcatSubats: {
                 type: Array,
                 notify: true,
+                observer: '_slottItem'
             },
             published: {
                 type: String,
@@ -194,10 +194,6 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
     }
     ready() {
         super.ready();
-        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-        </paper-spinner-lite>`
-        this.spinOut = false
-        this.translator.clone(this)
         this.translator.target('cms-subcats-item', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-subcats-item', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-subcats-item', 'setLangObject')
@@ -372,22 +368,26 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
     _addChildren() {
         this._addChild(true)
     }
-    _slottItem(data, index) {
-        let str = `
-             <div slot="table"> 
-                <cms-subcats-item>
-
-                </cms-subcats-item>
-             </div>             
-             `;
-        let arr = [atob(this.indexArr)]
-        arr.push(index)
-        this.translator.template.innerHTML = str;
-        this.translator.clone(this)
-        this.children[this.childElementCount - 1].children[0].lang = this.lang
-        this.children[this.childElementCount - 1].children[0].route = this.route
-        this.children[this.childElementCount - 1].children[0].subcat = data
-        this.children[this.childElementCount - 1].children[0].indexArr = btoa(arr.join(''))
+    _slottItem(data) {
+        if (typeof this.time === 'number') clearInterval(this.time)
+        this.time = setTimeout(() => {
+            if (!!data) {
+                let arr = [atob(this.indexArr)]
+                arr.push(index)
+                const pageTemplate = (subcats) => litHtml`${subcats.map((subcat, idx) => {
+                    return litHtml`
+                                <div slot="item${idx}"> 
+                                    <cms-subcats-item 
+                                        .lang="${this.lang}" 
+                                        .subcat="${subcat}"  
+                                        .route="${this.route}">
+                                        .indexArr="${btoa(arr.join(''))}"
+                                    </cms-subcats-item>
+                                </div> `
+                })} `
+                render(pageTemplate(data), this);
+            }
+        }, 60);
     }
     _openConfirm() {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {

@@ -10,6 +10,12 @@ export class cmsContentItemTemplate extends PolymerElement {
         }
         div[arow] {
             background: unset;
+        }           
+        div[inputs] {
+            height: 22px;
+            width: auto;
+            display: flex;
+            flex-direction: column;        
         }
         ${this._getStyles}
         </style> 

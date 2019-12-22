@@ -1,6 +1,8 @@
 import '@polymer/iron-selector/iron-selector';
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { html as litHtml, render } from 'lit-html';
 import './cms-page-list-item';
 import { cmsPagesLib } from '../tools/cms-save-lib.js';
 class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
@@ -37,17 +39,11 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
                     return MyAppGlobals[window.cms]//MyAppGlobals.translator
                 }
             },
-            spinOut: {
-                type: Boolean,
-                value: false
-            },
             pages: {
                 type: Array,
-                value: []
-            },
-            sloted: {
-                type: Boolean,
-                value: false
+                notify: true,
+                value: new Array(),
+                observer: 'putElement',
             }
         }
     }
@@ -65,9 +61,8 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
     }
     ready() {
         super.ready();
-        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-        </paper-spinner-lite>`
-        this.translator.clone(this)
+        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(spinnerTemplate(), this);
         this.translator.target('cms-page-list-type', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type', 'setLangObject')
@@ -87,75 +82,63 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(routeData, query) {
+        if (typeof this.time === 'number') clearInterval(this.time)
         let reset = (query.reset === 'true')
-        let removed = (query.removed === 'true')
-        if (routeData.page === "pages") {
-            if (!query.reset) {
-                if (this.pages.length < 1)
-                    this._askPages({ q: 'removed', v: false });
+        if (!query.reset) {
+            if (routeData.page === "pages") {
+                this.time = setTimeout(() => {
+                    if (this.pages.length === 0) {
+                        afterNextRender(this, () => {
+                            this._askPages({ q: 'removed', v: false });
+                        });
+                    }
+                }, 120);
+
             }
-            if ((!!query.reset) || (query.removed)) {
-                if ((reset === true) || (removed === true)) {
-                    this._contentChanged()
-                }
-            }
+        } else if (reset === true) {
+            this.pages = [];
+            this._contentChanged()
         }
     }
+
     _contentChanged() {
-        this.innerHTML = ''
-        setTimeout(() => {
-            if (this.spinOut === true) {
-                this.spinOut = false
-                this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">`
-                this.translator.clone(this)
-            }
-            setTimeout(() => {
-                this._askPages({ q: 'removed', v: false })
+        if (typeof this.time === 'number') clearTimeout(this.time)
+        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(spinnerTemplate(), this);
+        if (this.routeData.page === 'pages') {
+            this.time = setTimeout(() => {
+                window.history.pushState({}, null, `${this.rootPath}content/pages`)
+                window.dispatchEvent(new CustomEvent('location-changed'))
             }, 500);
-        }, 500);
-        this.sloted = false
+        } else {
+            this.pages = []
+        }
     }
     _setAll(response) {
-        let arr = [], arr2 = [];
-        this.set('inForm', arr);
+        let arr = []
+        this.pages = [];
         for (let i = 0; i < response.length; i++) {
-            this.pages = '';
             if (!!response[i].id) {
                 let datarr = response[i].data()
-                if (response[i].id === 'addedContent') {
-                    arr.push(datarr);
-                }
-                else {
-                    arr2.push(datarr);
-                }
+                arr.push(datarr);
             }
         }
-        this.set('inForm', arr);
-        this.set('pages', arr2);
-        if (this.spinOut === false) {
-            this.removeChild(this.children[0])
-            this.spinOut = true
-        }
+        this.set('pages', arr);
     }
-    putElement(index, page) {
-        if (typeof this.time === 'number') {
-            clearTimeout(this.time)
-        }
-        if (this.sloted === false) {
-            let template = html`
-                <cms-page-list-item>
-                </cms-page-list-item>`;
-            var clone = document.importNode(template.content, true);
-            this.appendChild(clone);
-            this.children[index].setAttribute('slot', `item${index}`);
-            this.children[index].set('page', page);
-            this.children[index].set('idx', index);
-            this.time = setTimeout(() => {
-                this.set('sloted', true)
-            }, 60);
-        }
+
+    putElement(data) {
+        if (typeof this.time === 'number') clearInterval(this.time)
+        this.time = setTimeout(() => {
+            const pageTemplate = (pages) => litHtml`${pages.map((article, idx) => {
+                return litHtml`<cms-page-list-item slot="item${idx}" .page="${article}">
+                        </cms-page-list-item>`
+            })} `
+            render(pageTemplate(data), this);
+        }, 60);
     }
+
     _reset(call, mlscs) {
+
         console.log('reseted pages')
         this.innerHTML = ''
         this.pages = undefined

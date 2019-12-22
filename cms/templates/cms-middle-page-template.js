@@ -154,7 +154,6 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <div table class="scroll"> 
                 <dom-repeat items="[[pages]]" as="page">
                     <template strip-whitespace>
-                        [[putElement(index, page)]]
                         <slot name="item[[index]]"></slot>
                     </template>
                 </dom-repeat>

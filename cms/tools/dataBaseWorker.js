@@ -186,16 +186,20 @@ export class dataBaseworker {
     }
     setArticles(done, table, dev) {
         let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
-        cr
-        eateDoc.call(this, obj, done, dev)
+        createDoc.call(this, obj, done, dev)
     }
     setArticleData(done, table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
         createItemCollectionDoc.call(this, obj, done, dev)
     }
     updateArticles(done, table, dev) {
-        let obj = { name: "articles", doc: table.name, data: { content: table.content } };
+        let obj = { name: "articles", doc: table.name, data: table.update };
         updateContent.call(this, obj, done, dev)
+    }
+    changeArticleData(done, table, dev) {
+        let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
+        // console.log(table, obj)
+        updateDocItemCollection.call(this, obj, done, dev)
     }
     deleteArticles(done, page, dev) {
         let obj = { name: 'articles', docName: page }

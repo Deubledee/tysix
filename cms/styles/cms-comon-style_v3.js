@@ -438,7 +438,6 @@ $_documentContainer.innerHTML = `
             }
 
             article[centerListItem] div {
-                height: 30px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis
@@ -466,7 +465,7 @@ $_documentContainer.innerHTML = `
 
             article[centerListItem] paper-icon-button {
                 height: 3.6em;
-                top: -5px;
+                top: 5px;
             }
 
             .centerImage {

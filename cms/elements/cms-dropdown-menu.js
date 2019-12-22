@@ -186,7 +186,6 @@ export class cmsDropdownMenu extends cmsContentItemTemplate {
     __setValues(data) {
         if (!!data) {
             let obj = data.shift()
-            console.log(obj)
             this._setValues(obj)
         }
     }

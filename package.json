@@ -26,14 +26,14 @@
     "@polymer/iron-icons": "^3.0.1",
     "@polymer/iron-iconset-svg": "^3.0.1",
     "@polymer/iron-media-query": "^3.0.1",
-    "@polymer/iron-overlay-behavior": "^3.0.2",
+    "@polymer/iron-overlay-behavior": "^3.0.3",
     "@polymer/iron-pages": "^3.0.1",
     "@polymer/iron-selector": "^3.0.1",
     "@polymer/neon-animation": "^3.0.1",
     "@polymer/paper-behaviors": "^3.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-checkbox": "^3.1.0",
-    "@polymer/paper-dropdown-menu": "^3.0.1",
+    "@polymer/paper-dropdown-menu": "^3.1.0",
     "@polymer/paper-icon-button": "^3.0.2",
     "@polymer/paper-input": "^3.1.0",
     "@polymer/paper-item": "^3.0.1",
@@ -42,7 +42,7 @@
     "@polymer/paper-tabs": "^3.1.0",
     "@polymer/polymer": "^3.3.1",
     "@webcomponents/webcomponentsjs": "^2.4.0",
-    "firebase": "^7.5.0",
+    "firebase": "^7.6.1",
     "lit-html": "^1.1.2"
   }
 }

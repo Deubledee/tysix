@@ -119,7 +119,7 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData.page)'
+            '_routePageChanged(routeData.page, query.reset)'
         ];
     }
     ready() {
@@ -144,18 +144,24 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(page) {
+    _routePageChanged(page, rst) {
         if (typeof this.time === 'number') clearInterval(this.time)
-        if (!!page && page === "articles") {
-            this.time = setTimeout(() => {
+        let reset = (rst === 'true')
+        if (!rst) {
+            if (!!page && page === "articles") {
                 if (this.contents.length === 0) {
-                    afterNextRender(this, () => {
-                        this.getArticles({ q: 'removed', v: false })
-                    });
+                    this.time = setTimeout(() => {
+                        afterNextRender(this, () => {
+                            this.getArticles({ q: 'removed', v: false })
+                        });
+                    }, 120);
                 }
-            }, 120);
+            }
+        } else if (reset === true) {
+            this._contentChanged()
         }
     }
+
     _setContent(data, art) {
         let temp = this.contents, arr = []
         this.contents = []
@@ -164,27 +170,29 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         temp.push(arr)
         this.contents = temp
     }
-
     _contentChanged() {
-        this.innerHTML = ''
-        setTimeout(() => {
-            if (this.spinOut === true) {
-                this.spinOut = false
-                const articleTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
-                render(articleTemplate(), this);
-            }
-            setTimeout(() => {
-                this.getArticles({ q: 'removed', v: false })
+        if (typeof this.time === 'number') clearTimeout(this.time)
+        const articleTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(articleTemplate(), this);
+        if (this.routeData.page === "articles") {
+            this.contents = []
+            this.time = setTimeout(() => {
+                window.history.pushState({}, null, `${this.rootPath}content/articles`)
+                window.dispatchEvent(new CustomEvent('location-changed'));
             }, 500);
-        }, 500);
-        this.sloted = false
+        } else {
+            this.contents = []
+        }
     }
     _setArticleElements(data) {
-        const articleTemplate = (articles) => litHtml`${articles.map((article, idx) => {
-            return litHtml`<cms-article-item slot="article-${idx}" .article="${article}">
+        if (typeof this.time === 'number') clearTimeout(this.time)
+        this.time = setTimeout(() => {
+            const articleTemplate = (articles) => litHtml`${articles.map((article, idx) => {
+                return litHtml`<cms-article-item slot="article-${idx}" .article="${article}">
                        </cms-article-item>`
-        })} `
-        render(articleTemplate(data), this);
+            })} `
+            render(articleTemplate(data), this);
+        }, 60);
     }
 }
 customElements.define(cmsArticleView.is, cmsArticleView);

@@ -40,7 +40,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[inputVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFull">
-                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                            <cms-content-item info="*" editing="[[editing]]" item="[[item]]"
                                 res="{{inputResponse}}">
                             </cms-content-item>
                         </section>
@@ -51,7 +51,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[textareaVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFullExtra">
-                            <cms-content-text editing="[[editing]]" item="[[item]]"
+                            <cms-content-text info="*" editing="[[editing]]" item="[[item]]"
                                 res="{{textAreaResponse}}">
                             </cms-content-text>
                         </section>
@@ -83,10 +83,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
 
         <div bottom>
      
-                    <cms-dropdown-menu items="[[category]]">
-                    
-                    </cms-dropdown-menu>
-                  
+            <cms-dropdown-menu items="[[category]]">
+            
+            </cms-dropdown-menu>                  
        
         </div>
 
@@ -138,7 +137,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[keywords]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull">
-                            <cms-content-text info="separete with commas" editing="[[editing]]" item="[[item]]"
+                            <cms-content-text info="* separete with commas" editing="[[editing]]" item="[[item]]"
                                 res="{{kwResponse}}">
                             </cms-content-text>
                         </section>
@@ -348,7 +347,6 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         }).catch(error => {
             console.log(error)
         })
-        return category
     }
     _setAddedContent() {
         let cont = JSON.parse(atob(Modelo))
@@ -394,26 +392,34 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         };
     }
     onSave() {
-        let data = new Date(), inform
-        inform = this.inform.pop()
-        let noLang = this._lastModified(this._setInfo(inform, data), data)
-        if (!!noLang) return
+        this.getArticleData(this.inform.id, 'info').then((this._save).bind(this)).catch(err => console.log(err))
+    }
+    _save(item) {
+        let obj = { addedBy: '', addedDate: '', lastModified: [] }
+        let Cont = this.add === false ? item.data : obj
+        this.INFO = this._lastModified(Cont)
         if (!!this.removelang) {
             this._removeLang()
             return
         }
         if (!!this.newlangstate) this.add = true
-        this.savePages()
+        this.saveArticles()
     }
-    _lastModified(inform, data) {
-        if (!inform) return 1
-        if (this.add === true)
-            inform.lastModified.push({
-                uid: this.user.uid,
-                author: this.user.displayName,
-                date: data.toLocaleString().replace(',', '')
-            });
-        this.inform = [inform]
+
+    _lastModified(ifo) {
+        let INFO = ifo
+        let data = new Date()
+        if (this.add === false) {
+            INFO.addedBy = this.user.name
+            INFO.addedDate = data
+        }
+
+        INFO.lastModifeid.push({
+            author: this.user.name,
+            date: data.toLocaleString().replace(',', ''),
+            uid: this.user.uid
+        });
+        return INFO
     }
     _setInfo(inform, data) {
         if (!this.newlangstate) {
@@ -422,23 +428,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                     alert('insert Lang & Category Name first')
                     return undefined
                 }
-                this.content[0][this.content[0].lang.lang] = this.content[0].lang
-                inform.id = this.content[0][this.content[0].lang.lang].categoryName
-                inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName)
-                inform.type = this.content[0][this.content[0].lang.lang].type
-                delete this.content[0].lang
-                inform.Published.date = 'NP'
-                inform.Published.publishedBy = 'N/A'
-                inform.Published.state = 'NP'
-                inform.author.id = this.user.uid
-                inform.author.name = this.user.displayName
-                inform.path = [inform.id]
-                inform.toArticle = 'B'
                 inform.removed = false
-                inform.dateCreated = data.toLocaleString().replace(',', '')
-            } else {
-                if (inform.type === "")
-                    inform.type = this.content[0][this.setContetnLang].type
             }
         }
         return inform
@@ -448,9 +438,15 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         this.set('imageArr', [])
         this.set('inputVal', '')
         this.set('infoVals', [])
-        this.set('media', [])
+        this.set(' media', [])
+        this.set('dtDetails', [])
+        this.set('category', [])
+        this.set('phDetails', [])
+        this.set('shDetails', [])
+        this.set('keywords', [])
         this.set('textareaVal', [])
         this.set('inform', [])
+
     }
 }
 customElements.define(cmsArticleContent.is, cmsArticleContent);
@@ -475,9 +471,6 @@ function _getInforDetails(details) {
     let infoVals = {}
     for (let par in details) {
         if (
-            par !== 'addedDate' &&
-            par !== 'addedBy' &&
-            par !== 'lastModifeid' &&
             par !== 'Published' &&
             par !== 'shipping' &&
             par !== 'shippingTax' &&

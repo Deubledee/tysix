@@ -1,5 +1,6 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer'
+import { html as litHtml, render } from 'lit-html';
 import { cmsItemTemplate } from '../templates/cms-item-template';
 import '@polymer/iron-icons/editor-icons';
 import '@polymer/paper-input/paper-input';
@@ -22,11 +23,12 @@ export class cmsSubcats extends cmsItemTemplate {
     }
     static get _getElement() {
         return html` 
-        <slot name="item"></slot>  
+        
         <slot name="nocontent"></slot> 
-        <dom-repeat items="[[content]]" as="item">
+        <dom-repeat items="[[subSubCats]]" as="item">
             <template>
-                [[_slottItem(item, index)]]            
+                <slot name="item[[index]]">
+                </slot>           
             </template>                            
         </dom-repeat>        
         `}
@@ -36,8 +38,8 @@ export class cmsSubcats extends cmsItemTemplate {
         return {
             subSubCats: {
                 type: Array,
-                value: [],
-                notify: true,
+                observer: '_slottItem',
+                notify: true
             },
             user: {
                 type: Object,
@@ -71,12 +73,6 @@ export class cmsSubcats extends cmsItemTemplate {
             editIndex: {
                 type: Number
             },
-            content: {
-                type: Array,
-                value: '',
-                notify: true,
-                computed: '_setContent(subSubCats)'
-            },
             add: {
                 type: Boolean,
                 value: false,
@@ -86,11 +82,6 @@ export class cmsSubcats extends cmsItemTemplate {
             info: {
                 type: Object,
                 value: {},
-            },
-            sloted: {
-                type: Boolean,
-                value: false,
-                notify: true
             },
             onSave: {
                 type: Object,
@@ -126,14 +117,7 @@ export class cmsSubcats extends cmsItemTemplate {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _setContent(data) {
-        if (data === '') {
-            this.translator.cloneElement(this, `<h1 slot="nocontent"> no content </h1>`)
-            return []
-        }
-        if (!!data && data != 0) this.Parent = data[0].parent
-        if (!this.content) return data
-    }
+
     _addChild(data) {
         if (!!this.children[0] && this.children[0].tagName === "H1") {
             this.removeChild(this.children[0])
@@ -145,36 +129,30 @@ export class cmsSubcats extends cmsItemTemplate {
             this.add = false
         }
     }
-    _slottItem(item, index) {
-        if (typeof this.time === 'number') {
-            clearTimeout(this.time)
-        }
-        if (this.sloted === false) {
-            let str = `            
-                <div scroll slot="item">          
-                    <cms-subcats-item>
-                    </cms-subcats-item>          
-                </div>                
-                `
-            let content = btoa(JSON.stringify(this.subSubCats))
-            this.translator.template.innerHTML = str
-            this.translator.clone(this)
-            this.children[this.childElementCount - 1].children[0].lang = this.lang
-            this.children[this.childElementCount - 1].children[0].route = this.route
-            this.children[this.childElementCount - 1].children[0].toContent = content
-            this.children[this.childElementCount - 1].children[0].Parent = this.query.content
-            this.children[this.childElementCount - 1].children[0].user = this.user
-            this.children[this.childElementCount - 1].children[0].subcat = item
-            this.children[this.childElementCount - 1].children[0].indexArr = btoa(index)
-        }/* */
+    _slottItem(data) {
+        if (typeof this.time === 'number') clearInterval(this.time)
         this.time = setTimeout(() => {
-            this.set('sloted', true)
+            if (!!data) {
+                const pageTemplate = (pages) => litHtml`${pages.map((article, idx) => {
+                    return litHtml`<div scroll slot="item${idx}">          
+                                 <cms-subcats-item 
+                                    .lang="${this.lang}" 
+                                    .user="${this.user}"
+                                    .subcat="${article}"
+                                    .indexArr="${btoa(idx)}"
+                                    .route="${this.route}" >
+                                 </cms-subcats-item>          
+                             </div> `
+                })} `
+                render(pageTemplate(data), this);
+            } else {
+                const nocont = () => litHtml`<h1 slot="nocontent"> no content </h1>`
+                render(nocont(), this);
+            }
         }, 60);
     }
     _reset() {
-        this.innerHTML = ''
         this.subSubCats = []
-        this.set('sloted', false)
         this.add = false
         window.onbeforeunload = function () { }
     }

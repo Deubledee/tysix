@@ -24,7 +24,6 @@ const cmsPagesLib = function (superClass) {
             getPageData(ID).then(data => {
                 let cont = [data]
                 let arr = this._setLangArr(cont[0])
-                console.log(arr[0])
                 let str = `content/pages/edit-category-pages?content=${ID}&add=false&lang=${arr[0]}`
                 localStorage.setItem(`page-${ID}`, JSON.stringify(cont))
                 window.history.pushState({}, null, str);
@@ -133,7 +132,6 @@ const cmsSubcatsLib = function (superClass) {
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {
                 this._setContent(done)
-                checkSpinner.call(this)
             }).catch(standartErr)
         }
         getChildrenSubcats(parent, subCatChildren) {
@@ -146,26 +144,23 @@ const cmsSubcatsLib = function (superClass) {
         getSubcatsData(parent, id) {
             getSubcatsData(parent, id).then((done) => {
                 this._setContent(done)
-                checkSpinner.call(this)
             }).catch(standartErr)
         }
         __checkEqual() {
             getSubcatsData(this.parent, this.subcat.id).then((done) => {
                 this._setContent(done)
-                checkSpinner.call(this)
             }).catch(standartErr)
         }
         __checkBigger(data, temp, index2) {
             if (data[index2 - 1] === temp[index2 - 1]) {
                 getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
-                    checkSpinner.call(this)
                     this._toggleChildren()
                 }).catch(standartErr)
             } else {
                 getSubcatsData(this.parent, this.subcat.id).then((done) => {
                     this._setContent(done)
-                    checkSpinner.call(this)
+
                 }).catch(standartErr)
             }
         }
@@ -275,19 +270,19 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
         }
         _getGalleries(query) {
             getNRGalleries(query).then(data => {
-                checkSpinner.call(this)
+
                 this.set('galleries', data)
             }).catch(standartErr)
         }
         _getAllGalleries() {
             getRnNRGallerries().then(data => {
-                checkSpinner.call(this)
+
                 this.set('galleries', data)
             }).catch(standartErr)
         }
         getGalleryImages(gallery, query) {
             getGalleryImages(gallery, query).then(data => {
-                checkSpinner.call(this)
+
                 this.set('IMAGES', data)
             }).catch(standartErr)
         }
@@ -561,16 +556,58 @@ const cmsArticlesLib = function (superClass) {
         getArticles(query) {
             getArticles(query).then(data => {
                 data.forEach(item => {
-                    getArticleData(item.id).then(art => {
+                    this.getArticleData(item.id, 'data').then(art => {
                         this._setContent(item.data(), art)
                     }).catch(standartErr) /**/
                 })
             }).catch(standartErr)
         }
-        setArticle(id, inform) {
-            setArticle(id, inform).then(() => {
-                console.log('art saved')
-            }).catch(standartErr)
+
+        getArticleData(id, type) {
+            return getArticleData(id, type)
+        }
+
+        saveArticles() {
+            if (this.add === false) {
+                if (!!this.inform.id) {
+                    window.history.pushState({}, null, `${this.rootPath}content/articles?reset=true`)
+                    let id = [this.inform.id]
+                    saveChangedArticle(id[0], this.inform).then(res => {
+                        saveChangedArticleData('data', id[0], this.content[0]).then(() => {
+                            window.onbeforeunload = function () { };
+                            this.editing = 0;
+                            localStorage.clear()
+                            this._reset();
+                            setTimeout(() => {
+                                window.dispatchEvent(new CustomEvent('location-changed'));
+                            }, 500)
+                            saveChangedArticleInfo('info', id[0], this.INFO).then(() => {
+                                console.log('art saved')
+                            }).catch(standartErr)
+                        }).catch(standartErr)
+                    }).catch(standartErr)
+                }
+            }
+            if (this.add === true) {
+                if (!!this.inform.id) {
+                    window.history.pushState({}, null, `${this.rootPath}content/articles?reset=true`)
+                    let id = [this.inform.id]
+                    setArticles(id[0], this.inform).then(() => {
+                        saveAddedArticleData('data', id[0], this.content[0]).then(() => {
+                            window.onbeforeunload = function () { };
+                            this.editing = 0;
+                            localStorage.clear()
+                            this._reset();
+                            setTimeout(() => {
+                                window.dispatchEvent(new CustomEvent('location-changed'));
+                            }, 500)
+                            saveAddedArticleInfo('info', id[0], this.INFO).then(() => {
+                                console.log('art saved')
+                            }).catch(standartErr)
+                        }).catch(standartErr)
+                    }).catch(standartErr)
+                }
+            }
         }
         _setLangArr(cont) {
             return _setLangArr(cont)
@@ -603,15 +640,15 @@ function getArticles(query) {
         })
 }
 
-function getArticleData(id) {
+function getArticleData(id, type) {
     return new Promise((resolve, reject) => {
         _DBW.getArticleData((done2) => {
             resolve(done2)
-        }, { name: id, dataType: 'data' }, __DEV)/* */
+        }, { name: id, dataType: type }, __DEV)/* */
     })
 }
 
-function setArticle(id, inform) {
+function setArticles(id, inform) {
     return new Promise((resolve, reject) => {
         _DBW.setArticles((msg, err) => {
             if (msg !== 'error') {
@@ -623,6 +660,19 @@ function setArticle(id, inform) {
         }, { name: id, create: inform }, __DEV);/* */
     })
 }
+function saveAddedArticleInfo(type, id, INFO) {
+    if (id !== 'undefined') {
+        return new Promise((resolve, reject) => {
+            _DBW.setArticleData((done) => {
+                if (done !== 'error') {
+                    resolve(done)
+                } else {
+                    reject(done)
+                }
+            }, { name: id, dataType: type, doc: 'data', data: INFO }, __DEV);
+        })
+    }
+}
 
 function saveAddedArticleData(type, id, content) {
     let toPromisse = []
@@ -631,6 +681,8 @@ function saveAddedArticleData(type, id, content) {
             _DBW.setArticleData((done, err) => {
                 if (done !== 'error') {
                     resolve(done)
+                } else {
+                    reject(done)
                 }
             }, { name: id, dataType: type, doc: par.toString(), data: content[par] }, __DEV);/* */
         }))
@@ -640,7 +692,7 @@ function saveAddedArticleData(type, id, content) {
 
 function saveChangedArticle(id, inform) {
     return new Promise((resolve, reject) => {
-        _DBW.changePages((msg, err) => {
+        _DBW.updateArticles((msg, err) => {
             if (msg !== 'error') {
                 resolve(msg)
             }
@@ -651,14 +703,25 @@ function saveChangedArticle(id, inform) {
         }, { name: id, update: inform }, __DEV);/* */
     })
 }
-
+function saveChangedArticleInfo(type, id, INFO) {
+    if (!!id) {
+        return new Promise((resolve, reject) => {
+            _DBW.changeArticleData((done) => {
+                if (done !== 'error') {
+                    resolve(true)
+                } else {
+                    reject(done)
+                }
+            }, { name: id, dataType: type, doc: 'data', data: INFO }, __DEV);
+        })
+    }
+}
 function saveChangedArticleData(type, id, content) {
     let toPromisse = []
-    console.log(type, id, content)
-    if (id !== 'undefined') {
+    if (!!id) {
         for (let par in content) {
             toPromisse.push(new Promise((resolve, reject) => {
-                _DBW.changePageData((done, err) => {
+                _DBW.changeArticleData((done, err) => {
                     if (done !== 'error') {
                         resolve(true)
                     }
@@ -672,7 +735,7 @@ function deleteArticleData(t) {
     let toPromisse = []
     for (let i = 0; i < t.langArr.length; i++) {
         toPromisse.push(new Promise((resolve, reject) => {
-            _DBW.deletePageData((done, err) => {
+            _DBW.deleteArticles((done, err) => {
                 console.log(done)
                 if (done !== 'error') {
                     resolve(done)
@@ -792,14 +855,6 @@ function removeGalleries(data) {
         }, data, __DEV)
     })
 }
-function checkSpinner() {
-    if (this.spinOut === false) {
-        if (this.children.item(this.children).tagName === "PAPER-SPINNER-LITE")
-            this.removeChild(this.children[0])
-        this.spinOut = true
-    }
-}
-
 
 /**in use */
 
@@ -880,7 +935,6 @@ function saveChanged(id, inform) {
 
 function saveChangedData(type, id, content) {
     let toPromisse = []
-    console.log(type, id, content)
     if (id !== 'undefined') {
         for (let par in content) {
             toPromisse.push(new Promise((resolve, reject) => {

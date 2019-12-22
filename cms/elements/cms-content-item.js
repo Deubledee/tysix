@@ -7,11 +7,7 @@ import {
 export class cmsContentItem extends cmsContentItemTemplate {
 
     static get _getStyles() {
-        return html`        
-        div[inputs] {
-            height: 22px;
-            width: 42%;
-        }
+        return html`    
         input{
             position: relative;
             top: -8px;
@@ -36,6 +32,10 @@ export class cmsContentItem extends cmsContentItemTemplate {
         input[texarea]{
             width: 407px;
             height: 247px;
+        }  
+        span{
+            color: var(--paper-red-600);
+            font-weight: 400;
         }
         cms-input[texarea].larger{
             --cms-input:{
@@ -59,6 +59,7 @@ export class cmsContentItem extends cmsContentItemTemplate {
                             </input>  
                         </iron-input>   
                     </cms-input>  
+                    <span> [[info]] </span>
                 </div>  
             </div> `
     }
@@ -75,6 +76,10 @@ export class cmsContentItem extends cmsContentItemTemplate {
             langs: {
                 type: Object,
                 value: {}
+            },
+            info: {
+                type: String,
+                notify: true,
             },
             translator: {
                 type: Object,
