@@ -512,6 +512,15 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                 type: Object,
                 value: {}
             },
+            ctnOpened: {
+                type: Boolean,
+                notify: true,
+            },
+            opened: {
+                type: Boolean,
+                notify: true,
+                observer: '_checkIfClose'
+            },
             addLangResponse: {
                 type: Object,
                 notify: true,
@@ -615,7 +624,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData.page, query)'
+            '_routePageChanged(route.path, query)'
         ];
     }
     ready() {
@@ -624,6 +633,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
         window.addEventListener('reset', (this._reset).bind(this))
+        //  this.$.overlay.close()
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -639,22 +649,46 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
-    _routePageChanged(page, query) {
-        if (!!page) {
+    _checkIfClose(data) {
+        if (data === false && this.ctnOpened === true) {
+            this.$.closeanchor.click();
+            this.ctnOpened = false
+        }
+    }
+
+    _routePageChanged(path, query) {
+        if (!path) {
+            if (!!this.ctnOpened) {
+                this.ctnOpened = false
+                setTimeout(() => {
+                    if (!!this.$.overlay.opened) {
+                        this.$.overlay.close()
+                        this.ctnOpened = false
+                    }
+                }, 500)
+            }
+        }
+        if (!!path) {
             let arr = []
             if (!!query.add) {
                 this.add = (query.add === 'true')
             }
             this.closestr = `media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}&reset=false`
-            if (page === 'add-images') {
+            if (path === '/add-images') {
+                if (!this.$.overlay.opened) {
+                    this.$.overlay.open()
+                    this.ctnOpened = true
+                }
                 if (this.add === true) {
                     localStorage[`images-${this.query.gallery}-new-content-info`] = atob(ModeloInfo)
                     this._getPageInfo(`images-${this.query.gallery}-new-content-`)
                     this.closestr = `media/view-images${location.search}`
                 }
 
+            } else {
+                this.$.overlay.close()
             }
-            if (page === 'edit-images') {
+            if (path === '/edit-images') {
                 if (!!this.added) {
                     this.inform = []
                     this._getPageInfo(`images-new-content-`)

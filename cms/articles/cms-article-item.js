@@ -103,16 +103,16 @@ export class cmsArticleItem extends cmsItemTemplate {
                            </span>
                        </div> 
                        <div>
-                            <paper-button class="button-del" @click="${this._openConfirm}">
+                            <paper-button class="button-del" @click="${(this._openConfirm).bind(this)}">
                                 <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
                                 </paper-icon-button> 
                             </paper-button> 
                        </div>
                    </article>`;
         render(articleTemplate(this.objData, this.objInfo), this);
-        localStorage.setItem(`article-${this.objInfo.REF}-info`, JSON.stringify(this.objInfo))
-        localStorage.setItem(`article-${this.objInfo.REF}-data`, JSON.stringify(this.objData))
-        localStorage.setItem(`article-${this.objInfo.REF}-media`, JSON.stringify(this.objMedia))
+        localStorage.setItem(`article-${this.objInfo.id}-info`, JSON.stringify(this.objInfo))
+        localStorage.setItem(`article-${this.objInfo.id}-data`, JSON.stringify(this.objData))
+        localStorage.setItem(`article-${this.objInfo.id}-media`, JSON.stringify(this.objMedia))
     }
     _getPagename(cats) {
         return cats;
@@ -120,23 +120,15 @@ export class cmsArticleItem extends cmsItemTemplate {
     error(data) {
         console.error('error from cms-article-viewer', data);
     }
-    deSpin() {
-        this.$.spinner.active = !this.$.spinner.active;
-    }
 
     showPage() {
         let arr = Object.keys(this.objData)
-        window.history.pushState({}, null, `content/articles/edit-articles?content=${this.objInfo.REF}&add=false&lang=${arr[0]}`);
+        window.history.pushState({}, null, `content/articles/edit-articles?content=${this.objInfo.id}&add=false&lang=${arr[0]}`);
         window.dispatchEvent(new CustomEvent('location-changed'));
     }
 
-    showCats() {
-        window.history.pushState({}, null, `content/pages/subcategory-pages?content=${this.objInfo[0].id}`);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-    }
-    __delete(data) {
-        this.page.removed = true
-        // this.removePage(data, this.page)
+    __delete() {
+        this.objInfo.removed = true
     }
     __publish(data) {
         console.log(data)
@@ -146,8 +138,8 @@ export class cmsArticleItem extends cmsItemTemplate {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: this.page.id, method: (this.__delete).bind(this),
-                    argument: this.page.id, headderMsgKind: 'remove ?', type: 'page/category'
+                    name: this.objInfo.id, method: (this.__delete).bind(this),
+                    argument: this.objInfo.id, headderMsgKind: 'remove ?', type: 'article'
                 }
             }));
         });
@@ -157,8 +149,8 @@ export class cmsArticleItem extends cmsItemTemplate {
             this.dispatchEvent(new CustomEvent('confirm', {
                 bubbles: true, composed: true,
                 detail: {
-                    name: this.page.id, method: console.log,// (this.__publish).bind(this),
-                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'page/category'
+                    name: this.objInfo.id, method: (this.__publish).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'article'
                 }
             }));
         });

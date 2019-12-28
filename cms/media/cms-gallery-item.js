@@ -7,35 +7,31 @@ import { cmsItemTemplate } from '../templates/cms-item-template';
 import { html } from '@polymer/polymer/polymer-element';
 class cmsGalleryItem extends cmsItemTemplate {
     static get _getElement() {
-        return html`
-            <dom-repeat repeat items="[[galleryArray]]" as="item">
-                <template>  
-                    <div centerImageItem>
-                        <article class="padding">
-                            <paper-button>
-                               [[item.id]]
-                            </paper-button>
-                        </article>  
-                        <article class="padding">
-                            <paper-button on-click="_showImages">
-                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show">
-                                </paper-icon-button> 
-                            </paper-button>
-                        </article> 
-                        <article class="padding">
-                            <paper-button>
-                                <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
-                            </paper-button>
-                        </article> 
-                        <article class="padding">
-                            <paper-button on-click="_openConfirm">
-                                <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
-                                </paper-icon-button>   
-                            </paper-button> 
-                        </article>  
-                    </div> 
-                </template>                            
-            </dom-repeat>`;
+        return html` 
+            <div centerImageItem>
+                <article class="padding">
+                    <paper-button>
+                        [[gallery.id]]
+                    </paper-button>
+                </article>  
+                <article class="padding">
+                    <paper-button on-click="_showImages">
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show">
+                        </paper-icon-button> 
+                    </paper-button>
+                </article> 
+                <article class="padding">
+                    <paper-button>
+                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                    </paper-button>
+                </article> 
+                <article class="padding">
+                    <paper-button on-click="_openConfirm">
+                        <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
+                        </paper-icon-button>   
+                    </paper-button> 
+                </article>  
+            </div> `;
     }
     static get is() { return 'cms-gallery-item'; }
     static get properties() {
@@ -71,12 +67,12 @@ class cmsGalleryItem extends cmsItemTemplate {
             },
             gallery: {
                 type: Object,
-                notify: true
+                notify: true,
+                value: {}
             },
             galleryArray: {
                 type: Array,
                 notify: true,
-                computed: '_putRow(gallery)'
             },
             noItem: {
                 type: Array,
@@ -88,15 +84,8 @@ class cmsGalleryItem extends cmsItemTemplate {
     }
     ready() {
         super.ready()
-        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-        </paper-spinner-lite>`
-        this.spinOut = false
-        this.translator.clone(this)
     }
 
-    _putRow(item) {
-        return [item]
-    }
     _showImages() {
         this.default()
     }

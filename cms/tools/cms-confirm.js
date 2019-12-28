@@ -1,6 +1,7 @@
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
+import '../elements/cms-overlay';
 import '../styles/cms-comon-style_v3';
 import { dataBaseworker } from '../tools/dataBaseWorker';
 const _DBW = new dataBaseworker();
@@ -10,28 +11,19 @@ class cmsConfirm extends PolymerElement {
     static get template() {
         return html`
     <style  include="cms-comon-style_v3">
-        nav[bottom2]{
-            box-sizing: border-box;
-            background-color: rgba(0, 0, 0, 0.45098039215686275);
-            position: fixed;
-            top: 0%;
-            width: 100%;
-            height: 100%;
-            padding-top: 118px
-        }
-        nav[bottom2] div[one],  nav[bottom2] div[tow]{
+        cms-overlay[bottom2] div[one],  cms-overlay[bottom2] div[tow]{
             box-sizing: border-box;
             text-align: center;
             word-break: break-word;
             letter-spacing: 2px;
             color: #356ea1;
         }
-        nav[bottom2] div[one] {
+        cms-overlay[bottom2] div[one] {
             flex-basis: 78px;
             height: auto;
             font-size: 26px;
         }
-        nav[bottom2] div[tow] {
+       cms-overlay[bottom2] div[tow] {
             padding: 11px;
         }
         h2 {
@@ -74,7 +66,7 @@ class cmsConfirm extends PolymerElement {
         }    
     </style>
 
-    <nav id="navbottom" bottom2>
+    <cms-overlay bottom2 id="overlay" tabindex="-1" with-backdrop scroll-action="lock" opened="{{opened}}">
         <div class="typeKind" >
             <h2 class="typeheader" pub$="[[headderMsgKind]]"> [[headderMsg]] </h2>    
             <h4>[[type]]: </h4>
@@ -92,7 +84,7 @@ class cmsConfirm extends PolymerElement {
                 </div>   
             </div> 
         </div>  
-    </nav>
+    </cms-overlay>
     `}
 
     static get is() { return 'cms-confirm'; }
@@ -110,6 +102,11 @@ class cmsConfirm extends PolymerElement {
             langs: {
                 type: Object,
                 value: {}
+            },
+            opened: {
+                type: Boolean,
+                notify: true,
+                observer: '_checkIfClose'
             },
             confirm: {
                 type: Boolean,
@@ -169,6 +166,11 @@ class cmsConfirm extends PolymerElement {
         }
         this.__changeLang();
     }
+    _checkIfClose(data) {
+        if (data === false && this.confirm === true) {
+            this.closeOut()
+        }
+    }
     execute() {
         this.method(this.argument)
         this.closeOut()
@@ -188,6 +190,7 @@ class cmsConfirm extends PolymerElement {
                                 this.headderMsgKind = event.detail.headderMsgKind
                             }
                             this.confirm = true
+                            this.$.overlay.open()
                         } else {
                             this.headderMsg = 'entry is typeof: ' + typeof this[event.detail.headderMsgKind] + ' put space & "!" or spcae & "?" or undescore  & msg"_MSG"'
                             this.headderMsgKind = 'entry is typeof: ' + typeof this[event.detail.headderMsgKind] + ' put space "!" or spcae "?" or undescore & msg "_MSG"'
@@ -203,6 +206,7 @@ class cmsConfirm extends PolymerElement {
             }
         } else {
             this.closeOut()
+            this.$.overlay.close()
         }
     }
     closeOut() {

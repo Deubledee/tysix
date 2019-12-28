@@ -21,14 +21,11 @@ class Setter {
     loginFire(obj) {
         return DBW.loginFire(obj);
     }
-    clone(parent) {
-        var clone = document.importNode(this.template.content, true);
-        parent.appendChild(clone)
+
+    logoutFire(obj) {
+        return DBW.logoutFire(obj);
     }
-    cloneElement(parent, elem) {
-        this.template.innerHTML = elem
-        this.clone(parent)
-    }
+
     changeLang() {
         if (this.langs[this.lang]) {
             let obj = this.langs[this.lang];

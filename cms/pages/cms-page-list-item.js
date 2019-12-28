@@ -3,6 +3,7 @@ import { cmsItemTemplate } from '../templates/cms-item-template'
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { cmsPagesLib } from '../tools/cms-save-lib';
+import { html as litHtml, render } from 'lit-html';
 class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
 
     static get is() { return 'cms-page-list-item'; }
@@ -23,60 +24,38 @@ class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
     _putRow(data) {
         this.objInfo = []
         this.objInfo.push(data)
-        this.translator.template.innerHTML = `
+        const articleTemplate = (objInfo) => litHtml`
             <article centerListItem slot="table">
                 <div>   
                     <span> 
-                        <paper-button class="button-normal"> ${this.objInfo[0].id}</paper-button>                        
-                    </span>
-                    <span> 
-                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                        <paper-button class="button-normal" @click="${(this.showPage).bind(this)}"> 
+                            ${objInfo[0].id}
+                        </paper-button>   
                     </span>
                 </div>                 
-                <div class="${this.objInfo[0].toArticle}">                   
+                <div class="${objInfo[0].toArticle}">                   
                     <span> 
-                        <paper-button> ${this.objInfo[0].toArticle} </paper-button>
+                        <paper-button @click="${(this._confirmToArticle).bind(this)}"> ${objInfo[0].toArticle} </paper-button>
                     </span>
                 </div>  
-                <div class="${this.objInfo[0].Published.state}">                    
+                <div class="${objInfo[0].Published.state}">                    
                     <span> 
-                        <paper-button> ${this.objInfo[0].Published.state} </paper-button>
+                        <paper-button @click="${(this._confirmPublish).bind(this)}"> ${objInfo[0].Published.state} </paper-button>
                     </span>
                 </div> 
                 <div>
                     <paper-button class="button-normal">
-                        <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
+                        <paper-icon-button @click="${(this.showCats).bind(this)}" icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button> 
                     </paper-button> 
                 </div>
                 <div>
                     <paper-button class="button-del">
-                        <paper-icon-button icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
+                        <paper-icon-button @click="${(this._openConfirm).bind(this)}" icon="av:not-interested" aria-label="mode-delete"></paper-icon-button> 
                     </paper-button> 
                 </div>
-            </article>`;
-        this.translator.clone(this)
+            </article>`
 
-        this.children[0].children[0].
-            children[0].children[0].addEventListener('click', (this.showPage).
-                bind(this));
-
-        this.children[0].children[0].
-            children[1].children[0].addEventListener('click', (this.showPage).
-                bind(this));
-
-        this.children[0].children[1].
-            children[0].addEventListener('click', (this._confirmToArticle).
-                bind(this));
-        this.children[0].children[2].
-            children[0].addEventListener('click', (this._confirmPublish).
-                bind(this));
-        this.children[0].children[3].
-            children[0].addEventListener('click', (this.showCats).
-                bind(this));
-        this.children[0].children[4].
-            children[0].addEventListener('click', (this._openConfirm).
-                bind(this));
-        // objdata.
+        render(articleTemplate(this.objInfo), this);
         localStorage.setItem(`page-${data.id}-info`, JSON.stringify(this.objInfo))
     }
     _getPagename(cats) {

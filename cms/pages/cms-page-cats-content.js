@@ -159,6 +159,15 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 type: Object,
                 value: {}
             },
+            ctnOpened: {
+                type: Boolean,
+                notify: true,
+            },
+            opened: {
+                type: Boolean,
+                notify: true,
+                observer: '_checkIfClose'
+            },
             getdown: {
                 type: Boolean,
                 reflectToAttribute: true,
@@ -194,7 +203,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData.page, query)'
+            '_routePageChanged(route.path, query)'
         ];
     }
     ready() {
@@ -228,27 +237,53 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
         }
     }
-    _routePageChanged(page, query) {
-        if (!!query.add) {
-            this.add = (query.add === 'true')
+    _checkIfClose(data) {
+        if (data === false && this.ctnOpened === true) {
+            this.$.closeanchor.click();
+            this.ctnOpened = false
         }
-        if (!!query.added) {
-            this.added = (query.added === 'true')
+    }
+    _routePageChanged(path, query) {
+        if (!path) {
+            if (!!this.ctnOpened) {
+                this.ctnOpened = false
+                setTimeout(() => {
+                    if (!!this.$.overlay.opened) {
+                        this.$.overlay.close()
+                        this.ctnOpened = false
+                    }
+                }, 500)
+            }
         }
-        if (!!this.langs[this.lang]) this._checkLabel()
-        this.closestr = 'content/pages'
-        if (page === 'add-category-pages') {
-            this._setAddedContent(query)
-        }
-        if (page === 'edit-category-pages') {
-            this._reset()
-            if (!!localStorage[`page-${query.content}`]) {
-                this._setEditContent(query)
-                return
+        if (!!path) {
+            if (!!query.add) {
+                this.add = (query.add === 'true')
+            }
+            if (!!query.added) {
+                this.added = (query.added === 'true')
+            }
+            if (!!this.langs[this.lang]) this._checkLabel()
+            this.closestr = 'content/pages'
+            if (path === '/add-category-pages' || page === '/edit-category-pages') {
+                if (!this.$.overlay.opened) {
+                    this.$.overlay.open()
+                    this.ctnOpened = true
+                }
+                if (path === '/add-category-pages') {
+                    this._setAddedContent(query)
+                }
+                if (path === '/edit-category-pages') {
+                    this._reset()
+                    if (!!localStorage[`page-${query.content}`]) {
+                        this._setEditContent(query)
+                        return
+                    }
+                }
+            } else {
+                this.$.overlay.close()
             }
         }
     }
-
     addImage() {
         if (this.add === false) {
             localStorage[`page-${this.query.content}`] = JSON.stringify(this.content)

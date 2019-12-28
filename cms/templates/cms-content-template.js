@@ -1,12 +1,14 @@
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/iron-icons/editor-icons';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
 import '../elements/cms-content-image';
 import '../elements/cms-content-item';
-import '../elements/cms-pop-input';
 import '../elements/cms-content-text';
 import '../elements/cms-lang-tab-item';
+import '../elements/cms-overlay';
+import '../elements/cms-pop-input';
 import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
     static get template() {
@@ -28,13 +30,13 @@ export class cmsContentTemplate extends PolymerElement {
         height: 100vh;
     }   
     div[background]{
-        margin-left: auto;
-        top: 0%;
-        display: flex;
-        flex-direction: column;
-        width: 983px;
         height: 100vh;
         background-color: var(--app-secondary-text-color);
+    }
+    .scrollable {
+        border: 1px solid lightgray;
+        padding: 24px;
+        @apply --layout-scroll;
     }
     div[placertop]{
         display: block;
@@ -94,7 +96,7 @@ export class cmsContentTemplate extends PolymerElement {
         display: flex;
         flex-direction: row;
         width: 800px;
-        height: 36px;
+        min-height: 36px;
         margin-left: auto;
         z-index: 2;
         margin-right: auto;;
@@ -232,42 +234,33 @@ export class cmsContentTemplate extends PolymerElement {
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
-    <main id="main">
-        <nav bottom2 on-click="closeanchor">
-            <div placertop>
-                <div background>
-                    <nav class="diferent">
-                        [[infoState]]
-                        ${this._getSideInfo}
-                    </nav>
-                    <nav buttons>  
-                        <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" on-click="_cancelhoverd" title="close">
-                            <div class="langdivsection borderright" on-mouseover="_hoverd" on-mouseout="_hoverd">        
-                                <div class="upleft" hovererd$="[[hovererd]]">
-                                </div>
-                                <div class="upright" hovererd$="[[hovererd]]">
-                                </div>
+            <cms-overlay id="overlay" tabindex="-1" with-backdrop scroll-action="lock" opened="{{opened}}">
+                <nav buttons>  
+                    <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" on-click="_cancelhoverd" title="close">
+                        <div class="langdivsection borderright" on-mouseover="_hoverd" on-mouseout="_hoverd">        
+                            <div class="upleft" hovererd$="[[hovererd]]">
                             </div>
-                        </a>
-
-                        <div class="rightblock">  
-                            <div class="langdivsection marginalize"> 
-                                <paper-button id="saveButton" class="saveButton" aria-label="mode-save">
-                                    [[navLabel]]
-                                </paper-button>
+                            <div class="upright" hovererd$="[[hovererd]]">
                             </div>
                         </div>
-
-                        <div class="rightblock">  
-                            <div class="langdivsection marginalize borderleft"> 
-                                <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
-                                    [[Save]]
-                                </paper-button>
-                            </div> 
-                            ${this._getLangButton}
+                    </a>
+                    <div class="rightblock">  
+                        <div class="langdivsection marginalize"> 
+                            <paper-button id="saveButton" class="saveButton" aria-label="mode-save">
+                                [[navLabel]]
+                            </paper-button>
                         </div>
-
-                    </nav> 
+                    </div>
+                    <div class="rightblock">  
+                        <div class="langdivsection marginalize borderleft"> 
+                            <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
+                                [[Save]]
+                            </paper-button>
+                        </div> 
+                        ${this._getLangButton}
+                    </div>
+                </nav> 
+                <div class="scrollable" background>
                     <div placerbottom>
                         <div path> 
                             ${this._getPath} 
@@ -292,9 +285,7 @@ export class cmsContentTemplate extends PolymerElement {
                         </nav>
                     </div> 
                 </div> 
-            </div> 
-        </nav> 
-    </main>
+            </cms-overlay>
         `;
     }
     static get _getStyles() {
@@ -609,13 +600,13 @@ export class cmsContentTemplate extends PolymerElement {
                     if (datalength === 2) {
                         this.newLang = data.addlang
                         this.content[0][this.newLang] = {}
-                        //   console.log(data, this.content[0])
                         for (let par in this.content[0][this.contetnLang]) {
                             if (par.toString() !== 'undefined')
                                 this.content[0][this.newLang][par] = this.content[0][this.contetnLang][par]
                         }
                         this.set('pageLangs', [])
                         this.content[0][this.newLang].lang = this.newLang
+                        this.__setStorage()
                         cont = this.content[0]
                         arr = this._setLangArr(cont)
                         setTimeout(() => {
@@ -633,6 +624,11 @@ export class cmsContentTemplate extends PolymerElement {
             }
         }
     }
+
+    __setStorage() {
+        localStorage[`page-${query.content}`] = JSON(this.content)
+    }
+
     __removelang(event) {
         let obj = {}
         for (let par in this.content[0]) {

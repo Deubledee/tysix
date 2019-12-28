@@ -150,6 +150,11 @@ class cmsControler extends PolymerElement {
                             <div>
                                 <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
                             </div>
+                            <div>
+                                <paper-button icon="perm-identity" aria-label\$="logout" on-click="_logout">
+                                    logout
+                                </paper-button>
+                            </div>
                         </div>
                       </nav>
 
@@ -364,7 +369,10 @@ class cmsControler extends PolymerElement {
       this.set('lang', 'en');
     }
   }
-
+  _logout() {
+    this.translator.logoutFire()
+    window.location.reload()
+  }
   openConfirm(event) {
     this.confirm = 'confirm';
     if (!this.$.confirm.openConfirm) {

@@ -1,9 +1,5 @@
-import {
-    html
-} from '@polymer/polymer/polymer-element';
-import {
-    cmsContentItemTemplate
-} from '../templates/cms-content-item-template';
+import { html } from '@polymer/polymer/polymer-element';
+import { cmsContentItemTemplate } from '../templates/cms-content-item-template';
 export class cmsContentItem extends cmsContentItemTemplate {
 
     static get _getStyles() {
@@ -33,7 +29,7 @@ export class cmsContentItem extends cmsContentItemTemplate {
             width: 407px;
             height: 247px;
         }  
-        span{
+        .span{
             color: var(--paper-red-600);
             font-weight: 400;
         }
@@ -53,13 +49,13 @@ export class cmsContentItem extends cmsContentItemTemplate {
                     <cms-input class="larger keyboard-focus" texarea$="[[texarea]]" id="inpt1" on-click="edit" 
                         name="[[itemLabel]]"
                         raised="[[raised]]">
-                            [[itemText]]                        
+                           <span> [[itemText]] </span>
                         <iron-input slot="input" bind-value="{{itemText}}">
                             <input id="input" value="{{value::input}}">
                             </input>  
                         </iron-input>   
                     </cms-input>  
-                    <span> [[info]] </span>
+                    <span class="span"> [[info]] </span>
                 </div>  
             </div> `
     }

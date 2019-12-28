@@ -182,6 +182,15 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 type: Object,
                 value: {}
             },
+            ctnOpened: {
+                type: Boolean,
+                notify: true,
+            },
+            opened: {
+                type: Boolean,
+                notify: true,
+                observer: '_checkIfClose'
+            },
             addLangResponse: {
                 type: Object,
                 notify: true,
@@ -228,7 +237,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData.page, query)'
+            '_routePageChanged(route.path, query)'
         ];
     }
     ready() {
@@ -267,8 +276,26 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             return STR.join(' - ')
         }
     }
-    _routePageChanged(page, query) {
-        if (!!page) {
+    _checkIfClose(data) {
+        if (data === false && this.ctnOpened === true) {
+            this.$.closeanchor.click();
+            this.ctnOpened = false
+        }
+    }
+
+    _routePageChanged(path, query) {
+        if (!path) {
+            if (!!this.ctnOpened) {
+                this.ctnOpened = false
+                setTimeout(() => {
+                    if (!!this.$.overlay.opened) {
+                        this.$.overlay.close()
+                        this.ctnOpened = false
+                    }
+                }, 500)
+            }
+        }
+        if (!!path) {
             this.add = this.query.adTosub
             let parentName = this.query.content
             let parentIndex = query.parent
@@ -284,13 +311,21 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 this.parent = parseInt(this.query.parent)
             }
             this.closestr = this.query.content === 'new-content' ? `content/pages/subcategory-pages?content=${this.query.content}` : `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=false`
-            if (page === 'add-subcategory-pages') {
-                this._setAddedContent(query)
-            }
-            if (page === 'edit-subcategory-pages') {
-                if (!!query.name) {
-                    this._setEditContent(query)
+            if (path === '/add-subcategory-pages' || page === '/edit-subcategory-pages') {
+                if (!this.$.overlay.opened) {
+                    this.$.overlay.open()
+                    this.ctnOpened = true
                 }
+                if (path === '/add-subcategory-pages') {
+                    this._setAddedContent(query)
+                }
+                if (path === '/edit-subcategory-pages') {
+                    if (!!query.name) {
+                        this._setEditContent(query)
+                    }
+                }
+            } else {
+                this.$.overlay.close()
             }
         }
     }

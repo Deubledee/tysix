@@ -2,6 +2,7 @@ import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behav
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { html as litHtml, render } from 'lit-html';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
 import './cms-image-item';
 class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsMiddlePageTemplate)) {
@@ -167,10 +168,6 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
     }
     ready() {
         super.ready()
-        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-        </paper-spinner-lite>`
-        this.spinOut = false
-        this.translator.clone(this)
         this.translator.target('cms-image', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-image', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-image', 'setLangObject')
@@ -194,6 +191,8 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         this.addTo = false
         this.checked = false
         this.addStr = `?gallery=${this.query.gallery}&add=trueI&count=${this.IMAGES.length}`
+        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(spinnerTemplate(), this);
         if (!!page && page === "view-images") {
             if (!!query.type) {
                 this.addTo = true
@@ -259,6 +258,8 @@ class cmsImages extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(c
         }
     }
     _computeUrl(IMAGES) {
+        const spinnerTemplate = () => litHtml``
+        render(spinnerTemplate(), this);
         return `${location.search.toString()}&count=${IMAGES.length}`
     }
     reset() {

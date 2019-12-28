@@ -256,8 +256,6 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
             setGalleries(this.gall, this.newGall).then(data => {
                 window.onbeforeunload = function () { };
                 this.galleries = []
-                this.sloted = false
-                this.innerHTML = ''
                 this.warningMsg = 'saved'
                 this.raised = false
                 setTimeout(() => {
@@ -270,13 +268,11 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
         }
         _getGalleries(query) {
             getNRGalleries(query).then(data => {
-
                 this.set('galleries', data)
             }).catch(standartErr)
         }
         _getAllGalleries() {
             getRnNRGallerries().then(data => {
-
                 this.set('galleries', data)
             }).catch(standartErr)
         }
@@ -573,16 +569,15 @@ const cmsArticlesLib = function (superClass) {
                     window.history.pushState({}, null, `${this.rootPath}content/articles?reset=true`)
                     let id = [this.inform.id]
                     saveChangedArticle(id[0], this.inform).then(res => {
-                        saveChangedArticleData('data', id[0], this.content[0]).then(() => {
+                        saveChangedArticleData('data', id[0], this.content[0]).then((d) => {
                             window.onbeforeunload = function () { };
-                            this.editing = 0;
                             localStorage.clear()
-                            this._reset();
                             setTimeout(() => {
                                 window.dispatchEvent(new CustomEvent('location-changed'));
+                                this._reset();
+                                this.scrollTo(0, 0)
                             }, 500)
                             saveChangedArticleInfo('info', id[0], this.INFO).then(() => {
-                                console.log('art saved')
                             }).catch(standartErr)
                         }).catch(standartErr)
                     }).catch(standartErr)
@@ -595,14 +590,13 @@ const cmsArticlesLib = function (superClass) {
                     setArticles(id[0], this.inform).then(() => {
                         saveAddedArticleData('data', id[0], this.content[0]).then(() => {
                             window.onbeforeunload = function () { };
-                            this.editing = 0;
                             localStorage.clear()
-                            this._reset();
                             setTimeout(() => {
                                 window.dispatchEvent(new CustomEvent('location-changed'));
+                                this._reset();
+                                this.scrollTo(0, 0)
                             }, 500)
                             saveAddedArticleInfo('info', id[0], this.INFO).then(() => {
-                                console.log('art saved')
                             }).catch(standartErr)
                         }).catch(standartErr)
                     }).catch(standartErr)

@@ -1,6 +1,7 @@
 import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
+import { html as litHtml, render } from 'lit-html';
 import '../elements/cms-content-item';
 import '../elements/cms-pop-input';
 class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
@@ -90,8 +91,7 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     static get _getTable() {
         return html`
         <dom-repeat items="[[galleries]]" as="gallery">
-            <template>                
-                [[putElement(index, gallery)]]
+            <template>
                 <slot name="item[[index]]"></slot>
             </template>
         </dom-repeat>
@@ -202,7 +202,8 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
             },
             galleries: {
                 type: Array,
-                notify: true
+                notify: true,
+                observer: 'putElement'
             },
             tgglelang: {
                 type: Boolean,
@@ -231,9 +232,8 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     ready() {
         super.ready()
-        this.translator.template.innerHTML = `<paper-spinner-lite active="false" slot="spinner">
-    </paper-spinner-lite>`
-        this.translator.clone(this)
+        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(spinnerTemplate(), this);
         this.translator.target('cms-galleries', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-galleries', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-galleries', 'setLangObject')
@@ -259,7 +259,6 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     }
     _setAddLangValue(data) {
         if (typeof this.time === 'number') clearTimeout(this.time)
-        if (typeof this.time2 === 'number') clearTimeout(this.time2)
         if (!!data && !('undefined' in data)) {
             this.time = setTimeout(() => {
                 this.gall = data.addGall
@@ -309,23 +308,15 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         return inform
     }
 
-    putElement(index, gallery) {
-        if (typeof this.time === 'number') {
-            clearTimeout(this.time)
-        }
-        if (this.sloted === false) {
-            let template = html`   
-                         <cms-gallery-item> 
-                        </cms-gallery-item>`;
-            var clone = document.importNode(template.content, true);
-            this.appendChild(clone);
-            let count = (this.childElementCount - 1)
-            this.children[count].setAttribute('slot', `item${count}`);
-            this.children[count].set('gallery', gallery);
-            this.time = setTimeout(() => {
-                this.set('sloted', true)
-            }, 60);
-        }
+    putElement(data) {
+        if (typeof this.time === 'number') clearInterval(this.time)
+        this.time = setTimeout(() => {
+            const pageTemplate = (galleries) => litHtml`${galleries.map((gallery, idx) => {
+                return litHtml`<cms-gallery-item slot="item${idx}" .gallery="${gallery}"> 
+                                   </cms-gallery-item>`
+            })} `
+            render(pageTemplate(data), this);
+        }, 60);
     }
     log(data) {
         console.log(data)

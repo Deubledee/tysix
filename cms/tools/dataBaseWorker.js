@@ -184,10 +184,15 @@ export class dataBaseworker {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType }
         getItemCollectionDoc.call(this, obj, done, dev)
     }
+
+
     setArticles(done, table, dev) {
-        let obj = table.parent !== undefined ? { name: 'articles', docName: table.parent, doc: table } : false;
+        let obj = { name: 'articles', docName: table.name, doc: table.create }
+        console.log(obj)
         createDoc.call(this, obj, done, dev)
     }
+
+
     setArticleData(done, table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
         createItemCollectionDoc.call(this, obj, done, dev)
@@ -274,6 +279,9 @@ export class dataBaseworker {
     //other
     loginFire(user) {
         return Worker.login(user);
+    }
+    logoutFire() {
+        return Worker.logout();
     }
     authStateChanged(done) {
         Worker.authState(done);

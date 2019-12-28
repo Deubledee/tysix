@@ -158,6 +158,8 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
                 }
             }
         } else if (reset === true) {
+            const articleTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+            render(articleTemplate(), this);
             this._contentChanged()
         }
     }
@@ -172,8 +174,6 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
     }
     _contentChanged() {
         if (typeof this.time === 'number') clearTimeout(this.time)
-        const articleTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
-        render(articleTemplate(), this);
         if (this.routeData.page === "articles") {
             this.contents = []
             this.time = setTimeout(() => {

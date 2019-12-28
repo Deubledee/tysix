@@ -2,9 +2,10 @@ import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsArticlesLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
 import '../elements/cms-content-text'
+import '../elements/cms-content-item'
 import '../elements/cms-dropdown-menu';
-const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
-const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yeSI6IiIsImRpbWVudGlvbnMiOiIiLCJrZXl3b3JkcyI6W10sImxhc3RNb2RpZmVpZCI6W10sInByaWNlIjo4MDAsInByb21vdGlvbkNvZGUiOiIiLCJyZW1vdmVkIjpmYWxzZSwicmV0YWlsZXIiOiJzb2xpZG8iLCJzaGlwcGluZyI6IiIsInNoaXBwaW5nVGF4IjoiIiwic3RvY2siOjAsInN0b3JlV2FycmFudHkiOiIiLCJ0YXgiOiIiLCJ3ZWlnaHQiOiIifQ=="
+const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImFydGljbGVOYW1lIjoiIiwibGFuZyI6IiIsImRlc2NyaXB0aW9uIjoiIiwidHlwZSI6IiJ9fQ=="
+const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yeSI6IiIsImRpbWVudGlvbnMiOiIiLCJrZXl3b3JkcyI6W10sImxhc3RNb2RpZmVpZCI6W10sInByaWNlIjoiIiwicHJvbW90aW9uQ29kZSI6IiIsInJlbW92ZWQiOmZhbHNlLCJyZXRhaWxlciI6IiIsInNoaXBwaW5nIjoiIiwic2hpcHBpbmdUYXgiOiIiLCJzdG9jayI6IiIsInN0b3JlV2FycmFudHkiOiIiLCJ0YXgiOiIiLCJ3ZWlnaHQiOiIifQ=="
 class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTemplate)) {
     static get _getStyles() {
         return html`
@@ -81,14 +82,14 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
             </section>
         </div>
 
-        <div bottom>
-     
-            <cms-dropdown-menu items="[[category]]">
-            
-            </cms-dropdown-menu>                  
-       
+        <div bottom>     
+            <cms-dropdown-menu 
+                items="[[category]]"  
+                horizontal-align="left" 
+                vertical-align="top" 
+                scroll-action="refit">            
+            </cms-dropdown-menu>       
         </div>
-
 
         <div bottom on-click="_seeFlat">
             <article class="row-layout" on-click="_seeFlat">
@@ -216,6 +217,15 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 type: Object,
                 value: {}
             },
+            ctnOpened: {
+                type: Boolean,
+                notify: true,
+            },
+            opened: {
+                type: Boolean,
+                notify: true,
+                observer: '_checkIfClose'
+            },
             getdown: {
                 type: Boolean,
                 reflectToAttribute: true,
@@ -269,7 +279,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
     }
     static get observers() {
         return [
-            '_routePageChanged(routeData.page, query)'
+            '_routePageChanged(route.path, query)'
         ];
     }
     ready() {
@@ -300,8 +310,25 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
             this.translator.changeItemTitleLang.call(this, 'editPage', 'navLabel')
         }
     }
-    _routePageChanged(page, query) {
-        if (!!page) {
+    _checkIfClose(data) {
+        if (data === false && this.ctnOpened === true) {
+            this.$.closeanchor.click();
+            this.ctnOpened = false
+        }
+    }
+    _routePageChanged(path, query) {
+        if (!path) {
+            if (!!this.ctnOpened) {
+                this.ctnOpened = false
+                setTimeout(() => {
+                    if (!!this.$.overlay.opened) {
+                        this.$.overlay.close()
+                        this.ctnOpened = false
+                    }
+                }, 500)
+            }
+        }
+        if (!!path) {
             this._reset()
             if (!!query.add) {
                 this.add = (query.add === 'true')
@@ -309,26 +336,33 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
             if (!!query.added) {
                 this.added = (query.added === 'true')
             }
-            if (!!this.langs[this.lang]) this._checkLabel()
-            this.closestr = 'content/articles'
-            if (page === 'add-articles') {
-                if (this.add === true) {
+            if (path === '/add-articles' || path === '/edit-articles') {
+                console.log(path);
+                if (!this.$.overlay.opened) {
+                    this.$.overlay.open()
+                    this.ctnOpened = true
+                }
+                if (!!this.langs[this.lang]) this._checkLabel()
+                this.closestr = 'content/articles?reset=true'
+                if (path === '/add-articles') {
                     this._setAddedContent()
                     return 0
                 }
-            }
-            if (page === 'edit-articles') {
-                if (!!query.content) {
-                    this._setEditContent(query)
-                    return 0
+                if (path === '/edit-articles') {
+                    if (!!query.content) {
+                        this._setEditContent(query)
+                        return 0
+                    }
                 }
+            } else {
+                this.$.overlay.close()
             }
         }
     }
     _setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images) {
         this.set('str', `content/articles/edit-articles${urlstring}lang=`)
         this.set('media', media)
-        this.set('imageArr', this.media.images.content)
+        this.set('imageArr', 'images' in this.media ? this.media.images.content : [])
         this.set('infoVals', this._getObjArr(infoVals, true))
         this.set('phDetails', this._getObjArr(phDetails, true))
         this.set('shDetails', this._getObjArr(shDetails, true))
@@ -349,31 +383,27 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         })
     }
     _setAddedContent() {
-        let cont = JSON.parse(atob(Modelo))
-        localStorage[`article-new-content-info`] = atob(ModeloInfo)
-        let obj = cont.images.content
-        this.imageLabel = 'images'
-        this.set('imageArr', obj)
-        this.set('str', `content/articles/add-articles?content=pagenotsaved`)
-        this._setContent('lang', [cont])
-        this._getPageInfo(`article-new-content-`)
-        this.set('pageLangs', [])
+        let infoVals, media, images, urlstring, phDetails, shDetails, dtDetails, keywords, category
+        [media, infoVals, images, urlstring,
+            phDetails, shDetails, dtDetails, keywords, category] = generateAddData.call(this)
+        this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
     }
     _setEditContent(query) {
         let arr = []
         let infoVals, cont, media, images, urlstring, phDetails, shDetails, dtDetails, keywords, category
         [cont, media, infoVals, images, urlstring,
-            phDetails, shDetails, dtDetails, keywords, category] = generateData.call(this, query)
-        if (this.add === false || this.added === true) {
-            this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
-            if (!!query.lang) {
-                if (query.lang !== 'lang') {
-                    arr = this._setLangArr(cont)
-                    this.set('pageLangs', arr)
-                }
-                this.__setLAng(query.lang, [cont])
+            phDetails, shDetails, dtDetails, keywords, category] = generateEditData.call(this, query)
+        this._setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images)
+        if (!!query.lang) {
+            if (query.lang !== 'lang') {
+                arr = this._setLangArr(cont)
+                this.set('pageLangs', arr)
             }
+            this.__setLAng(query.lang, [cont])
         }
+    }
+    __setStorage() {
+        localStorage[`article-${this.query.content}-data`] = JSON.stringify(this.content[0])
     }
     addImage() {
         if (this.add === false) {
@@ -392,28 +422,35 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         };
     }
     onSave() {
-        this.getArticleData(this.inform.id, 'info').then((this._save).bind(this)).catch(err => console.log(err))
+        if (this.add === false) {
+            this.getArticleData(this.inform.id, 'info').then((this._save).bind(this)).catch(err => console.log(err))
+        } else {
+            this._save(undefined)
+        }
     }
     _save(item) {
-        let obj = { addedBy: '', addedDate: '', lastModified: [] }
-        let Cont = this.add === false ? item.data : obj
+        let obj = { addedBy: '', addedDate: '', lastModifeid: [] }
+        let Cont = !!item ? item.data : obj
         this.INFO = this._lastModified(Cont)
+        let dataValidation = this._setAndCheckDataBeforeSave(this.inform)
+        if (!dataValidation) return
         if (!!this.removelang) {
             this._removeLang()
             return
         }
         if (!!this.newlangstate) this.add = true
+        this.newlangstate = !this.newlangstate
         this.saveArticles()
+        return
     }
 
     _lastModified(ifo) {
         let INFO = ifo
         let data = new Date()
-        if (this.add === false) {
+        if (this.add === true) {
             INFO.addedBy = this.user.name
             INFO.addedDate = data
         }
-
         INFO.lastModifeid.push({
             author: this.user.name,
             date: data.toLocaleString().replace(',', ''),
@@ -421,24 +458,32 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         });
         return INFO
     }
-    _setInfo(inform, data) {
+    _setAndCheckDataBeforeSave() {
         if (!this.newlangstate) {
             if (this.add === true) {
-                if (!this.content[0].lang.lang && !this.content[0].lang.categoryName) {
-                    alert('insert Lang & Category Name first')
-                    return undefined
+                if (!this.content[0].lang.lang && !this.content[0].lang.articleName) {
+                    return false
                 }
-                inform.removed = false
+                this.content[0][this.content[0].lang.lang] = this.content[0].lang
+                this.inform.id = (this.content[0][this.content[0].lang.lang].articleName).split(' ').join('_')
+                delete this.content[0].lang
+                this.inform.removed = false
+                this.inform.Published = "NP"
+                return true
             }
         }
-        return inform
+        for (let par in this.media) {
+            this.content[0][par] = this.media[par]
+        }
+
+        return true
     }
     _reset() {
         this.set('content', []);
         this.set('imageArr', [])
         this.set('inputVal', '')
         this.set('infoVals', [])
-        this.set(' media', [])
+        this.set('media', [])
         this.set('dtDetails', [])
         this.set('category', [])
         this.set('phDetails', [])
@@ -446,12 +491,33 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         this.set('keywords', [])
         this.set('textareaVal', [])
         this.set('inform', [])
-
+        this.newlangstate = false
     }
 }
 customElements.define(cmsArticleContent.is, cmsArticleContent);
 
-function* generateData(query) {
+function* generateAddData() {
+    let cont = JSON.parse(atob(Modelo))
+    localStorage[`article-new-content-info`] = atob(ModeloInfo)
+    let obj = cont.images.content
+    this._setContent('lang', [cont])
+    let strg = location.search
+    strg = strg.split('lang=')[0]
+    this.set('pageLangs', [])
+    //  yield cont
+    yield obj
+    this._getPageInfo(`article-new-content-`)
+    yield _getInforDetails(this.inform)
+    yield 'images'
+    yield strg
+    yield _getPhysicalDetails(this.inform)
+    yield _getShippingDEtails(this.inform)
+    yield _getDetails(this.inform)
+    yield _getKeywords(this.inform)
+    yield _getCatDetails(this.inform)
+}
+
+function* generateEditData(query) {
     yield JSON.parse(localStorage[`article-${query.content}-data`])
     yield JSON.parse(localStorage[`article-${query.content}-media`])
     this._getPageInfo(`article-${query.content}-`)
@@ -471,16 +537,12 @@ function _getInforDetails(details) {
     let infoVals = {}
     for (let par in details) {
         if (
-            par !== 'Published' &&
-            par !== 'shipping' &&
-            par !== 'shippingTax' &&
-            par !== 'price' &&
-            par !== 'category' &&
-            par !== 'removed' &&
-            par !== 'dimentions' &&
-            par !== 'stock' &&
-            par !== 'weight' &&
-            par !== 'keywords') {
+            par === 'REF' ||
+            par === 'SKA' ||
+            par === 'brandManufacturer' ||
+            par === 'promotionCode' ||
+            par === 'retailer' ||
+            par === 'storeWarranty') {
             infoVals[par] = details[par]
         }
     }
@@ -507,7 +569,7 @@ function _getShippingDEtails(details) {
 function _getDetails(details) {
     let dtDetails = {}
     for (let par in details) {
-        if (par === 'price' || par === 'stock') {
+        if (par === 'price' || par === 'stock' || par === 'tax') {
             dtDetails[par] = details[par]
         }
     }

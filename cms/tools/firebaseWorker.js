@@ -94,6 +94,7 @@ export class worker {
     }
     createDocDev(table) {
         var pagesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.docName}`)
+        console.log(table)
         return pagesRef.set(table.doc);
     }
 
@@ -278,6 +279,10 @@ export class worker {
     login(user) {
         let AUTH = this.auth().signInWithEmailAndPassword(user.email, user.pwd)
         return AUTH
+    }
+    logout() {
+        let signOut = this.auth().signOut()
+        return signOut
     }
     handleTransaction(table) {
         var sfDocRef = this.db.collection(table.name).doc(table.doc);
