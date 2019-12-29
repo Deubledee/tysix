@@ -87,7 +87,8 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 items="[[category]]"  
                 horizontal-align="left" 
                 vertical-align="top" 
-                scroll-action="refit">            
+                scroll-action="refit"
+                res="{{catResponse}}">            
             </cms-dropdown-menu>       
         </div>
 
@@ -337,7 +338,6 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 this.added = (query.added === 'true')
             }
             if (path === '/add-articles' || path === '/edit-articles') {
-                console.log(path);
                 if (!this.$.overlay.opened) {
                     this.$.overlay.open()
                     this.ctnOpened = true
@@ -375,7 +375,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         this.getCategories().then(data => {
             category.items = []
             data.forEach(item => {
-                category.items.push(item.data())
+                category.items.push(item.data().id)
             })
             this.set('category', this._getObjArr(category, true))
         }).catch(error => {

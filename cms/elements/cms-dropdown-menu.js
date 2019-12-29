@@ -20,8 +20,10 @@ export class cmsDropdownMenu extends PolymerElement {
         }
         
         div[inputs] {
-            height: 22px;
-            width: 42%;
+            box-sizing: border-box;
+            height: 30px;
+            background-color: var(--app-item-backgound-color);
+            padding-block-end: 7px;
         }
 
         input{
@@ -55,11 +57,27 @@ export class cmsDropdownMenu extends PolymerElement {
             min-height: 134px;
             max-width: unset;
         }
-
+        .alt{
+            padding-inline-start: 60px;
+        }
         .span{
             color: var(--paper-red-600);
             font-weight: 400;
         } 
+        iron-dropdown.formal{
+            margin-top: 2.6%;
+            margin-left: 0.2%;
+        }
+        paper-item.form-al{
+            font-size: 14px;
+            --paper-item-min-height: 30px
+        }
+        paper-listbox.dropdown-content{
+            background-color: var(--app-item-backgound-color);
+            box-shadow: 0px 2px 3px grey;
+
+        }
+        
         </style>
         <div class="alt">       
             <div class="flexright">   
@@ -71,7 +89,7 @@ export class cmsDropdownMenu extends PolymerElement {
                         [[itemText]] 
                     </paper-button>              
                         <iron-dropdown id="dropdown"
-                            class="keyboard-focus" 
+                            class="formal" 
                             slot="input"
                             vertical-align="[[verticalAlign]]"
                             horizontal-align="[[horizontalAlign]]"
@@ -81,10 +99,9 @@ export class cmsDropdownMenu extends PolymerElement {
                             close-animation-config="[[closeAnimationConfig]]"
                             opened="{{dmopened}}">   
                             <paper-listbox class="dropdown-content" slot="dropdown-content">
-
                                 <dom-repeat repeat items="[[list]]" as="item">
                                     <template>
-                                        <paper-item>[[item.id]]</paper-item>
+                                        <paper-item class="form-al" on-click="_setResValue">[[item]]</paper-item>
                                     </template>
                                 </dom-repeat>
                             </paper-listbox>
@@ -140,6 +157,11 @@ export class cmsDropdownMenu extends PolymerElement {
                 type: Boolean,
                 value: false,
             },
+            res: {
+                type: Object,
+                notify: true,
+                value: {}
+            },
             items: {
                 type: Array,
                 notify: true,
@@ -170,7 +192,6 @@ export class cmsDropdownMenu extends PolymerElement {
         this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
         this.translator.shoot('cms-content-item', 'setLangObject')
-        // window.addEventListener('flat', (this._getFlat).bind(this), false)
     }
     _setLObj(res, querySnapshot) {
         if ('data' in querySnapshot) {
@@ -188,6 +209,19 @@ export class cmsDropdownMenu extends PolymerElement {
         this.translator.changeItemTitleLang.call(this, this.itemLabel, 'title');
         this.translator.changeItemTitleLang.call(this, 'cancel', 'cancel');
     }
+    _setResValue(evt) {
+        let value = evt.model.__data.item,
+            obj = {};
+
+        obj[this.itemLabel] = value
+        this.set('itemText', value);
+        this.set('res', obj)
+        this.$.dropdown.close();
+        this.opened = false
+        window.onbeforeunload = function () {
+            return 'are you sure ?'
+        }
+    }
     __setValues(data) {
         if (data.length > 0) {
             let obj = data.shift()
@@ -197,7 +231,6 @@ export class cmsDropdownMenu extends PolymerElement {
         }
     }
     _setValues(data) {
-        //  this.$.cancel.classList.add('diferent');
         this.temp = this.item
         for (let par in data) {
             this.set('itemText', data[par])
@@ -210,17 +243,23 @@ export class cmsDropdownMenu extends PolymerElement {
         }
     }
     open() {
-        if (typeof this.time === 'number') clearInterval(this.time)
-        this.time = setTimeout(() => {
-            afterNextRender(this, () => {
-                if (!this.opened) {
-                    this.$.dropdown.open();
-                    this.opened = true
-                } else {
-                    this.opened = this.$.dropdown.opened
-                }
-            });
-        }, 120);
+        afterNextRender(this, () => {
+            if (!this.opened) {
+                this.$.dropdown.open();
+                this.opened = true
+            } else {
+                this.opened = this.$.dropdown.opened
+            }
+        });
     }
 }
 customElements.define(cmsDropdownMenu.is, cmsDropdownMenu);
+
+/*
+--paper - item                                       /*| Mixin applied to the item | { } *
+--paper - item - selected - weight                   /*| The font weight of a selected item | bold*
+--paper - item - selected                            /*| Mixin applied to selected paper-items | { } *
+--paper - item - disabled - color                    /*| The color for disabled paper-items | --disabled - text - color*
+--paper - item - disabled                            /*| Mixin applied to disabled paper-items | { } *
+--paper - item - focused                             /*| Mixin applied to focused paper-items | { } *
+--paper - item - focused - before                    /*| Mixin applied to :before focused paper-items | { }*/
