@@ -105,7 +105,7 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         if (typeof this.time === 'number') clearTimeout(this.time)
         const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
         render(spinnerTemplate(), this);
-        if (this.routeData.page === 'pages') {
+        if (this.routeData.page === 'pages' && this.route.path === '/pages') {
             this.time = setTimeout(() => {
                 window.history.pushState({}, null, `${this.rootPath}content/pages`)
                 window.dispatchEvent(new CustomEvent('location-changed'))

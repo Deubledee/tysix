@@ -39,9 +39,9 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
         
         <dom-repeat repeat items="[[subcatContent]]" as="item">
             <template>                
-                <article on-click="__changeColorTimeout" centerlistitem updated$="[[updated]]">                    
+                <article  on-click="__changeColorTimeout" centerlistitem updated$="[[updated]]">  
                     <div title="[[item.categoryName]]">
-                        <paper-button title="[[item.categoryName]]">
+                        <paper-button on-click="_viewEdit" title="[[item.categoryName]]">
                             [[item.categoryName]]
                         </paper-button>
                     </div>
@@ -53,12 +53,6 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                     <div title="[[item.Published.state]]" published$="[[item.Published.state]]">
                         <paper-button title="[[item.Published.state]]">
                             [[item.Published.state]]
-                        </paper-button>
-                    </div>
-                    <div>
-                        <paper-button on-click="_viewEdit">
-                            <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
-                            <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
                         </paper-button>
                     </div>
                     <div>
@@ -201,7 +195,7 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
             this.updated = this.subcat.id === event.detail.update ? true : false
             setTimeout(() => {
                 this.routeData.page = "subcategory-pages"
-                if (this.childElementCount > 0 && this.children.item(this.children).tagName === "PAPER-SPINNER-LITE") {
+                if (this.childElementCount > 0) {
                     this._subcatAdded(this._indexArr)
                 }
             }, 125);
@@ -224,13 +218,14 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
     _subcatAdded(data) {
         if (!!data) {
             if (this.routeData.page === "subcategory-pages") {
+                let reset = (this.query.reset === 'true')
                 let parent = this.query.content
                 this.set("parent", parent)
                 this.set('subCatChildren', this.subcat.children)
                 this.updated = this.subcat.id === this.query.update ? true : false
-                if (!!this.query.reset)
+                if (!!this.query.reset && !reset)
                     this._setNewUpdated(data)
-                if (!this.query.reset) /**/
+                if (!this.query.reset || !!reset) /**/
                     this.getSubcat(this.parent, this.subcat.id)
             }
         }

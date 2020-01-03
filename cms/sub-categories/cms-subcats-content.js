@@ -296,6 +296,8 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             }
         }
         if (!!path) {
+            this.__reset()
+            this.scrollTo(0, 0)
             this.add = this.query.adTosub
             let parentName = this.query.content
             let parentIndex = query.parent
@@ -311,7 +313,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 this.parent = parseInt(this.query.parent)
             }
             this.closestr = this.query.content === 'new-content' ? `content/pages/subcategory-pages?content=${this.query.content}` : `content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=false`
-            if (path === '/add-subcategory-pages' || page === '/edit-subcategory-pages') {
+            if (path === '/add-subcategory-pages' || path === '/edit-subcategory-pages') {
                 if (!this.$.overlay.opened) {
                     this.$.overlay.open()
                     this.ctnOpened = true
@@ -325,6 +327,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                     }
                 }
             } else {
+                this.ctnOpened = false
                 this.$.overlay.close()
             }
         }
@@ -444,6 +447,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         }
         return inform
     }
+
     __reset() {
         this.imageLabel = ''
         this.set('content', []);

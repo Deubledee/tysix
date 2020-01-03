@@ -22,6 +22,10 @@ export class CategoriesDB {
         let obj = { name: 'categories', docName: gallery }
         deleteDoc.call(this, obj, done, dev)
     }
+    changeCategory(done, table, dev) {
+        let obj = { name: 'categories', doc: table.name, data: table.update };
+        updateContent.call(this, obj, done, dev)
+    }
 }
 
 export class MediaDB {
@@ -94,7 +98,14 @@ export class dataBaseworker {
         let obj = { name: 'brands&manufactures' };
         getDocListDev.call(this, obj, done, dev)
     }
+
+
     //langs
+    getLangs(done, dev) {
+        let obj = { name: 'langs', doc: 'data' };
+        getDoc.call(this, obj, done, dev)
+    }
+
     updateLangs(done, table, dev) {
         let obj = { name: "langs", doc: table.name, data: { content: table.content } };
         updateContent.call(this, obj, done, dev)
@@ -107,15 +118,10 @@ export class dataBaseworker {
         let obj = { name: 'langs', docName: lang }
         deleteDoc.call(this, obj, done, dev)
     }
-    getLangs(done, table, dev) {
-        let obj = { name: 'langs', doc: table.name };
-        getDoc.call(this, obj, done, dev)
-    }
     getAllLangs(done, dev) {
         let obj = { name: 'langs' };
         getDocList.call(this, obj, done, dev)
     }
-
 
 
     /****************************************************************************************************************************/

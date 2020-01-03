@@ -331,6 +331,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         }
         if (!!path) {
             this._reset()
+            this.scrollTo(0, 0)
             if (!!query.add) {
                 this.add = (query.add === 'true')
             }
@@ -343,7 +344,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                     this.ctnOpened = true
                 }
                 if (!!this.langs[this.lang]) this._checkLabel()
-                this.closestr = 'content/articles?reset=true'
+                this.closestr = 'content/articles?reset=false'
                 if (path === '/add-articles') {
                     this._setAddedContent()
                     return 0
@@ -372,7 +373,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         this.imageLabel = images
     }
     _getCatArr(category) {
-        this.getCategories().then(data => {
+        this.getCategories({ q: 'removed', v: false }).then(data => {
             category.items = []
             data.forEach(item => {
                 category.items.push(item.data().id)
@@ -430,7 +431,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
     }
     _save(item) {
         let obj = { addedBy: '', addedDate: '', lastModifeid: [] }
-        let Cont = !!item ? item.data : obj
+        let Cont = !!item && !!item.data ? item.data : obj
         this.INFO = this._lastModified(Cont)
         let dataValidation = this._setAndCheckDataBeforeSave(this.inform)
         if (!dataValidation) return
@@ -475,7 +476,6 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         for (let par in this.media) {
             this.content[0][par] = this.media[par]
         }
-
         return true
     }
     _reset() {

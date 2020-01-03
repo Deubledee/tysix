@@ -50,34 +50,33 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
             <span> [[contents.length]] </span>
         </div>
         <section class="flexchildbotom noFlex">
-            <div class="center flex">
-                <h4 class="putitcool"> [[title]] </h4>               
-                <h4> [[viewedit]] viewedit</h4>
+            <div class="center">            
+                <h4> [[viewedit]] </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[type]] type</h4>
+                <h4> [[Type]] </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[type]] category</h4>
+                <h4> [[Category]] </h4>
             </div>
         </section>                       
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[published]] published</h4>
+                <h4> [[Published]] </h4>
             </div>
         </section>   
         <section class="flexchildbotom noFlex">
             <div class="center">
-                <h4> [[STOCK]] stock </h4>
+                <h4> [[STOCK]]  </h4>
             </div>
         </section>                          
         <section class="flexchildbotom noFlex">
             <div aria-delete="delete" class="center">
-                <h4> [[delete]] delete</h4>
+                <h4> [[delete]] </h4>
             </div>
         </section>
         `
@@ -147,6 +146,7 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
     _routePageChanged(page, rst) {
         if (typeof this.time === 'number') clearInterval(this.time)
         let reset = (rst === 'true')
+        this.scrollTo(0, 0)
         if (!rst) {
             if (!!page && page === "articles") {
                 if (this.contents.length === 0) {
@@ -160,7 +160,18 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         } else if (reset === true) {
             const articleTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
             render(articleTemplate(), this);
-            this._contentChanged()
+            this.time = setTimeout(() => {
+                afterNextRender(this, () => {
+                    this._contentChanged()
+                });
+            }, 500);
+        } else if (reset === false) {
+            this.time = setTimeout(() => {
+                afterNextRender(this, () => {
+                    window.history.pushState({}, null, `${this.rootPath}content/articles`)
+                    window.dispatchEvent(new CustomEvent('location-changed'));
+                });
+            }, 60);
         }
     }
 
@@ -176,10 +187,10 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         if (typeof this.time === 'number') clearTimeout(this.time)
         if (this.routeData.page === "articles") {
             this.contents = []
-            this.time = setTimeout(() => {
+            afterNextRender(this, () => {
                 window.history.pushState({}, null, `${this.rootPath}content/articles`)
                 window.dispatchEvent(new CustomEvent('location-changed'));
-            }, 500);
+            });
         } else {
             this.contents = []
         }
@@ -188,7 +199,7 @@ class cmsArticleView extends cmsArticlesLib(cmsMiddlePageTemplate) {
         if (typeof this.time === 'number') clearTimeout(this.time)
         this.time = setTimeout(() => {
             const articleTemplate = (articles) => litHtml`${articles.map((article, idx) => {
-                return litHtml`<cms-article-item slot="article-${idx}" .article="${article}">
+                return litHtml`<cms-article-item slot="article-${idx}" .article="${article}" .user="${this.user}">
                        </cms-article-item>`
             })} `
             render(articleTemplate(data), this);

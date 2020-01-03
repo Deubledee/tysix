@@ -15,6 +15,7 @@ export class cmsItemTemplate extends PolymerElement {
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
         </app-route>
+        <slot name="table"></slot>
          ${this._getElement}
           
         `;
@@ -22,14 +23,13 @@ export class cmsItemTemplate extends PolymerElement {
     static get _getStyles() {
         return html` 
         article[centerlistitem] paper-button{
-            ￼    height: auto;
-            ￼    max-height: 35px;
+            height: auto;
+            max-height: 35px;
             }
                `
     }
     static get _getElement() {
         return html`
-        <slot name="table"></slot>
         `
     }
     static get is() { return 'cms-item-template'; }

@@ -9,6 +9,7 @@ import '../elements/cms-content-text';
 import '../elements/cms-lang-tab-item';
 import '../elements/cms-overlay';
 import '../elements/cms-pop-input';
+import { getObjArr } from '../tools/objectArray';
 import '../styles/cms-comon-style_v3';
 export class cmsContentTemplate extends PolymerElement {
     static get template() {
@@ -518,27 +519,7 @@ export class cmsContentTemplate extends PolymerElement {
         this._setContent(lang, cont)
     }
     _getObjArr(content, withDescription) {
-        let obj,
-            arr = []
-        if (typeof withDescription !== 'boolean') return 'second argument expected to be a boolean'
-        for (let par in content) {
-            if (par !== 'image') {
-                if (!!withDescription) {
-                    if (par !== 'description') {
-                        obj = Object()
-                        obj[par] = content[par]
-                        arr.push(obj)
-                    }
-                } else {
-                    if (par === 'description') {
-                        obj = Object()
-                        obj[par] = content[par]
-                        arr.push(obj)
-                    }
-                }
-            }
-        }
-        return arr || []
+        return getObjArr(content, withDescription)
     }
     _getPageInfo(str) {
         this.infoState = 'getting info data..'

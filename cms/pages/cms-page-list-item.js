@@ -2,9 +2,9 @@
 import { cmsItemTemplate } from '../templates/cms-item-template'
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { cmsPagesLib } from '../tools/cms-save-lib';
+import { cmsPagesLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
 import { html as litHtml, render } from 'lit-html';
-class cmsPageListItem extends cmsPagesLib(cmsItemTemplate) {
+class cmsPageListItem extends cmscategoriesLib(cmsPagesLib(cmsItemTemplate)) {
 
     static get is() { return 'cms-page-list-item'; }
     static get properties() {

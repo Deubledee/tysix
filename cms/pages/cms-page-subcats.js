@@ -5,6 +5,7 @@ import '../styles/cms-comon-style_v3';
 import '../sub-categories/cms-subcats'
 import '../sub-categories/cms-subcats-item'
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
 import { html as litHtml, render } from 'lit-html';
 export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
@@ -29,6 +30,35 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
             <h5 class="higherh5"> category - [[query.content]]  </h5> 
         `
     }
+
+    static get _getBottom() {
+        return html`              
+        <div class="count">
+            <span> [[subSubCats.length]] </span>
+        </div>               
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[viewedit]]"> [[viewedit]] </h4>
+            </div>
+        </section>                           
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[item]]"> [[item]] </h4>   
+            </div>
+        </section>     
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[type]]"> 
+            [[type]]     </h4>     
+        </section>                            
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4 title="[[delete]]"> 
+            [[delete]]   </h4>   
+            </div>
+        </section>`
+    }
+
     static get _getTable() {
         return html`
             <div table class="scroll"> 
@@ -41,38 +71,6 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
             </div>
         `}
 
-    static get _getBottom() {
-        return html`              
-        <div class="count">
-            <span> [[subSubCats.length]] </span>
-        </div>               
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4 title="[[title]]"> [[title]] </h4>   
-            </div>
-        </section>                                
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4 title="[[item]]"> [[item]] </h4>   
-            </div>
-        </section>     
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4 title="[[type]]"> 
-            [[type]]     </h4>     
-        </section>                    
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4 title="[[viewedit]]"> [[viewedit]] </h4>
-            </div>
-        </section>                          
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4 title="[[delete]]"> 
-            [[delete]]   </h4>   
-            </div>
-        </section>`
-    }
     static get is() { return 'cms-page-subcats'; }
     static get properties() {
         return {
@@ -150,29 +148,44 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
         this.translator.changeLang.call(this)
     }
     _routePageChanged(page, query) {
-        if (!query.reset) {
-            if (page === "subcategory-pages" && (!!query.content)) {
+        if (typeof this.time === 'number') clearInterval(this.time)
+        let reset = (query.reset === 'true')
+        if (page === "subcategory-pages" && (!!query.content)) {
+            if (!query.reset || !!reset) {
                 let parent = query.content
-                if (this.lastpagesubs === parent) {
+                if (this.lastpagesubs === parent && !query.reset) {
                     this.lastpagesubs = atob(localStorage.getItem('lastpagesubs'))
                     return
                 } else
-                    if (this.lastpagesubs !== parent) {
+                    if (this.lastpagesubs !== parent || !!reset) {
                         const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
                         render(spinnerTemplate(), this);
                         localStorage.setItem('lastpagesubs', btoa(parent))
                         this.lastpagesubs = parent
-                        this.$.subcats._reset()
-                        setTimeout(() => {
-                            this.getTopSubcats(this.lastpagesubs)
-                        }, 1000)
+                        this.subSubCats = []
+                        this.time = setTimeout(() => {
+                            afterNextRender(this, () => {
+                                const spinnerOutTemplate = () => litHtml``
+                                this.getTopSubcats(this.lastpagesubs, render, spinnerOutTemplate)
+                                afterNextRender(this, () => {
+                                    if (!!reset) {
+                                        this.time = setTimeout(() => {
+                                            window.history.pushState({}, null, `${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}`);
+                                            window.dispatchEvent(new CustomEvent('location-changed'))
+                                        }, 500)
+                                    }
+                                });
+                            });
+                        }, 60)
                     }
+            } else
+                if (!reset) {
+                    window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
+                    window.history.pushState({}, null, `${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}`);
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }
 
-            }
-        } else
-            if (!!query.reset && query.reset === 'false') {
-                window.dispatchEvent(new CustomEvent('changecolor', { detail: query }))
-            }
+        }
     }
     _addSubCategory(evt) {
         evt.preventDefault()

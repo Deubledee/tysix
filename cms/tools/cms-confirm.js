@@ -206,10 +206,10 @@ class cmsConfirm extends PolymerElement {
             }
         } else {
             this.closeOut()
-            this.$.overlay.close()
         }
     }
     closeOut() {
+        this.$.overlay.close()
         this.confirm = false
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             this.dispatchEvent(new CustomEvent('closepopout', {

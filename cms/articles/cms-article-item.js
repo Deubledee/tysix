@@ -3,8 +3,9 @@ import { html } from '@polymer/polymer/polymer-element';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { html as litHtml, render } from 'lit-html';
+import { cmsArticlesLib } from '../tools/cms-save-lib.js';
 
-export class cmsArticleItem extends cmsItemTemplate {
+export class cmsArticleItem extends cmsArticlesLib(cmsItemTemplate) {
     static get _getStyles() {
         return html`
         shop-image{
@@ -14,6 +15,10 @@ export class cmsArticleItem extends cmsItemTemplate {
     static get is() { return 'cms-article-item'; }
     static get properties() {
         return {
+            user: {
+                type: Object,
+                notify: true,
+            },
             article: {
                 type: Array,
                 notify: true,
@@ -128,7 +133,9 @@ export class cmsArticleItem extends cmsItemTemplate {
     }
 
     __delete() {
+        // console.log(this.objInfo)
         this.objInfo.removed = true
+        this.getArticleData(this.objInfo.id, 'info').then((this.removeArticle).bind(this)).catch(err => console.log(err))
     }
     __publish(data) {
         console.log(data)

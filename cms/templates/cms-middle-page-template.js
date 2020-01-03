@@ -165,8 +165,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
             <span> [[pages.length]] </span>
         </div>
         <section class="flexchildbotom noFlex">
-            <div class="center flex">
-                <h4 class="putitcool"> [[title]] </h4>               
+            <div class="center">             
                 <h4> [[viewedit]] </h4>
             </div>
         </section>                       

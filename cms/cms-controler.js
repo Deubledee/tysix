@@ -21,10 +21,12 @@ import '@polymer/iron-icons/maps-icons';
 import './styles/cms-common-styles_v2';
 import './styles/cms-common-styles';
 import './elements/cms-sidebar-item'
+import './elements/cms-langs-menu'
+import { cmslangsLib } from './tools/cms-save-lib'
 setPassiveTouchGestures(true);
 setRootPath('/');
 
-class cmsControler extends PolymerElement {
+class cmsControler extends cmslangsLib(PolymerElement) {
   static get template() {
     return html`
     <style>
@@ -124,6 +126,7 @@ class cmsControler extends PolymerElement {
           <div rows>
               <nav toolbar>
                   <div class="content-wrapper">
+
                       <nav class="slight">
                           <div ty6>
                               <h1>Ty6</h1>
@@ -131,9 +134,8 @@ class cmsControler extends PolymerElement {
                       </nav>
                       <nav>
                           <div ty6>
-                              <div title="{{lang}}">
-                                  {{lang}}
-                              </div>
+                            <cms-langs-menu langs="[[langsArray]]" lang="{{lang}}">
+                            </cms-langs-menu>
                           </div>
                       </nav>
                       <dom-repeat repeat items="[[pageArray]]" as="page">
@@ -229,6 +231,10 @@ class cmsControler extends PolymerElement {
         type: String,
         notify: true,
         observer: '__changeLang'
+      },
+      langsArray: {
+        type: Array,
+        notify: true
       },
       pageArray: {
         type: Array,
@@ -343,6 +349,10 @@ class cmsControler extends PolymerElement {
     this.translator.target('cms-controler', 'setLangObject', (this._setLObj).bind(this))
     this.translator.target('cms-controler', 'changeLang', (this.__setLang).bind(this), false)
     this.translator.shoot('cms-controler', 'setLangObject')
+    this.getLangs().then(querySnapshot => {
+      this.langsArray = querySnapshot["west-europe"]
+    })
+
   }
   _setLObj(res, querySnapshot) {
     if ('data' in querySnapshot) {

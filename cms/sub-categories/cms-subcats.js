@@ -12,8 +12,8 @@ export class cmsSubcats extends cmsItemTemplate {
     static get _getStyles() {
         return html` 
             article[centerlistitem] paper-button{
-            ￼    height: auto;
-            ￼    max-height: 35px;
+                height: auto;
+                max-height: 35px;
             }
             
             div[basis] {

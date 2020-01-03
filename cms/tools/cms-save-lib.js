@@ -1,7 +1,7 @@
 import { dataBaseworker, MediaDB, CategoriesDB } from './dataBaseWorker';
 const _DBW = new dataBaseworker()
 const _MEDIADBW = new MediaDB()
-const _CATEGORIESDBW = new CategoriesDB
+const _CATEGORIESDBW = new CategoriesDB()
 const __DEV = true
 var storageRef = firebase.storage().ref();
 
@@ -28,19 +28,6 @@ const cmsPagesLib = function (superClass) {
                 localStorage.setItem(`page-${ID}`, JSON.stringify(cont))
                 window.history.pushState({}, null, str);
                 window.dispatchEvent(new CustomEvent('location-changed'));
-            }).catch(standartErr)
-        }
-        removePage(parent, cont) {
-            let str = `${this.rootPath}content/pages?content=${parent}&removed=true`
-            window.onbeforeunload = function () { };
-            saveChanged(parent, cont).then(() => {
-                window.history.pushState({}, null, str)
-                window.onbeforeunload = function () { };
-                localStorage.clear()
-                this.__reset()
-                setTimeout(() => {
-                    window.dispatchEvent(new CustomEvent('location-changed'))
-                }, 250)
             }).catch(standartErr)
         }
         _removeLang() {
@@ -79,7 +66,7 @@ const cmsPagesLib = function (superClass) {
                 if (this.add === false) {
                     if (!!this.inform[0].id) {
                         window.history.pushState({}, null, `${this.rootPath}content/pages?reset=true`)
-                        saveChanged(this.inform[0].id, this.inform[0], Object.keys(this.content[0])).then(() => {
+                        saveChanged(this.inform[0].id, this.inform[0]).then(() => {
                             saveChangedData('data', this.inform[0].id, this.content[0]).then(() => {
                                 window.onbeforeunload = function () { };
                                 this.editing = 0;
@@ -93,16 +80,31 @@ const cmsPagesLib = function (superClass) {
                     }
                 }
         }
+
+        removePage() {
+            let str = `${this.rootPath}content/pages?reset=true`
+            window.onbeforeunload = function () { };
+            saveChanged(this.objInfo[0].id, this.objInfo[0]).then(() => {
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                localStorage.clear()
+                this.__reset()
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }, 250)
+
+            }).catch(standartErr)
+            if (this.objInfo[0].toArticle === "A") {
+
+            }
+        }
+
     }
 }
 /************************************************************************************************* */
 /******************************************sub-categorias***************************************** */
 /************************************************************************************************* */
 /************************************************************************************************* */
-
-
-
-
 const cmsSubcatsLib = function (superClass) {
     return class extends superClass {
         static get is() { return 'cms-subcats-lib'; }
@@ -112,19 +114,12 @@ const cmsSubcatsLib = function (superClass) {
         _setLangArr(cont) {
             return _setLangArr(cont)
         }
-        getTopSubcats(parent) {
+        getTopSubcats(parent, render, spinnerOutTemplate) {
             getTopSubcats(parent).then(done => {
-                let child = this.children[0]
-                child = child.getAttribute('slot')
                 if (!!done && done.length > 0) {
-                    if (child === "spinner") {
-                        this.removeChild(this.children[0])
-                    }
+                    render(spinnerOutTemplate(), this);
                     this.subSubCats = done
                 } else {
-                    if (child === "spinner") {
-                        this.removeChild(this.children[0])
-                    }
                     this.subSubCats = ''
                 }
             }).catch(standartErr)
@@ -165,7 +160,8 @@ const cmsSubcatsLib = function (superClass) {
             }
         }
         saveSubcats() {
-            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&reset=true&update=${this.inform[0].id}`
+            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&update=${this.query.name}&reset=true`
+            this.ctnOpened = false
             if (this.add === true) {
                 saveAddedSubcat(this.inform[0].parent, this.inform[0].id, this.inform[0]).then(() => {
                     saveAddedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
@@ -446,12 +442,72 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
     }
 }
 
-export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib }
+export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib, cmslangsLib }
 
 //standart error callback function
 function standartErr(err) {
     throw err
 }
+/* ************************************************************************************************ */
+/* **********************************************langs********************************************* */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+const cmslangsLib = function (superClass) {
+    return class extends superClass {
+        static get is() { return 'cms-media-lib'; }
+        ready() {
+            super.ready();
+        }
+
+        getLangs() {
+            return getLangs()
+        }
+
+        setLangs(data) {
+            setLangs(data).then(() => {
+                console.log('art saved')
+            }).catch(standartErr)
+        }
+
+        removeLangs(id, inform) {
+            removeLangs(id, inform).then(() => {
+                console.log('art removed')
+            }).catch(standartErr)
+        }
+    }
+}
+
+/* ************************************************************************************************ */
+/* **********************************************langs********************************************* */
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+function getLangs() {
+    return new Promise((resolve, reject) => {
+        _DBW.getLangs((done) => {
+            if (done !== 'error') {
+                resolve(done)
+            } else {
+                reject(error)
+            }
+        }, __DEV)
+    })
+}
+
+function setLangs(id, inform) {
+    return new Promise((resolve, reject) => {
+        _DBW.setCategories((msg, err) => {
+            if (msg !== 'error') {
+                resolve(msg)
+            }
+            else {
+                reject(err)
+            }
+        }, { name: id, create: inform }, __DEV);/* */
+    })
+}
+
 /* ************************************************************************************************ */
 /* *******************************************categories******************************************* */
 /* ************************************************************************************************ */
@@ -474,8 +530,8 @@ const cmscategoriesLib = function (superClass) {
             }).catch(standartErr)
         }
 
-        removeCategory(id) {
-            removeCategory(id).then(() => {
+        removeCategory(id, inform) {
+            removeCategory(id, inform).then(() => {
                 console.log('art removed')
             }).catch(standartErr)
         }
@@ -524,16 +580,16 @@ function setCategory(id, inform) {
     })
 }
 
-function removeCategory(data) {
+function removeCategory(id, inform) {
     return new Promise((resolve, reject) => {
-        _CATEGORIESDBW.deleteCategory((done, err) => {
+        _CATEGORIESDBW.changeCategory((done, err) => {
             if (done !== 'error') {
                 resolve()
             } else {
                 reject()
                 console.error(err)
             }
-        }, data, __DEV)
+        }, { name: id, update: inform }, __DEV)
     })
 }
 
@@ -562,7 +618,21 @@ const cmsArticlesLib = function (superClass) {
         getArticleData(id, type) {
             return getArticleData(id, type)
         }
-
+        removeArticle(item) {
+            let id = [this.objInfo.id]
+            let Cont = item.data
+            this.set('INFO', this._lastModifiedRemoved(Cont))
+            window.history.pushState({}, null, `${this.rootPath}content/articles?reset=true`)
+            saveChangedArticle(id[0], this.objInfo).then(res => {
+                window.onbeforeunload = function () { };
+                localStorage.clear()
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('location-changed'));
+                }, 500)
+                saveChangedArticleInfo('info', id[0], this.INFO).then(() => {
+                }).catch(standartErr)
+            }).catch(standartErr)
+        }
         saveArticles() {
             if (this.add === false) {
                 if (!!this.inform.id) {
@@ -575,7 +645,6 @@ const cmsArticlesLib = function (superClass) {
                             setTimeout(() => {
                                 window.dispatchEvent(new CustomEvent('location-changed'));
                                 this._reset();
-                                this.scrollTo(0, 0)
                             }, 500)
                             saveChangedArticleInfo('info', id[0], this.INFO).then(() => {
                             }).catch(standartErr)
@@ -594,7 +663,6 @@ const cmsArticlesLib = function (superClass) {
                             setTimeout(() => {
                                 window.dispatchEvent(new CustomEvent('location-changed'));
                                 this._reset();
-                                this.scrollTo(0, 0)
                             }, 500)
                             saveAddedArticleInfo('info', id[0], this.INFO).then(() => {
                             }).catch(standartErr)
@@ -605,6 +673,18 @@ const cmsArticlesLib = function (superClass) {
         }
         _setLangArr(cont) {
             return _setLangArr(cont)
+        }
+        _lastModifiedRemoved(ifo) {
+            let INFO = ifo
+            let data = new Date()
+            INFO.removedBy = this.user.name
+            INFO.removeedDate = data
+            INFO.lastModifeid.push({
+                author: this.user.name,
+                date: data.toLocaleString().replace(',', ''),
+                uid: this.user.uid
+            });
+            return INFO
         }
     }
 }
