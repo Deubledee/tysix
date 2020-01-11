@@ -16,10 +16,14 @@ class cmsPageViewer extends cmsViewerTemplate {
     }
     _routePageChanged(route, page) {
         if (route.prefix === '/content/pages') {
-            if (route.path === '/' || route.path === '') {
+            if (route.path === '/'
+                || route.path === ''
+                || route.path === '/edit-category-pages'
+                || route.path === '/add-category-pages'
+            ) {
                 this.page = 'home';
             }
-            else if (['subcategory-pages'].indexOf(page) !== -1) {
+            else if (['subcategory-pages', 'edit-subcategory-pages', 'add-subcategory-pages'].indexOf(page) !== -1) {
                 this.page = 'subcategory-pages' //'home'
             }
             else {

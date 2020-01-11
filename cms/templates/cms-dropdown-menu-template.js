@@ -192,7 +192,6 @@ export class cmsDropdownMenuTemplate extends PolymerElement {
     _setResValue(evt) {
         let value = evt.model.__data.item,
             obj = {};
-
         obj[this.itemLabel] = value
         this.set('itemText', value);
         this.set('res', obj)

@@ -46,7 +46,7 @@ class cmsContent extends cmsTopPageTemplate {
   }
   static get observers() {
     return [
-      '_routePageChanged(route, routeData , query)'
+      '_routePageChanged(route, routeData.page , query)'
     ];
   }
   ready() {
@@ -81,10 +81,9 @@ class cmsContent extends cmsTopPageTemplate {
         if (this.breadcrumbs.length > 0) {
           this.setBreadcrumbs(this.route, this.routeData)
         }
-        if (page !== undefined && "page" in page) {
-          if (["articles", "pages"].indexOf(page.page) !== -1) {
-            this.page = page.page;
-            /* */
+        if (!!page) {
+          if (["articles", "pages"].indexOf(page) !== -1) {
+            this.page = page;
           }
         }
         if (route.path === '/')
