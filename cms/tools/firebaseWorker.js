@@ -1,7 +1,16 @@
-export class worker {
+
+const admin = require("firebase-admin");
+const serviceAccount = require("./../../routes/tysix-75b86-firebase-adminsdk-8yguk-63709f70f1.js")
+const settings = {};
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://tysix-75b86.firebaseio.com"
+});
+const dB = admin.firestore()
+class worker {
     constructor() {
-        this.db = firebase.firestore();
-        this.auth = firebase.auth;
+        this.db = dB
+        this.auth = admin.auth;
     }
     /**queries */
     queryDocList(table) {
@@ -67,9 +76,6 @@ export class worker {
         return pagesRef.get(); /**/
     }
 
-
-
-
     /** */
 
     getDoc(table) {
@@ -97,8 +103,6 @@ export class worker {
         console.log(table)
         return pagesRef.set(table.doc);
     }
-
-
 
     updateContent(table) {
         var imagesRef = this.db.collection(table.name).doc(table.doc);
@@ -301,3 +305,4 @@ export class worker {
         });
     }
 }
+module.exports = { worker }

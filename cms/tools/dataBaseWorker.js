@@ -1,126 +1,133 @@
-import { worker } from './firebaseWorker';
+const { worker } = require('./firebaseWorker');
+
+
 const Worker = new worker();
-
-export class CategoriesDB {
+class CategoriesDB {
+    constructor() {
+        this.categories = [];
+    }
     //Categories
-    getCategoriesEqualTo(done, query, value, dev) {
+    getCategoriesEqualTo(query, value, dev) {
         let obj = { name: 'categories', query: query, value: value, condition: '==' };
-        queryDocList.call(this, obj, done, dev)
+        return queryDocList.call(this, obj, dev)
     }
 
-    getCategories(done, dev) {
+    getCategories(dev) {
         let obj = { name: 'categories' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
 
-    setCategories(done, table, dev) {
+    setCategories(table, dev) {
         let obj = { name: 'categories', docName: table.name, doc: table.create }
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
 
-    deleteCategory(done, gallery, dev) {
+    deleteCategory(gallery, dev) {
         let obj = { name: 'categories', docName: gallery }
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
-    changeCategory(done, table, dev) {
+    changeCategory(table, dev) {
         let obj = { name: 'categories', doc: table.name, data: table.update };
-        updateContent.call(this, obj, done, dev)
+        return updateContent.call(this, obj, dev)
     }
 }
 
-export class MediaDB {
+class MediaDB {
     //media
-    writeGalleryContent(done, table, dev) {
+    constructor() {
+        this.categories = [];
+    }
+    writeGalleryContent(table, dev) {
         let obj = { name: "galleries", doc: table.gallerie, data: { content: table.content } };
-        updateContent.call(obj, done, dev)
+        return updateContent.call(obj, dev)
     }
 
-    getGalleriesEqualTo(done, query, value, dev) {
-        let obj = { name: 'galleries', query: query, value: value, condition: '==' };
-        queryDocList.call(this, obj, done, dev)
-    }
-    getPlaylistsEqualTo(done, query, value, dev) {
-        let obj = { name: 'playlists', query: query, value: value, condition: '==' };
-        queryDocList.call(this, obj, done, dev)
-    }
-    getGalleries(done, dev) {
+    /* getGalleriesEqualTo(query, value, dev) {
+         let obj = { name: 'galleries', query: query, value: value, condition: '==' };
+         return  queryDocList.call(this, obj, dev)
+     }
+     getPlaylistsEqualTo(query, value, dev) {
+         let obj = { name: 'playlists', query: query, value: value, condition: '==' };
+         return queryDocList.call(this, obj, dev)
+     }*/
+
+    getGalleries(dev) {
         let obj = { name: 'galleries' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
-    getPlaylists(done, dev) {
+    getPlaylists(dev) {
         let obj = { name: 'playlists' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
-    setGalleries(done, table, dev) {
+    setGalleries(table, dev) {
         let obj = { name: 'galleries', docName: table.name, doc: table.create }
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
-    deleteGallery(done, gallery, dev) {
+    deleteGallery(gallery, dev) {
         let obj = { name: 'galleries', docName: gallery }
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
-    getGalleryData(done, table, dev) {
+    getGalleryData(table, dev) {
         let obj = { name: 'galleries', docName: table.name, coll: 'data', query: table.query, condition: table.condition, value: table.value }
-        queryItemCollectionDoc.call(this, obj, done, dev)
+        return queryItemCollectionDoc.call(this, obj, dev)
     }
-    getGalleryGroups(done, table, dev) {
+    getGalleryGroups(table, dev) {
         let obj = { name: 'galleries', collDocName: table.gallery, collDocCollName: 'groups' }
-        queryItemCollectionDoc.call(this, obj, done, dev)
+        return queryItemCollectionDoc.call(this, obj, dev)
     }
-    setGalleryData(done, table, dev) {
+    setGalleryData(table, dev) {
         let obj = { name: 'galleries', docName: table.name, coll: 'data', doc: table.doc, data: table.data }
-        createItemCollectionDoc.call(this, obj, done, dev)
+        return createItemCollectionDoc.call(this, obj, dev)
     }
 }
 
-export class dataBaseworker {
+class dataBaseworker {
     constructor() {
         this.categories = [];
     }
 
-    updateBrands(done, table, dev) {
+    updateBrands(table, dev) {
         let obj = { name: "brands&manufactures", doc: table.name, data: { content: table.content } };
-        updateContent.call(this, obj, done, dev)
+        return updateContent.call(this, obj, dev)
     }
-    setBrands(done, table, dev) {
+    setBrands(table, dev) {
         let obj = table.name !== undefined ? { name: 'brands&manufactures', docName: table.name, doc: table.langs } : false;
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
-    deleteBrandsZone(done, lang, dev) {
+    deleteBrandsZone(lang, dev) {
         let obj = { name: 'brands&manufactures', docName: lang }
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
-    getBrands(done, table, dev) {
+    getBrands(table, dev) {
         let obj = { name: 'brands&manufactures', doc: table.name };
-        getDoc.call(this, obj, done, dev)
+        return getDoc.call(this, obj, dev)
     }
-    getAllBrands(done, dev) {
+    getAllBrands(dev) {
         let obj = { name: 'brands&manufactures' };
-        getDocListDev.call(this, obj, done, dev)
+        return getDocListDev.call(this, obj, dev)
     }
-
 
     //langs
-    getLangs(done, dev) {
+    getLangs(dev) {
         let obj = { name: 'langs', doc: 'data' };
-        getDoc.call(this, obj, done, dev)
+        return getDoc.call(this, obj, dev)
     }
 
-    updateLangs(done, table, dev) {
+    updateLangs(table, dev) {
         let obj = { name: "langs", doc: table.name, data: { content: table.content } };
-        updateContent.call(this, obj, done, dev)
+        return updateContent.call(this, obj, dev)
     }
-    setLangs(done, table, dev) {
+    setLangs(table, dev) {
         let obj = table.name !== undefined ? { name: 'langs', docName: table.name, doc: table.langs } : false;
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
-    deleteLangZone(done, lang, dev) {
+    deleteLangZone(lang, dev) {
         let obj = { name: 'langs', docName: lang }
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
-    getAllLangs(done, dev) {
+    getAllLangs(dev) {
         let obj = { name: 'langs' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
 
 
@@ -128,159 +135,157 @@ export class dataBaseworker {
     /***************************************************queries******************************************************************/
     /****************************************************************************************************************************/
 
-    getPagesEqualTo(done, query, value, dev) {
+    getPagesEqualTo(query, value, dev) {
         let obj = { name: 'pages', query: query, value: value, condition: '==' };
-        queryDocList.call(this, obj, done, dev)
+        return queryDocList.call(this, obj, dev)
     }
 
-    getArticlesEqualTo(done, query, value, dev) {
+    getArticlesEqualTo(query, value, dev) {
         let obj = { name: 'articles', query: query, value: value, condition: '==' };
-        queryDocList.call(this, obj, done, dev)
+        return queryDocList.call(this, obj, dev)
     }
 
-    queryPage(done, table, dev) {
+    queryPage(table, dev) {
         let query, condition, value
         [query, condition, value] = table.query.split(',')
         value = value === 'true' || value === 'false' ? (value === 'true') : value
         let obj = { name: 'pages', docName: table.name, query: query, condition: condition, value: value }
-        queryItemCollectionDoc.call(this, obj, done, dev)
+        return queryItemCollectionDoc.call(this, obj, dev)
     }
 
-    mixQueryPage(done, table, dev) {
+    mixQueryPage(table, dev) {
         let query, query2
         query = table.query.split(',')
         query2 = table.query2.split(',')
         let obj = { name: 'pages', docName: table.name, query: query, query2: query2 }
-        mixQueryDocList.call(this, done, obj, done, dev)
+        return mixQueryDocList.call(this, obj, dev)
     }
 
-    queryPageData(done, table, dev) {
+    queryPageData(table, dev) {
         let query, condition, value
         [query, condition, value] = table.query.split(',')
         value = value === 'true' || value === 'false' ? (value === 'true') : value
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, query: query, condition: condition, value: value }
-        queryItemCollectionDoc.call(this, obj, done, dev)
+        return queryItemCollectionDoc.call(this, obj, dev)
     }
 
-    mixQueryPageData(done, table, dev) {
+    mixQueryPageData(table, dev) {
         let query, query2
         query = table.query.split(',')
         query2 = table.query2.split(',')
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, query: query, query2: query2 }
-        mixQueryItemCollectionDoc.call(this, obj, done, dev)
+        return mixQueryItemCollectionDoc.call(this, obj, dev)
     }
 
-    querySubcatsData(done, table, dev) {
+    querySubcatsData(table, dev) {
         let query, condition, value
         [query, condition, value] = table.query.split(',')
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data', query: query, condition: condition, value: value }
-        queryCollDoCollItem.call(this, obj, done, dev)
+        return queryCollDoCollItem.call(this, obj, dev)
     }
 
     //aticles
-    getAllArticles(done, dev) {
+    getAllArticles(dev) {
         let obj = { name: 'articles' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
-    getArticle(done, table, dev) {
+    getArticle(table, dev) {
         let obj = { name: 'articles', doc: table.name };
-        getDoc.call(this, obj, done, dev)
+        return getDoc.call(this, obj, dev)
     }
-    getArticleData(done, table, dev) {
+    getArticleData(table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType }
-        getItemCollectionDoc.call(this, obj, done, dev)
+        return getItemCollectionDoc.call(this, obj, dev)
     }
 
-
-    setArticles(done, table, dev) {
+    setArticles(table, dev) {
         let obj = { name: 'articles', docName: table.name, doc: table.create }
         console.log(obj)
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
 
-
-    setArticleData(done, table, dev) {
+    setArticleData(table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
-        createItemCollectionDoc.call(this, obj, done, dev)
+        return createItemCollectionDoc.call(this, obj, dev)
     }
-    updateArticles(done, table, dev) {
+    updateArticles(table, dev) {
         let obj = { name: "articles", doc: table.name, data: table.update };
-        updateContent.call(this, obj, done, dev)
+        return updateContent.call(this, obj, dev)
     }
-    changeArticleData(done, table, dev) {
+    changeArticleData(table, dev) {
         let obj = { name: 'articles', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
         // console.log(table, obj)
-        updateDocItemCollection.call(this, obj, done, dev)
+        return updateDocItemCollection.call(this, obj, dev)
     }
-    deleteArticles(done, page, dev) {
+    deleteArticles(page, dev) {
         let obj = { name: 'articles', docName: page }
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
     /****************************************************************************************************************************/
     /*********************************************************pages**************************************************************/
     /****************************************************************************************************************************/
 
-    getAllPages(done, dev) {
+    getAllPages(dev) {
         let obj = { name: 'pages' };
-        getDocList.call(this, obj, done, dev)
+        return getDocList.call(this, obj, dev)
     }
-    changePages(done, table, dev) {
+    changePages(table, dev) {
         let obj = { name: 'pages', doc: table.name, data: table.update };
-        updateContent.call(this, obj, done, dev)
+        return updateContent.call(this, obj, dev)
     }
 
-    changePageData(done, table, dev) {
+    changePageData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
         // console.log(table, obj)
-        updateDocItemCollection.call(this, obj, done, dev)
+        return updateDocItemCollection.call(this, obj, dev)
     }
 
-    setPages(done, table, dev) {
+    setPages(table, dev) {
         let obj = { name: 'pages', docName: table.name, doc: table.create }
-        createDoc.call(this, obj, done, dev)
+        return createDoc.call(this, obj, dev)
     }
 
-    deletePage(done, page, dev) {
-        // console.log(done, page, dev)
+    deletePage(page, dev) {
+        // console.log(page, dev)
         let obj = { name: 'pages', docName: page }
-        // console.log(obj, done, dev)
+        // console.log(obj, dev)
 
-        deleteDoc.call(this, obj, done, dev)
+        return deleteDoc.call(this, obj, dev)
     }
-    getPageData(done, table, dev) {
+    getPageData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType }
-        getItemCollectionDoc.call(this, obj, done, dev)
+        return getItemCollectionDoc.call(this, obj, dev)
     }
-    getPageDataSnapshot(done, table, dev) {
+    getPageDataSnapshot(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType }
-        getItemCollectionDocSnapshot.call(this, obj, done, dev)
+        return getItemCollectionDocSnapshot.call(this, obj, dev)
     }
 
-    setPageData(done, table, dev) {
+    setPageData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc, data: table.data }
-        createItemCollectionDoc.call(this, obj, done, dev)
+        return createItemCollectionDoc.call(this, obj, dev)
     }
 
-    deletePageData(done, table, dev) {
+    deletePageData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType, doc: table.doc }
-        deleteCollectionDocData.call(this, obj, done, dev)
+        return deleteCollectionDocData.call(this, obj, dev)
     }
 
-    getSubcatsData(done, table, dev) {
+    getSubcatsData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data' }
-        getDocItemCollectionCollection.call(this, obj, done, dev)
+        return getDocItemCollectionCollection.call(this, obj, dev)
     }
-    setubcatsData(done, table, dev) {
+    setubcatsData(table, dev) {
         let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.doc, data: table.data }
-        createDocItemCollectionCollection.call(this, obj, done, dev)
+        return createDocItemCollectionCollection.call(this, obj, dev)
     }
-    changeSubcatsData(done, table, dev) {
+    changeSubcatsData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.docName, doctable: 'data', doc: table.doc, data: table.data }
-        updateCollectionDoc.call(this, obj, done, dev)
+        return updateCollectionDoc.call(this, obj, dev)
     }
-    deleteSubcatData(done, table, dev) {
+    deleteSubcatData(table, dev) {
         let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.doc }
-        deleteCollectionDoc.call(this, obj, done, dev)
+        return deleteCollectionDoc.call(this, obj, dev)
     }
     //other
     loginFire(user) {
@@ -290,10 +295,10 @@ export class dataBaseworker {
         return Worker.logout();
     }
     authStateChanged(done) {
-        Worker.authState(done);
+        return Worker.authState(done);
     }
     checkMailLink() {
-        Worker.mailLink();
+        return Worker.mailLink();
     }
     getElementAssets(element, dev) {
         let obj = { name: 'stylesandlangs', doc: element };
@@ -309,484 +314,478 @@ export class dataBaseworker {
         let obj = { name: 'stylesandlangs', docName: String, doc: Object };
         obj.docName = table.element;
         obj.doc = table.content;
-        createDoc.call(obj, done, dev)
+        return createDoc.call(obj, dev)
     }
 }
 
-//private methods
-function getDocList(obj, done, dev) {
+module.exports = { dataBaseworker, CategoriesDB, MediaDB }
+
+// shared functions
+async function getDocList(obj, dev) {
     if (dev === false) {
-        Worker.getDocList(obj)
+        this.categories = [];
+        await Worker.getDocList(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc);
-                });
-                done(this.categories);
-            }).catch(function (error) {
-                done("error", error);
+                this.categories = querySnapshot
+            }).catch(async function (error) {
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.getDocListDev(obj)
+        await Worker.getDocListDev(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc);
-                });
-                done(this.categories);
-            }).catch(function (error) {
-                done("error", error);
+                this.categories = querySnapshot
+            }).catch(async function (error) {
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function updateContent(obj, done, dev) {
+async function updateContent(obj, dev) {
     if (dev === false) {
-        Worker.updateContent(obj)
+        await Worker.updateContent(obj)
             .then(function () {
-                done("successfully updated!", table.lang);
+                this.categories = 'successfully updated'
             })
-            .catch(function (error) {
-                done("Error", error);
+            .catch(async function (error) {
+                this.categories = "Error"
+                console.error("Error", error);
             });
     }
     else {
-        Worker.updateContentDev(obj)
+        await Worker.updateContentDev(obj)
             .then(function () {
-                done("successfully updated!", obj.lang);
+                this.categories = 'successfully updated'
             })
             .catch(function (error) {
-                done("Error", error);
+                this.categories = "Error"
+                console.error("Error", error);
             });
     }
+    return this.categories
 }
-function createDoc(obj, done, dev) {
+async function createDoc(obj, dev) {
     if (obj === false) {
-        done(false, false);
+        console.error(false, false);
         return;
     }
     if (dev === false) {
-        Worker.createDoc(obj)
+        await Worker.createDoc(obj)
             .then(function () {
-                done();
+                this.categories = 'successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = "Error"
+                console.error('error', error);
             });
     }
     else {
-        Worker.createDocDev(obj)
+        await Worker.createDocDev(obj)
             .then(function () {
-                done();
+                this.categories = 'successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = "Error"
+                console.error('error', error);
             });
     }
-
+    return this.categories
 }
-function deleteDoc(obj, done, dev) {
+async function deleteDoc(obj, dev) {
     if (dev === false) {
-        Worker.deleteDoc(obj)
+        await Worker.deleteDoc(obj)
             .then(function () {
-                done("successfully deleted!");
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = "Error"
+                console.error("error", error);
             });
     }
     else {
-        Worker.deleteDocDev(obj)
+        await Worker.deleteDocDev(obj)
             .then(function () {
-                done("successfully deleted!");
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = "Error"
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function getDoc(obj, done, dev) {
+async function getDoc(obj, dev) {
     if (dev === false) {
-        Worker.getDoc(obj)
+        await Worker.getDoc(obj)
             .then((querySnapshot) => {
-                let content = querySnapshot.data();
-                done(content);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.getDocDev(obj)
+        await Worker.getDocDev(obj)
             .then((querySnapshot) => {
-                let content = querySnapshot.data();
-                done(content);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function queryDocList(obj, done, dev) {
+async function queryDocList(obj, dev) {
     this.categories = []
     if (dev === false) {
-        Worker.queryDocList(obj)
+        await Worker.queryDocList(obj)
             .then((querySnapshot) => {
-                this.categories = []
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc);
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.queryDocListDev(obj)
+        await Worker.queryDocListDev(obj)
             .then((querySnapshot) => {
-                this.categories = []
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc);
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function getItemCollectionDocSnapshot(obj, done, dev) {
+async function getItemCollectionDocSnapshot(obj, dev) {
     if (dev === false) {
-        Worker.getItemCollectionDoc(obj)
+        await Worker.getItemCollectionDoc(obj)
             .then((querySnapshot) => {
-                done(querySnapshot);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.getItemCollectionDocDev(obj)
+        await Worker.getItemCollectionDocDev(obj)
             .then((querySnapshot) => {
-                done(querySnapshot);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function getItemCollectionDoc(obj, done, dev) {
+async function getItemCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.getItemCollectionDoc(obj)
+        await Worker.getItemCollectionDoc(obj)
             .then((querySnapshot) => {
                 this.categories = {}
+                this.categories = querySnapshot/*
                 querySnapshot.forEach(item => {
                     this.categories[item.id] = item.data()
-                })
-                done(this.categories);
+                })*/
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.getItemCollectionDocDev(obj)
+        await Worker.getItemCollectionDocDev(obj)
             .then((querySnapshot) => {
-                this.categories = {}
-                querySnapshot.forEach(item => {
-                    this.categories[item.id] = item.data()
-                })
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error(error);
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function queryItemCollectionDoc(obj, done, dev) {
+async function queryItemCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.queryItemCollectionDoc(obj)
+        await Worker.queryItemCollectionDoc(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                console.log(querySnapshot)
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
+                /*  querySnapshot.forEach((doc) => {
+                      this.categories.push(doc.data())
+                  });*/
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.queryItemCollectionDocDev(obj)
+        await Worker.queryItemCollectionDocDev(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function mixQueryDocList(obj, done, dev) {
+async function mixQueryDocList(obj, dev) {
     if (dev === false) {
-        Worker.mixQueryDocList(obj)
+        await Worker.mixQueryDocList(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                console.log(querySnapshot)
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
+                /* querySnapshot.forEach((doc) => {
+                     this.categories.push(doc.data())
+                 });*/
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.mixQueryDocListDev(obj)
+        await Worker.mixQueryDocListDev(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function mixQueryItemCollectionDoc(obj, done, dev) {
+async function mixQueryItemCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.mixQueryItemCollectionDoc(obj)
+        await Worker.mixQueryItemCollectionDoc(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                console.log(querySnapshot)
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
+                /* querySnapshot.forEach((doc) => {
+                     this.categories.push(doc.data())
+                 });*/
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.mixQueryItemCollectionDocDev(obj)
+        await Worker.mixQueryItemCollectionDocDev(obj)
             .then((querySnapshot) => {
-                this.categories = [];
-                querySnapshot.forEach((doc) => {
-                    this.categories.push(doc.data())
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function createItemCollectionDoc(obj, done, dev) {
+async function createItemCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.createItemCollectionDoc(obj)
+        await Worker.createItemCollectionDoc(obj)
             .then(function () {
-                done('successfully created');
+                this.categories = 'successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = 'error'
+                console.error('error', error);
             });
     }
     else {
-        Worker.createItemCollectionDocDev(obj)
+        await Worker.createItemCollectionDocDev(obj)
             .then(function () {
-                done('successfully created');
+                this.categories = 'successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = 'error'
+                console.error('error', error);
             });
     }
+    return this.categories
 }
-function updateDocItemCollection(obj, done, dev) {
+async function updateDocItemCollection(obj, dev) {
     if (dev === false) {
-        Worker.updateCollectionDocItem(obj)
+        await Worker.updateCollectionDocItem(obj)
             .then(function () {
-                done('successfully created');
+                this.categories = 'successfully updated'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = 'Error writing page'
                 console.error("Error writing page: ", error);
             });/**/
     }
     else {
-        Worker.updateCollectionDocItemDev(obj)
+        await Worker.updateCollectionDocItemDev(obj)
             .then(function () {
-                done('successfully updated');
-            })
-            .catch((error) => {
-                done('error', error);
+                this.categories = 'successfully updated'
+            }).catch((error) => {
+                this.categories = 'Error writing page'
                 console.error("Error writing page: ", error);
             });/* */
     }
+    return this.categories
 }
-function deleteCollectionDocData(obj, done, dev) {
+async function deleteCollectionDocData(obj, dev) {
     if (dev === false) {
-        Worker.deleteCollectionDocData(obj)
+        await Worker.deleteCollectionDocData(obj)
             .then(function () {
-                done("successfully deleted!", obj.doc);
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.deleteCollectionDocDataDev(obj)
+        await Worker.deleteCollectionDocDataDev(obj)
             .then(function () {
-                done("successfully deleted!", obj.doc);
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function deleteCollectionDoc(obj, done, dev) {
+
+async function deleteCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.deleteCollectionDoc(obj)
-            .then(function (data) {
-                done(data);
+        await Worker.deleteCollectionDoc(obj)
+            .then(function () {
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
     else {
-        Worker.deleteCollectionDocDev(obj)
-            .then(function (data) {
-                done(data);
+        await Worker.deleteCollectionDocDev(obj)
+            .then(function () {
+                this.categories = "successfully deleted!"
             }).catch(function (error) {
-                done("error", error);
+                this.categories = 'error'
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function getDocItemCollectionCollection(obj, done, dev) {
+async function getDocItemCollectionCollection(obj, dev) {
     if (dev === false) {
-        Worker.getDocItemCollectionCollection(obj)
+        await Worker.getDocItemCollectionCollection(obj)
             .then((querySnapshot) => {
-                this.categories = {};
-                querySnapshot.forEach((doc) => {
-                    this.categories[doc.id] = doc.data()
-                });
-                done(this.categories);
+                this.categories = querySnapshot
+                /*  querySnapshot.forEach((doc) => {
+                      this.categories[doc.id] = doc.data()
+                  });*/
             }).catch(function (error) {
+                this.categories = "error"
                 console.error("Error getting all pages: ", error);
-                done("error", error);
             });
     }
     else {
-        Worker.getDocItemCollectionCollectionDev(obj)
+        await Worker.getDocItemCollectionCollectionDev(obj)
             .then((querySnapshot) => {
-                obj = {}
-                this.categories = {}
-                querySnapshot.forEach((doc) => {
-                    this.categories[doc.id] = doc.data()
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
+                this.categories = "error"
                 console.error("Error getting all pages: ", error);
-                done("error", error);
             });
     }
+    return this.categories
 }
 
 
-function createDocItemCollectionCollection(obj, done, dev) {
+async function createDocItemCollectionCollection(obj, dev) {
     if (dev === false) {
-        Worker.createDocItemCollectionCollection(obj)
+        await Worker.createDocItemCollectionCollection(obj)
             .then(() => {
-                done();
+                this.categories = "successfully created"
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
     else {
-        Worker.createDocItemCollectionCollectionDev(obj)
+        await Worker.createDocItemCollectionCollectionDev(obj)
             .then(() => {
-                done();
+                this.categories = "successfully created"
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
 
-function updateCollectionDoc(obj, done, dev) {
+async function updateCollectionDoc(obj, dev) {
     if (dev === false) {
-        Worker.updateCollectionDoc(obj)
+        await Worker.updateCollectionDoc(obj)
             .then((msg) => {
-                done(msg);
+                this.categories = "successfully updated"
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
     else {
-        Worker.updateCollectionDocDev(obj)
+        await Worker.updateCollectionDocDev(obj)
             .then((msg) => {
-                done(msg);
+                this.categories = "successfully updated"
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
+    return this.categories
 }
 
-function queryCollDoCollItem(obj, done, dev) {
+async function queryCollDoCollItem(obj, dev) {
     if (dev === false) {
-        Worker.queryDocItemCollectionCollection(obj)
+        await Worker.queryDocItemCollectionCollection(obj)
             .then((querySnapshot) => {
-                this.categories = {};
-                querySnapshot.forEach((doc) => {
-                    this.categories[doc.id] = doc.data()
-                });
-                done(this.categories);
+                this.categories = querySnapshot
+                /*  this.categories = {};
+                  querySnapshot.forEach((doc) => {
+                      this.categories[doc.id] = doc.data()
+                  });*/
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
     else {
-        Worker.queryDocItemCollectionCollectionDev(obj)
+        await Worker.queryDocItemCollectionCollectionDev(obj)
             .then((querySnapshot) => {
-                obj = {}
-                this.categories = {}
-                querySnapshot.forEach((doc) => {
-                    this.categories[doc.id] = doc.data()
-                });
-                done(this.categories);
+                this.categories = querySnapshot
             }).catch(function (error) {
-                console.error("Error getting all pages: ", error);
-                done("error", error);
+                this.categories = "error"
+                console.error("error", error);
             });
     }
+    return this.categories
 }
-function createDocItemCollection(obj, dene, dev) {
+async function createDocItemCollection(obj, dene, dev) {
     if (dev === false) {
-        Worker.createDocItemCollection(obj)
+        await Worker.createDocItemCollection(obj)
             .then(function () {
-                done('page successfully created');
+                this.categories = 'page successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = "error"
                 console.error("Error writing page: ", error);
             });
     }
     else {
-        Worker.createDocItemCollectionDev(obj)
+        await Worker.createDocItemCollectionDev(obj)
             .then(function () {
-                done('page info created');
+                this.categories = 'page successfully created'
             })
             .catch((error) => {
-                done('error', error);
+                this.categories = "error"
                 console.error("Error writing page: ", error);
             });
     }
+    return this.categories
 }
+
