@@ -1252,7 +1252,7 @@ function deleteAddedData(parent) {
     })
 }
 
-function deleteAddedDataĨtem(parent, itemArray) {
+function deleteAddedDatatem(parent, itemArray) {
     return new Promise((resolve, reject) => {
         _DBW.getPageDataSnapshot((done2, err) => {
             if (done2 !== 'error' && done2.docs.length > 0) {

@@ -1,60 +1,15 @@
 
 const express = require('express');
 const session = require('express-session')
-const graphqlHTTP = require('express-graphql');
-const { buildSchema, GraphQLObjectType, GraphQLString } = require('graphql');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const responseTime = require('response-time')
 const index = require('./routes/index');
+const galleries = require('./routes/galleries');
+const pages = require('./routes/pages');
 const app = express();
 //const cors = require('cors');
-const { MediaDB } = require('./cms/tools/dataBaseWorker')
-var media = new MediaDB()
-//graphQl
-var schema = buildSchema(`
-  type Query {
-    title: String,
-    pages: String,
-    galleries: String,
-    articles: String
-  }
-`);
-
-var hello = {
-  title: () => {
-    return 'TySix';
-  },
-
-  pages: async () => {
-    var result = []
-    /*  await getCollection('pages').then(data => {
-        result = data
-      })*/
-    return JSON.stringify(result) || 'Dam!!';
-  },
-
-  galleries: async () => {
-    var result = []
-    await media.getGalleries().then((QuerySnapshot) => {
-      QuerySnapshot.forEach(item => {
-        result.push(item.data())
-      })
-    }, process.env.develolpment === "true")
-    return JSON.stringify(result) || 'Dam!!';
-  },
-
-  articles: async () => {
-    var result = []
-    /* await getCollection('articles').then(data => {
-       result = data
-     })*/
-    return JSON.stringify(result) || 'Dam!!';
-  },
-};
-
-// Midleware
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -82,52 +37,18 @@ app.use('/content/search', index);
 app.use('/users', index);
 app.use('/galleries', index);
 app.use('/view404', index);
-//graphQL api route
-app.use('/api', graphqlHTTP({
-  schema: schema,
-  rootValue: hello,
-  graphiql: true,
-}));
-//graphQL session verification
-var postType = new GraphQLObjectType({
-  name: 'Post',
-  fields: {
-    body: {
-      type: GraphQLString,
-      resolve: (post, args, context, { hello }) => {
-        // return the post body only if the user is the post's author
-        if (context.user && (context.user.id === post.authorId)) {
-          return post.body;
-        }
-        return null;
-      }
-    }
-  }
-});
-
-module.exports = app;
-
-/**/
-async function getCollection(coll) {
-  let collection = dB.collection('dev').doc('VoSSMkzGYmPTvUhh9mgL').collection(coll)
-  let result = []
-  await collection.get().then(querySnapshot => {
-    querySnapshot.forEach((doc) => {
-      result.push(doc.data())
-
-    });
-  })
-  return result
-}
+// grapkql routes
+app.use('/api/galleries', galleries);
+app.use('/api/pages', pages);
 
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   //res.render('error');
 });
+
 module.exports = app;

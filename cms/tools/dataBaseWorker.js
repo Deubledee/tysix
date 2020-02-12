@@ -252,10 +252,12 @@ class dataBaseworker {
 
         return deleteDoc.call(this, obj, dev)
     }
+
     getPageData(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType }
         return getItemCollectionDoc.call(this, obj, dev)
     }
+
     getPageDataSnapshot(table, dev) {
         let obj = { name: 'pages', docName: table.name, coll: table.dataType }
         return getItemCollectionDocSnapshot.call(this, obj, dev)
@@ -275,6 +277,7 @@ class dataBaseworker {
         let obj = { name: 'pages', docName: table.name, coll: 'subCategories', collDocName: table.doc, collDocCollName: 'data' }
         return getDocItemCollectionCollection.call(this, obj, dev)
     }
+
     setubcatsData(table, dev) {
         let obj = { name: 'pages', docName: table.page, coll: 'subCategories', collDocName: table.name, collDocCollName: 'data', doc: table.doc, data: table.data }
         return createDocItemCollectionCollection.call(this, obj, dev)
