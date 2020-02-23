@@ -7,7 +7,6 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     static get _getSideInfo() {
         return html`
         <dom-repeat repeat items="[[inform]]" as="cat">
-        no items here
             <template>
                 <div class="center-menu">
                     <aside class="info">
@@ -353,7 +352,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         if (this.add === true)
             inform.lastModified.push({
                 uid: this.user.uid,
-                author: this.user.displayName,
+                author: this.user.name,
                 date: data.toLocaleString().replace(',', '')
             });
         this.inform = [inform]
@@ -366,7 +365,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                     return undefined
                 }
                 this.content[0][this.content[0].lang.lang] = this.content[0].lang
-                inform.id = this.content[0][this.content[0].lang.lang].categoryName
+                inform.id = this.content[0][this.content[0].lang.lang].categoryName.toLowerCase()
                 inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName)
                 inform.type = this.content[0][this.content[0].lang.lang].type
                 delete this.content[0].lang
@@ -374,7 +373,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 inform.Published.publishedBy = 'N/A'
                 inform.Published.state = 'NP'
                 inform.author.id = this.user.uid
-                inform.author.name = this.user.displayName
+                inform.author.name = this.user.name
                 inform.path = [inform.id]
                 inform.toArticle = 'B'
                 inform.removed = false

@@ -44,5 +44,8 @@
     "@webcomponents/webcomponentsjs": "^2.4.0",
     "firebase": "^7.6.1",
     "lit-html": "^1.1.2"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^4.0.1"
   }
 }

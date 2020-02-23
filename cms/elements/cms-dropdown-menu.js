@@ -53,5 +53,22 @@ export class cmsDropdownMenu extends cmsDropdownMenuTemplate {
         this.translator.changeItemTitleLang.call(this, this.itemLabel, 'title');
         this.translator.changeItemTitleLang.call(this, 'cancel', 'cancel');
     }
+    __setValues(data) {
+        console.log(data)
+        if (!!data) {
+            let obj = data
+            this.list = data.items
+            Reflect.deleteProperty(obj, 'items')
+            this._setValues(obj)
+            this.__changeLang()
+        }
+    }
+    _setValues(data) {
+        this.temp = this.item
+        for (let par in data) {
+            this.set('itemText', data[par])
+        }
+        this._setLabels(data)
+    }
 }
 customElements.define(cmsDropdownMenu.is, cmsDropdownMenu);

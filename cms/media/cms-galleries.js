@@ -291,7 +291,7 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         inform.lastModified = []
         inform.lastModified.push({
             uid: this.user.uid,
-            author: this.user.displayName,
+            author: this.user.name,
             date: data.toLocaleString().replace(',', '')
         });
         this.newGall = inform
@@ -302,7 +302,7 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         inform.id = this.gall
         inform.type = 'gallerie'
         inform.author.id = this.user.uid
-        inform.author.name = this.user.displayName
+        inform.author.name = this.user.name
         inform.removed = false
         inform.dateCreated = data.toLocaleString().replace(',', '')
         return inform

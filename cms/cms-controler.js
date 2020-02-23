@@ -125,42 +125,41 @@ class cmsControler extends cmslangsLib(PolymerElement) {
       <div>
           <div rows>
               <nav toolbar>
-                  <div class="content-wrapper">
-
-                      <nav class="slight">
-                          <div ty6>
-                              <h1>Ty6</h1>
-                          </div>
-                      </nav>
-                      <nav>
-                          <div ty6>
-                            <cms-langs-menu langs="[[langsArray]]" lang="{{lang}}">
-                            </cms-langs-menu>
-                          </div>
-                      </nav>
-                      <dom-repeat repeat items="[[pageArray]]" as="page">
-                        <template>  
-                          <cms-sidebar-item content="[[page]]" route="[[subroute]]" route="[[route]]">
-                          </cms-sidebar-item>
-                        </template>                            
-                      </dom-repeat>                      
-                      <nav id="login" class="">   
-                        <div>
-                            <div>
-                                <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
-                            </div>
-                            <div>
-                                <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
-                            </div>
-                            <div>
-                                <paper-button icon="perm-identity" aria-label\$="logout" on-click="_logout">
-                                    logout
-                                </paper-button>
-                            </div>
+                <div class="content-wrapper">
+                    <nav class="slight">
+                        <div ty6>
+                            <h1>Ty6</h1>
                         </div>
-                      </nav>
+                    </nav>
+                    <nav>
+                        <div ty6>
+                          <cms-langs-menu langs="[[langsArray]]" lang="{{lang}}">
+                          </cms-langs-menu>
+                        </div>
+                    </nav>
+                    <dom-repeat repeat items="[[pageArray]]" as="page">
+                      <template>  
+                        <cms-sidebar-item content="[[page]]" route="[[subroute]]" route="[[route]]">
+                        </cms-sidebar-item>
+                      </template>                            
+                    </dom-repeat>                      
+                    <nav id="login" class="">   
+                      <div>
+                          <div>
+                              <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
+                          </div>
+                          <div>
+                              <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
+                          </div>
+                          <div>
+                              <paper-button icon="perm-identity" aria-label\$="logout" on-click="_logout">
+                                  logout
+                              </paper-button>
+                          </div>
+                      </div>
+                    </nav>
 
-                  </div>
+                </div>
               </nav>
               <div pages>
                   <iron-pages selected="[[page]]" attr-for-selected="name">
@@ -241,6 +240,16 @@ class cmsControler extends cmslangsLib(PolymerElement) {
         notify: true,
         value: function () {
           return [{
+            title: 'Definitions',
+            description: 'CMS definitions',
+            pages: [{
+              url: 'definitions/',
+              views: ['definitions'],
+              iconString: 'av:library-books',
+              title: 'definitions'
+            }]
+          },
+          {
             title: 'Content',
             description: 'pages sub-categories articles',
             pages: [{
@@ -282,7 +291,7 @@ class cmsControler extends cmslangsLib(PolymerElement) {
               title: 'users & groups'
             },
             {
-              url: 'us[ers/login/',
+              url: 'users/login/',
               views: ['login'],
               iconString: 'perm-identity',
               title: 'login & logout'
@@ -291,8 +300,12 @@ class cmsControler extends cmslangsLib(PolymerElement) {
           {
             title: 'Preview',
             description: 'preview the app',
-            views: [],
-            pages: []
+            pages: [{
+              views: ['Preview'],
+              url: '',
+              iconString: '',
+              title: 'Preview the app'
+            }]
           }]
         }
       },
@@ -328,8 +341,8 @@ class cmsControler extends cmslangsLib(PolymerElement) {
   }
   static get observers() {
     return [
-      '_routePageChanged(routeData, route)',
-      '_routePopoutChanged(popOutRoute)'
+      '_routePageChanged(routeData.page, route)',
+      '_routePopoutChanged(popOutRoute.path)'
     ];
   }
   connectedCallback() {
@@ -398,34 +411,42 @@ class cmsControler extends cmslangsLib(PolymerElement) {
   }
 
   _routePopoutChanged(popOutRoute) {
-    if (['/add-category-pages', '/edit-category-pages'].indexOf(popOutRoute.path) !== -1) {
-      this.popout = 'add-category-pages';
-    } else
-      if (['/add-subcategory-pages', '/edit-subcategory-pages'].indexOf(popOutRoute.path) !== -1) {
-        this.popout = 'add-subcategory-pages'
-      } else
-        if (['/add-gallery', '/edit-gallery'].indexOf(popOutRoute.path) !== -1) {
-          this.popout = 'add-gallery'
-        } else
-          if (['/add-images', '/edit-images'].indexOf(popOutRoute.path) !== -1) {
-            this.popout = 'add-images'
-          } else
-            if (['/add-articles', '/edit-articles'].indexOf(popOutRoute.path) !== -1) {
-              this.popout = 'add-articles'
-            } else {
-              this.popout = ''
+    if (!!popOutRoute) {
+      if (['/add-category-pages', '/edit-category-pages'].indexOf(popOutRoute) !== -1) {
+        this.popout = 'add-category-pages';
+      }
+      else
+        if (['/add-subcategory-pages', '/edit-subcategory-pages'].indexOf(popOutRoute) !== -1) {
+          this.popout = 'add-subcategory-pages'
+        }
+        else
+          if (['/add-gallery', '/edit-gallery'].indexOf(popOutRoute) !== -1) {
+            this.popout = 'add-gallery'
+          }
+          else
+            if (['/add-images', '/edit-images'].indexOf(popOutRoute) !== -1) {
+              this.popout = 'add-images'
             }
+            else
+              if (['/add-articles', '/edit-articles'].indexOf(popOutRoute) !== -1) {
+                this.popout = 'add-articles'
+              }
+              else {
+                this.popout = ''
+              }
+    }
   }
   _routePageChanged(page) {
-    if (this.page !== page.page && page.page == page.page) {
-      if (!page.page) {
-        this.page = 'cmshome';
-      }
-      else if (['app', 'content', 'users', 'cmshome', 'media'].indexOf(page.page) !== -1) {
-        this.page = page.page;
+    if (!page) {
+      this.page = 'cmshome';
+      return
+    }
+    if (!!page) {
+      if (['app', 'content', 'users', 'cmshome', 'media'].indexOf(page) !== -1) {
+        this.page = page;
       }
       else {
-        // this.page = 'view404';
+        this.page = 'view404';
       }
     }
   }
@@ -437,10 +458,6 @@ class cmsControler extends cmslangsLib(PolymerElement) {
     )
   }
   _pageChanged(page) {
-    if (page === 'cmshome') {
-      /*- import('./cms-home-viewer');
-       return;*/
-    }
     if (page === 'content') {
       import('./cms-content');
       return;

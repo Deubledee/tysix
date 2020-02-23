@@ -1,7 +1,8 @@
 import '@polymer/polymer/polymer-element.js';
 const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<dom-module id="shop-select">
+$_documentContainer.innerHTML = `
+<dom-module id="shop-select">
   <template>
     <style>
 

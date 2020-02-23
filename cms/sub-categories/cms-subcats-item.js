@@ -6,8 +6,8 @@ import '../elements/cms-content-image';
 import '../elements/cms-content-item';
 import '../elements/cms-content-text';
 import '../styles/cms-comon-style_v3';
-import { cmsSubcatsLib } from '../tools/cms-save-lib.js';
-export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
+import { cmsSubcatsLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
+export class cmsSubcatsItem extends cmscategoriesLib(cmsSubcatsLib(PolymerElement)) {
     static get template() {
         return html` 
         <style include="cms-comon-style_v3">    
@@ -46,12 +46,12 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                         </paper-button>
                     </div>
                     <div title="[[item.toArticle]]" toarticle$="[[item.toArticle]]">
-                        <paper-button title="[[item.toArticle]]">
+                        <paper-button title="[[item.toArticle]]"on-click="_confirmToArticle" >
                             [[item.toArticle]]
                         </paper-button>
                     </div>
                     <div title="[[item.Published.state]]" published$="[[item.Published.state]]">
-                        <paper-button title="[[item.Published.state]]">
+                        <paper-button title="[[item.Published.state]]"on-click="_confirmPublished" >
                             [[item.Published.state]]
                         </paper-button>
                     </div>
@@ -215,6 +215,43 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
     }
+    __publish() {
+        this.subcat.Published.date = date.toLocaleDateString()
+        this.subcat.Published.publishedBy = this.user.name
+        this.subcat.Published.state = "P"
+        this._publishToArticle()
+    }
+    __toArticle() {
+        this.subcat.toArticle = "A"
+        let id, category = {}
+        this._publishToArticle()
+        id = this.subcat.path.join('-')
+        category.id = this.subcat.path.join('/')
+        category.removed = false
+        this.setCategories(id, category)
+    }
+    _confirmPublished() {
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true,
+                detail: {
+                    name: this.subcat.id, method: (this.__publish).bind(this),// (this.__publish).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'publish ?', type: 'page/sub-category'
+                }
+            }));
+        });
+    }
+    _confirmToArticle() {
+        this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true,
+                detail: {
+                    name: this.subcat.id, method: (this.__toArticle).bind(this),
+                    argument: '!!to be done!!', headderMsgKind: 'send to articles ?', type: 'page/sub-category'
+                }
+            }));
+        });
+    }
     _subcatAdded(data) {
         if (!!data) {
             if (this.routeData.page === "subcategory-pages") {
@@ -278,7 +315,7 @@ export class cmsSubcatsItem extends cmsSubcatsLib(PolymerElement) {
                 name = `${this._indexArr}${this.subcat.children.length}`
             }
             this.add = true
-            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.subcat.parent}&name=${name}&parent=${this.subcat.id}&path=${this.subcat.path}/${this.content[this.catlang].categoryName}&&topparenttype=${this.content[this.catlang].type}&top=false&add=${this.add}`
+            let string = `${this.rootPath}content/pages/add-subcategory-pages?content=${this.subcat.parent}&name=${name}&parent=${this.subcat.id}&path=${this.subcat.path}}&&topparenttype=${this.content[this.catlang].type}&top=false&add=${this.add}`
             window.history.pushState({}, null, string);
             window.dispatchEvent(new CustomEvent('location-changed'))
         }

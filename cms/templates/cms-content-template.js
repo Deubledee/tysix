@@ -30,8 +30,9 @@ export class cmsContentTemplate extends PolymerElement {
         width: 100%;
         height: 100vh;
     }   
+     
     div[background]{
-        height: 100vh;
+        height: 90vh;
         background-color: var(--app-secondary-text-color);
     }
     .scrollable {
@@ -550,11 +551,21 @@ export class cmsContentTemplate extends PolymerElement {
             }
         }
     }
+    _setInfomrCat(data) {
+        console.log(data);
+        for (let par in data) {
+            if (par.toString() !== 'undefined') {
+                console.log(par);
+
+                this.tempCategory = data[par]
+            }
+        }
+    }
     _setInfomrKw(data) {
         if (!!this.content[0]) {
             for (let par in data) {
                 if (par.toString() !== 'undefined') {
-                    this.inform[par] = data[par].split(' ').join('').split(',')
+                    this.inform[par] = data[par].split(',')
                 }
             }
         }

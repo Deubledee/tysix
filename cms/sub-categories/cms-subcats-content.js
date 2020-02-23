@@ -299,7 +299,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
             this.__reset()
             this.scrollTo(0, 0)
             this.add = this.query.adTosub
-            let parentName = this.query.content
+            let parentName = query.content
             let parentIndex = query.parent
             this.set("parentName", parentName)
             let indexArr = (!!this.query.indexarr) === false ? parentIndex : this.query.indexarr
@@ -404,7 +404,7 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
         if (this.add === true)
             inform.lastModified.push({
                 uid: this.user.uid,
-                author: this.user.displayName,
+                author: this.user.name,
                 date: data.toLocaleString().replace(',', '')
             });
         this.inform = [inform]
@@ -429,11 +429,11 @@ class cmsSubcatsContent extends cmsSubcatsLib(cmsContentTemplate) {
                 inform.Published.state = 'NP'
                 inform.Published.unPublishedBy = 'N/A'
                 inform.author.uid = this.user.uid
-                inform.author.name = this.user.displayName
+                inform.author.name = this.user.name
                 inform.parent = this.query.content
                 inform.id = this.query.name
                 inform.removed = false
-                inform.path = [this.query.path, this.content[0][lang].categoryName]
+                inform.path = `${this.query.path}/${this.content[0][lang].categoryName.toLowerCase()}`
                 inform.toArticle = 'B'
                 inform.top = top
                 inform.dateCreated = data.toLocaleString().replace(',', '')

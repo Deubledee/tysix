@@ -89,7 +89,7 @@ export class cmsArticleItem extends cmsArticlesLib(cmsItemTemplate) {
                        <div >                    
                            <span> 
                                <paper-button class="button-normal">
-                                   ${objInfo.category} 
+                                   ${objInfo.categories[0]} 
                                </paper-button>
                            </span>
                        </div>  

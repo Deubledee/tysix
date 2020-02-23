@@ -813,7 +813,7 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
         let IMAGES = objrr.map(image => {
             let obj = image
             obj.author.id = this.user.uid
-            obj.author.name = this.user.displayName
+            obj.author.name = this.user.name
             obj.removed = false
             obj.dateCreated = data.toLocaleString().replace(',', '')
             let length = obj.addedTo.split(' ').length

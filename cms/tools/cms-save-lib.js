@@ -5,6 +5,7 @@ const _CATEGORIESDBW = new CategoriesDB()
 const __DEV = true
 var storageRef = firebase.storage().ref();
 
+export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib, cmslangsLib }
 const cmsPagesLib = function (superClass) {
     return class extends superClass {
         static get is() { return 'cms-pages-lib'; }
@@ -159,11 +160,22 @@ const cmsSubcatsLib = function (superClass) {
                 }).catch(standartErr)
             }
         }
+        _publishToArticle() {
+            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=true`
+            saveAddedSubcat(this.query.content, this.subcat.id, this.subcat).then(() => {
+                window.history.pushState({}, null, str)
+                window.onbeforeunload = function () { };
+                localStorage.clear()
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('location-changed'))
+                }, 500)
+            }).catch(standartErr)
+        }
         saveSubcats() {
-            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&update=${this.query.name}&reset=true`
+            let str = `${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=true`
             this.ctnOpened = false
             if (this.add === true) {
-                saveAddedSubcat(this.inform[0].parent, this.inform[0].id, this.inform[0]).then(() => {
+                saveAddedSubcat(this.query.content, this.inform[0].id, this.inform[0]).then(() => {
                     saveAddedSubcatData(this.inform[0].parent, this.inform[0].id, this.content[0]).then(() => {
                         window.history.pushState({}, null, str)
                         window.onbeforeunload = function () { };
@@ -442,7 +454,6 @@ const cmsMediaLib = function cmsMediaLib(superClass) {
     }
 }
 
-export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib, cmslangsLib }
 
 //standart error callback function
 function standartErr(err) {
@@ -524,8 +535,8 @@ const cmscategoriesLib = function (superClass) {
             return getCategories(query)
         }
 
-        setCategories(id, inform) {
-            setCategory(id, inform).then(() => {
+        setCategories(id, category) {
+            setCategory(id, category).then(() => {
                 console.log('art saved')
             }).catch(standartErr)
         }
@@ -1252,7 +1263,7 @@ function deleteAddedData(parent) {
     })
 }
 
-function deleteAddedDataĨtem(parent, itemArray) {
+function deleteAddedDataItem(parent, itemArray) {
     return new Promise((resolve, reject) => {
         _DBW.getPageDataSnapshot((done2, err) => {
             if (done2 !== 'error' && done2.docs.length > 0) {

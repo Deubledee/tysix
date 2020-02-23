@@ -5,7 +5,7 @@ import '../elements/cms-content-text'
 import '../elements/cms-content-item'
 import '../elements/cms-dropdown-menu';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImFydGljbGVOYW1lIjoiIiwibGFuZyI6IiIsImRlc2NyaXB0aW9uIjoiIiwidHlwZSI6IiJ9fQ=="
-const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yeSI6IiIsImRpbWVudGlvbnMiOiIiLCJrZXl3b3JkcyI6W10sImxhc3RNb2RpZmVpZCI6W10sInByaWNlIjoiIiwicHJvbW90aW9uQ29kZSI6IiIsInJlbW92ZWQiOmZhbHNlLCJyZXRhaWxlciI6IiIsInNoaXBwaW5nIjoiIiwic2hpcHBpbmdUYXgiOiIiLCJzdG9jayI6IiIsInN0b3JlV2FycmFudHkiOiIiLCJ0YXgiOiIiLCJ3ZWlnaHQiOiIifQ=="
+const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yaWVzIjpbXSwiZGltZW50aW9ucyI6IiIsImtleXdvcmRzIjpbXSwibGFzdE1vZGlmZWlkIjpbXSwicHJpY2UiOiIiLCJwcm9tb3Rpb25Db2RlIjoiIiwicmVtb3ZlZCI6ZmFsc2UsInJldGFpbGVyIjoiIiwic2hpcHBpbmciOiIiLCJzaGlwcGluZ1RheCI6IiIsInN0b2NrIjoiIiwic3RvcmVXYXJyYW50eSI6IiIsInRheCI6IiIsIndlaWdodCI6IiJ9"
 class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTemplate)) {
     static get _getStyles() {
         return html`
@@ -84,7 +84,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
 
         <div bottom>     
             <cms-dropdown-menu 
-                items="[[category]]"  
+                items="[[categories]]"  
                 horizontal-align="left" 
                 vertical-align="top" 
                 scroll-action="refit"
@@ -261,7 +261,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 type: Object,
                 notify: true,
                 value: {},
-                observer: '_setInfomr'
+                observer: '_setInfomrCat'
             },
             kwResponse: {
                 type: Object,
@@ -273,6 +273,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 type: Object,
                 notify: true,
                 value: {},
+            },
+            tempCategory: {
+                type: String
             },
             langStr: String,
             time: Number
@@ -360,7 +363,7 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
             }
         }
     }
-    _setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, category, keywords, images) {
+    _setAllInfo(urlstring, media, infoVals, phDetails, shDetails, dtDetails, categories, keywords, images) {
         this.set('str', `content/articles/edit-articles${urlstring}lang=`)
         this.set('media', media)
         this.set('imageArr', 'images' in this.media ? this.media.images.content : [])
@@ -368,17 +371,17 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         this.set('phDetails', this._getObjArr(phDetails, true))
         this.set('shDetails', this._getObjArr(shDetails, true))
         this.set('dtDetails', this._getObjArr(dtDetails, true))
-        this._getCatArr(category)
+        this._getCatArr(categories)
         this.set('keywords', [{ keywords: keywords.keywords.join(', ') }])
         this.imageLabel = images
     }
-    _getCatArr(category) {
+    _getCatArr(categories) {
         this.getCategories({ q: 'removed', v: false }).then(data => {
-            category.items = []
+            categories.items = []
             data.forEach(item => {
-                category.items.push(item.data().id)
+                categories.items.push(item.data().id)
             })
-            this.set('category', this._getObjArr(category, true))
+            this.set('categories', categories)
         }).catch(error => {
             console.log(error)
         })
@@ -433,13 +436,11 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
         let obj = { addedBy: '', addedDate: '', lastModifeid: [] }
         let Cont = !!item && !!item.data ? item.data : obj
         this.INFO = this._lastModified(Cont)
-        let dataValidation = this._setAndCheckDataBeforeSave(this.inform)
-        if (!dataValidation) return
         if (!!this.removelang) {
             this._removeLang()
             return
         }
-        if (!!this.newlangstate) this.add = true
+        if (!this._setAndCheckDataBeforeSave(this.inform)) this.add = true
         this.newlangstate = !this.newlangstate
         this.saveArticles()
         return
@@ -461,22 +462,27 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
     }
     _setAndCheckDataBeforeSave() {
         if (!this.newlangstate) {
+            if (!!this.tempCategory) {
+                this.inform.categories.push(this.tempCategory)
+                this.tempCategory = undefined
+            }
+            for (let par in this.media) {
+                this.content[0][par] = this.media[par]
+            }
             if (this.add === true) {
                 if (!this.content[0].lang.lang && !this.content[0].lang.articleName) {
                     return false
                 }
                 this.content[0][this.content[0].lang.lang] = this.content[0].lang
-                this.inform.id = (this.content[0][this.content[0].lang.lang].articleName).split(' ').join('_')
+                this.inform.id = (this.content[0][this.content[0].lang.lang].articleName).split(' ').join('_').toLowerCase()
                 delete this.content[0].lang
                 this.inform.removed = false
                 this.inform.Published = "NP"
                 return true
             }
+            return true
         }
-        for (let par in this.media) {
-            this.content[0][par] = this.media[par]
-        }
-        return true
+        return false
     }
     _reset() {
         this.set('content', []);
@@ -577,11 +583,7 @@ function _getDetails(details) {
 }
 function _getCatDetails(details) {
     let catDetails = {}
-    for (let par in details) {
-        if (par === 'category') {
-            catDetails[par] = details[par]
-        }
-    }
+    catDetails['categories'] = details['categories']
     return catDetails
 }
 function _getKeywords(details) {
