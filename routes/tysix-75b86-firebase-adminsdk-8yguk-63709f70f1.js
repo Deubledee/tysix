@@ -1,3 +1,7 @@
+function firebase() {
+  return   
+}
+
 module.exports = {
   "type": "service_account",
   "project_id": "tysix-75b86",
