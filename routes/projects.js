@@ -9,7 +9,7 @@ const schema = G.schema,
     rootValue = G.rootValue
 //graphQL api route
 
-router.post('/', (req, res, next) => {
+/*router.post('/', (req, res, next) => {
     // console.log(req.headers);
 
     let projects = JSON.parse(fs.readFileSync('data/projects.json'));
@@ -20,9 +20,12 @@ router.post('/', (req, res, next) => {
         next()
     }
     else {
-        res.status('404').send('origin not allowed')
+        res.status('404')
+        res.send('origin not allowed')
+        res.end()
+        
     }
-});
+});*/
 router.get('/', graphqlHTTP({
     schema,
     rootValue,
