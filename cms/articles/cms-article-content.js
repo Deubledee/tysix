@@ -1,8 +1,8 @@
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsArticlesLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
-import '../elements/cms-content-text'
-import '../elements/cms-content-item'
+import '../elements/cms-content-textarea'
+import '../elements/cms-content-input'
 import '../elements/cms-dropdown-menu';
 const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImFydGljbGVOYW1lIjoiIiwibGFuZyI6IiIsImRlc2NyaXB0aW9uIjoiIiwidHlwZSI6IiJ9fQ=="
 const ModeloInfo = "eyJQdWJsaXNoZWQiOiIiLCJSRUYiOiIiLCJTS0EiOiIiLCJhZGRlZEJ5IjoiIiwiYWRkZWREYXRlIjoiIiwiYnJhbmRNYW51ZmFjcnVyZXIiOiIiLCJjYXRlZ29yaWVzIjpbXSwiZGltZW50aW9ucyI6IiIsImtleXdvcmRzIjpbXSwibGFzdE1vZGlmZWlkIjpbXSwicHJpY2UiOiIiLCJwcm9tb3Rpb25Db2RlIjoiIiwicmVtb3ZlZCI6ZmFsc2UsInJldGFpbGVyIjoiIiwic2hpcHBpbmciOiIiLCJzaGlwcGluZ1RheCI6IiIsInN0b2NrIjoiIiwic3RvcmVXYXJyYW50eSI6IiIsInRheCI6IiIsIndlaWdodCI6IiJ9"
@@ -41,9 +41,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[inputVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFull">
-                            <cms-content-item info="*" editing="[[editing]]" item="[[item]]"
+                            <cms-content-input info="*" editing="[[editing]]" item="[[item]]"
                                 res="{{inputResponse}}">
-                            </cms-content-item>
+                            </cms-content-input>
                         </section>
                     </template>
                 </dom-repeat>
@@ -52,9 +52,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[textareaVal]]" as="item">
                     <template>
                         <section class="flexchildbotomFullExtra">
-                            <cms-content-text info="*" editing="[[editing]]" item="[[item]]"
+                            <cms-content-textarea info="*" editing="[[editing]]" item="[[item]]"
                                 res="{{textAreaResponse}}">
-                            </cms-content-text>
+                            </cms-content-textarea>
                         </section>
                     </template>
                 </dom-repeat>
@@ -66,9 +66,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[dtDetails]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
-                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                            <cms-content-input editing="[[editing]]" item="[[item]]"
                                 res="{{ifResponse}}">
-                            </cms-content-item>
+                            </cms-content-input>
                         </section>
                     </template>
                 </dom-repeat>
@@ -97,9 +97,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[phDetails]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
-                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                            <cms-content-input editing="[[editing]]" item="[[item]]"
                                 res="{{ifResponse}}">
-                            </cms-content-item>
+                            </cms-content-input>
                         </section>
                     </template>
                 </dom-repeat>
@@ -111,9 +111,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[infoVals]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
-                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                            <cms-content-input editing="[[editing]]" item="[[item]]"
                                 res="{{ifResponse}}">
-                            </cms-content-item>
+                            </cms-content-input>
                         </section>
                     </template>
                 </dom-repeat>
@@ -125,9 +125,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[shDetails]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull flexchild-article">
-                            <cms-content-item editing="[[editing]]" item="[[item]]"
+                            <cms-content-input editing="[[editing]]" item="[[item]]"
                                 res="{{ifResponse}}">
-                            </cms-content-item>
+                            </cms-content-input>
                         </section>
                     </template>
                 </dom-repeat>
@@ -139,9 +139,9 @@ class cmsArticleContent extends cmscategoriesLib(cmsArticlesLib(cmsContentTempla
                 <dom-repeat repeat items="[[keywords]]" as="item">
                     <template>
                         <section on-click="_seeFlat" class="flexchildbotomFull">
-                            <cms-content-text info="* separete with commas" editing="[[editing]]" item="[[item]]"
+                            <cms-content-textarea info="* separete with commas" editing="[[editing]]" item="[[item]]"
                                 res="{{kwResponse}}">
-                            </cms-content-text>
+                            </cms-content-textarea>
                         </section>
                     </template>
                 </dom-repeat>

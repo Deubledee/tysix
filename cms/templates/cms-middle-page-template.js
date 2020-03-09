@@ -58,11 +58,7 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 flex-basis: auto;
                 letter-spacing: 0.2px;
             } 
-            div[spinnercenter]{
-                position: absolute;
-                left: 50%;
-                top: 30%;
-            }
+          
             .add-btn-group{
                 display: flex;
                 flex-direction: row;
@@ -201,6 +197,12 @@ export class cmsMiddlePageTemplate extends PolymerElement {
                 type: Array,
                 value: [],
                 notify: true
+            },
+            spinner: {
+                type: Object,
+                value: function () {
+                    return document.querySelector('#spinner')
+                }
             },
             closed: {
                 type: Boolean,

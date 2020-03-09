@@ -1,7 +1,7 @@
 import { html } from '@polymer/polymer/polymer-element.js';
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsPagesLib } from '../tools/cms-save-lib.js';
-const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiIsImxhbmciOiIiLCJkZXNjcmlwdGlvbiI6IiIsInR5cGUiOiIifX0="
+const Modelo = "eyJpbWFnZXMiOnsiY29udGVudCI6W119LCJsYW5nIjp7ImNhdGVnb3J5TmFtZSI6IiJ9fQ=="
 const ModeloInfo = "W3siUHVibGlzaGVkIjp7ImRhdGUiOiIiLCJwdWJsaXNoZWRCeSI6Ik4vQSIsInN0YXRlIjoiTi9QIn0sImF1dGhvciI6eyJpZCI6IiIsIm5hbWUiOiIifSwiZGF0ZUNyZWF0ZWQiOiIiLCJpZCI6IiIsInN1YkNhdGVnb3J5Q291bnQiOiIiLCJ0b0FydGljbGUiOmZhbHNlLCJ0eXBlIjoiIiwibGFzdE1vZGlmaWVkIjpbXX1d"
 class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
     static get _getSideInfo() {
@@ -191,13 +191,31 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 value: {},
                 observer: '_setContentTextValue'
             },
+            typesArray: {
+                type: Array,
+                value: ["home",
+                    "portfolio",
+                    "blog",
+                    "services",
+                    "profile",
+                    "social",
+                    "about"]
+            },
             content: {
                 type: Object,
                 notify: true,
                 value: {},
             },
             langStr: String,
-            time: Number
+            time: Number,
+            _typeSellectedIndex: {
+                type: Number,
+                notify: true,
+            },
+            _sellectedLangIndex: {
+                type: Number,
+                notify: true,
+            }
         }
     }
     static get observers() {
@@ -211,6 +229,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.translator.target('cms-page-list-type-content', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type-content', 'setLangObject')
         this.$.image.addImage = (this.addImage).bind(this)
+        var form = this.shadowRoot.querySelectorAll('iron-form')
+        form.forEach(form => form.addEventListener('iron-form-submit', (this.defaultFormCallback).bind(this)))
     }
 
     _setLObj(res, querySnapshot) {
@@ -228,6 +248,22 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         this.lang = this.translator.lang
         this.translator.changeLang.call(this)
         this._checkLabel()
+    }
+
+    defaultFormCallback(event) {
+        let obj = event.detail
+        let formType = (!!obj.formtype ||
+            !obj.formtype.match('undefined')) ?
+            obj.formtype : ''
+        if (!formType) return
+        Reflect.deleteProperty(obj, 'formtype')
+        let lang = this.add === true ? 'lang' : this.query.lang
+        try {
+            Object.keys(obj).forEach(prop => this[formType][0][lang][prop] = obj[prop])
+        }
+        catch (err) {
+            throw err
+        }
     }
     _checkLabel() {
         if (this.add === true) {
@@ -247,8 +283,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             if (!!this.ctnOpened) {
                 this.ctnOpened = false
                 setTimeout(() => {
-                    if (!!this.$.overlay.opened) {
-                        this.$.overlay.close()
+                    if (!!this.opened) {
+                        this.hideThis()
                         this.ctnOpened = false
                     }
                 }, 500)
@@ -266,8 +302,8 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
             if (!!this.langs[this.lang]) this._checkLabel()
             this.closestr = 'content/pages'
             if (path === '/add-category-pages' || path === '/edit-category-pages') {
-                if (!this.$.overlay.opened) {
-                    this.$.overlay.open()
+                if (!this.opened) {
+                    this.showThis()
                     this.ctnOpened = true
                 }
                 if (path === '/add-category-pages') {
@@ -281,7 +317,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 }
             } else {
                 this.ctnOpened = false
-                this.$.overlay.close()
+                this.hideThis()
             }
         }
     }
@@ -327,10 +363,12 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         if (this.add === false || this.added === true) {
             [arr, cont, images] = generateData.call(this, query)
             this.set('imageArr', images)
+            this._typeSellectedIndex = _getTypeIndex(this.inform, this.typesArray)
             if (!!query.lang) {
                 if (query.lang !== 'lang')
                     this.set('pageLangs', arr)
                 this.__setLAng(query.lang, cont)
+                this._sellectedLangIndex = _getLangIndex(this.pageLangs, query.lang)
             }
         }
     }
@@ -342,7 +380,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
         if (!!noLang) return
         if (!!this.removelang) {
             this._removeLang()
-            return
+            return 0
         }
         if (!!this.newlangstate) this.add = true
         this.savePages()
@@ -366,7 +404,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 }
                 this.content[0][this.content[0].lang.lang] = this.content[0].lang
                 inform.id = this.content[0][this.content[0].lang.lang].categoryName.toLowerCase()
-                inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName)
+                inform.ref = btoa(this.content[0][this.content[0].lang.lang].categoryName).split('').map(item => item.charCodeAt().toString(16)).join('')
                 inform.type = this.content[0][this.content[0].lang.lang].type
                 delete this.content[0].lang
                 inform.Published.date = 'NP'
@@ -374,7 +412,7 @@ class cmsPageCatsContent extends cmsPagesLib(cmsContentTemplate) {
                 inform.Published.state = 'NP'
                 inform.author.id = this.user.uid
                 inform.author.name = this.user.name
-                inform.path = [inform.id]
+                inform.path = inform.id
                 inform.toArticle = 'B'
                 inform.removed = false
                 inform.dateCreated = data.toLocaleString().replace(',', '')
@@ -403,4 +441,13 @@ function* generateData(query) {
     yield cont
     this._getPageInfo(`page-${query.content}-`)
     yield cont[0].images.content
+}
+
+function _getTypeIndex(details, typesArray) {
+    return typesArray.findIndex((item) => item === details[0]['type'])
+}
+
+
+function _getLangIndex(pageLangs, lang) {
+    return pageLangs.findIndex((item) => item === lang)
 }

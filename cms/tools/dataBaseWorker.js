@@ -1,6 +1,19 @@
 import { worker } from './firebaseWorker';
 const Worker = new worker();
 
+export class Settings {
+    get Projects() {
+
+        return Worker._getProjects()
+    }
+
+    changeProject(config, projectID) {
+        var newProject = firebase.initializeApp(config, projectID);
+        return newProject.name
+    }
+
+}
+
 export class CategoriesDB {
     //Categories
     getCategoriesEqualTo(done, query, value, dev) {
@@ -79,24 +92,34 @@ export class dataBaseworker {
     }
 
     updateBrands(done, table, dev) {
+
         let obj = { name: "brands&manufactures", doc: table.name, data: { content: table.content } };
         updateContent.call(this, obj, done, dev)
+
     }
     setBrands(done, table, dev) {
+
         let obj = table.name !== undefined ? { name: 'brands&manufactures', docName: table.name, doc: table.langs } : false;
         createDoc.call(this, obj, done, dev)
+
     }
     deleteBrandsZone(done, lang, dev) {
+
         let obj = { name: 'brands&manufactures', docName: lang }
         deleteDoc.call(this, obj, done, dev)
+
     }
     getBrands(done, table, dev) {
+
         let obj = { name: 'brands&manufactures', doc: table.name };
         getDoc.call(this, obj, done, dev)
+
     }
     getAllBrands(done, dev) {
+
         let obj = { name: 'brands&manufactures' };
         getDocListDev.call(this, obj, done, dev)
+
     }
 
 

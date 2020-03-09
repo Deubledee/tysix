@@ -158,15 +158,23 @@ export class cmsPageSubcats extends cmsSubcatsLib(cmsMiddlePageTemplate) {
                     return
                 } else
                     if (this.lastpagesubs !== parent || !!reset) {
-                        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
-                        render(spinnerTemplate(), this);
+                        this.spinner.active = true
+
                         localStorage.setItem('lastpagesubs', btoa(parent))
                         this.lastpagesubs = parent
                         this.subSubCats = []
                         this.time = setTimeout(() => {
                             afterNextRender(this, () => {
-                                const spinnerOutTemplate = () => litHtml``
-                                this.getTopSubcats(this.lastpagesubs, render, spinnerOutTemplate)
+                                this.getTopSubcats(this.lastpagesubs)
+                                    .then(done => {
+                                        if (!!done && done.length > 0) {
+                                            this.spinner.active = false
+                                            this.subSubCats = done
+                                        } else {
+                                            this.subSubCats = ''
+                                        }
+                                    }).catch(this.standartErr)
+
                                 afterNextRender(this, () => {
                                     if (!!reset) {
                                         this.time = setTimeout(() => {

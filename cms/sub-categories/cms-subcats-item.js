@@ -3,8 +3,8 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { FlattenedNodesObserver } from '@polymer/polymer/lib/utils/flattened-nodes-observer';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '../elements/cms-content-image';
-import '../elements/cms-content-item';
-import '../elements/cms-content-text';
+import '../elements/cms-content-input';
+import '../elements/cms-content-textarea';
 import '../styles/cms-comon-style_v3';
 import { cmsSubcatsLib, cmscategoriesLib } from '../tools/cms-save-lib.js';
 export class cmsSubcatsItem extends cmscategoriesLib(cmsSubcatsLib(PolymerElement)) {

@@ -1,28 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings';
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import '@polymer/app-route/app-location';
-import '@polymer/app-route/app-route';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/iron-pages/iron-pages';
-import '@polymer/iron-selector/iron-selector';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@polymer/paper-tabs/paper-tabs';
-import '@polymer/paper-tabs/paper-tab';
-import '@polymer/paper-button/paper-button';
-import '@polymer/iron-icons/iron-icons';
-import '@polymer/iron-icons/editor-icons';
-import '@polymer/iron-icons/hardware-icons';
-import '@polymer/iron-icons/av-icons';
-import '@polymer/iron-icons/image-icons';
-import '@polymer/iron-icons/social-icons';
-import '@polymer/iron-icons/maps-icons';
-import './styles/cms-common-styles_v2';
-import './styles/cms-common-styles';
-import './elements/cms-sidebar-item'
-import './elements/cms-langs-menu'
-import { cmslangsLib } from './tools/cms-save-lib'
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import { cmslangsLib } from './tools/cms-save-lib';
+import './lazy-imports'
 setPassiveTouchGestures(true);
 setRootPath('/');
 
@@ -171,6 +152,9 @@ class cmsControler extends cmslangsLib(PolymerElement) {
                       <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
                       </cms-user-viewer>
 
+                      <cms-settings route="[[subroute]]" name="settings" user="[[user]]">
+                      </cms-settings>
+
                       <cms-content route="[[subroute]]" name="content" user="[[user]]">
                       </cms-content>
 
@@ -182,6 +166,7 @@ class cmsControler extends cmslangsLib(PolymerElement) {
               </div>
           </div>
       </div>
+
       <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name">
 
           <cms-page-cats-content name="add-category-pages" user="[[user]]" route="[[popOutRoute]]">
@@ -196,7 +181,7 @@ class cmsControler extends cmslangsLib(PolymerElement) {
           <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
           </cms-images-content>
 
-      </iron-pages>
+     </iron-pages>
 
       <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">
 
@@ -240,13 +225,23 @@ class cmsControler extends cmslangsLib(PolymerElement) {
         notify: true,
         value: function () {
           return [{
-            title: 'Definitions',
-            description: 'CMS definitions',
+            title: 'settings',
+            description: 'CMS settings & tools',
             pages: [{
-              url: 'definitions/',
-              views: ['definitions'],
+              url: 'settings/projects/',
+              views: ['projects'],
               iconString: 'av:library-books',
-              title: 'definitions'
+              title: 'project management'
+            }, {
+              url: 'settings/templates/',
+              views: ['templates'],
+              iconString: 'av:library-books',
+              title: 'app templates'
+            }, {
+              url: 'settings/tools/',
+              views: ['tools'],
+              iconString: 'settings',
+              title: 'tools'
             }]
           },
           {
@@ -409,7 +404,6 @@ class cmsControler extends cmslangsLib(PolymerElement) {
   _closeConfirm() {
     this.confirm = '';
   }
-
   _routePopoutChanged(popOutRoute) {
     if (!!popOutRoute) {
       if (['/add-category-pages', '/edit-category-pages'].indexOf(popOutRoute) !== -1) {
@@ -442,7 +436,7 @@ class cmsControler extends cmslangsLib(PolymerElement) {
       return
     }
     if (!!page) {
-      if (['app', 'content', 'users', 'cmshome', 'media'].indexOf(page) !== -1) {
+      if (['settings', 'app', 'content', 'users', 'cmshome', 'media'].indexOf(page) !== -1) {
         this.page = page;
       }
       else {
@@ -458,6 +452,10 @@ class cmsControler extends cmslangsLib(PolymerElement) {
     )
   }
   _pageChanged(page) {
+    if (page === 'settings') {
+      import('./cms-settings');
+      return;
+    }
     if (page === 'content') {
       import('./cms-content');
       return;

@@ -1,7 +1,7 @@
 import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/polymer-element.js';
-import '../elements/cms-content-item';
+import '../elements/cms-content-input';
 import "../elements/cms-pop-input";
 import { cmsContentTemplate } from '../templates/cms-content-template';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
@@ -322,11 +322,11 @@ class cmsImagesContent extends mixinBehaviors(IronCheckedElementBehavior, cmsMed
                         <paper-button slot="button" class="exex" on-click="_openStoragePath">
                             x
                         </paper-button> 
-                        <cms-content-item
+                        <cms-content-input
                             slot="input" 
                             item="[[storagePath]]"
                             res="{{addLangResponse}}">
-                        </cms-content-item>  
+                        </cms-content-input>  
                         <div slot="anchor">                            
                             <paper-button classs="color" on-click="getFilesFromStorage">
                                 submit

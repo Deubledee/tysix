@@ -53,7 +53,7 @@ export class cmsDropdownMenu extends cmsDropdownMenuTemplate {
         this.translator.changeItemTitleLang.call(this, this.itemLabel, 'title');
         this.translator.changeItemTitleLang.call(this, 'cancel', 'cancel');
     }
-    __setValues(data) {
+    setValues(data) {
         console.log(data)
         if (!!data) {
             let obj = data

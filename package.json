@@ -8,18 +8,18 @@
   "repository": "Deubledee/tysix",
   "scripts": {
     "start": "polymer serve",
+    "start2": "polymer serve & npm run start-dev",
+    "start:node": "NODE_ENV=production node ./bin/www",
+    "start-dev": "NODE_ENV=development node-dev ./bin/www",
     "build": "npm run build:prpl-server && npm run build:static",
-    "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",
-    "build:static": "polymer build",
-    "serve:prpl-server": "prpl-server --root server/build",
-    "serve:static": "polymer serve --port 5000 build/es5-bundled",
-    "test": "rm -rf build/ && polymer lint && polymer test"
+    "build:static": "polymer build"
   },
   "dependencies": {
     "@polymer/app-layout": "^3.1.0",
     "@polymer/app-route": "^3.0.2",
-    "@polymer/app-storage": "^3.0.2",
+    "@polymer/app-storage": "^3.0.3",
     "@polymer/iron-ajax": "^3.0.1",
+    "@polymer/iron-demo-helpers": "^3.1.0",
     "@polymer/iron-flex-layout": "^3.0.1",
     "@polymer/iron-form": "^3.0.1",
     "@polymer/iron-icon": "^3.0.1",
@@ -35,17 +35,30 @@
     "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-dropdown-menu": "^3.1.0",
     "@polymer/paper-icon-button": "^3.0.2",
-    "@polymer/paper-input": "^3.1.0",
+    "@polymer/paper-input": "^3.2.0",
     "@polymer/paper-item": "^3.0.1",
     "@polymer/paper-listbox": "^3.0.1",
     "@polymer/paper-spinner": "^3.0.2",
     "@polymer/paper-tabs": "^3.1.0",
     "@polymer/polymer": "^3.3.1",
-    "@webcomponents/webcomponentsjs": "^2.4.0",
+    "lit-html": "^1.1.2",
+    "@webcomponents/webcomponentsjs": "^2.4.2",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-graphql": "^0.9.0",
+    "express-session": "^1.15.6",
     "firebase": "^7.6.1",
-    "lit-html": "^1.1.2"
+    "firebase-admin": "^8.9.2",
+    "graphql": "^14.6.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@polymer/iron-component-page": "^4.0.1"
+    "del": "^3.0.0",
+    "pem": "^1.13.2",
+    "prpl-server": "^1.2.0",
+    "response-time": "^2.3.2",
+    "util": "^0.11.1"
   }
 }

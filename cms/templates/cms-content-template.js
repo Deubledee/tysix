@@ -3,291 +3,253 @@ import '@polymer/iron-icons/editor-icons';
 import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { NeonAnimationBehavior } from '@polymer/neon-animation/neon-animation-behavior'
+import { NeonAnimationRunnerBehavior } from '@polymer/neon-animation/neon-animation-runner-behavior.js';
+import '@polymer/neon-animation/neon-animations'
 import '../elements/cms-content-image';
-import '../elements/cms-content-item';
-import '../elements/cms-content-text';
+import '../elements/cms-content-input';
+import '../elements/cms-content-textarea';
 import '../elements/cms-lang-tab-item';
-import '../elements/cms-overlay';
 import '../elements/cms-pop-input';
 import { getObjArr } from '../tools/objectArray';
-import '../styles/cms-comon-style_v3';
-export class cmsContentTemplate extends PolymerElement {
+export class cmsContentTemplate extends mixinBehaviors(
+    [NeonAnimationBehavior, NeonAnimationRunnerBehavior],
+    PolymerElement) {
     static get template() {
         return html`
-    <style include="cms-comon-style_v3">
-    :host {
-        position: relative;
-        /*font-family: DeliciousRoman;*/
-    }  
+    <style include="iron-flex-layout">
+        :host {
+           /* display: block;*/
+            position: fixed;
+            top: 0px;
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0e0e0e57;
+        }  
+      
+        .container {
+            background-color: var(--app-backgound-color);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 5px;
+            height: 85vh;
+            width: 72.5vw;
+            box-sizing: border-box;
+            padding: 3%;
+            border-radius: 2px;
+            box-shadow: var(--shadow-elevation-2dp_-_box-shadow);
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+            @apply --shadow-elevation-3dp;
+        }
+        app-toolbar {
+            background-color: var(--app-item-backgound-color);
+            color:var(--app-content-section-span-color);
+            margin-top: 20px;
+            @apply --shadow-elevation-3dp;
+            border-top-right-radius: 4px;
+        }
+        app-toolbar {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70vw;
+        }
+        .xbuton{
+            background-color: var(--paper-cyan-200);
+            border-radius: 50%;
+            position: absolute;
+            top: -15px;
+            left: -15px; 
+            @apply --shadow-elevation-2dp;
+        }
+         app-toolbar a:hover{
+            background-color: var(--paper-cyan-300);
+            @apply --shadow-elevation-3dp;
+         }         
+        .flex-horizontal {
+            @apply --layout-horizontal;
+        }
+        .flex-vertical {
+            @apply --layout-vertical;
+        }
+        .flexchild {
+            @apply --layout-flex;
+        }
+        .flex2child {
+            @apply --layout-flex-2;
+        }
+        .flex3child {
+            @apply --layout-flex-3;
+        }
+        .input-area,
+        iron-form {
+            box-sizing: border-box;
+            padding: 20px; 
+        }
+        input, paper-input, paper-checkbox {
+          margin-bottom: 8px;
+        }
+        paper-button {
+          display: inline-block;
+          box-sizing: border-box;
+          width: 45%;
+          height: 40px;
+          text-align: center;
+        } 
 
-    main{
-        width: 1100px  
-    }                  
-    nav[bottom2]{
-        background-color: rgba(0, 0, 0, 0.45098039215686275);
-        position: fixed;
-        top: 0%;
-        width: 100%;
-        height: 100vh;
-    }   
-     
-    div[background]{
-        height: 90vh;
-        background-color: var(--app-secondary-text-color);
-    }
-    .scrollable {
-        border: 1px solid lightgray;
-        padding: 24px;
-        @apply --layout-scroll;
-    }
-    div[placertop]{
-        display: block;
-    }
-    div[placerbottom]{
-        display: flex;
-        flex-direction: column;
-    }
-    div[path]{
-        height: 30px;
-        width: 300px;
-    }
-    nav[buttons] {
-        background-color: var(--app-backgound-color);
-        display: flex;
-        flex-direction: row;
-        border: unset;
-        flex-basis: 60px;
-        border-bottom: 1px solid var(--light-theme-divider-color);
-    } 
-    div[saveandaddlang]:{
-        flex-basis: 100px
-    }
-    .navside {
-        display: none;
-    }
+        #form1 paper-button {
+            width: 100%;
+        }
+        paper-dropdown-menu{
+            padding: 8px;
+            height: 68px;
+        }
+       paper-button:not([disabled]),
+        paper-dropdown-menu,
+        cms-content-textarea,
+        cms-content-input{
+            background: var(--paper-grey-200);
+        }
 
-    div[goback]{
-        height: 38px;
-        display: flex;
-        padding-left: 10px;
-    }
-    div[path]{
-        display: flex;
-        flex-direction: row;
-        position: relative;
-        font-style: italic;    
-        padding-left: 57px;
-        color: var(--app-content-section-span-color)    
-    }
-    div[path] h5 {
-        margin-block-start: 12px;
-        margin-block-end: 7px;
-    }
-    div[path] h6 {
-        margin-block-start: 12px;
-        margin-block-end: 7px;
-        color: var(--paper-blue-a200); 
-    }
-    .path{
-        flex-basis: 100%;
-    }
-    div[langdiv]{
-        position: relative;
-        top: 6px;
-        border-bottom: 6px solid var(--app-backgound-color);
-        display: flex;
-        flex-direction: row;
-        width: 800px;
-        min-height: 36px;
-        margin-left: auto;
-        z-index: 2;
-        margin-right: auto;;
-    }      
-    .titleactive{
-        position: relative;
-        height: 20px;
-        top: 10px;
-        background-color:var(--paper-grey-200);
-    }
-    .langdivsection{
-        display: flex;
-        border-radius: unset!important; 
-        box-shadow: unset!important;
-        width: 110px;
-        height: 60px;
-        color: var(--google-blue-300);
-    }  
-    .anchorish{
-        cursor: pointer; 
-    }
-    div[bottom]{
-        background-color: var(--app-backgound-color);
-        flex-direction: row;
-        box-shadow: 0px 1px 4px var(--disabled-text-color);
-        border-radius: 12px;
-        padding: 22px;
-        width: 816px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 10px;
-    }
-    div[bottom] article{
-        flex-basis: 50%;
-        padding-inline-start: 50px;
-        display: flex;
-        flex-direction: column;
-    }
-    div[langdiv] section[nova]{
-        color: var(--paper-grey-300);;
-        background-color: grey;
-    }
-    div[langdiv] paper-button[nova]{
-        color: var(--paper-blue-300);
-        background-color: var(--paper-blue-300);;
-    } 
-    div[save]{
-        flex-basis: 70%;
-        display: block;  
-    }       
-    .rightblock{
-        display: block;
-        width: 100%;
-    } 
-    .marginalize{
-        float: right;
-    }
-    .borderright{
-        border-right: 1px solid var(--app-item-backgound-color)
-    } 
-    .borderleft{
-        border-left : 1px solid var(--app-item-backgound-color);
-    }  
-    .xbuton{
-        cursor: pointer;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: row;
-        padding-top: 2px;
-    }     
-    .upright, .upleft{
-        top: 15px;
-        height: 27px;
-        width: 27px;
-        -webkit-transition: box-shadow 1s ease-out;
-        -moz-transition: box-shadow 1s ease-out;
-        transition: box-shadow 1s ease-out;
-    }
-    .upright{
-        position: relative;
-        margin-left: auto;
-        transform: rotateZ(46deg);
-        box-shadow: 2px -2px 1px var(--light-theme-divider-color);
-        right: 22px;   
-        border-top-right-radius: 7px;   
-        border-top-left-radius: 7px;
-        -webkit-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
-        -moz-transition: box-shadow 1s ease-in, width 1s ease-in, , height 1s ease-in, right is ease-in;
-        transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
-    }
-    .upleft{
-        position: relative;
-        margin-right: auto;
-        margin-left: auto;
-        transform: rotateZ(-45deg);
-        box-shadow: -2px -2px 1px var(--light-theme-divider-color);
-        right: -1px;
-        border-top-left-radius: 7px;
-        border-top-right-radius: 7px;
-        -webkit-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
-        -moz-transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
-        transition: box-shadow 1s ease-in, width 1s ease-in, height 1s ease-in, right is ease-in;
-    }
-    .upright[hovererd]{
-        -webkit-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        -moz-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        transform: rotateZ(-45deg);
-        box-shadow: -2px -2px 2px var(--paper-lime-700);
-        border-top-left-radius: 0px;
-        height: 20px;
-        width: 20px;
-        right: 34px;
-    }
-    .upleft[hovererd]{
-        -webkit-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        -moz-transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        transition: box-shadow 1s ease-out, width 1s ease-out, height 1s ease-out, right is ease-out;
-        transform: rotateZ(45deg);
-        border-top-right-radius: 0px;
-        box-shadow: 2px -2px 2px var(--paper-lime-700);
-        height: 20px;
-        width: 20px;
-        right: -4px;
-    }  
-    cms-lang-tab-item {
-        margin-right: 3px
-    }
-    cms-pop-input.abs{
-        position: absolute;
-        top: 110px;
-        left: 68%;
-    }
+        paper-dropdown-menu.pdd-sm {
+            height: 64px;
+            padding: 0;
+        }
+
+        paper-button.pbtn-sm {
+            background: var(--divider-color)!important;
+            color: var(--app-content-section-span-color)!important;
+            padding: 4px;
+            max-width: 8%!important;
+            min-width: 8%;
+        }
+
+        cms-content-textarea {
+            margin-top: 20px;
+        }
+        paper-button:not([disabled]) {
+                max-width: 150px;
+                color: var(--app-item-backgound-color);
+                background: var(--app-content-section-span-color);
+        }
+        paper-spinner {
+          width: 14px;
+          height: 14px;
+          margin-right: 20px;
+        }
+        paper-spinner[hidden] {
+          display: none;
+        }
+        .output {
+            margin-top: 20px;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
+        .form-placing{
+            box-sizing: border-box;
+        }
+        form[id=formal1]{
+            @apply --layout-scroll;
+            max-height: 60vh; 
+            min-height: 20vh; 
+            overflow-x: hidden;
+            padding-inline-end: 2%;
+            box-sizing: border-box;
+        }
+        .input-area{
+            height: 100px;
+            box-sizing: border-box;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            padding-right: 60px;
+        }
+
+        paper-icon-button {
+            --paper-icon-button-ink-color: white;
+        }
+
+        paper-icon-button + [main-title] {
+            margin-left: 24px;
+        }
+
+        paper-icon-button[icon=close]{
+            color: var(--app-backgound-color)
+        }
+        .shorter {
+            max-width: 25vw;
+        }
     ${this._getStyles}
-    </style>
+  </style>  
+
+
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
-            <cms-overlay id="overlay" tabindex="-1" with-backdrop scroll-action="lock" opened="{{opened}}">
-                <nav buttons>  
-                    <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" on-click="_cancelhoverd" title="close">
-                        <div class="langdivsection borderright" on-mouseover="_hoverd" on-mouseout="_hoverd">        
-                            <div class="upleft" hovererd$="[[hovererd]]">
-                            </div>
-                            <div class="upright" hovererd$="[[hovererd]]">
-                            </div>
-                        </div>
-                    </a>
-                    <div class="rightblock">  
-                        <div class="langdivsection marginalize"> 
-                            <paper-button id="saveButton" class="saveButton" aria-label="mode-save">
-                                [[navLabel]]
-                            </paper-button>
-                        </div>
-                    </div>
-                    <div class="rightblock">  
-                        <div class="langdivsection marginalize borderleft"> 
-                            <paper-button id="saveButton" class="saveButton" on-click="onSave" aria-label="mode-save">
-                                [[Save]]
-                            </paper-button>
-                        </div> 
-                        ${this._getLangButton}
-                    </div>
-                </nav> 
-                <div class="scrollable" background>
-                    <div placerbottom>
-                        <div path> 
-                            ${this._getPath} 
-                            <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
-                                ${this._getXbutton}
-                                <cms-content-item
+        <app-toolbar id="toolbar">
+            <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" title="close">
+                <paper-icon-button icon="close"></paper-icon-button>
+            </a>
+            <paper-icon-button icon="av:library-books"></paper-icon-button>
+            <div main-title> [[navLabel]]</div>
+            <iron-form id="formlang" allow-redirect="[[redirect]]">   
+                <form id="formallang">
+                    <paper-dropdown-menu class="pdd-sm" label="langs" name="langs" required >
+                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="[[_sellectedLangIndex]]">
+                            <dom-repeat repeat items="[[pageLangs]]" as="item">
+                                <template>
+                                    <paper-item value="[[item]]">[[item]]</paper-item>
+                                </template>
+                            </dom-repeat>   
+                        </paper-listbox>
+                    </paper-dropdown-menu>  
+                </form>                    
+            </iron-form>
+            <paper-button class="pbtn-sm" on-click="_newLang" raised>
+                <iron-icon icon="add">
+                </iron-icon>
+            </paper-button>  
+        </app-toolbar>  
+        <div  id="forms" class="flex-vertical container">
+            <div class="flex2child flex-horizontal form-placing" aria-label="form-submition-area">  
+                <nav class="flex2child flex-vertical form-placing" >
+                   
+                    ${this._getContentItems}
+
+                </nav>  
+                <div id="formside" class="flexchild shorter">          
+                    <iron-form id="form3" allow-redirect="[[redirect]]">   
+                        <form id="formal4" class="flex-vertical">     
+                            <input hidden name="formtype" value="content"></input>
+                            <cms-content-image class="flexchild" id="image" item-label="[[imageLabel]]" images="[[imageArr]]">
+                            </cms-content-image>        
+                        </form>
+                    </iron-form>             
+                    <iron-form id="form2" allow-redirect="[[redirect]]">   
+                        <form id="formal3" class="flex-vertical">
+                            <input hidden name="formtype" value="inform"></input>                                                            
+
+                             <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]">
+                                ${this._getXbutton}                                
+                                <cms-content-input
                                     slot="input" 
                                     item="[[itemlang]]"
-                                    res="{{addLangResponse}}"
                                     raised="[[raised]]">
-                                </cms-content-item>  
-                                <a slot="anchor" href="https://www.metamodpro.com/browser-language-codes" target="_blank">
-                                    <h6>  more info </h6> 
-                                </a>                                              
+                                </cms-content-input>                                       
+                                <paper-button slot="anchor" raised on-click="submit">
+                                    Submit
+                                <paper-button>                                       
                             </cms-pop-input>
-                        </div> 
-                        <div langdiv> 
-                            ${this._getLangAnchor}
-                        </div>
-                        <nav class="navbottom" id="bottom">                    
-                            ${this._getContentItems}
-                        </nav>
-                    </div> 
-                </div> 
-            </cms-overlay>
+                            
+                        </form>
+                    </iron-form>    
+                </div>  
+            </div>
+            <div id="inputarea" class="flex-horizontal flexchild input-area">
+                <paper-button class="flexchild" raised on-click="submit">Submit</paper-button>
+                <paper-button class="flexchild" raised on-click="reset">Reset</paper-button>
+            </div>
+        </div>
         `;
     }
     static get _getStyles() {
@@ -295,25 +257,19 @@ export class cmsContentTemplate extends PolymerElement {
     }
     static get _getLangButton() {
         return html` 
-        <section class="langdivsection marginalize borderleft">
-            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
                 <a class="anchorish" id="adlang"  on-click="_newLang">                                            
                     <paper-button class="saveButton" aria-label="lang"> 
                         <span>Add lang</span>
                     </paper-button>
-                </a>           
-            </iron-selector>
-        </section>`
+                </a> `
     }
     static get _getXbutton() {
         return html` 
-        <paper-button slot="button" class="exex" on-click="_newLang">
-            x
-        </paper-button> 
+        <a id="closeanchor" slot="button" class="xbuton" title="close" on-click="_newLang">
+            <paper-icon-button icon="close"></paper-icon-button>
+        </a>
          `
     }
-
-
     static get _getLangAnchor() {
         return html`            
         <dom-repeat id="model" repeat items="[[pageLangs]]" as="pagelang">
@@ -326,96 +282,53 @@ export class cmsContentTemplate extends PolymerElement {
             </template>
         </dom-repeat> `
     }
-
-
     static get _getPath() {
         return html`   
          <div  class="path">          
         </div>`
     }
     static get _getContentItems() {
-        return html`
-        <div bottom on-click="_seeFlat">
-            <article>
+        return html` 
+        <iron-form id="form1" class="flex2child" allow-redirect="[[redirect]]">   
+            <form id="formal1">
+                <input hidden name="formtype" value="contentlang"></input>
                 <dom-repeat repeat items="[[inputVal]]" as="item">
                     <template>
-                        <section class="flexchildbotomFull">
-                            <cms-content-item editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
-                                res="{{inputResponse}}">
-                            </cms-content-item>
-                        </section>
+                        <cms-content-input class="" item="[[item]]" 
+                            required 
+                            pattern="[a-zA-Z]*" 
+                            error-message="letters only!">                                
+                        </cms-content-input>
                     </template>
-                </dom-repeat>
-            </article>
-            <article>
+                </dom-repeat>      
                 <dom-repeat repeat items="[[textareaVal]]" as="item">
-                    <template>
-                        <section class="flexchildbotomFullExtra">
-                            <cms-content-text editing="[[editing]]" item="[[item]]" save-button="[[saveButton]]"
-                                res="{{textAreaResponse}}">
-                            </cms-content-text>
-                        </section>
+                    <template>                                
+                        <cms-content-textarea class="" item="[[item]]"
+                            required rows="6" 
+                            pattern="[a-zA-Z]*" 
+                            error-message="letters only!">
+                        </cms-content-textarea>
                     </template>
-                </dom-repeat>
-            </article>
-        </div>
-        <div bottom>
-            <section class="flexchildbotom">
-                <cms-content-image id="image" editing="[[editing]]" item-label="[[imageLabel]]" images="[[imageArr]]" _deleteImg="[[deleteImg]]">
-                </cms-content-image>
-            </section>
-        </div>`;
+                </dom-repeat>   
+            </form>                    
+        </iron-form>   
+        <iron-form id="form12" class="flex2child" allow-redirect="[[redirect]]">   
+            <form id="formal2">
+                <input hidden name="formtype" value="inform"></input>
+                <paper-dropdown-menu  class="" label="type" name="type" required>
+                    <paper-listbox class="dropdown-content" slot="dropdown-content" selected="[[_typeSellectedIndex]]">  
+                        <dom-repeat repeat items="[[typesArray]]" as="item">
+                            <template>   
+                                <paper-item value="[[item]]">[[item]]</paper-item>
+                            </template>
+                        </dom-repeat> 
+                    </paper-listbox>
+                </paper-dropdown-menu>   
+            </form>                    
+        </iron-form>`;
     }
     static get _getSideInfo() {
-        return html`
-                < dom - repeat repeat items = "[[inform]]" as="cat" >
-                    <template>
-                        <div class="center-menu">
-                            <aside class="info">
-                                <span>
-                                    [[info]]
-                        </span>
-                            </aside>
-                        </div>
-                        <div class="center-menu">
-                            <aside>
-                                <span>
-                                    [[lastmodified]]
-                        </span>
-                            </aside>
-                        </div>
-                        <div class="row-menu">
-                            <aside>
-                                <span>
-                                    [[author]]
-                        </span>
-                            </aside>
-                            <aside>
-                                <span>
-                                    [[date]]
-                        </span>
-                            </aside>
-                        </div>
-                        <div rightSide>
-                            <dom-repeat repeat items="[[cat.lastModified]]" as="createdAt">
-                                <template>
-                                    <section>
-                                        <aside class="asideBackgrc">
-                                            <span>
-                                                [[createdAt.author]]
-                                    </span>
-                                        </aside>
-                                        <aside class="asideBackgrc">
-                                            <span>
-                                                [[createdAt.date]]
-                                    </span>
-                                        </aside>
-                                    </section>
-                                </template>
-                            </dom-repeat>
-                        </div>
-                    </template>
-        </dom-repeat>`
+        return html``
     }
     static get is() {
         return 'cms-content-template';
@@ -430,6 +343,10 @@ export class cmsContentTemplate extends PolymerElement {
                 type: Array,
                 value: []
             },
+            redirect: {
+                type: Boolean,
+                value: false
+            },
             infoState: {
                 type: String,
                 value: 'No info available..',
@@ -443,7 +360,14 @@ export class cmsContentTemplate extends PolymerElement {
             warning: {
                 type: Boolean,
                 notify: true,
-                value: false,
+                value: true,
+            },
+            sharedElements: {
+                type: Object
+            },
+            animationConfig: {
+                type: Object,
+                computed: '_setConfig(opened)'
             },
             itemlang: {
                 type: Object,
@@ -459,31 +383,83 @@ export class cmsContentTemplate extends PolymerElement {
                 value: true,
                 notify: true
             },
-            hovererd: {
-                type: Boolean,
-                value: false,
-                notify: true,
-                reflectToAttribute: true,
-            },
         }
     }
+
     ready() {
         super.ready();
+        this.addEventListener('neon-animation-finish', this._onAnimationFinish)
+    }
+
+    _setConfig() {
+        return {
+            'entry': [{
+                name: 'scale-up-animation',
+                node: this.$.toolbar,
+            },
+            {
+                name: 'scale-up-animation',
+                node: this.$.forms
+            },
+            {
+                name: 'slide-from-top-animation',
+                node: this.$.inputarea,
+            },
+            {
+                name: 'slide-from-left-animation',
+                node: this.$.formside,
+            },
+            {
+                name: 'slide-from-bottom-animation',
+                node: this.$.form1
+            }],
+            'exit': [
+                {
+                    name: 'scale-down-animation',
+                    node: this.$.toolbar
+                },
+                {
+                    name: 'scale-down-animation',
+                    node: this.$.forms
+                },
+                {
+                    name: 'fade-out-animation',
+                    node: this
+                }]
+        }
+    }
+
+    submit() {
+        var forms = this.shadowRoot.querySelectorAll('iron-form')
+        forms = Array.from(forms)
+        let valid = []
+        valid = forms.map(form => form.validate())
+        console.log(forms)
+        if (valid.indexOf(false) !== -1) return alert('required field not set.')
+        forms.forEach(form => form.submit())
+    }
+    reset() {
+        var forms = this.shadowRoot.querySelectorAll('iron-form')
+        forms.forEach(form => form.reset())
+    }
+    //'slide-left-animation'
+    _onAnimationFinish() {
+        if (!this.opened) {
+            this.style.display = 'none';
+            this.reset()
+        }
+    }
+    showThis() {
+        this.opened = true;
+        this.style.display = 'block';
+        this.playAnimation('entry');
+    }
+    hideThis() {
+        this.opened = false;
+        this.playAnimation('exit');
     }
     _log(data) {
-        console.log(data)
-    }
-    onSave() {
-        return 0
-    }
-    _hoverd(evt) {
-        this.set('hovererd', !this.hovererd)
-    }
-    _cancelhoverd() {
-        let time = setTimeout(() => {
-            this.hovererd = !1
-            clearTimeout(time)
-        }, 120);
+        // console.log(data)
     }
     _setContent(lang, content) {
         this.content = content
@@ -493,16 +469,6 @@ export class cmsContentTemplate extends PolymerElement {
     }
     closeanchor(event) {
         if (event.srcElement.hasAttribute('placertop')) this.$.closeanchor.click()
-    }
-    _seeFlat(e) {
-        if (e.srcElement.tagName === 'DIV' || e.srcElement.tagName === 'ARTICLE') {
-            this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
-                window.dispatchEvent(new CustomEvent('flat', {
-                    bubbles: true,
-                    composed: true
-                }));
-            });
-        }
     }
     _newLang() {
         //   if (!!this.contetnLang) {
@@ -552,10 +518,10 @@ export class cmsContentTemplate extends PolymerElement {
         }
     }
     _setInfomrCat(data) {
-        console.log(data);
+        //  console.log(data);
         for (let par in data) {
             if (par.toString() !== 'undefined') {
-                console.log(par);
+                //   console.log(par);
 
                 this.tempCategory = data[par]
             }

@@ -2,8 +2,8 @@ import { html } from '@polymer/polymer/polymer-element';
 import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template'
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
 import { html as litHtml, render } from 'lit-html';
-import '../elements/cms-content-item';
 import '../elements/cms-pop-input';
+
 class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
     static get _getStyles() {
         return html`
@@ -57,20 +57,20 @@ class cmsGalleries extends cmsMediaLib(cmsMiddlePageTemplate) {
         return html`       
             <h2>[[Galleries]]</h2>    
             <div path>
-                <cms-pop-input tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
+                <!--cms-pop-input tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]"> 
                     <paper-button slot="button" class="exex" on-click="_newGall">
                         x
                     </paper-button> 
-                    <cms-content-item
+                    <cms-content-input
                         slot="input" 
                         item="[[itemlang]]"
                         res="{{addLangResponse}}"
                         raised="[[raised]]">
-                    </cms-content-item>  
+                    </cms-content-input>  
                     <paper-button class="save-btn"  slot="anchor" on-click="_onSave">
                         <h6 id="agasix" class="save-btn" >  save </h6> 
-                    </paper-button >                                              
-                </cms-pop-input>           
+                    </paper-button>                                              
+                </cms-pop-input-->           
             </div>`
     }
     static get _getSilentAnchor() {

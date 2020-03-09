@@ -19,9 +19,13 @@
     <meta name="theme-color" content="#fff">
     <meta name="description" content="Polymer & firebase/firestore based content management service app" />
 
-    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-firestore.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.2.3/firebase-storage.js"></script>
+
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.2/web-animations-next-lite.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -102,44 +106,29 @@
             font-size: 97px;
             box-shadow: 4px 4px 4px grey
         }
+
+        div[spinnercenter] {
+            position: fixed;
+            left: 50%;
+            top: 30%;
+        }
     </style>
 
 </head>
 
 <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WGK54TG" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <noscript>
+        <meta HTTP-EQUIV="REFRESH" content="0; url=http://127.0.0.1:3000/noscript">
+    </noscript>
+
     <script>
-        window.MyAppGlobals = { rootPath: '/' };
-        function fsd(urlo, call, method, formData) {
-            let url = urlo, json = [], str = ''
-            let xhr = new XMLHttpRequest();
-            let meth = method || 'GET'
-            // console.log("method", method, meth)
-            xhr.addEventListener('load', onLoad.bind(this))
-            xhr.addEventListener('error', onError);
-            xhr.open(meth, url);
-            xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost/')
-            xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST')
-            xhr.setRequestHeader("Accept", "application/json");
-            if (formData) {
-                xhr.setRequestHeader("Content-Type", "multipart/form-data");
-                xhr.send(formData);
-                console.log('formData')
-            } else {
-                xhr.send();
-            }
-            function onLoad(e) {
-                call(e.target.responseText)
-            }
-            function onError(e) {
-                console.log(e)
-            }
-            return xhr
-        }                
+        window.performance && performance.mark && performance.mark('index.html');
     </script>
+
+
+    <div spinnercenter>
+        <paper-spinner-lite id="spinner" active="false" slot="spinner"> </paper-spinner-lite>
+    </div>
 
     <cms-login>
         <cms-controler slot="controler">
@@ -155,28 +144,60 @@
             <span class="spanfour"> Deubledee </span>
         </nav>
     </cms-login>
-    <script type="module" src="cms/cms-login.js"></script>
-
     <script>
-        window.performance && performance.mark && performance.mark('index.html');
-    </script>
 
-    <noscript>
-        <meta HTTP-EQUIV="REFRESH" content="0; url=http://127.0.0.1:3000/noscript">
-    </noscript>
-    <script>
-        function getFirebaseContent(url) {
-            fsd(url, config => {
-                firebase.initializeApp(JSON.parse(config).pop());
-            })
+        getFirebaseContent()
+
+        async function getFirebaseContent() {
+            let fail
+            let query = `mainProject(apiKey: "AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18", projectId: "tysix"){ config { apiKey authDomain databaseURL projectId storageBucket messagingSenderId } }`
+
+            //  change url before build  and create push-manifest \\
+
+            await request(`http://127.0.0.1:3000/api/projects`, 'POST', query)
+                .then(res => res.json())
+                .then(res => {
+                    let config = res.data.mainProject.config
+                    if (!!config) {
+                        firebase.initializeApp(config);
+                        //uncoment for es6 build
+                        // import("./src/cms-login.js")
+                        fail = false
+                    } else {
+                        throw new Error('failed to get config')
+                    }
+                }).catch(err => {
+                    fail = true
+                    console.error(err)
+                });;
+
+            if (!fail) {
+                console.log(firebase.app(), 'got here')
+            }
         }
-        getFirebaseContent('data/firebase.json')
-        let scripts = document.querySelectorAll('script')
-        setTimeout(() => {
-            scripts[scripts.length - 1].parentElement.removeChild(scripts[scripts.length - 1])
-        }, 5000)
-    </script>
 
+        function request(url, method, formData) {
+            var req = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Methods': 'GET, POST'
+                    // 'Access-Control-Allow-Origin': 'https://localhost/',
+                }
+            }
+            if (!!formData) {
+                req.body = JSON.stringify({
+                    query: `{
+                    ${formData}                      
+                }`
+                })
+            }
+            return fetch(url, req)
+        }
+    </script>
+    <!-- comment for es6 build -->
+    <script type="module" src="src/cms-login.js">
+    </script>
 </body>
 
 </html>

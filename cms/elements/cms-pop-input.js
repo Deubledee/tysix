@@ -1,90 +1,42 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-export class cmsPopInput extends PolymerElement {
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { NeonAnimationBehavior } from '@polymer/neon-animation/neon-animation-behavior'
+import { NeonAnimationRunnerBehavior } from '@polymer/neon-animation/neon-animation-runner-behavior.js';
+export class cmsPopInput extends mixinBehaviors(
+    [NeonAnimationBehavior, NeonAnimationRunnerBehavior],
+    PolymerElement) {
     static get template() {
         return html`
-        <style include="cms-comon-style_v3">       
+        <style  include="iron-flex-layout">       
             :host{
                 position: absolute;
             }     
-            div[inputlang] {
-                position: absolute;
-                display: flex;
-                flex-direction: column;
-                box-sizing: border-box;
-                background-color: var(--app-backgound-color);
-                width: 419px;
-                z-index: 10;
-                height: 155px;
-                padding: 9px;
-                box-shadow: 0px 1px 7px var(--disabled-text-color);
-                border-radius: 8px;
-            }
-
-            div.closed{
-                display: none
-            }
-
-            div[warning]{
-                width: 90%;
-                display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                padding-inline-start: 10%
-            }
-
-            div[warning] h5{
-                flex-basis: 66%;
-                margin-block-start: 1.4em;
-                color: var(--paper-pink-700);
-                @apply --warningh5
-            }
-
-            div[warning] h5, div[warning] h6{
-                letter-spacing: 0.1em;
-            }
-
-            div[warning] h6 {
-                margin-block-start: 1.3em;
-            }
-
-            div[warning]  a{
-                flex-basis: 6%;
-                color: var(--paper-grey-600);
-            }
-
-            .btnx{
-                height: 0px;
-                width: 7px;
-                flex-basis: 24%;
-            }  
             
-            div[tgglelang]{
-                display: none;
+            .flex-vertical {
+                @apply --layout-vertical;
             }
-            .input {
-                height: 59px;
-                padding-inline-start: 12%;
+            .flexchild {
+                @apply --layout-flex;
+            }
+            .flex2child {
+                @apply --layout-flex-2;
+            }
+            .flex3child {
+                @apply --layout-flex-3;
             }
 
         </style>
-        <main>
-            <div tgglelang$="[[tgglelang]]" inputlang>
-                <div class="btnx">
-                    <slot name="button"></slot>
-                </div>
-                <div class="input">
-                    <slot name="input">
-                    </slot>
-                </div>
-                <div class="closed" warning$="[[warning]]">
-                    <h5>
-                        [[warningMsg]]
-                    </h5>
-                    <slot name="anchor">
-                    </slot>
-                </div>
+        <nav class="flex-vertical">
+            <div class="flexchild">
+                <slot name="button"></slot>
             </div>
-        </main>
+            <div class="flex2child">
+                <slot name="input"></slot>
+            </div>
+            <div class="flexchild">
+                <slot name="anchor"></slot>
+            </div>
+        </nav>    
         `
     }
     static get is() {
@@ -92,23 +44,13 @@ export class cmsPopInput extends PolymerElement {
     }
     static get properties() {
         return {
-            warningMsg: {
-                type: String,
-                notify: true,
-                value: ''
-            },
-            warning: {
+            opened: {
                 type: Boolean,
-                value: false,
-                notify: true,
-                reflectToAttribute: true,
-            },
-            tgglelang: {
-                type: Boolean,
-                value: true,
-                notify: true,
-                reflectToAttribute: true,
                 observer: '_resetInput'
+            },
+            animationConfig: {
+                type: Object,
+                computed: '_setConfig(opened)'
             },
         }
     }
@@ -119,6 +61,44 @@ export class cmsPopInput extends PolymerElement {
     _resetInput(data) {
         if (data === true) {
             this.children[1].itemText = ''
+        }
+    }
+
+    _setConfig() {
+        return {
+            'entry': [{
+                name: 'scale-up-animation',
+                node: this.$.toolbar,
+            },
+            {
+                name: 'scale-up-animation',
+                node: this.$.forms
+            },
+            {
+                name: 'slide-from-top-animation',
+                node: this.$.inputarea,
+            },
+            {
+                name: 'slide-from-left-animation',
+                node: this.$.formside,
+            },
+            {
+                name: 'slide-from-bottom-animation',
+                node: this.$.form1
+            }],
+            'exit': [
+                {
+                    name: 'scale-down-animation',
+                    node: this.$.toolbar
+                },
+                {
+                    name: 'scale-down-animation',
+                    node: this.$.forms
+                },
+                {
+                    name: 'fade-out-animation',
+                    node: this
+                }]
         }
     }
 }

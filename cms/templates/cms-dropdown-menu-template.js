@@ -201,7 +201,7 @@ export class cmsDropdownMenuTemplate extends PolymerElement {
             return 'are you sure ?'
         }
     }
-    __setValues(data) {
+    setValues(data) {
         if (data.length > 0) {
             let obj = data.shift()
             this._setValues(obj)

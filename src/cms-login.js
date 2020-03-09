@@ -8,16 +8,18 @@ import '@polymer/paper-listbox/paper-listbox';
 import '@polymer/paper-item/paper-item';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
-import './tools/cms-input-sellector';
+import '../cms/tools/cms-input-sellector';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { microTask } from '@polymer/polymer/lib/utils/async';
-import { expresso } from "./tools/expresso/expresso.js"
+import { expresso } from "../cms/tools/expresso/expresso.js"
 window.cms = Symbol('app')
+window.MyAppGlobals = {}
 Object.defineProperty(window, "cms", {
     enumerable: false,
     writable: true
 });
 window.MyAppGlobals[window.cms] = new expresso();//window.MyAppGlobals.translator
+//window.MyAppGlobals.translator
 class cmsLogin extends PolymerElement {
     static get template() {
         return html`
@@ -221,7 +223,7 @@ class cmsLogin extends PolymerElement {
     _userAccepted(user) {
         this._changeSectionDebouncer = Debouncer.debounce(this._changeSectionDebouncer, microTask, () => {
             if (['admin', 'dev', 'manager', 'advUser'].indexOf(user.role) > -1) {
-                import('./cms-controler').then(() => {
+                import('../cms/cms-controler').then(() => {
                     this.set('user', user);
                     this.children[0].set('user', user);
                 });
@@ -233,7 +235,3 @@ class cmsLogin extends PolymerElement {
     }
 }
 customElements.define(cmsLogin.is, cmsLogin);
-
-
-
-

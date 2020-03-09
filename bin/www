@@ -30,6 +30,8 @@ pem.createCertificate({ days: 1, selfSigned: true }, function (err, keys) {
   server2.on('error', onError);
   server2.on('listening', onListening)
   console.log('listening', 'http://localhost:' + port, 'https://localhost:' + port2)
+  console.log('listening', `http://localhost:${port}/api/app - https://localhost:${port2}/app`)
+  console.log('listening', `http://localhost:${port}/api/projects - https://localhost:${port2}/projects`)
 });
 
 var server = http.createServer(app);

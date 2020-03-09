@@ -1,14 +1,13 @@
 import '@polymer/iron-selector/iron-selector';
-import { html } from '@polymer/polymer/polymer-element';
-import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { html } from '@polymer/polymer/polymer-element';
 import { html as litHtml, render } from 'lit-html';
-import './cms-page-list-item';
-import { cmsPagesLib } from '../tools/cms-save-lib.js';
-class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
+import { cmsMiddlePageTemplate } from '../templates/cms-middle-page-template';
+import { request } from '../../cms/tools/http-handler'
+class cmsProjects extends cmsMiddlePageTemplate {
     static get _getSilentAnchor() {
         return html`            
-        <a href="[[rootPath]]content/pages/add-category-pages?&add=true">
+        <a href="[[rootPath]]settings/projects/add-project?&add=true">
             <div class="add-btn-group" title="[[ADD]]">
                 <div class="add-btn-group-item group-item-top-left" ></div>
 
@@ -21,7 +20,13 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         </a>
         `
     }
-    static get is() { return 'cms-page-cats'; }
+    static get _topLabel() {
+        return html`       
+            <h3 class="higherh3">Projects</h3>       
+            <h5 class="higherh5"> Active - [[appName]]  </h5> 
+        `
+    }
+    static get is() { return 'cms-projects'; }
     static get properties() {
         return {
             lang: {
@@ -31,6 +36,12 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
             langs: {
                 type: Object,
                 value: {}
+            },
+            appName: {
+                type: String,
+                value: function () {
+                    return firebase.app().name
+                }
             },
             translator: {
                 type: Object,
@@ -44,6 +55,12 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
                 notify: true,
                 value: new Array(),
                 observer: 'putElement',
+            },
+            spinner: {
+                type: Object,
+                value: function () {
+                    return document.querySelector("#spinner")
+                }
             }
         }
     }
@@ -61,6 +78,7 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
     }
     ready() {
         super.ready();
+        this.spinner.active = true
         this.translator.target('cms-page-list-type', 'setLangObject', (this._setLObj).bind(this))
         this.translator.target('cms-page-list-type', 'changeLang', (this._setLang).bind(this), false)
         this.translator.shoot('cms-page-list-type', 'setLangObject')
@@ -83,26 +101,29 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
         if (typeof this.time === 'number') clearInterval(this.time)
         let reset = (query.reset === 'true')
         if (!query.reset) {
-            if (routeData.page === "pages") {
+            if (routeData.page === "projects") {
                 this.time = setTimeout(() => {
                     if (this.pages.length === 0) {
-                        this.spinner.active = true
+                        // let projs = getProjects()
                         afterNextRender(this, () => {
-                            this._askPages({ q: 'removed', v: false });
+                            //  projs.then(response => console.log(response))
+                            this.spinner.active = false
                         });
                     }
                 }, 120);
 
             }
-        } else if (reset === true) {
+        } /*else if (reset === true) {
             this.pages = [];
-            this.spinner.active = true
             this._contentChanged()
-        }
+        }*/
     }
 
     _contentChanged() {
         if (typeof this.time === 'number') clearTimeout(this.time)
+        const spinnerTemplate = () => litHtml`<paper-spinner-lite active="false" slot="spinner">`
+        render(spinnerTemplate(), this);
+
         if (this.routeData.page === 'pages' && this.route.path === '/pages') {
             this.time = setTimeout(() => {
                 window.history.pushState({}, null, `${this.rootPath}content/pages`)
@@ -132,21 +153,22 @@ class cmsPageCats extends cmsPagesLib(cmsMiddlePageTemplate) {
                         </cms-page-list-item>`
             })} `
             render(pageTemplate(data), this);
-            this.spinner.active = false
         }, 60);
     }
 
-    _reset(call, mlscs) {
-
-        console.log('reseted pages')
-        this.innerHTML = ''
-        this.pages = undefined
-        this.inForm = undefined
-        this.set('sloted', false)
-        window.onbeforeunload = function () { }
-        setTimeout(() => {
-            call()
-        }, mlscs)
-    }
 }
-customElements.define(cmsPageCats.is, cmsPageCats);
+customElements.define(cmsProjects.is, cmsProjects);
+async function getProjects() {
+    let proj
+    await request('http://127.0.0.1:8001/data/projects.json', 'GET')
+        .then(res => res.text())
+        .then(res => {
+            proj = res
+        });
+    return proj
+}
+
+function changeProject(config, projectID) {
+    var newProject = firebase.initializeApp(config, projectID);
+    return newProject.name
+}

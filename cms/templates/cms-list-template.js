@@ -3,8 +3,8 @@ import { microTask } from '@polymer/polymer/lib/utils/async';
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '../elements/cms-content-image';
-import '../elements/cms-content-item';
-import '../elements/cms-content-text';
+import '../elements/cms-content-input';
+import '../elements/cms-content-textarea';
 import '../styles/cms-comon-style_v3';
 export class cmsListTemplate extends PolymerElement {
     static get template() {
@@ -149,22 +149,22 @@ export class cmsListTemplate extends PolymerElement {
                         <dom-repeat repeat items="[[inputVal]]" as="item">
                             <template>
                                 <section class="flexchildbotomFull">
-                                    <cms-content-item
+                                    <cms-content-input
                                         item="[[item]]"
                                         save-button="[[saveButton]]"
                                         res="{{inputResponse}}">
-                                    </cms-content-item>
+                                    </cms-content-input>
                                 </section>
                             </template>
                         </dom-repeat>
                         <dom-repeat repeat items="[[textareaVal]]" as="item">
                             <template>
                                 <section class="flexchildbotomFullExtra">
-                                    <cms-content-text
+                                    <cms-content-textarea
                                         item="[[item]]"
                                         save-button="[[saveButton]]"
                                         res="{{textAreaResponse}}">
-                                    </cms-content-text>
+                                    </cms-content-textarea>
                                 </section>
                             </template>
                         </dom-repeat>

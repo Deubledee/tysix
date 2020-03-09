@@ -1,11 +1,23 @@
-import { dataBaseworker, MediaDB, CategoriesDB } from './dataBaseWorker';
+import { dataBaseworker, MediaDB, CategoriesDB, Settings } from './dataBaseWorker';
 const _DBW = new dataBaseworker()
 const _MEDIADBW = new MediaDB()
 const _CATEGORIESDBW = new CategoriesDB()
+const _SETTINGSBW = new Settings()
 const __DEV = true
 var storageRef = firebase.storage().ref();
 
-export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib, cmslangsLib }
+export { cmsMediaLib, cmsPagesLib, cmsSubcatsLib, cmsArticlesLib, cmscategoriesLib, cmslangsLib, cmsSettingsLib }
+
+const cmsSettingsLib = function (superClass) {
+    return class extends superClass {
+        ready() {
+            super.ready();
+        }
+        getProjects() {
+            return _SETTINGSBW.Projects
+        }
+    }
+}
 const cmsPagesLib = function (superClass) {
     return class extends superClass {
         static get is() { return 'cms-pages-lib'; }
@@ -115,15 +127,9 @@ const cmsSubcatsLib = function (superClass) {
         _setLangArr(cont) {
             return _setLangArr(cont)
         }
-        getTopSubcats(parent, render, spinnerOutTemplate) {
-            getTopSubcats(parent).then(done => {
-                if (!!done && done.length > 0) {
-                    render(spinnerOutTemplate(), this);
-                    this.subSubCats = done
-                } else {
-                    this.subSubCats = ''
-                }
-            }).catch(standartErr)
+        getTopSubcats(parent) {
+            this.standartErr = standartErr
+            return getTopSubcats(parent)
         }
         getSubcat(parent, id) {
             getSubcat(parent, id).then((done) => {

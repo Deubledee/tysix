@@ -1,7 +1,7 @@
 import { IronCheckedElementBehavior } from '@polymer//iron-checked-element-behavior/iron-checked-element-behavior.js';
 import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/polymer-element';
-import '../../src/shop-image';
+//import '../../src/shop-image';
 import { cmsItemTemplate } from '../templates/cms-item-template';
 import { cmsMediaLib } from '../tools/cms-save-lib.js';
 export class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior, cmsMediaLib(cmsItemTemplate)) {

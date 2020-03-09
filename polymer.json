@@ -1,10 +1,9 @@
 {
   "entrypoint": "index.html",
-  "shell": "./cms/cms-login.js",
+  "shell": "./src/cms-login.js",
   "sources": [
-    "data/**/*",
-    "images/**/*",
-    "cms/tools/**/*"
+    "src/js/*",
+    "data/*"
   ],
   "extraDependencies": [
     "manifest.json",
@@ -12,25 +11,7 @@
   ],
   "builds": [
     {
-      "name": "esm-bundled",
-      "browserCapabilities": [
-        "es2015",
-        "modules"
-      ],
-      "js": {
-        "minify": true
-      },
-      "css": {
-        "minify": false
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
-      "addServiceWorker": true
-    },
-    {
-      "name": "es6-bundled",
+      "name": "es6-AMD",
       "browserCapabilities": [
         "es2015"
       ],
@@ -49,11 +30,14 @@
       "addServiceWorker": true
     },
     {
-      "name": "es5-bundled",
+      "name": "es6-noAMD",
+      "browserCapabilities": [
+        "es2015"
+      ],
       "js": {
-        "compile": "es5",
+        "compile": "es2015",
         "minify": true,
-        "transformModulesToAmd": true
+        "transformModulesToAmd": false
       },
       "css": {
         "minify": false
