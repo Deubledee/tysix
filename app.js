@@ -50,9 +50,9 @@ app.use('/view404', index);
 // grapkql routes 
 app.use('/api/app', appRoute);
 app.use('/api/projects', projects);
-/* 
+
 app.use('/api/galleries', galleries);
-app.use('/api/pages', pages);*/
+app.use('/api/pages', pages);
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
