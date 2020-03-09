@@ -27,18 +27,20 @@ class Projects {
             mainProject: async (args, req) => {
                 let obj, error = { msg: 'api key not valid'}
                     error.config = {
-                        apiKey: 'hostname ' + req.hostname,
-                        authDomain: 'origin ' + req.headers.host,
-                        databaseURL: 'origins ' + JSON.stringify(projects.main.origins),
-                        projectId: 'if array contains host headres' + (projects.main.origins.indexOf(req.headers.host.toString()) !== -1) ,
-                        storageBucket: 'if array contains hostname' + (projects.main.origins.indexOf(req.hostname.toString()) !== -1),
+                        apiKey: error.msg,
+                        authDomain: error.msg,
+                        databaseURL: error.msg,
+                        projectId: error.msg,
+                        storageBucket: error.msg,
                         messagingSenderId: error.msg,
                     }
                 try {
                     let projects = JSON.parse(fs.readFileSync('data/projects.json'));
                     obj = (args.apiKey === projects.main.client.apiKey &&
-                        args.projectId === projects.main.name) ?
-                        { config: error.config /* projects.main.client*/ } : { config: { apiKey: 'api key not valid for main' } }
+                        args.projectId === projects.main.name &&
+                        projects.main.origins.indexOf(req.hostname.toString()) !== -1 ||
+                        projects.main.origins.indexOf(req.headers.host.toString()) !== -1) ?
+                        { config: projects.main.client } : { config: error.config}
                 } catch (err) {
                     console.error(err)
                 }
