@@ -38,10 +38,10 @@ class Projects {
                 try {
                     projects = JSON.parse(fs.readFileSync(path.resolve('../data/projects.json')));
                     if (!!projects.main) {
-                        error.apiKey = req.hostname
-                        error.apiKey = req.origin
-                        error.apiKey = JSON.stringify(req.headers)
-                        error.apiKey = req.ip
+                        error.config.apiKey = req.hostname
+                        error.config.apiKey = req.origin
+                        error.config.apiKey = JSON.stringify(req.headers)
+                        error.config.apiKey = req.ip
                         obj = error  
                         /* (args.apiKey === projects.main.client.apiKey &&
                             args.projectId === projects.main.name) ?
