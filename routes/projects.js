@@ -14,6 +14,7 @@ router.post('/', (req, res, next) => {
 
     let projects = JSON.parse(fs.readFileSync('data/projects.json'));
     let origin = req.hostname
+    console.log(req.hostname, projects.main.origins)
     //TODO active and licence verification
     if (projects.main.origins.indexOf(origin) !== -1) {
         next()
