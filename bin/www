@@ -7,45 +7,20 @@
 var app = require('../app');
 var debug = require('debug')('tysix:server');
 var http = require('http');
-var https = require('https');
-var pem = require('pem');
-
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
-var port2 = normalizePort(process.env.PORT || '3443');
-/**
- * Create HTTP server.
- */
-pem.createCertificate({ days: 1, selfSigned: true }, function (_, keys) {
-  var options = {
-    key: keys.serviceKey,
-    cert: keys.certificate
-  };
-  var server2 = https.createServer(options, app);
-  server2.listen(port2);
-  server2.on('error', onError);
-  server2.on('listening', onListening)
-  console.log('listening', 'https://localhost:3443')
-});
-
 var server = http.createServer(app);
-
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
