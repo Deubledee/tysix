@@ -27,10 +27,10 @@ class Projects {
             mainProject: async (args, req) => {
                 let obj, error = { msg: 'api key not valid'}
                     error.config = {
-                        apiKey: req.hostname,
-                        authDomain: req.origin,
-                        databaseURL: JSON.stringify(req.headers),
-                        projectId: req.ip,
+                        apiKey: 'hostname ' + req.hostname,
+                        authDomain: 'origin ' + req.origin,
+                        databaseURL: 'headers ' + JSON.stringify(req.headers),
+                        projectId: 'ip ' + req.ip,
                         storageBucket: error.msg,
                         messagingSenderId: error.msg,
                     }
