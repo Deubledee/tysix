@@ -22,7 +22,7 @@ app.use(session({
     // path: 'api/projects',
     expires: new Date(Date.now() + 60 * 60 * 1000)//1 hour
   }
-}));
+})); 
 
 app.use(cors());
 app.use(bodyParser.json());
