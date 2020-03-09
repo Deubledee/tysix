@@ -28,10 +28,10 @@ class Projects {
                 let obj, error = { msg: 'api key not valid'}
                     error.config = {
                         apiKey: 'hostname ' + req.hostname,
-                        authDomain: 'origin ' + req.origin,
-                        databaseURL: 'headers ' + JSON.stringify(req.headers),
-                        projectId: 'ip ' + req.ip,
-                        storageBucket: error.msg,
+                        authDomain: 'origin ' + req.headers.host,
+                        databaseURL: 'origins ' + JSON.stringify(projects.main.origins),
+                        projectId: 'if array contains host headres' + (projects.main.origins.indexOf(req.headers.host.toString()) !== -1) ,
+                        storageBucket: 'if array contains hostname' + (projects.main.origins.indexOf(req.hostname.toString()) !== -1),
                         messagingSenderId: error.msg,
                     }
                 try {
