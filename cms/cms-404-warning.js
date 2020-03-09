@@ -1,4 +1,4 @@
-define(["./cms-login.js"],function(_cmsLogin){"use strict";class cms404Warning extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+define(["../src/cms-login.js"],function(_cmsLogin){"use strict";class cms404Warning extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
     <style>
 
       :host {

@@ -8,7 +8,6 @@ var app = require('../app');
 var debug = require('debug')('tysix:server');
 var http = require('http');
 var https = require('https');
-var path = require('path')
 var pem = require('pem');
 
 /**
@@ -21,7 +20,7 @@ var port2 = normalizePort(process.env.PORT || '3443');
 /**
  * Create HTTP server.
  */
-pem.createCertificate({ days: 1, selfSigned: true }, function (err, keys) {
+pem.createCertificate({ days: 1, selfSigned: true }, function (_, keys) {
   var options = {
     key: keys.serviceKey,
     cert: keys.certificate

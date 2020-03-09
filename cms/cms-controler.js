@@ -1,517 +1,862 @@
-define(["exports","require","./cms-login.js"],function(_exports,_require,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0});_exports.IronMenubarBehaviorImpl=_exports.IronMenubarBehavior=_exports.AppRouteConverterBehavior=_exports.$ironMenubarBehavior=_exports.$appRouteConverterBehavior=void 0;_require=babelHelpers.interopRequireWildcard(_require);(0,_cmsLogin.Polymer)({is:"iron-location",properties:{/**
-     * The pathname component of the URL.
-     */path:{type:String,notify:!0,value:function(){return window.decodeURIComponent(window.location.pathname)}},/**
-     * The query string portion of the URL.
-     */query:{type:String,notify:!0,value:function(){return window.location.search.slice(1)}},/**
-     * The hash component of the URL.
-     */hash:{type:String,notify:!0,value:function(){return window.decodeURIComponent(window.location.hash.slice(1))}},/**
-     * If the user was on a URL for less than `dwellTime` milliseconds, it
-     * won't be added to the browser's history, but instead will be replaced
-     * by the next entry.
-     *
-     * This is to prevent large numbers of entries from clogging up the user's
-     * browser history. Disable by setting to a negative number.
-     */dwellTime:{type:Number,value:2e3},/**
-     * A regexp that defines the set of URLs that should be considered part
-     * of this web app.
-     *
-     * Clicking on a link that matches this regex won't result in a full page
-     * navigation, but will instead just update the URL state in place.
-     *
-     * This regexp is given everything after the origin in an absolute
-     * URL. So to match just URLs that start with /search/ do:
-     *     url-space-regex="^/search/"
-     *
-     * @type {string|RegExp}
-     */urlSpaceRegex:{type:String,value:""},/**
-     * A flag that specifies whether the spaces in query that would normally be
-     * encoded as %20 should be encoded as +.
-     *
-     * Given an example text "hello world", it is encoded in query as
-     * - "hello%20world" without the parameter
-     * - "hello+world" with the parameter
-     */encodeSpaceAsPlusInQuery:{type:Boolean,value:!1},/**
-     * urlSpaceRegex, but coerced into a regexp.
-     *
-     * @type {RegExp}
-     */_urlSpaceRegExp:{computed:"_makeRegExp(urlSpaceRegex)"},_lastChangedAt:{type:Number},_initialized:{type:Boolean,value:!1}},hostAttributes:{hidden:!0},observers:["_updateUrl(path, query, hash)"],created:function(){this.__location=window.location},attached:function(){this.listen(window,"hashchange","_hashChanged");this.listen(window,"location-changed","_urlChanged");this.listen(window,"popstate","_urlChanged");this.listen(/** @type {!HTMLBodyElement} */document.body,"click","_globalOnClick");// Give a 200ms grace period to make initial redirects without any
-// additions to the user's history.
-this._lastChangedAt=window.performance.now()-(this.dwellTime-200);this._initialized=!0;this._urlChanged()},detached:function(){this.unlisten(window,"hashchange","_hashChanged");this.unlisten(window,"location-changed","_urlChanged");this.unlisten(window,"popstate","_urlChanged");this.unlisten(/** @type {!HTMLBodyElement} */document.body,"click","_globalOnClick");this._initialized=!1},_hashChanged:function(){this.hash=window.decodeURIComponent(this.__location.hash.substring(1))},_urlChanged:function(){// We want to extract all info out of the updated URL before we
-// try to write anything back into it.
-//
-// i.e. without _dontUpdateUrl we'd overwrite the new path with the old
-// one when we set this.hash. Likewise for query.
-this._dontUpdateUrl=!0;this._hashChanged();this.path=window.decodeURIComponent(this.__location.pathname);this.query=this.__location.search.substring(1);this._dontUpdateUrl=!1;this._updateUrl()},_getUrl:function(){var partiallyEncodedPath=window.encodeURI(this.path).replace(/\#/g,"%23").replace(/\?/g,"%3F"),partiallyEncodedQuery="";if(this.query){partiallyEncodedQuery="?"+this.query.replace(/\#/g,"%23");if(this.encodeSpaceAsPlusInQuery){partiallyEncodedQuery=partiallyEncodedQuery.replace(/\+/g,"%2B").replace(/ /g,"+").replace(/%20/g,"+")}else{// required for edge
-partiallyEncodedQuery=partiallyEncodedQuery.replace(/\+/g,"%2B").replace(/ /g,"%20")}}var partiallyEncodedHash="";if(this.hash){partiallyEncodedHash="#"+window.encodeURI(this.hash)}return partiallyEncodedPath+partiallyEncodedQuery+partiallyEncodedHash},_updateUrl:function(){if(this._dontUpdateUrl||!this._initialized){return}if(this.path===window.decodeURIComponent(this.__location.pathname)&&this.query===this.__location.search.substring(1)&&this.hash===window.decodeURIComponent(this.__location.hash.substring(1))){// Nothing to do, the current URL is a representation of our properties.
-return}var newUrl=this._getUrl(),fullNewUrl=new URL(newUrl,this.__location.protocol+"//"+this.__location.host).href,now=window.performance.now(),shouldReplace=this._lastChangedAt+this.dwellTime>now;// Need to use a full URL in case the containing page has a base URI.
-this._lastChangedAt=now;if(shouldReplace){window.history.replaceState({},"",fullNewUrl)}else{window.history.pushState({},"",fullNewUrl)}this.fire("location-changed",{},{node:window})},/**
-   * A necessary evil so that links work as expected. Does its best to
-   * bail out early if possible.
+define(["exports","require","../src/cms-login.js"],function(_exports,_require,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0/* ignoreName */ /* skipSlots */});_exports.cmsLangsMenu=_exports.IronMenubarBehaviorImpl=_exports.IronMenubarBehavior=_exports.AppLayoutBehavior=_exports.$ironMenubarBehavior=_exports.$cmsLangsMenu=_exports.$appLayoutBehavior=void 0;_require=babelHelpers.interopRequireWildcard(_require);const AppLayoutBehavior=[_cmsLogin.IronResizableBehavior,{listeners:{"app-reset-layout":"_appResetLayoutHandler","iron-resize":"resetLayout"},attached:function(){this.fire("app-reset-layout")},_appResetLayoutHandler:function(e){if((0,_cmsLogin.dom)(e).path[0]===this){return}this.resetLayout();e.stopPropagation()},_updateLayoutStates:function(){console.error("unimplemented")},/**
+   * Resets the layout. If you changed the size of this element via CSS
+   * you can notify the changes by either firing the `iron-resize` event
+   * or calling `resetLayout` directly.
    *
-   * @param {MouseEvent} event .
-   */_globalOnClick:function(event){// If another event handler has stopped this event then there's nothing
-// for us to do. This can happen e.g. when there are multiple
-// iron-location elements in a page.
-if(event.defaultPrevented){return}var href=this._getSameOriginLinkHref(event);if(!href){return}event.preventDefault();// If the navigation is to the current page we shouldn't add a history
-// entry or fire a change event.
-if(href===this.__location.href){return}window.history.pushState({},"",href);this.fire("location-changed",{},{node:window})},/**
-   * Returns the absolute URL of the link (if any) that this click event
-   * is clicking on, if we can and should override the resulting full
-   * page navigation. Returns null otherwise.
-   *
-   * @param {MouseEvent} event .
-   * @return {string?} .
-   */_getSameOriginLinkHref:function(event){// We only care about left-clicks.
-if(0!==event.button){return null}// We don't want modified clicks, where the intent is to open the page
-// in a new tab.
-if(event.metaKey||event.ctrlKey){return null}for(var eventPath=(0,_cmsLogin.dom)(event).path,anchor=null,i=0,element;i<eventPath.length;i++){element=eventPath[i];if("A"===element.tagName&&element.href){anchor=element;break}}// If there's no link there's nothing to do.
-if(!anchor){return null}// Target blank is a new tab, don't intercept.
-if("_blank"===anchor.target){return null}// If the link is for an existing parent frame, don't intercept.
-if(("_top"===anchor.target||"_parent"===anchor.target)&&window.top!==window){return null}// If the link is a download, don't intercept.
-if(anchor.download){return null}var href=anchor.href,url;// It only makes sense for us to intercept same-origin navigations.
-// pushState/replaceState don't work with cross-origin links.
-if(null!=document.baseURI){url=new URL(href,/** @type {string} */document.baseURI)}else{url=new URL(href)}var origin;// IE Polyfill
-if(this.__location.origin){origin=this.__location.origin}else{origin=this.__location.protocol+"//"+this.__location.host}var urlOrigin;if(url.origin){urlOrigin=url.origin}else{// IE always adds port number on HTTP and HTTPS on <a>.host but not on
-// window.location.host
-var urlHost=url.host,urlPort=url.port,urlProtocol=url.protocol,isExtraneousHTTPS="https:"===urlProtocol&&"443"===urlPort,isExtraneousHTTP="http:"===urlProtocol&&"80"===urlPort;if(isExtraneousHTTPS||isExtraneousHTTP){urlHost=url.hostname}urlOrigin=urlProtocol+"//"+urlHost}if(urlOrigin!==origin){return null}var normalizedHref=url.pathname+url.search+url.hash;// pathname should start with '/', but may not if `new URL` is not supported
-if("/"!==normalizedHref[0]){normalizedHref="/"+normalizedHref}// If we've been configured not to handle this url... don't handle it!
-if(this._urlSpaceRegExp&&!this._urlSpaceRegExp.test(normalizedHref)){return null}// Need to use a full URL in case the containing page has a base URI.
-var fullNormalizedHref=new URL(normalizedHref,this.__location.href).href;return fullNormalizedHref},_makeRegExp:function(urlSpaceRegex){return RegExp(urlSpaceRegex)}});(0,_cmsLogin.Polymer)({is:"iron-query-params",properties:{/**
-     * @type{string|undefined}
-     */paramsString:{type:String,notify:!0,observer:"paramsStringChanged"},/**
-     * @type{Object|undefined}
-     */paramsObject:{type:Object,notify:!0},_dontReact:{type:Boolean,value:!1}},hostAttributes:{hidden:!0},observers:["paramsObjectChanged(paramsObject.*)"],paramsStringChanged:function(){this._dontReact=!0;this.paramsObject=this._decodeParams(this.paramsString);this._dontReact=!1},paramsObjectChanged:function(){if(this._dontReact){return}this.paramsString=this._encodeParams(this.paramsObject).replace(/%3F/g,"?").replace(/%2F/g,"/").replace(/'/g,"%27")},_encodeParams:function(params){var encodedParams=[];for(var key in params){var value=params[key];if(""===value){encodedParams.push(encodeURIComponent(key))}else if(value){encodedParams.push(encodeURIComponent(key)+"="+encodeURIComponent(value.toString()))}}return encodedParams.join("&")},_decodeParams:function(paramString){var params={};// Work around a bug in decodeURIComponent where + is not
-// converted to spaces:
-paramString=(paramString||"").replace(/\+/g,"%20");for(var paramList=paramString.split("&"),i=0,param;i<paramList.length;i++){param=paramList[i].split("=");if(param[0]){params[decodeURIComponent(param[0])]=decodeURIComponent(param[1]||"")}}return params}});const AppRouteConverterBehavior={properties:{/**
-     * A model representing the deserialized path through the route tree, as
-     * well as the current queryParams.
-     *
-     * A route object is the kernel of the routing system. It is intended to
-     * be fed into consuming elements such as `app-route`.
-     *
-     * @type {?Object|undefined}
-     */route:{type:Object,notify:!0},/**
-     * A set of key/value pairs that are universally accessible to branches of
-     * the route tree.
-     *
-     * @type {?Object}
-     */queryParams:{type:Object,notify:!0},/**
-     * The serialized path through the route tree. This corresponds to the
-     * `window.location.pathname` value, and will update to reflect changes
-     * to that value.
-     */path:{type:String,notify:!0}},observers:["_locationChanged(path, queryParams)","_routeChanged(route.prefix, route.path)","_routeQueryParamsChanged(route.__queryParams)"],created:function(){this.linkPaths("route.__queryParams","queryParams");this.linkPaths("queryParams","route.__queryParams")},/**
-   * Handler called when the path or queryParams change.
-   */_locationChanged:function(){if(this.route&&this.route.path===this.path&&this.queryParams===this.route.__queryParams){return}this.route={prefix:"",path:this.path,__queryParams:this.queryParams}},/**
-   * Handler called when the route prefix and route path change.
-   */_routeChanged:function(){if(!this.route){return}this.path=this.route.prefix+this.route.path},/**
-   * Handler called when the route queryParams change.
-   *
-   * @param  {Object} queryParams A set of key/value pairs that are
-   * universally accessible to branches of the route tree.
-   */_routeQueryParamsChanged:function(queryParams){if(!this.route){return}this.queryParams=queryParams}};_exports.AppRouteConverterBehavior=AppRouteConverterBehavior;var appRouteConverterBehavior={AppRouteConverterBehavior:AppRouteConverterBehavior};_exports.$appRouteConverterBehavior=appRouteConverterBehavior;(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
-    <iron-query-params params-string="{{__query}}" params-object="{{queryParams}}">
-    </iron-query-params>
-    <iron-location path="{{__path}}" query="{{__query}}" hash="{{__hash}}" url-space-regex="[[urlSpaceRegex]]" dwell-time="[[dwellTime]]">
-    </iron-location>
-  `,is:"app-location",properties:{/**
-     * A model representing the deserialized path through the route tree, as
-     * well as the current queryParams.
-     */route:{type:Object,notify:!0},/**
-     * In many scenarios, it is convenient to treat the `hash` as a stand-in
-     * alternative to the `path`. For example, if deploying an app to a static
-     * web server (e.g., Github Pages) - where one does not have control over
-     * server-side routing - it is usually a better experience to use the hash
-     * to represent paths through one's app.
-     *
-     * When this property is set to true, the `hash` will be used in place of
-      * the `path` for generating a `route`.
-     */useHashAsPath:{type:Boolean,value:!1},/**
-     * A regexp that defines the set of URLs that should be considered part
-     * of this web app.
-     *
-     * Clicking on a link that matches this regex won't result in a full page
-     * navigation, but will instead just update the URL state in place.
-     *
-     * This regexp is given everything after the origin in an absolute
-     * URL. So to match just URLs that start with /search/ do:
-     *     url-space-regex="^/search/"
-     *
-     * @type {string|RegExp}
-     */urlSpaceRegex:{type:String,notify:!0},/**
-     * A set of key/value pairs that are universally accessible to branches
-     * of the route tree.
-     */__queryParams:{type:Object},/**
-     * The pathname component of the current URL.
-     */__path:{type:String},/**
-     * The query string portion of the current URL.
-     */__query:{type:String},/**
-     * The hash portion of the current URL.
-     */__hash:{type:String},/**
-     * The route path, which will be either the hash or the path, depending
-     * on useHashAsPath.
-     */path:{type:String,observer:"__onPathChanged"},/**
-     * Whether or not the ready function has been called.
-     */_isReady:{type:Boolean},/**
-     * If the user was on a URL for less than `dwellTime` milliseconds, it
-     * won't be added to the browser's history, but instead will be
-     * replaced by the next entry.
-     *
-     * This is to prevent large numbers of entries from clogging up the
-     * user's browser history. Disable by setting to a negative number.
-     *
-     * See `iron-location` for more information.
-     */dwellTime:{type:Number}},behaviors:[AppRouteConverterBehavior],observers:["__computeRoutePath(useHashAsPath, __hash, __path)"],ready:function(){this._isReady=!0},__computeRoutePath:function(){this.path=this.useHashAsPath?this.__hash:this.__path},__onPathChanged:function(){if(!this._isReady){return}if(this.useHashAsPath){this.__hash=this.path}else{this.__path=this.path}}});(0,_cmsLogin.Polymer)({is:"app-route",properties:{/**
-     * The URL component managed by this element.
-     */route:{type:Object,notify:!0},/**
-     * The pattern of slash-separated segments to match `route.path` against.
-     *
-     * For example the pattern "/foo" will match "/foo" or "/foo/bar"
-     * but not "/foobar".
-     *
-     * Path segments like `/:named` are mapped to properties on the `data`
-     * object.
-     */pattern:{type:String},/**
-     * The parameterized values that are extracted from the route as
-     * described by `pattern`.
-     */data:{type:Object,value:function(){return{}},notify:!0},/**
-     * Auto activate route if path empty
-     */autoActivate:{type:Boolean,value:!1},_queryParamsUpdating:{type:Boolean,value:!1},/**
-     * @type {?Object}
-     */queryParams:{type:Object,value:function(){return{}},notify:!0},/**
-     * The part of `route.path` NOT consumed by `pattern`.
-     */tail:{type:Object,value:function(){return{path:null,prefix:null,__queryParams:null}},notify:!0},/**
-     * Whether the current route is active. True if `route.path` matches the
-     * `pattern`, false otherwise.
-     */active:{type:Boolean,notify:!0,readOnly:!0},/**
-     * @type {?string}
-     */_matched:{type:String,value:""}},observers:["__tryToMatch(route.path, pattern)","__updatePathOnDataChange(data.*)","__tailPathChanged(tail.path)","__routeQueryParamsChanged(route.__queryParams)","__tailQueryParamsChanged(tail.__queryParams)","__queryParamsChanged(queryParams.*)"],created:function(){this.linkPaths("route.__queryParams","tail.__queryParams");this.linkPaths("tail.__queryParams","route.__queryParams")},/**
-   * Deal with the query params object being assigned to wholesale.
-   */__routeQueryParamsChanged:function(queryParams){if(queryParams&&this.tail){if(this.tail.__queryParams!==queryParams){this.set("tail.__queryParams",queryParams)}if(!this.active||this._queryParamsUpdating){return}// Copy queryParams and track whether there are any differences compared
-// to the existing query params.
-var copyOfQueryParams={},anythingChanged=!1;for(var key in queryParams){copyOfQueryParams[key]=queryParams[key];if(anythingChanged||!this.queryParams||queryParams[key]!==this.queryParams[key]){anythingChanged=!0}}// Need to check whether any keys were deleted
-for(var key in this.queryParams){if(anythingChanged||!(key in queryParams)){anythingChanged=!0;break}}if(!anythingChanged){return}this._queryParamsUpdating=!0;this.set("queryParams",copyOfQueryParams);this._queryParamsUpdating=!1}},__tailQueryParamsChanged:function(queryParams){if(queryParams&&this.route&&this.route.__queryParams!=queryParams){this.set("route.__queryParams",queryParams)}},__queryParamsChanged:function(changes){if(!this.active||this._queryParamsUpdating){return}this.set("route.__"+changes.path,changes.value)},__resetProperties:function(){this._setActive(!1);this._matched=null},__tryToMatch:function(){if(!this.route){return}var path=this.route.path,pattern=this.pattern;if(this.autoActivate&&""===path){path="/"}if(!pattern){return}if(!path){this.__resetProperties();return}for(var remainingPieces=path.split("/"),patternPieces=pattern.split("/"),matched=[],namedMatches={},i=0,patternPiece;i<patternPieces.length;i++){patternPiece=patternPieces[i];if(!patternPiece&&""!==patternPiece){break}var pathPiece=remainingPieces.shift();// We don't match this path.
-if(!pathPiece&&""!==pathPiece){this.__resetProperties();return}matched.push(pathPiece);if(":"==patternPiece.charAt(0)){namedMatches[patternPiece.slice(1)]=pathPiece}else if(patternPiece!==pathPiece){this.__resetProperties();return}}this._matched=matched.join("/");// Properties that must be updated atomically.
-var propertyUpdates={};// this.active
-if(!this.active){propertyUpdates.active=!0}// this.tail
-var tailPrefix=this.route.prefix+this._matched,tailPath=remainingPieces.join("/");if(0<remainingPieces.length){tailPath="/"+tailPath}if(!this.tail||this.tail.prefix!==tailPrefix||this.tail.path!==tailPath){propertyUpdates.tail={prefix:tailPrefix,path:tailPath,__queryParams:this.route.__queryParams}}// this.data
-propertyUpdates.data=namedMatches;this._dataInUrl={};for(var key in namedMatches){this._dataInUrl[key]=namedMatches[key]}if(this.setProperties){// atomic update
-this.setProperties(propertyUpdates,!0)}else{this.__setMulti(propertyUpdates)}},__tailPathChanged:function(path){if(!this.active){return}var tailPath=path,newPath=this._matched;if(tailPath){if("/"!==tailPath.charAt(0)){tailPath="/"+tailPath}newPath+=tailPath}this.set("route.path",newPath)},__updatePathOnDataChange:function(){if(!this.route||!this.active){return}var newPath=this.__getLink({}),oldPath=this.__getLink(this._dataInUrl);if(newPath===oldPath){return}this.set("route.path",newPath)},__getLink:function(overrideValues){var values={tail:null};for(var key in this.data){values[key]=this.data[key]}for(var key in overrideValues){values[key]=overrideValues[key]}var patternPieces=this.pattern.split("/"),interp=patternPieces.map(function(value){if(":"==value[0]){value=values[value.slice(1)]}return value},this);if(values.tail&&values.tail.path){if(0<interp.length&&"/"===values.tail.path.charAt(0)){interp.push(values.tail.path.slice(1))}else{interp.push(values.tail.path)}}return interp.join("/")},__setMulti:function(setObj){// HACK(rictic): skirting around 1.0's lack of a setMulti by poking at
-//     internal data structures. I would not advise that you copy this
-//     example.
-//
-//     In the future this will be a feature of Polymer itself.
-//     See: https://github.com/Polymer/polymer/issues/3640
-//
-//     Hacking around with private methods like this is juggling footguns,
-//     and is likely to have unexpected and unsupported rough edges.
-//
-//     Be ye so warned.
-for(var property in setObj){this._propertySetter(property,setObj[property])}// notify in a specific order
-if(setObj.data!==void 0){this._pathEffector("data",this.data);this._notifyChange("data")}if(setObj.active!==void 0){this._pathEffector("active",this.active);this._notifyChange("active")}if(setObj.tail!==void 0){this._pathEffector("tail",this.tail);this._notifyChange("tail")}}});const template=_cmsLogin.html$1`<iron-iconset-svg name="paper-tabs" size="24">
-<svg><defs>
-<g id="chevron-left"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g>
-<g id="chevron-right"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g>
-</defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template.content);(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+   * @method resetLayout
+   */resetLayout:function(){var self=this,cb=this._updateLayoutStates.bind(this);this._layoutDebouncer=_cmsLogin.Debouncer.debounce(this._layoutDebouncer,_cmsLogin.animationFrame,cb);(0,_cmsLogin.enqueueDebouncer)(this._layoutDebouncer);this._notifyDescendantResize()},_notifyLayoutChanged:function(){var self=this;// TODO: the event `app-reset-layout` can be fired synchronously
+// as long as `_updateLayoutStates` waits for all the microtasks after
+// rAF. E.g. requestAnimationFrame(setTimeOut())
+requestAnimationFrame(function(){self.fire("app-reset-layout")})},_notifyDescendantResize:function(){if(!this.isAttached){return}this._interestedResizables.forEach(function(resizable){if(this.resizerShouldNotify(resizable)){this._notifyDescendant(resizable)}},this)}}];_exports.AppLayoutBehavior=AppLayoutBehavior;var appLayoutBehavior={AppLayoutBehavior:AppLayoutBehavior};_exports.$appLayoutBehavior=appLayoutBehavior;(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
     <style>
       :host {
-        @apply --layout-inline;
-        @apply --layout-center;
-        @apply --layout-center-justified;
-        @apply --layout-flex-auto;
-
+        display: block;
+        /**
+         * Force app-header-layout to have its own stacking context so that its parent can
+         * control the stacking of it relative to other elements (e.g. app-drawer-layout).
+         * This could be done using \`isolation: isolate\`, but that's not well supported
+         * across browsers.
+         */
         position: relative;
-        padding: 0 12px;
-        overflow: hidden;
-        cursor: pointer;
-        vertical-align: middle;
-
-        @apply --paper-font-common-base;
-        @apply --paper-tab;
+        z-index: 0;
       }
 
-      :host(:focus) {
-        outline: none;
+      #wrapper ::slotted([slot=header]) {
+        @apply --layout-fixed-top;
+        z-index: 1;
       }
 
-      :host([link]) {
-        padding: 0;
+      #wrapper.initializing ::slotted([slot=header]) {
+        position: relative;
       }
 
-      .tab-content {
-        height: 100%;
-        transform: translateZ(0);
-          -webkit-transform: translateZ(0);
-        transition: opacity 0.1s cubic-bezier(0.4, 0.0, 1, 1);
-        @apply --layout-horizontal;
-        @apply --layout-center-center;
-        @apply --layout-flex-auto;
-        @apply --paper-tab-content;
-      }
-
-      :host(:not(.iron-selected)) > .tab-content {
-        opacity: 0.8;
-
-        @apply --paper-tab-content-unselected;
-      }
-
-      :host(:focus) .tab-content {
-        opacity: 1;
-        font-weight: 700;
-      }
-
-      paper-ripple {
-        color: var(--paper-tab-ink, var(--paper-yellow-a100));
-      }
-
-      .tab-content > ::slotted(a) {
-        @apply --layout-flex-auto;
-
+      :host([has-scrolling-region]) {
         height: 100%;
       }
+
+      :host([has-scrolling-region]) #wrapper ::slotted([slot=header]) {
+        position: absolute;
+      }
+
+      :host([has-scrolling-region]) #wrapper.initializing ::slotted([slot=header]) {
+        position: relative;
+      }
+
+      :host([has-scrolling-region]) #wrapper #contentContainer {
+        @apply --layout-fit;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      :host([has-scrolling-region]) #wrapper.initializing #contentContainer {
+        position: relative;
+      }
+
+      :host([fullbleed]) {
+        @apply --layout-vertical;
+        @apply --layout-fit;
+      }
+
+      :host([fullbleed]) #wrapper,
+      :host([fullbleed]) #wrapper #contentContainer {
+        @apply --layout-vertical;
+        @apply --layout-flex;
+      }
+
+      #contentContainer {
+        /* Create a stacking context here so that all children appear below the header. */
+        position: relative;
+        z-index: 0;
+      }
+
+      @media print {
+        :host([has-scrolling-region]) #wrapper #contentContainer {
+          overflow-y: visible;
+        }
+      }
+
     </style>
 
-    <div class="tab-content">
-      <slot></slot>
-    </div>
-`,is:"paper-tab",behaviors:[_cmsLogin.IronControlState,_cmsLogin.IronButtonState,_cmsLogin.PaperRippleBehavior],properties:{/**
-     * If true, the tab will forward keyboard clicks (enter/space) to
-     * the first anchor element found in its descendants
-     */link:{type:Boolean,value:!1,reflectToAttribute:!0}},/** @private */hostAttributes:{role:"tab"},listeners:{down:"_updateNoink",tap:"_onTap"},attached:function(){this._updateNoink()},get _parentNoink(){var parent=(0,_cmsLogin.dom)(this).parentNode;return!!parent&&!!parent.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink},_onTap:function(event){if(this.link){var anchor=this.queryEffectiveChildren("a");if(!anchor){return}// Don't get stuck in a loop delegating
-// the listener from the child anchor
-if(event.target===anchor){return}anchor.click()}}});const IronMenubarBehaviorImpl={hostAttributes:{role:"menubar"},/**
-   * @type {!Object}
-   */keyBindings:{left:"_onLeftKey",right:"_onRightKey"},_onUpKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},_onDownKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},get _isRTL(){return"rtl"===window.getComputedStyle(this).direction},_onLeftKey:function(event){if(this._isRTL){this._focusNext()}else{this._focusPrevious()}event.detail.keyboardEvent.preventDefault()},_onRightKey:function(event){if(this._isRTL){this._focusPrevious()}else{this._focusNext()}event.detail.keyboardEvent.preventDefault()},_onKeydown:function(event){if(this.keyboardEventMatchesKeys(event,"up down left right esc")){return}// all other keys focus the menu item starting with that character
-this._focusWithKeyboardEvent(event)}};/** @polymerBehavior */_exports.IronMenubarBehaviorImpl=IronMenubarBehaviorImpl;const IronMenubarBehavior=[_cmsLogin.IronMenuBehavior,IronMenubarBehaviorImpl];_exports.IronMenubarBehavior=IronMenubarBehavior;var ironMenubarBehavior={IronMenubarBehaviorImpl:IronMenubarBehaviorImpl,IronMenubarBehavior:IronMenubarBehavior};_exports.$ironMenubarBehavior=ironMenubarBehavior;(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
-    <style>
-      :host {
-        @apply --layout;
-        @apply --layout-center;
+    <div id="wrapper" class="initializing">
+      <slot id="headerSlot" name="header"></slot>
 
-        height: 48px;
-        font-size: 14px;
-        font-weight: 500;
-        overflow: hidden;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-
-        /* NOTE: Both values are needed, since some phones require the value to be \`transparent\`. */
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        -webkit-tap-highlight-color: transparent;
-
-        @apply --paper-tabs;
-      }
-
-      :host(:dir(rtl)) {
-        @apply --layout-horizontal-reverse;
-      }
-
-      #tabsContainer {
-        position: relative;
-        height: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        @apply --layout-flex-auto;
-        @apply --paper-tabs-container;
-      }
-
-      #tabsContent {
-        height: 100%;
-        -moz-flex-basis: auto;
-        -ms-flex-basis: auto;
-        flex-basis: auto;
-        @apply --paper-tabs-content;
-      }
-
-      #tabsContent.scrollable {
-        position: absolute;
-        white-space: nowrap;
-      }
-
-      #tabsContent:not(.scrollable),
-      #tabsContent.scrollable.fit-container {
-        @apply --layout-horizontal;
-      }
-
-      #tabsContent.scrollable.fit-container {
-        min-width: 100%;
-      }
-
-      #tabsContent.scrollable.fit-container > ::slotted(*) {
-        /* IE - prevent tabs from compressing when they should scroll. */
-        -ms-flex: 1 0 auto;
-        -webkit-flex: 1 0 auto;
-        flex: 1 0 auto;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      .not-visible {
-        opacity: 0;
-        cursor: default;
-      }
-
-      paper-icon-button {
-        width: 48px;
-        height: 48px;
-        padding: 12px;
-        margin: 0 4px;
-      }
-
-      #selectionBar {
-        position: absolute;
-        height: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-bottom: 2px solid var(--paper-tabs-selection-bar-color, var(--paper-yellow-a100));
-          -webkit-transform: scale(0);
-        transform: scale(0);
-          -webkit-transform-origin: left center;
-        transform-origin: left center;
-          transition: -webkit-transform;
-        transition: transform;
-
-        @apply --paper-tabs-selection-bar;
-      }
-
-      #selectionBar.align-bottom {
-        top: 0;
-        bottom: auto;
-      }
-
-      #selectionBar.expand {
-        transition-duration: 0.15s;
-        transition-timing-function: cubic-bezier(0.4, 0.0, 1, 1);
-      }
-
-      #selectionBar.contract {
-        transition-duration: 0.18s;
-        transition-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
-      }
-
-      #tabsContent > ::slotted(:not(#selectionBar)) {
-        height: 100%;
-      }
-    </style>
-
-    <paper-icon-button icon="paper-tabs:chevron-left" class\$="[[_computeScrollButtonClass(_leftHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onLeftScrollButtonDown" tabindex="-1"></paper-icon-button>
-
-    <div id="tabsContainer" on-track="_scroll" on-down="_down">
-      <div id="tabsContent" class\$="[[_computeTabsContentClass(scrollable, fitContainer)]]">
-        <div id="selectionBar" class\$="[[_computeSelectionBarClass(noBar, alignBottom)]]" on-transitionend="_onBarTransitionEnd"></div>
+      <div id="contentContainer">
         <slot></slot>
       </div>
     </div>
+`,is:"app-header-layout",behaviors:[AppLayoutBehavior],properties:{/**
+     * If true, the current element will have its own scrolling region.
+     * Otherwise, it will use the document scroll to control the header.
+     */hasScrollingRegion:{type:Boolean,value:/* ignoreName */!1/* skipSlots */ /* skipSlots */,reflectToAttribute:!0}},observers:["resetLayout(isAttached, hasScrollingRegion)"],/**
+   * A reference to the app-header element.
+   *
+   * @property header
+   */get header(){return(0,_cmsLogin.dom)(this.$.headerSlot).getDistributedNodes()[0]},_updateLayoutStates:function(){var header=this.header;if(!this.isAttached||!header){return}// Remove the initializing class, which staticly positions the header and
+// the content until the height of the header can be read.
+this.$.wrapper.classList.remove("initializing");// Update scroll target.
+header.scrollTarget=this.hasScrollingRegion?this.$.contentContainer:this.ownerDocument.documentElement;// Get header height here so that style reads are batched together before
+// style writes (i.e. getBoundingClientRect() below).
+var headerHeight=header.offsetHeight;// Update the header position.
+if(!this.hasScrollingRegion){requestAnimationFrame(function(){var rect=this.getBoundingClientRect(),rightOffset=document.documentElement.clientWidth-rect.right;header.style.left=rect.left+"px";header.style.right=rightOffset+"px"}.bind(this))}else{header.style.left="";header.style.right=""}// Update the content container position.
+var containerStyle=this.$.contentContainer.style;if(header.fixed&&!header.condenses&&this.hasScrollingRegion){// If the header size does not change and we're using a scrolling region,
+// exclude the header area from the scrolling region so that the header
+// doesn't overlap the scrollbar.
+containerStyle.marginTop=headerHeight+"px";containerStyle.paddingTop=""}else{containerStyle.paddingTop=headerHeight+"px";containerStyle.marginTop=""}}});(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
+    <style>
+      :host {
+        position: relative;
+        display: block;
+        transition-timing-function: linear;
+        transition-property: -webkit-transform;
+        transition-property: transform;
+      }
 
-    <paper-icon-button icon="paper-tabs:chevron-right" class\$="[[_computeScrollButtonClass(_rightHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onRightScrollButtonDown" tabindex="-1"></paper-icon-button>
-`,is:"paper-tabs",behaviors:[_cmsLogin.IronResizableBehavior,IronMenubarBehavior],properties:{/**
-     * If true, ink ripple effect is disabled. When this property is changed,
-     * all descendant `<paper-tab>` elements have their `noink` property
-     * changed to the new value as well.
-     */noink:{type:Boolean,value:!1,observer:"_noinkChanged"},/**
-     * If true, the bottom bar to indicate the selected tab will not be shown.
-     */noBar:{type:Boolean,value:!1},/**
-     * If true, the slide effect for the bottom bar is disabled.
-     */noSlide:{type:Boolean,value:!1},/**
-     * If true, tabs are scrollable and the tab width is based on the label
-     * width.
-     */scrollable:{type:Boolean,value:!1},/**
-     * If true, tabs expand to fit their container. This currently only applies
-     * when scrollable is true.
-     */fitContainer:{type:Boolean,value:!1},/**
-     * If true, dragging on the tabs to scroll is disabled.
-     */disableDrag:{type:Boolean,value:!1},/**
-     * If true, scroll buttons (left/right arrow) will be hidden for scrollable
-     * tabs.
-     */hideScrollButtons:{type:Boolean,value:!1},/**
-     * If true, the tabs are aligned to bottom (the selection bar appears at the
-     * top).
-     */alignBottom:{type:Boolean,value:!1},selectable:{type:String,value:"paper-tab"},/**
-     * If true, tabs are automatically selected when focused using the
-     * keyboard.
-     */autoselect:{type:Boolean,value:!1},/**
-     * The delay (in milliseconds) between when the user stops interacting
-     * with the tabs through the keyboard and when the focused item is
-     * automatically selected (if `autoselect` is true).
-     */autoselectDelay:{type:Number,value:0},_step:{type:Number,value:10},_holdDelay:{type:Number,value:1},_leftHidden:{type:Boolean,value:!1},_rightHidden:{type:Boolean,value:!1},_previousTab:{type:Object}},/** @private */hostAttributes:{role:"tablist"},listeners:{"iron-resize":"_onTabSizingChanged","iron-items-changed":"_onTabSizingChanged","iron-select":"_onIronSelect","iron-deselect":"_onIronDeselect"},/**
-   * @type {!Object}
-   */keyBindings:{"left:keyup right:keyup":"_onArrowKeyup"},created:function(){this._holdJob=null;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;this._bindDelayedActivationHandler=this._delayedActivationHandler.bind(this);this.addEventListener("blur",this._onBlurCapture.bind(this),!0)},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},detached:function(){this._cancelPendingActivation()},_noinkChanged:function(noink){var childTabs=(0,_cmsLogin.dom)(this).querySelectorAll("paper-tab");childTabs.forEach(noink?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(element){element.setAttribute("noink","")},_removeNoinkAttribute:function(element){element.removeAttribute("noink")},_computeScrollButtonClass:function(hideThisButton,scrollable,hideScrollButtons){if(!scrollable||hideScrollButtons){return"hidden"}if(hideThisButton){return"not-visible"}return""},_computeTabsContentClass:function(scrollable,fitContainer){return scrollable?"scrollable"+(fitContainer?" fit-container":""):" fit-container"},_computeSelectionBarClass:function(noBar,alignBottom){if(noBar){return"hidden"}else if(alignBottom){return"align-bottom"}return""},// TODO(cdata): Add `track` response back in when gesture lands.
-_onTabSizingChanged:function(){this.debounce("_onTabSizingChanged",function(){this._scroll();this._tabChanged(this.selectedItem)},10)},_onIronSelect:function(event){this._tabChanged(event.detail.item,this._previousTab);this._previousTab=event.detail.item;this.cancelDebouncer("tab-changed")},_onIronDeselect:function(event){this.debounce("tab-changed",function(){this._tabChanged(null,this._previousTab);this._previousTab=null;// See polymer/polymer#1305
-},1)},_activateHandler:function(){// Cancel item activations scheduled by keyboard events when any other
-// action causes an item to be activated (e.g. clicks).
-this._cancelPendingActivation();_cmsLogin.IronMenuBehaviorImpl._activateHandler.apply(this,arguments)},/**
-   * Activates an item after a delay (in milliseconds).
-   */_scheduleActivation:function(item,delay){this._pendingActivationItem=item;this._pendingActivationTimeout=this.async(this._bindDelayedActivationHandler,delay)},/**
-   * Activates the last item given to `_scheduleActivation`.
-   */_delayedActivationHandler:function(){var item=this._pendingActivationItem;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;item.fire(this.activateEvent,null,{bubbles:!0,cancelable:!0})},/**
-   * Cancels a previously scheduled item activation made with
-   * `_scheduleActivation`.
-   */_cancelPendingActivation:function(){if(this._pendingActivationTimeout!==void 0){this.cancelAsync(this._pendingActivationTimeout);this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0}},_onArrowKeyup:function(event){if(this.autoselect){this._scheduleActivation(this.focusedItem,this.autoselectDelay)}},_onBlurCapture:function(event){// Cancel a scheduled item activation (if any) when that item is
-// blurred.
-if(event.target===this._pendingActivationItem){this._cancelPendingActivation()}},get _tabContainerScrollSize(){return Math.max(0,this.$.tabsContainer.scrollWidth-this.$.tabsContainer.offsetWidth)},_scroll:function(e,detail){if(!this.scrollable){return}var ddx=detail&&-detail.ddx||0;this._affectScroll(ddx)},_down:function(e){// go one beat async to defeat IronMenuBehavior
-// autorefocus-on-no-selection timeout
-this.async(function(){if(this._defaultFocusAsync){this.cancelAsync(this._defaultFocusAsync);this._defaultFocusAsync=null}},1)},_affectScroll:function(dx){this.$.tabsContainer.scrollLeft+=dx;var scrollLeft=this.$.tabsContainer.scrollLeft;this._leftHidden=0===scrollLeft;this._rightHidden=scrollLeft===this._tabContainerScrollSize},_onLeftScrollButtonDown:function(){this._scrollToLeft();this._holdJob=setInterval(this._scrollToLeft.bind(this),this._holdDelay)},_onRightScrollButtonDown:function(){this._scrollToRight();this._holdJob=setInterval(this._scrollToRight.bind(this),this._holdDelay)},_onScrollButtonUp:function(){clearInterval(this._holdJob);this._holdJob=null},_scrollToLeft:function(){this._affectScroll(-this._step)},_scrollToRight:function(){this._affectScroll(this._step)},_tabChanged:function(tab,old){if(!tab){// Remove the bar without animation.
-this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.remove("contract");this._positionBar(0,0);return}var r=this.$.tabsContent.getBoundingClientRect(),w=r.width,tabRect=tab.getBoundingClientRect(),tabOffsetLeft=tabRect.left-r.left;this._pos={width:this._calcPercent(tabRect.width,w),left:this._calcPercent(tabOffsetLeft,w)};if(this.noSlide||null==old){// Position the bar without animation.
-this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.remove("contract");this._positionBar(this._pos.width,this._pos.left);return}var oldRect=old.getBoundingClientRect(),oldIndex=this.items.indexOf(old),index=this.items.indexOf(tab),m=5;// bar animation: expand
-this.$.selectionBar.classList.add("expand");var moveRight=oldIndex<index,isRTL=this._isRTL;if(isRTL){moveRight=!moveRight}if(moveRight){this._positionBar(this._calcPercent(tabRect.left+tabRect.width-oldRect.left,w)-m,this._left)}else{this._positionBar(this._calcPercent(oldRect.left+oldRect.width-tabRect.left,w)-m,this._calcPercent(tabOffsetLeft,w)+m)}if(this.scrollable){this._scrollToSelectedIfNeeded(tabRect.width,tabOffsetLeft)}},_scrollToSelectedIfNeeded:function(tabWidth,tabOffsetLeft){var l=tabOffsetLeft-this.$.tabsContainer.scrollLeft;if(0>l){this.$.tabsContainer.scrollLeft+=l}else{l+=tabWidth-this.$.tabsContainer.offsetWidth;if(0<l){this.$.tabsContainer.scrollLeft+=l}}},_calcPercent:function(w,w0){return 100*w/w0},_positionBar:function(width,left){width=width||0;left=left||0;this._width=width;this._left=left;this.transform("translateX("+left+"%) scaleX("+width/100+")",this.$.selectionBar)},_onBarTransitionEnd:function(e){var cl=this.$.selectionBar.classList;// bar animation: expand -> contract
-if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionBar(this._pos.width,this._pos.left);// bar animation done
-}else if(cl.contains("contract")){cl.remove("contract")}}});const template$1=_cmsLogin.html$1`<iron-iconset-svg name="hardware" size="24">
-<svg><defs>
-<g id="cast"><path d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"></path></g>
-<g id="cast-connected"><path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09 4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></g>
-<g id="computer"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"></path></g>
-<g id="desktop-mac"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"></path></g>
-<g id="desktop-windows"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"></path></g>
-<g id="developer-board"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"></path></g>
-<g id="device-hub"><path d="M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z"></path></g>
-<g id="devices-other"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3V6zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22V12zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1zm-1 10h-4v-8h4v8z"></path></g>
-<g id="dock"><path d="M8 23h8v-2H8v2zm8-21.99L8 1c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM16 15H8V5h8v10z"></path></g>
-<g id="gamepad"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"></path></g>
-<g id="headset"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"></path></g>
-<g id="headset-mic"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h4v1h-7v2h6c1.66 0 3-1.34 3-3V10c0-4.97-4.03-9-9-9z"></path></g>
-<g id="keyboard"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"></path></g>
-<g id="keyboard-arrow-down"><path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path></g>
-<g id="keyboard-arrow-left"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"></path></g>
-<g id="keyboard-arrow-right"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path></g>
-<g id="keyboard-arrow-up"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></g>
-<g id="keyboard-backspace"><path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"></path></g>
-<g id="keyboard-capslock"><path d="M12 8.41L16.59 13 18 11.59l-6-6-6 6L7.41 13 12 8.41zM6 18h12v-2H6v2z"></path></g>
-<g id="keyboard-hide"><path d="M20 3H4c-1.1 0-1.99.9-1.99 2L2 15c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 3h2v2h-2V6zm0 3h2v2h-2V9zM8 6h2v2H8V6zm0 3h2v2H8V9zm-1 2H5V9h2v2zm0-3H5V6h2v2zm9 7H8v-2h8v2zm0-4h-2V9h2v2zm0-3h-2V6h2v2zm3 3h-2V9h2v2zm0-3h-2V6h2v2zm-7 15l4-4H8l4 4z"></path></g>
-<g id="keyboard-return"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"></path></g>
-<g id="keyboard-tab"><path d="M11.59 7.41L15.17 11H1v2h14.17l-3.59 3.59L13 18l6-6-6-6-1.41 1.41zM20 6v12h2V6h-2z"></path></g>
-<g id="keyboard-voice"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.42 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path></g>
-<g id="laptop"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"></path></g>
-<g id="laptop-chromebook"><path d="M22 18V3H2v15H0v2h24v-2h-2zm-8 0h-4v-1h4v1zm6-3H4V5h16v10z"></path></g>
-<g id="laptop-mac"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2H0c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2h-4zM4 5h16v11H4V5zm8 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path></g>
-<g id="laptop-windows"><path d="M20 18v-1c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2v1H0v2h24v-2h-4zM4 5h16v10H4V5z"></path></g>
-<g id="memory"><path d="M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z"></path></g>
-<g id="mouse"><path d="M13 1.07V9h7c0-4.08-3.05-7.44-7-7.93zM4 15c0 4.42 3.58 8 8 8s8-3.58 8-8v-4H4v4zm7-13.93C7.05 1.56 4 4.92 4 9h7V1.07z"></path></g>
-<g id="phone-android"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"></path></g>
-<g id="phone-iphone"><path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"></path></g>
-<g id="phonelink"><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"></path></g>
-<g id="phonelink-off"><path d="M22 6V4H6.82l2 2H22zM1.92 1.65L.65 2.92l1.82 1.82C2.18 5.08 2 5.52 2 6v11H0v3h17.73l2.35 2.35 1.27-1.27L3.89 3.62 1.92 1.65zM4 6.27L14.73 17H4V6.27zM23 8h-6c-.55 0-1 .45-1 1v4.18l2 2V10h4v7h-2.18l3 3H23c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1z"></path></g>
-<g id="power-input"><path d="M2 9v2h19V9H2zm0 6h5v-2H2v2zm7 0h5v-2H9v2zm7 0h5v-2h-5v2z"></path></g>
-<g id="router"><path d="M20.2 5.9l.8-.8C19.6 3.7 17.8 3 16 3s-3.6.7-5 2.1l.8.8C13 4.8 14.5 4.2 16 4.2s3 .6 4.2 1.7zm-.9.8c-.9-.9-2.1-1.4-3.3-1.4s-2.4.5-3.3 1.4l.8.8c.7-.7 1.6-1 2.5-1 .9 0 1.8.3 2.5 1l.8-.8zM19 13h-2V9h-2v4H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM8 18H6v-2h2v2zm3.5 0h-2v-2h2v2zm3.5 0h-2v-2h2v2z"></path></g>
-<g id="scanner"><path d="M19.8 10.7L4.2 5l-.7 1.9L17.6 12H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5.5c0-.8-.5-1.6-1.2-1.8zM7 17H5v-2h2v2zm12 0H9v-2h10v2z"></path></g>
-<g id="security"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></g>
-<g id="sim-card"><path d="M19.99 4c0-1.1-.89-2-1.99-2h-8L4 8v12c0 1.1.9 2 2 2h12.01c1.1 0 1.99-.9 1.99-2l-.01-16zM9 19H7v-2h2v2zm8 0h-2v-2h2v2zm-8-4H7v-4h2v4zm4 4h-2v-4h2v4zm0-6h-2v-2h2v2zm4 2h-2v-4h2v4z"></path></g>
-<g id="smartphone"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"></path></g>
-<g id="speaker"><path d="M17 2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 1.99 2 1.99L17 22c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 2c1.1 0 2 .9 2 2s-.9 2-2 2c-1.11 0-2-.9-2-2s.89-2 2-2zm0 16c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></g>
-<g id="speaker-group"><path d="M18.2 1H9.8C8.81 1 8 1.81 8 2.8v14.4c0 .99.81 1.79 1.8 1.79l8.4.01c.99 0 1.8-.81 1.8-1.8V2.8c0-.99-.81-1.8-1.8-1.8zM14 3c1.1 0 2 .89 2 2s-.9 2-2 2-2-.89-2-2 .9-2 2-2zm0 13.5c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"></path><circle cx="14" cy="12.5" r="2.5"></circle><path d="M6 5H4v16c0 1.1.89 2 2 2h10v-2H6V5z"></path></g>
-<g id="tablet"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 1.99-.9 1.99-2L23 6c0-1.1-.9-2-2-2zm-2 14H5V6h14v12z"></path></g>
-<g id="tablet-android"><path d="M18 0H6C4.34 0 3 1.34 3 3v18c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V3c0-1.66-1.34-3-3-3zm-4 22h-4v-1h4v1zm5.25-3H4.75V3h14.5v16z"></path></g>
-<g id="tablet-mac"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"></path></g>
-<g id="toys"><path d="M12 12c0-3 2.5-5.5 5.5-5.5S23 9 23 12H12zm0 0c0 3-2.5 5.5-5.5 5.5S1 15 1 12h11zm0 0c-3 0-5.5-2.5-5.5-5.5S9 1 12 1v11zm0 0c3 0 5.5 2.5 5.5 5.5S15 23 12 23V12z"></path></g>
-<g id="tv"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"></path></g>
-<g id="videogame-asset"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g>
-<g id="watch"><path d="M20 12c0-2.54-1.19-4.81-3.04-6.27L16 0H8l-.95 5.73C5.19 7.19 4 9.45 4 12s1.19 4.81 3.05 6.27L8 24h8l.96-5.73C18.81 16.81 20 14.54 20 12zM6 12c0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6-6-2.69-6-6z"></path></g>
-</defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$1.content);const template$2=_cmsLogin.html$1`<iron-iconset-svg name="av" size="24">
+      :host::before {
+        position: absolute;
+        right: 0px;
+        bottom: -5px;
+        left: 0px;
+        width: 100%;
+        height: 5px;
+        content: "";
+        transition: opacity 0.4s;
+        pointer-events: none;
+        opacity: 0;
+        box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
+        will-change: opacity;
+        @apply --app-header-shadow;
+      }
+
+      :host([shadow])::before {
+        opacity: 1;
+      }
+
+      #background {
+        @apply --layout-fit;
+        overflow: hidden;
+      }
+
+      #backgroundFrontLayer,
+      #backgroundRearLayer {
+        @apply --layout-fit;
+        height: 100%;
+        pointer-events: none;
+        background-size: cover;
+      }
+
+      #backgroundFrontLayer {
+        @apply --app-header-background-front-layer;
+      }
+
+      #backgroundRearLayer {
+        opacity: 0;
+        @apply --app-header-background-rear-layer;
+      }
+
+      #contentContainer {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      :host([disabled]),
+      :host([disabled])::after,
+      :host([disabled]) #backgroundFrontLayer,
+      :host([disabled]) #backgroundRearLayer,
+      /* Silent scrolling should not run CSS transitions */
+      :host([silent-scroll]),
+      :host([silent-scroll])::after,
+      :host([silent-scroll]) #backgroundFrontLayer,
+      :host([silent-scroll]) #backgroundRearLayer {
+        transition: none !important;
+      }
+
+      :host([disabled]) ::slotted(app-toolbar:first-of-type),
+      :host([disabled]) ::slotted([sticky]),
+      /* Silent scrolling should not run CSS transitions */
+      :host([silent-scroll]) ::slotted(app-toolbar:first-of-type),
+      :host([silent-scroll]) ::slotted([sticky]) {
+        transition: none !important;
+      }
+
+    </style>
+    <div id="contentContainer">
+      <slot id="slot"></slot>
+    </div>
+`,is:"app-header",behaviors:[_cmsLogin.AppScrollEffectsBehavior,AppLayoutBehavior],properties:{/**
+     * If true, the header will automatically collapse when scrolling down.
+     * That is, the `sticky` element remains visible when the header is fully
+     *condensed whereas the rest of the elements will collapse below `sticky`
+     *element.
+     *
+     * By default, the `sticky` element is the first toolbar in the light DOM:
+     *
+     *```html
+     * <app-header condenses>
+     *   <app-toolbar>This toolbar remains on top</app-toolbar>
+     *   <app-toolbar></app-toolbar>
+     *   <app-toolbar></app-toolbar>
+     * </app-header>
+     * ```
+     *
+     * Additionally, you can specify which toolbar or element remains visible in
+     *condensed mode by adding the `sticky` attribute to that element. For
+     *example: if we want the last toolbar to remain visible, we can add the
+     *`sticky` attribute to it.
+     *
+     *```html
+     * <app-header condenses>
+     *   <app-toolbar></app-toolbar>
+     *   <app-toolbar></app-toolbar>
+     *   <app-toolbar sticky>This toolbar remains on top</app-toolbar>
+     * </app-header>
+     * ```
+     *
+     * Note the `sticky` element must be a direct child of `app-header`.
+     */condenses:{type:Boolean,value:!1},/**
+     * Mantains the header fixed at the top so it never moves away.
+     */fixed:{type:Boolean,value:!1},/**
+     * Slides back the header when scrolling back up.
+     */reveals:{type:Boolean,value:!1},/**
+     * Displays a shadow below the header.
+     */shadow:{type:Boolean,reflectToAttribute:!0,value:!1}},observers:["_configChanged(isAttached, condenses, fixed)"],/**
+   * A cached offsetHeight of the current element.
+   *
+   * @type {number}
+   */_height:0,/**
+   * The distance in pixels the header will be translated to when scrolling.
+   *
+   * @type {number}
+   */_dHeight:0,/**
+   * The offsetTop of `_stickyEl`
+   *
+   * @type {number}
+   */_stickyElTop:0,/**
+   * A reference to the element that remains visible when the header condenses.
+   *
+   * @type {HTMLElement}
+   */_stickyElRef:null,/**
+   * The header's top value used for the `transformY`
+   *
+   * @type {number}
+   */_top:0,/**
+   * The current scroll progress.
+   *
+   * @type {number}
+   */_progress:0,_wasScrollingDown:!1,_initScrollTop:0,_initTimestamp:0,_lastTimestamp:0,_lastScrollTop:0,/**
+   * The distance the header is allowed to move away.
+   *
+   * @type {number}
+   */get _maxHeaderTop(){return this.fixed?this._dHeight:this._height+5},/**
+   * Returns a reference to the sticky element.
+   *
+   * @return {HTMLElement}?
+   */get _stickyEl(){if(this._stickyElRef){return this._stickyElRef}// Get the element with the sticky attribute on it or the first element in
+// the light DOM.
+for(var nodes=(0,_cmsLogin.dom)(this.$.slot).getDistributedNodes(),i=0,node;node=/** @type {!HTMLElement} */nodes[i];i++){if(node.nodeType===Node.ELEMENT_NODE){if(node.hasAttribute("sticky")){this._stickyElRef=node;break}else if(!this._stickyElRef){this._stickyElRef=node}}}return this._stickyElRef},_configChanged:function(){this.resetLayout();this._notifyLayoutChanged()},_updateLayoutStates:function(){if(0===this.offsetWidth&&0===this.offsetHeight){return}var scrollTop=this._clampedScrollTop,firstSetup=0===this._height||0===scrollTop,currentDisabled=this.disabled;this._height=this.offsetHeight;this._stickyElRef=null;this.disabled=!0;// prepare for measurement
+if(!firstSetup){this._updateScrollState(0,!0)}if(this._mayMove()){this._dHeight=this._stickyEl?this._height-this._stickyEl.offsetHeight:0}else{this._dHeight=0}this._stickyElTop=this._stickyEl?this._stickyEl.offsetTop:0;this._setUpEffect();if(firstSetup){this._updateScrollState(scrollTop,!0)}else{this._updateScrollState(this._lastScrollTop,!0);this._layoutIfDirty()}// restore no transition
+this.disabled=currentDisabled},/**
+   * Updates the scroll state.
+   *
+   * @param {number} scrollTop
+   * @param {boolean=} forceUpdate (default: false)
+   */_updateScrollState:function(scrollTop,forceUpdate){if(0===this._height){return}var progress=0,top=0,lastTop=this._top,lastScrollTop=this._lastScrollTop,maxHeaderTop=this._maxHeaderTop,dScrollTop=scrollTop-this._lastScrollTop,absDScrollTop=Math.abs(dScrollTop),isScrollingDown=scrollTop>this._lastScrollTop,now=performance.now();if(this._mayMove()){top=this._clamp(this.reveals?lastTop+dScrollTop:scrollTop,0,maxHeaderTop)}if(scrollTop>=this._dHeight){top=this.condenses&&!this.fixed?Math.max(this._dHeight,top):top;this.style.transitionDuration="0ms"}if(this.reveals&&!this.disabled&&100>absDScrollTop){// set the initial scroll position
+if(300<now-this._initTimestamp||this._wasScrollingDown!==isScrollingDown){this._initScrollTop=scrollTop;this._initTimestamp=now}if(scrollTop>=maxHeaderTop){// check if the header is allowed to snap
+if(30<Math.abs(this._initScrollTop-scrollTop)||10<absDScrollTop){if(isScrollingDown&&scrollTop>=maxHeaderTop){top=maxHeaderTop}else if(!isScrollingDown&&scrollTop>=this._dHeight){top=this.condenses&&!this.fixed?this._dHeight:0}var scrollVelocity=dScrollTop/(now-this._lastTimestamp);this.style.transitionDuration=this._clamp((top-lastTop)/scrollVelocity,0,300)+"ms"}else{top=this._top}}}if(0===this._dHeight){progress=0<scrollTop?1:0}else{progress=top/this._dHeight}if(!forceUpdate){this._lastScrollTop=scrollTop;this._top=top;this._wasScrollingDown=isScrollingDown;this._lastTimestamp=now}if(forceUpdate||progress!==this._progress||lastTop!==top||0===scrollTop){this._progress=progress;this._runEffects(progress,top);this._transformHeader(top)}},/**
+   * Returns true if the current header is allowed to move as the user scrolls.
+   *
+   * @return {boolean}
+   */_mayMove:function(){return this.condenses||!this.fixed},/**
+   * Returns true if the current header will condense based on the size of the
+   * header and the `consenses` property.
+   *
+   * @return {boolean}
+   */willCondense:function(){return 0<this._dHeight&&this.condenses},/**
+   * Returns true if the current element is on the screen.
+   * That is, visible in the current viewport.
+   *
+   * @method isOnScreen
+   * @return {boolean}
+   */isOnScreen:function(){return 0!==this._height&&this._top<this._height},/**
+   * Returns true if there's content below the current element.
+   *
+   * @method isContentBelow
+   * @return {boolean}
+   */isContentBelow:function(){return 0===this._top?0<this._clampedScrollTop:0<=this._clampedScrollTop-this._maxHeaderTop},/**
+   * Transforms the header.
+   *
+   * @param {number} y
+   */_transformHeader:function(y){this.translate3d(0,-y+"px",0);if(this._stickyEl){this.translate3d(0,this.condenses&&y>=this._stickyElTop?Math.min(y,this._dHeight)-this._stickyElTop+"px":0,0,this._stickyEl)}},_clamp:function(v,min,max){return Math.min(max,Math.max(min,v))},_ensureBgContainers:function(){if(!this._bgContainer){this._bgContainer=document.createElement("div");this._bgContainer.id="background";this._bgRear=document.createElement("div");this._bgRear.id="backgroundRearLayer";this._bgContainer.appendChild(this._bgRear);this._bgFront=document.createElement("div");this._bgFront.id="backgroundFrontLayer";this._bgContainer.appendChild(this._bgFront);(0,_cmsLogin.dom)(this.root).insertBefore(this._bgContainer,this.$.contentContainer)}},_getDOMRef:function(id){switch(id){case"backgroundFrontLayer":this._ensureBgContainers();return this._bgFront;case"backgroundRearLayer":this._ensureBgContainers();return this._bgRear;case"background":this._ensureBgContainers();return this._bgContainer;case"mainTitle":return(0,_cmsLogin.dom)(this).querySelector("[main-title]");case"condensedTitle":return(0,_cmsLogin.dom)(this).querySelector("[condensed-title]");}return null},/**
+   * Returns an object containing the progress value of the scroll effects
+   * and the top position of the header.
+   *
+   * @method getScrollState
+   * @return {Object}
+   */getScrollState:function(){return{progress:this._progress,top:this._top}}});(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
+    <style>
+
+      :host {
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        position: relative;
+        height: 64px;
+        padding: 0 16px;
+        pointer-events: none;
+        font-size: var(--app-toolbar-font-size, 20px);
+      }
+
+      :host ::slotted(*) {
+        pointer-events: auto;
+      }
+
+      :host ::slotted(paper-icon-button) {
+        /* paper-icon-button/issues/33 */
+        font-size: 0;
+      }
+
+      :host ::slotted([main-title]),
+      :host ::slotted([condensed-title]) {
+        pointer-events: none;
+        @apply --layout-flex;
+      }
+
+      :host ::slotted([bottom-item]) {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      :host ::slotted([top-item]) {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+      }
+
+      :host ::slotted([spacer]) {
+        margin-left: 64px;
+      }
+    </style>
+
+    <slot></slot>
+`,is:"app-toolbar"});(0,_cmsLogin.Polymer)({is:"iron-request",hostAttributes:{hidden:!0},properties:{/**
+     * A reference to the XMLHttpRequest instance used to generate the
+     * network request.
+     *
+     * @type {XMLHttpRequest}
+     */xhr:{type:Object,notify:!0,readOnly:!0,value:function(){return new XMLHttpRequest}},/**
+     * A reference to the parsed response body, if the `xhr` has completely
+     * resolved.
+     *
+     * @type {*}
+     * @default null
+     */response:{type:Object,notify:!0,readOnly:!0,value:function(){return null}},/**
+     * A reference to the status code, if the `xhr` has completely resolved.
+     */status:{type:Number,notify:!0,readOnly:!0,value:0},/**
+     * A reference to the status text, if the `xhr` has completely resolved.
+     */statusText:{type:String,notify:!0,readOnly:!0,value:""},/**
+     * A promise that resolves when the `xhr` response comes back, or rejects
+     * if there is an error before the `xhr` completes.
+     * The resolve callback is called with the original request as an argument.
+     * By default, the reject callback is called with an `Error` as an argument.
+     * If `rejectWithRequest` is true, the reject callback is called with an
+     * object with two keys: `request`, the original request, and `error`, the
+     * error object.
+     *
+     * @type {Promise}
+     */completes:{type:Object,readOnly:!0,notify:!0,value:function(){return new Promise(function(resolve,reject){this.resolveCompletes=resolve;this.rejectCompletes=reject}.bind(this))}},/**
+     * An object that contains progress information emitted by the XHR if
+     * available.
+     *
+     * @default {}
+     */progress:{type:Object,notify:!0,readOnly:!0,value:function(){return{}}},/**
+     * Aborted will be true if an abort of the request is attempted.
+     */aborted:{type:Boolean,notify:!0,readOnly:!0,value:!1},/**
+     * Errored will be true if the browser fired an error event from the
+     * XHR object (mainly network errors).
+     */errored:{type:Boolean,notify:!0,readOnly:!0,value:!1},/**
+     * TimedOut will be true if the XHR threw a timeout event.
+     */timedOut:{type:Boolean,notify:!0,readOnly:!0,value:!1}},/**
+   * Succeeded is true if the request succeeded. The request succeeded if it
+   * loaded without error, wasn't aborted, and the status code is ≥ 200, and
+   * < 300, or if the status code is 0.
+   *
+   * The status code 0 is accepted as a success because some schemes - e.g.
+   * file:// - don't provide status codes.
+   *
+   * @return {boolean}
+   */get succeeded(){if(this.errored||this.aborted||this.timedOut){return!1}var status=this.xhr.status||0;// Note: if we are using the file:// protocol, the status code will be 0
+// for all outcomes (successful or otherwise).
+return 0===status||200<=status&&300>status},/**
+   * Sends an HTTP request to the server and returns a promise (see the
+   * `completes` property for details).
+   *
+   * The handling of the `body` parameter will vary based on the Content-Type
+   * header. See the docs for iron-ajax's `body` property for details.
+   *
+   * @param {{
+   *   url: string,
+   *   method: (string|undefined),
+   *   async: (boolean|undefined),
+   *   body:
+   * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
+   *   headers: (Object|undefined),
+   *   handleAs: (string|undefined),
+   *   jsonPrefix: (string|undefined),
+   *   withCredentials: (boolean|undefined),
+   *   timeout: (number|undefined),
+   *   rejectWithRequest: (boolean|undefined)}} options -
+   *   - url The url to which the request is sent.
+   *   - method The HTTP method to use, default is GET.
+   *   - async By default, all requests are sent asynchronously. To send
+   * synchronous requests, set to false.
+   *   -  body The content for the request body for POST method.
+   *   -  headers HTTP request headers.
+   *   -  handleAs The response type. Default is 'text'.
+   *   -  withCredentials Whether or not to send credentials on the request.
+   * Default is false.
+   *   -  timeout - Timeout for request, in milliseconds.
+   *   -  rejectWithRequest Set to true to include the request object with
+   * promise rejections.
+   * @return {Promise}
+   */send:function(options){var xhr=this.xhr;if(0<xhr.readyState){return null}xhr.addEventListener("progress",function(progress){this._setProgress({lengthComputable:progress.lengthComputable,loaded:progress.loaded,total:progress.total});// Webcomponents v1 spec does not fire *-changed events when not connected
+this.fire("iron-request-progress-changed",{value:this.progress})}.bind(this));xhr.addEventListener("error",function(error){this._setErrored(!0);this._updateStatus();var response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));xhr.addEventListener("timeout",function(error){this._setTimedOut(!0);this._updateStatus();var response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));xhr.addEventListener("abort",function(){this._setAborted(!0);this._updateStatus();var error=new Error("Request aborted."),response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));// Called after all of the above.
+xhr.addEventListener("loadend",function(){this._updateStatus();this._setResponse(this.parseResponse());if(!this.succeeded){var error=new Error("The request failed with status code: "+this.xhr.status),response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response);return}this.resolveCompletes(this)}.bind(this));this.url=options.url;var isXHRAsync=!1!==options.async;xhr.open(options.method||"GET",options.url,isXHRAsync);var acceptType={json:"application/json",text:"text/plain",html:"text/html",xml:"application/xml",arraybuffer:"application/octet-stream"}[options.handleAs],headers=options.headers||Object.create(null),newHeaders=Object.create(null);for(var key in headers){newHeaders[key.toLowerCase()]=headers[key]}headers=newHeaders;if(acceptType&&!headers.accept){headers.accept=acceptType}Object.keys(headers).forEach(function(requestHeader){if(/[A-Z]/.test(requestHeader)){_cmsLogin.Base._error("Headers must be lower case, got",requestHeader)}xhr.setRequestHeader(requestHeader,headers[requestHeader])},this);if(isXHRAsync){xhr.timeout=options.timeout;var handleAs=options.handleAs;// If a JSON prefix is present, the responseType must be 'text' or the
+// browser won’t be able to parse the response.
+if(!!options.jsonPrefix||!handleAs){handleAs="text"}// In IE, `xhr.responseType` is an empty string when the response
+// returns. Hence, caching it as `xhr._responseType`.
+xhr.responseType=xhr._responseType=handleAs;// Cache the JSON prefix, if it exists.
+if(!!options.jsonPrefix){xhr._jsonPrefix=options.jsonPrefix}}xhr.withCredentials=!!options.withCredentials;var body=this._encodeBodyObject(options.body,headers["content-type"]);xhr.send(/**
+                 @type {ArrayBuffer|ArrayBufferView|Blob|Document|FormData|
+                         null|string|undefined}
+               */body);return this.completes},/**
+   * Attempts to parse the response body of the XHR. If parsing succeeds,
+   * the value returned will be deserialized based on the `responseType`
+   * set on the XHR.
+   *
+   * @return {*} The parsed response,
+   * or undefined if there was an empty response or parsing failed.
+   */parseResponse:function(){var xhr=this.xhr,responseType=xhr.responseType||xhr._responseType,preferResponseText=!this.xhr.responseType,prefixLen=xhr._jsonPrefix&&xhr._jsonPrefix.length||0;try{switch(responseType){case"json":// If the xhr object doesn't have a natural `xhr.responseType`,
+// we can assume that the browser hasn't parsed the response for us,
+// and so parsing is our responsibility. Likewise if response is
+// undefined, as there's no way to encode undefined in JSON.
+if(preferResponseText||xhr.response===void 0){// Try to emulate the JSON section of the response body section of
+// the spec: https://xhr.spec.whatwg.org/#response-body
+// That is to say, we try to parse as JSON, but if anything goes
+// wrong return null.
+try{return JSON.parse(xhr.responseText)}catch(_){console.warn("Failed to parse JSON sent from "+xhr.responseURL);return null}}return xhr.response;case"xml":return xhr.responseXML;case"blob":case"document":case"arraybuffer":return xhr.response;case"text":default:{// If `prefixLen` is set, it implies the response should be parsed
+// as JSON once the prefix of length `prefixLen` is stripped from
+// it. Emulate the behavior above where null is returned on failure
+// to parse.
+if(prefixLen){try{return JSON.parse(xhr.responseText.substring(prefixLen))}catch(_){console.warn("Failed to parse JSON sent from "+xhr.responseURL);return null}}return xhr.responseText}}}catch(e){this.rejectCompletes(new Error("Could not parse response. "+e.message))}},/**
+   * Aborts the request.
+   */abort:function(){this._setAborted(!0);this.xhr.abort()},/**
+   * @param {*} body The given body of the request to try and encode.
+   * @param {?string} contentType The given content type, to infer an encoding
+   *     from.
+   * @return {*} Either the encoded body as a string, if successful,
+   *     or the unaltered body object if no encoding could be inferred.
+   */_encodeBodyObject:function(body,contentType){if("string"==typeof body){return body;// Already encoded.
+}var bodyObj=/** @type {Object} */body;switch(contentType){case"application/json":return JSON.stringify(bodyObj);case"application/x-www-form-urlencoded":return this._wwwFormUrlEncode(bodyObj);}return body},/**
+   * @param {Object} object The object to encode as x-www-form-urlencoded.
+   * @return {string} .
+   */_wwwFormUrlEncode:function(object){if(!object){return""}var pieces=[];Object.keys(object).forEach(function(key){// TODO(rictic): handle array values here, in a consistent way with
+//   iron-ajax params.
+pieces.push(this._wwwFormUrlEncodePiece(key)+"="+this._wwwFormUrlEncodePiece(object[key]))},this);return pieces.join("&")},/**
+   * @param {*} str A key or value to encode as x-www-form-urlencoded.
+   * @return {string} .
+   */_wwwFormUrlEncodePiece:function(str){// Spec says to normalize newlines to \r\n and replace %20 spaces with +.
+// jQuery does this as well, so this is likely to be widely compatible.
+if(null===str||str===void 0||!str.toString){return""}return encodeURIComponent(str.toString().replace(/\r?\n/g,"\r\n")).replace(/%20/g,"+")},/**
+   * Updates the status code and status text.
+   */_updateStatus:function(){this._setStatus(this.xhr.status);this._setStatusText(this.xhr.statusText===void 0?"":this.xhr.statusText)}});(0,_cmsLogin.Polymer)({is:"iron-ajax",/**
+   * Fired before a request is sent.
+   *
+   * @event iron-ajax-presend
+   */ /**
+       * Fired when a request is sent.
+       *
+       * @event request
+       */ /**
+           * Fired when a request is sent.
+           *
+           * @event iron-ajax-request
+           */ /**
+               * Fired when a response is received.
+               *
+               * @event response
+               */ /**
+                   * Fired when a response is received.
+                   *
+                   * @event iron-ajax-response
+                   */ /**
+                       * Fired when an error is received.
+                       *
+                       * @event error
+                       */ /**
+                           * Fired when an error is received.
+                           *
+                           * @event iron-ajax-error
+                           */hostAttributes:{hidden:!0},properties:{/**
+     * The URL target of the request.
+     */url:{type:String},/**
+     * An object that contains query parameters to be appended to the
+     * specified `url` when generating a request. If you wish to set the body
+     * content when making a POST request, you should use the `body` property
+     * instead.
+     */params:{type:Object,value:function(){return{}}},/**
+     * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
+     * Default is 'GET'.
+     */method:{type:String,value:"GET"},/**
+     * HTTP request headers to send.
+     *
+     * Example:
+     *
+     *     <iron-ajax
+     *         auto
+     *         url="http://somesite.com"
+     *         headers='{"X-Requested-With": "XMLHttpRequest"}'
+     *         handle-as="json"></iron-ajax>
+     *
+     * Note: setting a `Content-Type` header here will override the value
+     * specified by the `contentType` property of this element.
+     */headers:{type:Object,value:function(){return{}}},/**
+     * Content type to use when sending data. If the `contentType` property
+     * is set and a `Content-Type` header is specified in the `headers`
+     * property, the `headers` property value will take precedence.
+     *
+     * Varies the handling of the `body` param.
+     */contentType:{type:String,value:null},/**
+     * Body content to send with the request, typically used with "POST"
+     * requests.
+     *
+     * If body is a string it will be sent unmodified.
+     *
+     * If Content-Type is set to a value listed below, then
+     * the body will be encoded accordingly.
+     *
+     *    * `content-type="application/json"`
+     *      * body is encoded like `{"foo":"bar baz","x":1}`
+     *    * `content-type="application/x-www-form-urlencoded"`
+     *      * body is encoded like `foo=bar+baz&x=1`
+     *
+     * Otherwise the body will be passed to the browser unmodified, and it
+     * will handle any encoding (e.g. for FormData, Blob, ArrayBuffer).
+     *
+     * @type
+     * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object)
+     */body:{type:Object,value:null},/**
+     * Toggle whether XHR is synchronous or asynchronous. Don't change this
+     * to true unless You Know What You Are Doing™.
+     */sync:{type:Boolean,value:!1},/**
+     * Specifies what data to store in the `response` property, and
+     * to deliver as `event.detail.response` in `response` events.
+     *
+     * One of:
+     *
+     *    `text`: uses `XHR.responseText`.
+     *
+     *    `xml`: uses `XHR.responseXML`.
+     *
+     *    `json`: uses `XHR.responseText` parsed as JSON.
+     *
+     *    `arraybuffer`: uses `XHR.response`.
+     *
+     *    `blob`: uses `XHR.response`.
+     *
+     *    `document`: uses `XHR.response`.
+     */handleAs:{type:String,value:"json"},/**
+     * Set the withCredentials flag on the request.
+     */withCredentials:{type:Boolean,value:!1},/**
+     * Set the timeout flag on the request.
+     */timeout:{type:Number,value:0},/**
+     * If true, automatically performs an Ajax request when either `url` or
+     * `params` changes.
+     */auto:{type:Boolean,value:!1},/**
+     * If true, error messages will automatically be logged to the console.
+     */verbose:{type:Boolean,value:!1},/**
+     * The most recent request made by this iron-ajax element.
+     *
+     * @type {Object|undefined}
+     */lastRequest:{type:Object,notify:!0,readOnly:!0},/**
+     * The `progress` property of this element's `lastRequest`.
+     *
+     * @type {Object|undefined}
+     */lastProgress:{type:Object,notify:!0,readOnly:!0},/**
+     * True while lastRequest is in flight.
+     */loading:{type:Boolean,notify:!0,readOnly:!0},/**
+     * lastRequest's response.
+     *
+     * Note that lastResponse and lastError are set when lastRequest finishes,
+     * so if loading is true, then lastResponse and lastError will correspond
+     * to the result of the previous request.
+     *
+     * The type of the response is determined by the value of `handleAs` at
+     * the time that the request was generated.
+     *
+     * @type {Object}
+     */lastResponse:{type:Object,notify:!0,readOnly:!0},/**
+     * lastRequest's error, if any.
+     *
+     * @type {Object}
+     */lastError:{type:Object,notify:!0,readOnly:!0},/**
+     * An Array of all in-flight requests originating from this iron-ajax
+     * element.
+     */activeRequests:{type:Array,notify:!0,readOnly:!0,value:function(){return[]}},/**
+     * Length of time in milliseconds to debounce multiple automatically
+     * generated requests.
+     */debounceDuration:{type:Number,value:0,notify:!0},/**
+     * Prefix to be stripped from a JSON response before parsing it.
+     *
+     * In order to prevent an attack using CSRF with Array responses
+     * (http://haacked.com/archive/2008/11/20/anatomy-of-a-subtle-json-vulnerability.aspx/)
+     * many backends will mitigate this by prefixing all JSON response bodies
+     * with a string that would be nonsensical to a JavaScript parser.
+     *
+     */jsonPrefix:{type:String,value:""},/**
+     * By default, iron-ajax's events do not bubble. Setting this attribute will
+     * cause its request and response events as well as its iron-ajax-request,
+     * -response,  and -error events to bubble to the window object. The vanilla
+     * error event never bubbles when using shadow dom even if this.bubbles is
+     * true because a scoped flag is not passed with it (first link) and because
+     * the shadow dom spec did not used to allow certain events, including
+     * events named error, to leak outside of shadow trees (second link).
+     * https://www.w3.org/TR/shadow-dom/#scoped-flag
+     * https://www.w3.org/TR/2015/WD-shadow-dom-20151215/#events-that-are-not-leaked-into-ancestor-trees
+     */bubbles:{type:Boolean,value:!1},/**
+     * Changes the [`completes`](iron-request#property-completes) promise chain
+     * from `generateRequest` to reject with an object
+     * containing the original request, as well an error message.
+     * If false (default), the promise rejects with an error message only.
+     */rejectWithRequest:{type:Boolean,value:!1},_boundHandleResponse:{type:Function,value:function(){return this._handleResponse.bind(this)}}},observers:["_requestOptionsChanged(url, method, params.*, headers, contentType, "+"body, sync, handleAs, jsonPrefix, withCredentials, timeout, auto)"],created:function(){this._boundOnProgressChanged=this._onProgressChanged.bind(this)},/**
+   * The query string that should be appended to the `url`, serialized from
+   * the current value of `params`.
+   *
+   * @return {string}
+   */get queryString(){var queryParts=[],param,value;for(param in this.params){value=this.params[param];param=window.encodeURIComponent(param);if(Array.isArray(value)){for(var i=0;i<value.length;i++){queryParts.push(param+"="+window.encodeURIComponent(value[i]))}}else if(null!==value){queryParts.push(param+"="+window.encodeURIComponent(value))}else{queryParts.push(param)}}return queryParts.join("&")},/**
+   * The `url` with query string (if `params` are specified), suitable for
+   * providing to an `iron-request` instance.
+   *
+   * @return {string}
+   */get requestUrl(){var queryString=this.queryString,url=this.url||"";if(queryString){var bindingChar=0<=url.indexOf("?")?"&":"?";return url+bindingChar+queryString}return url},/**
+   * An object that maps header names to header values, first applying the
+   * the value of `Content-Type` and then overlaying the headers specified
+   * in the `headers` property.
+   *
+   * @return {Object}
+   */get requestHeaders(){var headers={},contentType=this.contentType;if(null==contentType&&"string"===typeof this.body){contentType="application/x-www-form-urlencoded"}if(contentType){headers["content-type"]=contentType}var header;if("object"===typeof this.headers){for(header in this.headers){headers[header]=this.headers[header].toString()}}return headers},_onProgressChanged:function(event){this._setLastProgress(event.detail.value)},/**
+   * Request options suitable for generating an `iron-request` instance based
+   * on the current state of the `iron-ajax` instance's properties.
+   *
+   * @return {{
+   *   url: string,
+   *   method: (string|undefined),
+   *   async: (boolean|undefined),
+   *   body:
+   * (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined|Object),
+   *   headers: (Object|undefined),
+   *   handleAs: (string|undefined),
+   *   jsonPrefix: (string|undefined),
+   *   withCredentials: (boolean|undefined)}}
+   */toRequestOptions:function(){return{url:this.requestUrl||"",method:this.method,headers:this.requestHeaders,body:this.body,async:!this.sync,handleAs:this.handleAs,jsonPrefix:this.jsonPrefix,withCredentials:this.withCredentials,timeout:this.timeout,rejectWithRequest:this.rejectWithRequest}},/**
+   * Performs an AJAX request to the specified URL.
+   *
+   * @return {!IronRequestElement}
+   */generateRequest:function(){var request=/** @type {!IronRequestElement} */document.createElement("iron-request"),requestOptions=this.toRequestOptions();this.push("activeRequests",request);request.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this,request)).then(this._discardRequest.bind(this,request));var evt=this.fire("iron-ajax-presend",{request:request,options:requestOptions},{bubbles:this.bubbles,cancelable:!0});if(evt.defaultPrevented){request.abort();request.rejectCompletes(request);return request}if(this.lastRequest){this.lastRequest.removeEventListener("iron-request-progress-changed",this._boundOnProgressChanged)}request.addEventListener("iron-request-progress-changed",this._boundOnProgressChanged);request.send(requestOptions);this._setLastProgress(null);this._setLastRequest(request);this._setLoading(!0);this.fire("request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});return request},_handleResponse:function(request){if(request===this.lastRequest){this._setLastResponse(request.response);this._setLastError(null);this._setLoading(!1)}this.fire("response",request,{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-response",request,{bubbles:this.bubbles,composed:!0})},_handleError:function(request,error){if(this.verbose){_cmsLogin.Base._error(error)}if(request===this.lastRequest){this._setLastError({request:request,error:error,status:request.xhr.status,statusText:request.xhr.statusText,response:request.xhr.response});this._setLastResponse(null);this._setLoading(!1)}// Tests fail if this goes after the normal this.fire('error', ...)
+this.fire("iron-ajax-error",{request:request,error:error},{bubbles:this.bubbles,composed:!0});this.fire("error",{request:request,error:error},{bubbles:this.bubbles,composed:!0})},_discardRequest:function(request){var requestIndex=this.activeRequests.indexOf(request);if(-1<requestIndex){this.splice("activeRequests",requestIndex,1)}},_requestOptionsChanged:function(){this.debounce("generate-request",function(){if(null==this.url){return}if(this.auto){this.generateRequest()}},this.debounceDuration)}});(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <!-- This form is used to collect the elements that should be submitted -->
+    <slot></slot>
+
+    <!-- This form is used for submission -->
+    <form id="helper" action\$="[[action]]" method\$="[[method]]" enctype\$="[[enctype]]"></form>
+`,is:"iron-form",properties:{/*
+     * Set this to true if you don't want the form to be submitted through an
+     * ajax request, and you want the page to redirect to the action URL
+     * after the form has been submitted.
+     */allowRedirect:{type:Boolean,value:!1},/**
+     * HTTP request headers to send. See PolymerElements/iron-ajax for
+     * more details. Only works when `allowRedirect` is false.
+     */headers:{type:Object,value:function(){return{}}},/**
+     * Set the `withCredentials` flag on the request. See
+     * PolymerElements/iron-ajax for more details. Only works when
+     * `allowRedirect` is false.
+     */withCredentials:{type:Boolean,value:!1}},/**
+   * Fired if the form cannot be submitted because it's invalid.
+   *
+   * @event iron-form-invalid
+   */ /**
+       * Fired after the form is submitted.
+       *
+       * @event iron-form-submit
+       */ /**
+           * Fired before the form is submitted.
+           *
+           * @event iron-form-presubmit
+           */ /**
+               * Fired after the form is reset.
+               *
+               * @event iron-form-reset
+               */ /**
+                   * Fired after the form is submitted and a response is received. An
+                   * IronRequestElement is included as the event.detail object.
+                   *
+                   * @event iron-form-response
+                   */ /**
+                       * Fired after the form is submitted and an error is received. An
+                       * error message is included in event.detail.error and an
+                       * IronRequestElement is included in event.detail.request.
+                       *
+                       * @event iron-form-error
+                       */ /**
+                           * @return {void}
+                           */attached:function(){// We might have been detached then re-attached.
+// Avoid searching again for the <form> if we already found it.
+if(this._form){return}// Search for the `<form>`, if we don't find it, observe for
+// mutations.
+this._form=(0,_cmsLogin.dom)(this).querySelector("form");if(this._form){this._init();// Since some elements might not be upgraded yet at this time,
+// we won't be able to look into their shadowRoots for submittables.
+// We wait a tick and check again for any missing submittable default
+// values.
+this.async(this._saveInitialValues.bind(this),1)}else{this._nodeObserver=(0,_cmsLogin.dom)(this).observeNodes(function(mutations){for(var i=0;i<mutations.addedNodes.length;i++){if("FORM"===mutations.addedNodes[i].tagName){this._form=mutations.addedNodes[i];// At this point in time, all custom elements are expected
+// to be upgraded, hence we'll be able to traverse their
+// shadowRoots.
+this._init();(0,_cmsLogin.dom)(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}}}.bind(this))}},/**
+   * @return {void}
+   */detached:function(){if(this._nodeObserver){(0,_cmsLogin.dom)(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}},_init:function(){this._form.addEventListener("submit",this.submit.bind(this));this._form.addEventListener("reset",this.reset.bind(this));// Save the initial values.
+this._defaults=this._defaults||new WeakMap;this._saveInitialValues()},/**
+   * Saves the values of all form elements that will be used when resetting
+   * the form. Initially called asynchronously on attach. Any time you
+   * call this function, the previously saved values for a form element will
+   * be overwritten.
+   *
+   * This function is useful if you are dynamically adding elements to
+   * the form, or if your elements are asynchronously setting their values.
+   * @return {void}
+   */saveResetValues:function(){this._saveInitialValues(!0)},/**
+   * @param {boolean=} overwriteValues
+   * @return {void}
+   */_saveInitialValues:function(overwriteValues){for(var nodes=this._getValidatableElements(),i=0,node;i<nodes.length;i++){node=nodes[i];if(!this._defaults.has(node)||overwriteValues){// Submittables are expected to have `value` property,
+// that's what gets serialized.
+var defaults={value:node.value};if("checked"in node){defaults.checked=node.checked}// In 1.x iron-form would reset `invalid`, so
+// keep it here for backwards compat.
+if("invalid"in node){defaults.invalid=node.invalid}this._defaults.set(node,defaults)}}},/**
+   * Validates all the required elements (custom and native) in the form.
+   * @return {boolean} True if all the elements are valid.
+   */validate:function(){// If you've called this before distribution happened, bail out.
+if(!this._form){return!1}if(""===this._form.getAttribute("novalidate"))return!0;// Start by making the form check the native elements it knows about.
+// Go through all the elements, and validate the custom ones.
+for(var valid=this._form.checkValidity(),elements=this._getValidatableElements(),el,i=0,validatable;el=elements[i],i<elements.length;i++){// This is weird to appease the compiler. We assume the custom element
+// has a validate() method, otherwise we can't check it.
+validatable=/** @type {{validate: (function() : boolean)}} */el;if(validatable.validate){valid=!!validatable.validate()&&valid}}return valid},/**
+   * Submits the form.
+   *
+   * @param {Event=} event
+   * @return {void}
+   */submit:function(event){// We are not using this form for submission, so always cancel its event.
+if(event){event.preventDefault()}// If you've called this before distribution happened, bail out.
+if(!this._form){return}if(!this.validate()){this.fire("iron-form-invalid");return}// Remove any existing children in the submission form (from a previous
+// submit).
+this.$.helper.textContent="";var json=this.serializeForm();// If we want a redirect, submit the form natively.
+if(this.allowRedirect){// If we're submitting the form natively, then create a hidden element for
+// each of the values.
+for(var element in json){this.$.helper.appendChild(this._createHiddenElement(element,json[element]))}// Copy the original form attributes.
+this.$.helper.action=this._form.getAttribute("action");this.$.helper.method=this._form.getAttribute("method")||"GET";this.$.helper.contentType=this._form.getAttribute("enctype")||"application/x-www-form-urlencoded";this.$.helper.submit();this.fire("iron-form-submit")}else{this._makeAjaxRequest(json)}},/**
+   * Resets the form to the default values.
+   *
+   * @param {Event=} event
+   * @return {void}
+   */reset:function(event){// We are not using this form for submission, so always cancel its event.
+if(event)event.preventDefault();// If you've called this before distribution happened, bail out.
+if(!this._form){return}// Ensure the native form fired the `reset` event.
+// User might have bound `<button on-click="_resetIronForm">`, or directly
+// called `ironForm.reset()`. In these cases we want to first reset the
+// native form.
+if(!event||"reset"!==event.type||event.target!==this._form){this._form.reset();return}// Load the initial values.
+for(var nodes=this._getValidatableElements(),i=0,node;i<nodes.length;i++){node=nodes[i];if(this._defaults.has(node)){var defaults=this._defaults.get(node);for(var propName in defaults){node[propName]=defaults[propName]}}}this.fire("iron-form-reset")},/**
+   * Serializes the form as will be used in submission. Note that `serialize`
+   * is a Polymer reserved keyword, so calling `someIronForm`.serialize()`
+   * will give you unexpected results.
+   * @return {!Object<string, *>} An object containing name-value pairs for elements that
+   *                  would be submitted.
+   */serializeForm:function(){// Only elements that have a `name` and are not disabled are submittable.
+for(var elements=this._getSubmittableElements(),json={},i=0,values;i<elements.length;i++){values=this._serializeElementValues(elements[i]);for(var v=0;v<values.length;v++){this._addSerializedElement(json,elements[i].name,values[v])}}return json},_handleFormResponse:function(event){this.fire("iron-form-response",event.detail)},_handleFormError:function(event){this.fire("iron-form-error",event.detail)},_makeAjaxRequest:function(json){// Initialize the iron-ajax element if we haven't already.
+if(!this.request){this.request=document.createElement("iron-ajax");this.request.addEventListener("response",this._handleFormResponse.bind(this));this.request.addEventListener("error",this._handleFormError.bind(this))}// Native forms can also index elements magically by their name (can't make
+// this up if I tried) so we need to get the correct attributes, not the
+// elements with those names.
+this.request.url=this._form.getAttribute("action");this.request.method=this._form.getAttribute("method")||"GET";this.request.contentType=this._form.getAttribute("enctype")||"application/x-www-form-urlencoded";this.request.withCredentials=this.withCredentials;this.request.headers=this.headers;if("POST"===this._form.method.toUpperCase()){this.request.body=json}else{this.request.params=json}// Allow for a presubmit hook
+var event=this.fire("iron-form-presubmit",{},{cancelable:!0});if(!event.defaultPrevented){this.request.generateRequest();this.fire("iron-form-submit",json)}},_getValidatableElements:function(){return this._findElements(this._form,!0,!1)},_getSubmittableElements:function(){return this._findElements(this._form,!1,!1)},/**
+   * Traverse the parent element to find and add all submittable nodes to
+   * `submittable`.
+   * @param  {!Node} parent The parent node
+   * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+   * @param  {!boolean} skipSlots  Whether to skip traversing of slot elements
+   * @param  {!Array<!Node>=} submittable Reference to the array of submittables
+   * @return {!Array<!Node>}
+   * @private
+   */_findElements:function(parent,ignoreName,skipSlots,submittable){submittable=submittable||[];for(var nodes=(0,_cmsLogin.dom)(parent).querySelectorAll("*"),i=0;i<nodes.length;i++){// An element is submittable if it is not disabled, and if it has a
+// name attribute.
+if(!skipSlots&&("slot"===nodes[i].localName||"content"===nodes[i].localName)){this._searchSubmittableInSlot(submittable,nodes[i],ignoreName)}else{this._searchSubmittable(submittable,nodes[i],ignoreName)}}return submittable},/**
+   * Traverse the distributed nodes of a slot or content element
+   * and add all submittable nodes to `submittable`.
+   * @param  {!Array<!Node>} submittable Reference to the array of submittables
+   * @param  {!Node} node The slot or content node
+   * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+   * @return {void}
+   * @private
+   */_searchSubmittableInSlot:function(submittable,node,ignoreName){for(var assignedNodes=(0,_cmsLogin.dom)(node).getDistributedNodes(),i=0;i<assignedNodes.length;i++){if(assignedNodes[i].nodeType===Node.TEXT_NODE){continue}// Note: assignedNodes does not contain <slot> or <content> because
+// getDistributedNodes flattens the tree.
+this._searchSubmittable(submittable,assignedNodes[i],ignoreName);for(var nestedAssignedNodes=(0,_cmsLogin.dom)(assignedNodes[i]).querySelectorAll("*"),j=0;j<nestedAssignedNodes.length;j++){this._searchSubmittable(submittable,nestedAssignedNodes[j],ignoreName)}}},/**
+   * Traverse the distributed nodes of a slot or content element
+   * and add all submittable nodes to `submittable`.
+   * @param  {!Array<!Node>} submittable Reference to the array of submittables
+   * @param  {!Node} node The node to be
+   * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+   * @return {void}
+   * @private
+   */_searchSubmittable:function(submittable,node,ignoreName){if(this._isSubmittable(node,ignoreName)){submittable.push(node)}else if(node.root){this._findElements(node.root,ignoreName,!0,submittable)}},/**
+   * An element is submittable if it is not disabled, and if it has a
+   * 'name' attribute. If we ignore the name, check if is validatable.
+   * This allows `_findElements` to decide if to explore an element's shadowRoot
+   * or not: an element implementing `validate()` is considered validatable, and
+   * we don't search for validatables in its shadowRoot.
+   * @param {!Node} node
+   * @param {!boolean} ignoreName
+   * @return {boolean}
+   * @private
+   */_isSubmittable:function(node,ignoreName){return!node.disabled&&(ignoreName?node.name||"function"===typeof node.validate:node.name)},_serializeElementValues:function(element){// We will assume that every custom element that needs to be serialized
+// has a `value` property, and it contains the correct value.
+// The only weird one is an element that implements
+// IronCheckedElementBehaviour, in which case like the native checkbox/radio
+// button, it's only used when checked. For native elements, from
+// https://www.w3.org/TR/html5/forms.html#the-form-element. Native
+// submittable elements: button, input, keygen, object, select, textarea;
+// 1. We will skip `keygen and `object` for this iteration, and deal with
+// them if they're actually required.
+// 2. <button> and <textarea> have a `value` property, so they behave like
+//    the custom elements.
+// 3. <select> can have multiple options selected, in which case its
+//    `value` is incorrect, and we must use the values of each of its
+//    `selectedOptions`
+// 4. <input> can have a whole bunch of behaviours, so it's handled
+// separately.
+// 5. Buttons are hard. The button that was clicked to submit the form
+//    is the one who's name/value gets sent to the server.
+var tag=element.tagName.toLowerCase();if("button"===tag||"input"===tag&&("submit"===element.type||"reset"===element.type)){return[]}if("select"===tag){return this._serializeSelectValues(element)}else if("input"===tag){return this._serializeInputValues(element)}else{if(element._hasIronCheckedElementBehavior&&!element.checked)return[];return[element.value]}},_serializeSelectValues:function(element){// A <select multiple> has an array of options, some of which can be
+// selected.
+for(var values=[],i=0;i<element.options.length;i++){if(element.options[i].selected){values.push(element.options[i].value)}}return values},_serializeInputValues:function(element){// Most of the inputs use their 'value' attribute, with the exception
+// of radio buttons, checkboxes and file.
+var type=element.type.toLowerCase();// Don't do anything for unchecked checkboxes/radio buttons.
+// Don't do anything for file, since that requires a different request.
+if(("checkbox"===type||"radio"===type)&&!element.checked||"file"===type){return[]}return[element.value]},_createHiddenElement:function(name,value){var input=document.createElement("input");input.setAttribute("type","hidden");input.setAttribute("name",name);input.setAttribute("value",value);return input},_addSerializedElement:function(json,name,value){// If the name doesn't exist, add it. Otherwise, serialize it to
+// an array,
+if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){json[name]=[json[name]]}json[name].push(value)}}});const template=_cmsLogin.html$1`<iron-iconset-svg name="av" size="24">
 <svg><defs>
 <g id="add-to-queue"><path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-7v2h-3v3h-2v-3H8v-2h3V7h2v3h3z"></path></g>
 <g id="airplay"><path d="M6 22h12l-6-6zM21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3V5h18v12h-4v2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></g>
@@ -594,7 +939,58 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
 <g id="web"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"></path></g>
 <g id="web-asset"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H5V8h14v10z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$2.content);const template$3=_cmsLogin.html$1`<iron-iconset-svg name="image" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template.content);const template$1=_cmsLogin.html$1`<iron-iconset-svg name="hardware" size="24">
+<svg><defs>
+<g id="cast"><path d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"></path></g>
+<g id="cast-connected"><path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09 4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></g>
+<g id="computer"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"></path></g>
+<g id="desktop-mac"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H3V4h18v10z"></path></g>
+<g id="desktop-windows"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"></path></g>
+<g id="developer-board"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14zM6 13h5v4H6zm6-6h4v3h-4zM6 7h5v5H6zm6 4h4v6h-4z"></path></g>
+<g id="device-hub"><path d="M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z"></path></g>
+<g id="devices-other"><path d="M3 6h18V4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3V6zm10 6H9v1.78c-.61.55-1 1.33-1 2.22s.39 1.67 1 2.22V20h4v-1.78c.61-.55 1-1.34 1-2.22s-.39-1.67-1-2.22V12zm-2 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM22 8h-6c-.5 0-1 .5-1 1v10c0 .5.5 1 1 1h6c.5 0 1-.5 1-1V9c0-.5-.5-1-1-1zm-1 10h-4v-8h4v8z"></path></g>
+<g id="dock"><path d="M8 23h8v-2H8v2zm8-21.99L8 1c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM16 15H8V5h8v10z"></path></g>
+<g id="gamepad"><path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"></path></g>
+<g id="headset"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"></path></g>
+<g id="headset-mic"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h4v1h-7v2h6c1.66 0 3-1.34 3-3V10c0-4.97-4.03-9-9-9z"></path></g>
+<g id="keyboard"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"></path></g>
+<g id="keyboard-arrow-down"><path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"></path></g>
+<g id="keyboard-arrow-left"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"></path></g>
+<g id="keyboard-arrow-right"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path></g>
+<g id="keyboard-arrow-up"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></g>
+<g id="keyboard-backspace"><path d="M21 11H6.83l3.58-3.59L9 6l-6 6 6 6 1.41-1.41L6.83 13H21z"></path></g>
+<g id="keyboard-capslock"><path d="M12 8.41L16.59 13 18 11.59l-6-6-6 6L7.41 13 12 8.41zM6 18h12v-2H6v2z"></path></g>
+<g id="keyboard-hide"><path d="M20 3H4c-1.1 0-1.99.9-1.99 2L2 15c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 3h2v2h-2V6zm0 3h2v2h-2V9zM8 6h2v2H8V6zm0 3h2v2H8V9zm-1 2H5V9h2v2zm0-3H5V6h2v2zm9 7H8v-2h8v2zm0-4h-2V9h2v2zm0-3h-2V6h2v2zm3 3h-2V9h2v2zm0-3h-2V6h2v2zm-7 15l4-4H8l4 4z"></path></g>
+<g id="keyboard-return"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"></path></g>
+<g id="keyboard-tab"><path d="M11.59 7.41L15.17 11H1v2h14.17l-3.59 3.59L13 18l6-6-6-6-1.41 1.41zM20 6v12h2V6h-2z"></path></g>
+<g id="keyboard-voice"><path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.42 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path></g>
+<g id="laptop"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"></path></g>
+<g id="laptop-chromebook"><path d="M22 18V3H2v15H0v2h24v-2h-2zm-8 0h-4v-1h4v1zm6-3H4V5h16v10z"></path></g>
+<g id="laptop-mac"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2H0c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2h-4zM4 5h16v11H4V5zm8 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path></g>
+<g id="laptop-windows"><path d="M20 18v-1c1.1 0 1.99-.9 1.99-2L22 5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2v1H0v2h24v-2h-4zM4 5h16v10H4V5z"></path></g>
+<g id="memory"><path d="M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z"></path></g>
+<g id="mouse"><path d="M13 1.07V9h7c0-4.08-3.05-7.44-7-7.93zM4 15c0 4.42 3.58 8 8 8s8-3.58 8-8v-4H4v4zm7-13.93C7.05 1.56 4 4.92 4 9h7V1.07z"></path></g>
+<g id="phone-android"><path d="M16 1H8C6.34 1 5 2.34 5 4v16c0 1.66 1.34 3 3 3h8c1.66 0 3-1.34 3-3V4c0-1.66-1.34-3-3-3zm-2 20h-4v-1h4v1zm3.25-3H6.75V4h10.5v14z"></path></g>
+<g id="phone-iphone"><path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"></path></g>
+<g id="phonelink"><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"></path></g>
+<g id="phonelink-off"><path d="M22 6V4H6.82l2 2H22zM1.92 1.65L.65 2.92l1.82 1.82C2.18 5.08 2 5.52 2 6v11H0v3h17.73l2.35 2.35 1.27-1.27L3.89 3.62 1.92 1.65zM4 6.27L14.73 17H4V6.27zM23 8h-6c-.55 0-1 .45-1 1v4.18l2 2V10h4v7h-2.18l3 3H23c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1z"></path></g>
+<g id="power-input"><path d="M2 9v2h19V9H2zm0 6h5v-2H2v2zm7 0h5v-2H9v2zm7 0h5v-2h-5v2z"></path></g>
+<g id="router"><path d="M20.2 5.9l.8-.8C19.6 3.7 17.8 3 16 3s-3.6.7-5 2.1l.8.8C13 4.8 14.5 4.2 16 4.2s3 .6 4.2 1.7zm-.9.8c-.9-.9-2.1-1.4-3.3-1.4s-2.4.5-3.3 1.4l.8.8c.7-.7 1.6-1 2.5-1 .9 0 1.8.3 2.5 1l.8-.8zM19 13h-2V9h-2v4H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM8 18H6v-2h2v2zm3.5 0h-2v-2h2v2zm3.5 0h-2v-2h2v2z"></path></g>
+<g id="scanner"><path d="M19.8 10.7L4.2 5l-.7 1.9L17.6 12H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5.5c0-.8-.5-1.6-1.2-1.8zM7 17H5v-2h2v2zm12 0H9v-2h10v2z"></path></g>
+<g id="security"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"></path></g>
+<g id="sim-card"><path d="M19.99 4c0-1.1-.89-2-1.99-2h-8L4 8v12c0 1.1.9 2 2 2h12.01c1.1 0 1.99-.9 1.99-2l-.01-16zM9 19H7v-2h2v2zm8 0h-2v-2h2v2zm-8-4H7v-4h2v4zm4 4h-2v-4h2v4zm0-6h-2v-2h2v2zm4 2h-2v-4h2v4z"></path></g>
+<g id="smartphone"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"></path></g>
+<g id="speaker"><path d="M17 2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 1.99 2 1.99L17 22c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 2c1.1 0 2 .9 2 2s-.9 2-2 2c-1.11 0-2-.9-2-2s.89-2 2-2zm0 16c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></g>
+<g id="speaker-group"><path d="M18.2 1H9.8C8.81 1 8 1.81 8 2.8v14.4c0 .99.81 1.79 1.8 1.79l8.4.01c.99 0 1.8-.81 1.8-1.8V2.8c0-.99-.81-1.8-1.8-1.8zM14 3c1.1 0 2 .89 2 2s-.9 2-2 2-2-.89-2-2 .9-2 2-2zm0 13.5c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"></path><circle cx="14" cy="12.5" r="2.5"></circle><path d="M6 5H4v16c0 1.1.89 2 2 2h10v-2H6V5z"></path></g>
+<g id="tablet"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 1.99-.9 1.99-2L23 6c0-1.1-.9-2-2-2zm-2 14H5V6h14v12z"></path></g>
+<g id="tablet-android"><path d="M18 0H6C4.34 0 3 1.34 3 3v18c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V3c0-1.66-1.34-3-3-3zm-4 22h-4v-1h4v1zm5.25-3H4.75V3h14.5v16z"></path></g>
+<g id="tablet-mac"><path d="M18.5 0h-14C3.12 0 2 1.12 2 2.5v19C2 22.88 3.12 24 4.5 24h14c1.38 0 2.5-1.12 2.5-2.5v-19C21 1.12 19.88 0 18.5 0zm-7 23c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7.5-4H4V3h15v16z"></path></g>
+<g id="toys"><path d="M12 12c0-3 2.5-5.5 5.5-5.5S23 9 23 12H12zm0 0c0 3-2.5 5.5-5.5 5.5S1 15 1 12h11zm0 0c-3 0-5.5-2.5-5.5-5.5S9 1 12 1v11zm0 0c3 0 5.5 2.5 5.5 5.5S15 23 12 23V12z"></path></g>
+<g id="tv"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"></path></g>
+<g id="videogame-asset"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g>
+<g id="watch"><path d="M20 12c0-2.54-1.19-4.81-3.04-6.27L16 0H8l-.95 5.73C5.19 7.19 4 9.45 4 12s1.19 4.81 3.05 6.27L8 24h8l.96-5.73C18.81 16.81 20 14.54 20 12zM6 12c0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6-6-2.69-6-6z"></path></g>
+</defs></svg>
+</iron-iconset-svg>`;document.head.appendChild(template$1.content);const template$2=_cmsLogin.html$1`<iron-iconset-svg name="image" size="24">
 <svg><defs>
 <g id="add-a-photo"><path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z"></path></g>
 <g id="add-to-photos"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"></path></g>
@@ -752,40 +1148,7 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
 <g id="wb-iridescent"><path d="M5 14.5h14v-6H5v6zM11 .55V3.5h2V.55h-2zm8.04 2.5l-1.79 1.79 1.41 1.41 1.8-1.79-1.42-1.41zM13 22.45V19.5h-2v2.95h2zm7.45-3.91l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM3.55 4.46l1.79 1.79 1.41-1.41-1.79-1.79-1.41 1.41zm1.41 15.49l1.79-1.8-1.41-1.41-1.79 1.79 1.41 1.42z"></path></g>
 <g id="wb-sunny"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$3.content);const template$4=_cmsLogin.html$1`<iron-iconset-svg name="social" size="24">
-<svg><defs>
-<g id="cake"><path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"></path></g>
-<g id="domain"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path></g>
-<g id="group"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></g>
-<g id="group-add"><path d="M8 10H5V7H3v3H0v2h3v3h2v-3h3v-2zm10 1c1.66 0 2.99-1.34 2.99-3S19.66 5 18 5c-.32 0-.63.05-.91.14.57.81.9 1.79.9 2.86s-.34 2.04-.9 2.86c.28.09.59.14.91.14zm-5 0c1.66 0 2.99-1.34 2.99-3S14.66 5 13 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm6.62 2.16c.83.73 1.38 1.66 1.38 2.84v2h3v-2c0-1.54-2.37-2.49-4.38-2.84zM13 13c-2 0-6 1-6 3v2h12v-2c0-2-4-3-6-3z"></path></g>
-<g id="location-city"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"></path></g>
-<g id="mood"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
-<g id="mood-bad"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 3c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"></path></g>
-<g id="notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></g>
-<g id="notifications-active"><path d="M7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2c.15-2.65 1.51-4.97 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43c2.02 1.45 3.39 3.77 3.54 6.42zM18 11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2v-5zm-6 11c.14 0 .27-.01.4-.04.65-.14 1.18-.58 1.44-1.18.1-.24.15-.5.15-.78h-4c.01 1.1.9 2 2.01 2z"></path></g>
-<g id="notifications-none"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"></path></g>
-<g id="notifications-off"><path d="M20 18.69L7.84 6.14 5.27 3.49 4 4.76l2.8 2.8v.01c-.52.99-.8 2.16-.8 3.42v5l-2 2v1h13.73l2 2L21 19.72l-1-1.03zM12 22c1.11 0 2-.89 2-2h-4c0 1.11.89 2 2 2zm6-7.32V11c0-3.08-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68c-.15.03-.29.08-.42.12-.1.03-.2.07-.3.11h-.01c-.01 0-.01 0-.02.01-.23.09-.46.2-.68.31 0 0-.01 0-.01.01L18 14.68z"></path></g>
-<g id="notifications-paused"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.93 6 11v5l-2 2v1h16v-1l-2-2zm-3.5-6.2l-2.8 3.4h2.8V15h-5v-1.8l2.8-3.4H9.5V8h5v1.8z"></path></g>
-<g id="pages"><path d="M3 5v6h5L7 7l4 1V3H5c-1.1 0-2 .9-2 2zm5 8H3v6c0 1.1.9 2 2 2h6v-5l-4 1 1-4zm9 4l-4-1v5h6c1.1 0 2-.9 2-2v-6h-5l1 4zm2-14h-6v5l4-1-1 4h5V5c0-1.1-.9-2-2-2z"></path></g>
-<g id="party-mode"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 3c1.63 0 3.06.79 3.98 2H12c-1.66 0-3 1.34-3 3 0 .35.07.69.18 1H7.1c-.06-.32-.1-.66-.1-1 0-2.76 2.24-5 5-5zm0 10c-1.63 0-3.06-.79-3.98-2H12c1.66 0 3-1.34 3-3 0-.35-.07-.69-.18-1h2.08c.07.32.1.66.1 1 0 2.76-2.24 5-5 5z"></path></g>
-<g id="people"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></g>
-<g id="people-outline"><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></g>
-<g id="person"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g>
-<g id="person-add"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g>
-<g id="person-outline"><path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path></g>
-<g id="plus-one"><path d="M10 8H8v4H4v2h4v4h2v-4h4v-2h-4zm4.5-1.92V7.9l2.5-.5V18h2V5z"></path></g>
-<g id="poll"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></g>
-<g id="public"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></g>
-<g id="school"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"></path></g>
-<g id="sentiment-dissatisfied"><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-6c-2.33 0-4.32 1.45-5.12 3.5h1.67c.69-1.19 1.97-2 3.45-2s2.75.81 3.45 2h1.67c-.8-2.05-2.79-3.5-5.12-3.5z"></path></g>
-<g id="sentiment-neutral"><path d="M9 14h6v1.5H9z"></path><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path></g>
-<g id="sentiment-satisfied"><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-4c-1.48 0-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5s4.32-1.45 5.12-3.5h-1.67c-.7 1.19-1.97 2-3.45 2z"></path></g>
-<g id="sentiment-very-dissatisfied"><path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10S22 17.53 22 12 17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4.18-12.24l-1.06 1.06-1.06-1.06L13 8.82l1.06 1.06L13 10.94 14.06 12l1.06-1.06L16.18 12l1.06-1.06-1.06-1.06 1.06-1.06zM7.82 12l1.06-1.06L9.94 12 11 10.94 9.94 9.88 11 8.82 9.94 7.76 8.88 8.82 7.82 7.76 6.76 8.82l1.06 1.06-1.06 1.06zM12 14c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"></path></g>
-<g id="sentiment-very-satisfied"><path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10S22 17.53 22 12 17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-10.06L14.06 11l1.06-1.06L16.18 11l1.06-1.06-2.12-2.12zm-4.12 0L9.94 11 11 9.94 8.88 7.82 6.76 9.94 7.82 11zM12 17.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
-<g id="share"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"></path></g>
-<g id="whatshot"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"></path></g>
-</defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$4.content);const template$5=_cmsLogin.html$1`<iron-iconset-svg name="maps" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template$2.content);const template$3=_cmsLogin.html$1`<iron-iconset-svg name="maps" size="24">
 <svg><defs>
 <g id="add-location"><path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm4 8h-3v3h-2v-3H8V8h3V5h2v3h3v2z"></path></g>
 <g id="beenhere"><path d="M19 1H5c-1.1 0-1.99.9-1.99 2L3 15.93c0 .69.35 1.3.88 1.66L12 23l8.11-5.41c.53-.36.88-.97.88-1.66L21 3c0-1.1-.9-2-2-2zm-9 15l-5-5 1.41-1.41L10 13.17l7.59-7.59L19 7l-9 9z"></path></g>
@@ -856,7 +1219,545 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
 <g id="transfer-within-a-station"><path d="M16.49 15.5v-1.75L14 16.25l2.49 2.5V17H22v-1.5zm3.02 4.25H14v1.5h5.51V23L22 20.5 19.51 18zM9.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5.75 8.9L3 23h2.1l1.75-8L9 17v6h2v-7.55L8.95 13.4l.6-3C10.85 12 12.8 13 15 13v-2c-1.85 0-3.45-1-4.35-2.45l-.95-1.6C9.35 6.35 8.7 6 8 6c-.25 0-.5.05-.75.15L2 8.3V13h2V9.65l1.75-.75"></path></g>
 <g id="zoom-out-map"><path d="M15 3l2.3 2.3-2.89 2.87 1.42 1.42L18.7 6.7 21 9V3zM3 9l2.3-2.3 2.87 2.89 1.42-1.42L6.7 5.3 9 3H3zm6 12l-2.3-2.3 2.89-2.87-1.42-1.42L5.3 17.3 3 15v6zm12-6l-2.3 2.3-2.87-2.89-1.42 1.42 2.89 2.87L15 21h6z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$5.content);const $_documentContainer=document.createElement("template");$_documentContainer.innerHTML=`
+</iron-iconset-svg>`;document.head.appendChild(template$3.content);const template$4=_cmsLogin.html$1`<iron-iconset-svg name="social" size="24">
+<svg><defs>
+<g id="cake"><path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"></path></g>
+<g id="domain"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path></g>
+<g id="group"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></g>
+<g id="group-add"><path d="M8 10H5V7H3v3H0v2h3v3h2v-3h3v-2zm10 1c1.66 0 2.99-1.34 2.99-3S19.66 5 18 5c-.32 0-.63.05-.91.14.57.81.9 1.79.9 2.86s-.34 2.04-.9 2.86c.28.09.59.14.91.14zm-5 0c1.66 0 2.99-1.34 2.99-3S14.66 5 13 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm6.62 2.16c.83.73 1.38 1.66 1.38 2.84v2h3v-2c0-1.54-2.37-2.49-4.38-2.84zM13 13c-2 0-6 1-6 3v2h12v-2c0-2-4-3-6-3z"></path></g>
+<g id="location-city"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"></path></g>
+<g id="mood"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
+<g id="mood-bad"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 3c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"></path></g>
+<g id="notifications"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></g>
+<g id="notifications-active"><path d="M7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2c.15-2.65 1.51-4.97 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43c2.02 1.45 3.39 3.77 3.54 6.42zM18 11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2v-5zm-6 11c.14 0 .27-.01.4-.04.65-.14 1.18-.58 1.44-1.18.1-.24.15-.5.15-.78h-4c.01 1.1.9 2 2.01 2z"></path></g>
+<g id="notifications-none"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"></path></g>
+<g id="notifications-off"><path d="M20 18.69L7.84 6.14 5.27 3.49 4 4.76l2.8 2.8v.01c-.52.99-.8 2.16-.8 3.42v5l-2 2v1h13.73l2 2L21 19.72l-1-1.03zM12 22c1.11 0 2-.89 2-2h-4c0 1.11.89 2 2 2zm6-7.32V11c0-3.08-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68c-.15.03-.29.08-.42.12-.1.03-.2.07-.3.11h-.01c-.01 0-.01 0-.02.01-.23.09-.46.2-.68.31 0 0-.01 0-.01.01L18 14.68z"></path></g>
+<g id="notifications-paused"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.93 6 11v5l-2 2v1h16v-1l-2-2zm-3.5-6.2l-2.8 3.4h2.8V15h-5v-1.8l2.8-3.4H9.5V8h5v1.8z"></path></g>
+<g id="pages"><path d="M3 5v6h5L7 7l4 1V3H5c-1.1 0-2 .9-2 2zm5 8H3v6c0 1.1.9 2 2 2h6v-5l-4 1 1-4zm9 4l-4-1v5h6c1.1 0 2-.9 2-2v-6h-5l1 4zm2-14h-6v5l4-1-1 4h5V5c0-1.1-.9-2-2-2z"></path></g>
+<g id="party-mode"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 3c1.63 0 3.06.79 3.98 2H12c-1.66 0-3 1.34-3 3 0 .35.07.69.18 1H7.1c-.06-.32-.1-.66-.1-1 0-2.76 2.24-5 5-5zm0 10c-1.63 0-3.06-.79-3.98-2H12c1.66 0 3-1.34 3-3 0-.35-.07-.69-.18-1h2.08c.07.32.1.66.1 1 0 2.76-2.24 5-5 5z"></path></g>
+<g id="people"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></g>
+<g id="people-outline"><path d="M16.5 13c-1.2 0-3.07.34-4.5 1-1.43-.67-3.3-1-4.5-1C5.33 13 1 14.08 1 16.25V19h22v-2.75c0-2.17-4.33-3.25-6.5-3.25zm-4 4.5h-10v-1.25c0-.54 2.56-1.75 5-1.75s5 1.21 5 1.75v1.25zm9 0H14v-1.25c0-.46-.2-.86-.52-1.22.88-.3 1.96-.53 3.02-.53 2.44 0 5 1.21 5 1.75v1.25zM7.5 12c1.93 0 3.5-1.57 3.5-3.5S9.43 5 7.5 5 4 6.57 4 8.5 5.57 12 7.5 12zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 5.5c1.93 0 3.5-1.57 3.5-3.5S18.43 5 16.5 5 13 6.57 13 8.5s1.57 3.5 3.5 3.5zm0-5.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"></path></g>
+<g id="person"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g>
+<g id="person-add"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></g>
+<g id="person-outline"><path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path></g>
+<g id="plus-one"><path d="M10 8H8v4H4v2h4v4h2v-4h4v-2h-4zm4.5-1.92V7.9l2.5-.5V18h2V5z"></path></g>
+<g id="poll"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></g>
+<g id="public"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"></path></g>
+<g id="school"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"></path></g>
+<g id="sentiment-dissatisfied"><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-6c-2.33 0-4.32 1.45-5.12 3.5h1.67c.69-1.19 1.97-2 3.45-2s2.75.81 3.45 2h1.67c-.8-2.05-2.79-3.5-5.12-3.5z"></path></g>
+<g id="sentiment-neutral"><path d="M9 14h6v1.5H9z"></path><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path></g>
+<g id="sentiment-satisfied"><circle cx="15.5" cy="9.5" r="1.5"></circle><circle cx="8.5" cy="9.5" r="1.5"></circle><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-4c-1.48 0-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5s4.32-1.45 5.12-3.5h-1.67c-.7 1.19-1.97 2-3.45 2z"></path></g>
+<g id="sentiment-very-dissatisfied"><path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10S22 17.53 22 12 17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4.18-12.24l-1.06 1.06-1.06-1.06L13 8.82l1.06 1.06L13 10.94 14.06 12l1.06-1.06L16.18 12l1.06-1.06-1.06-1.06 1.06-1.06zM7.82 12l1.06-1.06L9.94 12 11 10.94 9.94 9.88 11 8.82 9.94 7.76 8.88 8.82 7.82 7.76 6.76 8.82l1.06 1.06-1.06 1.06zM12 14c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"></path></g>
+<g id="sentiment-very-satisfied"><path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10S22 17.53 22 12 17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-10.06L14.06 11l1.06-1.06L16.18 11l1.06-1.06-2.12-2.12zm-4.12 0L9.94 11 11 9.94 8.88 7.82 6.76 9.94 7.82 11zM12 17.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></g>
+<g id="share"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"></path></g>
+<g id="whatshot"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"></path></g>
+</defs></svg>
+</iron-iconset-svg>`;document.head.appendChild(template$4.content);(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+    <style>
+      :host {
+        @apply --layout-inline;
+        @apply --layout-center;
+        @apply --layout-center-justified;
+        @apply --layout-flex-auto;
+
+        position: relative;
+        padding: 0 12px;
+        overflow: hidden;
+        cursor: pointer;
+        vertical-align: middle;
+
+        @apply --paper-font-common-base;
+        @apply --paper-tab;
+      }
+
+      :host(:focus) {
+        outline: none;
+      }
+
+      :host([link]) {
+        padding: 0;
+      }
+
+      .tab-content {
+        height: 100%;
+        transform: translateZ(0);
+          -webkit-transform: translateZ(0);
+        transition: opacity 0.1s cubic-bezier(0.4, 0.0, 1, 1);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+        @apply --layout-flex-auto;
+        @apply --paper-tab-content;
+      }
+
+      :host(:not(.iron-selected)) > .tab-content {
+        opacity: 0.8;
+
+        @apply --paper-tab-content-unselected;
+      }
+
+      :host(:focus) .tab-content {
+        opacity: 1;
+        font-weight: 700;
+
+        @apply --paper-tab-content-focused;
+      }
+
+      paper-ripple {
+        color: var(--paper-tab-ink, var(--paper-yellow-a100));
+      }
+
+      .tab-content > ::slotted(a) {
+        @apply --layout-flex-auto;
+
+        height: 100%;
+      }
+    </style>
+
+    <div class="tab-content">
+      <slot></slot>
+    </div>
+`,is:"paper-tab",behaviors:[_cmsLogin.IronControlState,_cmsLogin.IronButtonState,_cmsLogin.PaperRippleBehavior],properties:{/**
+     * If true, the tab will forward keyboard clicks (enter/space) to
+     * the first anchor element found in its descendants
+     */link:{type:Boolean,value:!1,reflectToAttribute:!0}},/** @private */hostAttributes:{role:"tab"},listeners:{down:"_updateNoink",tap:"_onTap"},attached:function(){this._updateNoink()},get _parentNoink(){var parent=(0,_cmsLogin.dom)(this).parentNode;return!!parent&&!!parent.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink},_onTap:function(event){if(this.link){var anchor=this.queryEffectiveChildren("a");if(!anchor){return}// Don't get stuck in a loop delegating
+// the listener from the child anchor
+if(event.target===anchor){return}anchor.click()}}});const template$5=_cmsLogin.html$1`<iron-iconset-svg name="paper-tabs" size="24">
+<svg><defs>
+<g id="chevron-left"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g>
+<g id="chevron-right"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g>
+</defs></svg>
+</iron-iconset-svg>`;document.head.appendChild(template$5.content);const IronMenubarBehaviorImpl={hostAttributes:{role:"menubar"},/**
+   * @type {!Object}
+   */keyBindings:{left:"_onLeftKey",right:"_onRightKey"},_onUpKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},_onDownKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},get _isRTL(){return"rtl"===window.getComputedStyle(this).direction},_onLeftKey:function(event){if(this._isRTL){this._focusNext()}else{this._focusPrevious()}event.detail.keyboardEvent.preventDefault()},_onRightKey:function(event){if(this._isRTL){this._focusPrevious()}else{this._focusNext()}event.detail.keyboardEvent.preventDefault()},_onKeydown:function(event){if(this.keyboardEventMatchesKeys(event,"up down left right esc")){return}// all other keys focus the menu item starting with that character
+this._focusWithKeyboardEvent(event)}};/** @polymerBehavior */_exports.IronMenubarBehaviorImpl=IronMenubarBehaviorImpl;const IronMenubarBehavior=[_cmsLogin.IronMenuBehavior,IronMenubarBehaviorImpl];_exports.IronMenubarBehavior=IronMenubarBehavior;var ironMenubarBehavior={IronMenubarBehaviorImpl:IronMenubarBehaviorImpl,IronMenubarBehavior:IronMenubarBehavior};_exports.$ironMenubarBehavior=ironMenubarBehavior;(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+    <style>
+      :host {
+        @apply --layout;
+        @apply --layout-center;
+
+        height: 48px;
+        font-size: 14px;
+        font-weight: 500;
+        overflow: hidden;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
+        /* NOTE: Both values are needed, since some phones require the value to be \`transparent\`. */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+
+        @apply --paper-tabs;
+      }
+
+      :host(:dir(rtl)) {
+        @apply --layout-horizontal-reverse;
+      }
+
+      #tabsContainer {
+        position: relative;
+        height: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        @apply --layout-flex-auto;
+        @apply --paper-tabs-container;
+      }
+
+      #tabsContent {
+        height: 100%;
+        -moz-flex-basis: auto;
+        -ms-flex-basis: auto;
+        flex-basis: auto;
+        @apply --paper-tabs-content;
+      }
+
+      #tabsContent.scrollable {
+        position: absolute;
+        white-space: nowrap;
+      }
+
+      #tabsContent:not(.scrollable),
+      #tabsContent.scrollable.fit-container {
+        @apply --layout-horizontal;
+      }
+
+      #tabsContent.scrollable.fit-container {
+        min-width: 100%;
+      }
+
+      #tabsContent.scrollable.fit-container > ::slotted(*) {
+        /* IE - prevent tabs from compressing when they should scroll. */
+        -ms-flex: 1 0 auto;
+        -webkit-flex: 1 0 auto;
+        flex: 1 0 auto;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .not-visible {
+        opacity: 0;
+        cursor: default;
+      }
+
+      paper-icon-button {
+        width: 48px;
+        height: 48px;
+        padding: 12px;
+        margin: 0 4px;
+      }
+
+      #selectionBar {
+        position: absolute;
+        height: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-bottom: 2px solid var(--paper-tabs-selection-bar-color, var(--paper-yellow-a100));
+          -webkit-transform: scale(0);
+        transform: scale(0);
+          -webkit-transform-origin: left center;
+        transform-origin: left center;
+          transition: -webkit-transform;
+        transition: transform;
+
+        @apply --paper-tabs-selection-bar;
+      }
+
+      #selectionBar.align-bottom {
+        top: 0;
+        bottom: auto;
+      }
+
+      #selectionBar.expand {
+        transition-duration: 0.15s;
+        transition-timing-function: cubic-bezier(0.4, 0.0, 1, 1);
+      }
+
+      #selectionBar.contract {
+        transition-duration: 0.18s;
+        transition-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
+      }
+
+      #tabsContent > ::slotted(:not(#selectionBar)) {
+        height: 100%;
+      }
+    </style>
+
+    <paper-icon-button icon="paper-tabs:chevron-left" class$="[[_computeScrollButtonClass(_leftHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onLeftScrollButtonDown" tabindex="-1"></paper-icon-button>
+
+    <div id="tabsContainer" on-track="_scroll" on-down="_down">
+      <div id="tabsContent" class$="[[_computeTabsContentClass(scrollable, fitContainer)]]">
+        <div id="selectionBar" class$="[[_computeSelectionBarClass(noBar, alignBottom)]]" on-transitionend="_onBarTransitionEnd"></div>
+        <slot></slot>
+      </div>
+    </div>
+
+    <paper-icon-button icon="paper-tabs:chevron-right" class$="[[_computeScrollButtonClass(_rightHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onRightScrollButtonDown" tabindex="-1"></paper-icon-button>
+`,is:"paper-tabs",behaviors:[_cmsLogin.IronResizableBehavior,IronMenubarBehavior],properties:{/**
+     * If true, ink ripple effect is disabled. When this property is changed,
+     * all descendant `<paper-tab>` elements have their `noink` property
+     * changed to the new value as well.
+     */noink:{type:Boolean,value:!1,observer:"_noinkChanged"},/**
+     * If true, the bottom bar to indicate the selected tab will not be shown.
+     */noBar:{type:Boolean,value:!1},/**
+     * If true, the slide effect for the bottom bar is disabled.
+     */noSlide:{type:Boolean,value:!1},/**
+     * If true, tabs are scrollable and the tab width is based on the label
+     * width.
+     */scrollable:{type:Boolean,value:!1},/**
+     * If true, tabs expand to fit their container. This currently only applies
+     * when scrollable is true.
+     */fitContainer:{type:Boolean,value:!1},/**
+     * If true, dragging on the tabs to scroll is disabled.
+     */disableDrag:{type:Boolean,value:!1},/**
+     * If true, scroll buttons (left/right arrow) will be hidden for scrollable
+     * tabs.
+     */hideScrollButtons:{type:Boolean,value:!1},/**
+     * If true, the tabs are aligned to bottom (the selection bar appears at the
+     * top).
+     */alignBottom:{type:Boolean,value:!1},selectable:{type:String,value:"paper-tab"},/**
+     * If true, tabs are automatically selected when focused using the
+     * keyboard.
+     */autoselect:{type:Boolean,value:!1},/**
+     * The delay (in milliseconds) between when the user stops interacting
+     * with the tabs through the keyboard and when the focused item is
+     * automatically selected (if `autoselect` is true).
+     */autoselectDelay:{type:Number,value:0},_step:{type:Number,value:10},_holdDelay:{type:Number,value:1},_leftHidden:{type:Boolean,value:!1},_rightHidden:{type:Boolean,value:!1},_previousTab:{type:Object}},/** @private */hostAttributes:{role:"tablist"},listeners:{"iron-resize":"_onTabSizingChanged","iron-items-changed":"_onTabSizingChanged","iron-select":"_onIronSelect","iron-deselect":"_onIronDeselect"},/**
+   * @type {!Object}
+   */keyBindings:{"left:keyup right:keyup":"_onArrowKeyup"},created:function(){this._holdJob=null;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;this._bindDelayedActivationHandler=this._delayedActivationHandler.bind(this);this.addEventListener("blur",this._onBlurCapture.bind(this),!0)},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},detached:function(){this._cancelPendingActivation()},_noinkChanged:function(noink){var childTabs=(0,_cmsLogin.dom)(this).querySelectorAll("paper-tab");childTabs.forEach(noink?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(element){element.setAttribute("noink","")},_removeNoinkAttribute:function(element){element.removeAttribute("noink")},_computeScrollButtonClass:function(hideThisButton,scrollable,hideScrollButtons){if(!scrollable||hideScrollButtons){return"hidden"}if(hideThisButton){return"not-visible"}return""},_computeTabsContentClass:function(scrollable,fitContainer){return scrollable?"scrollable"+(fitContainer?" fit-container":""):" fit-container"},_computeSelectionBarClass:function(noBar,alignBottom){if(noBar){return"hidden"}else if(alignBottom){return"align-bottom"}return""},// TODO(cdata): Add `track` response back in when gesture lands.
+_onTabSizingChanged:function(){this.debounce("_onTabSizingChanged",function(){this._scroll();this._tabChanged(this.selectedItem)},10)},_onIronSelect:function(event){this._tabChanged(event.detail.item,this._previousTab);this._previousTab=event.detail.item;this.cancelDebouncer("tab-changed")},_onIronDeselect:function(event){this.debounce("tab-changed",function(){this._tabChanged(null,this._previousTab);this._previousTab=null;// See polymer/polymer#1305
+},1)},_activateHandler:function(){// Cancel item activations scheduled by keyboard events when any other
+// action causes an item to be activated (e.g. clicks).
+this._cancelPendingActivation();_cmsLogin.IronMenuBehaviorImpl._activateHandler.apply(this,arguments)},/**
+   * Activates an item after a delay (in milliseconds).
+   */_scheduleActivation:function(item,delay){this._pendingActivationItem=item;this._pendingActivationTimeout=this.async(this._bindDelayedActivationHandler,delay)},/**
+   * Activates the last item given to `_scheduleActivation`.
+   */_delayedActivationHandler:function(){var item=this._pendingActivationItem;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;item.fire(this.activateEvent,null,{bubbles:!0,cancelable:!0})},/**
+   * Cancels a previously scheduled item activation made with
+   * `_scheduleActivation`.
+   */_cancelPendingActivation:function(){if(this._pendingActivationTimeout!==void 0){this.cancelAsync(this._pendingActivationTimeout);this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0}},_onArrowKeyup:function(event){if(this.autoselect){this._scheduleActivation(this.focusedItem,this.autoselectDelay)}},_onBlurCapture:function(event){// Cancel a scheduled item activation (if any) when that item is
+// blurred.
+if(event.target===this._pendingActivationItem){this._cancelPendingActivation()}},get _tabContainerScrollSize(){return Math.max(0,this.$.tabsContainer.scrollWidth-this.$.tabsContainer.offsetWidth)},_scroll:function(e,detail){if(!this.scrollable){return}var ddx=detail&&-detail.ddx||0;this._affectScroll(ddx)},_down:function(e){// go one beat async to defeat IronMenuBehavior
+// autorefocus-on-no-selection timeout
+this.async(function(){if(this._defaultFocusAsync){this.cancelAsync(this._defaultFocusAsync);this._defaultFocusAsync=null}},1)},_affectScroll:function(dx){this.$.tabsContainer.scrollLeft+=dx;var scrollLeft=this.$.tabsContainer.scrollLeft;this._leftHidden=0===scrollLeft;this._rightHidden=scrollLeft===this._tabContainerScrollSize},_onLeftScrollButtonDown:function(){this._scrollToLeft();this._holdJob=setInterval(this._scrollToLeft.bind(this),this._holdDelay)},_onRightScrollButtonDown:function(){this._scrollToRight();this._holdJob=setInterval(this._scrollToRight.bind(this),this._holdDelay)},_onScrollButtonUp:function(){clearInterval(this._holdJob);this._holdJob=null},_scrollToLeft:function(){this._affectScroll(-this._step)},_scrollToRight:function(){this._affectScroll(this._step)},_tabChanged:function(tab,old){if(!tab){// Remove the bar without animation.
+this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.remove("contract");this._positionBar(0,0);return}var r=this.$.tabsContent.getBoundingClientRect(),w=r.width,tabRect=tab.getBoundingClientRect(),tabOffsetLeft=tabRect.left-r.left;this._pos={width:this._calcPercent(tabRect.width,w),left:this._calcPercent(tabOffsetLeft,w)};if(this.noSlide||null==old){// Position the bar without animation.
+this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.remove("contract");this._positionBar(this._pos.width,this._pos.left);return}var oldRect=old.getBoundingClientRect(),oldIndex=this.items.indexOf(old),index=this.items.indexOf(tab),m=5;// bar animation: expand
+this.$.selectionBar.classList.add("expand");var moveRight=oldIndex<index,isRTL=this._isRTL;if(isRTL){moveRight=!moveRight}if(moveRight){this._positionBar(this._calcPercent(tabRect.left+tabRect.width-oldRect.left,w)-m,this._left)}else{this._positionBar(this._calcPercent(oldRect.left+oldRect.width-tabRect.left,w)-m,this._calcPercent(tabOffsetLeft,w)+m)}if(this.scrollable){this._scrollToSelectedIfNeeded(tabRect.width,tabOffsetLeft)}},_scrollToSelectedIfNeeded:function(tabWidth,tabOffsetLeft){var l=tabOffsetLeft-this.$.tabsContainer.scrollLeft;if(0>l){this.$.tabsContainer.scrollLeft+=l}else{l+=tabWidth-this.$.tabsContainer.offsetWidth;if(0<l){this.$.tabsContainer.scrollLeft+=l}}},_calcPercent:function(w,w0){return 100*w/w0},_positionBar:function(width,left){width=width||0;left=left||0;this._width=width;this._left=left;this.transform("translateX("+left+"%) scaleX("+width/100+")",this.$.selectionBar)},_onBarTransitionEnd:function(e){var cl=this.$.selectionBar.classList;// bar animation: expand -> contract
+if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionBar(this._pos.width,this._pos.left);// bar animation done
+}else if(cl.contains("contract")){cl.remove("contract")}}});class cmsLangsMenu extends _cmsLogin.cmsDropdownMenuTemplate{static get _getStyles(){return _cmsLogin.html`
+        .alt{
+            display: flex;
+            flex-direction: row;
+            padding-inline-start: unset;
+            width: 20%;
+        }
+        .flexright {
+            min-height: 0px;
+            max-width: unset;
+        }
+        div[inputs] {
+            background-color: #082138;
+            width: 100%;
+            padding: 4px;
+            border-right: 1px solid var(--app-primary-text-color);
+            height: 25px;
+            cursor: pointer;
+        }
+
+        .flexleft, .flexright {
+            flex: 1;
+            max-height: unset;
+        } 
+
+        .flexleft {
+            width: 84px;
+            flex-basis: 92px;
+        } 
+        paper-listbox.dropdown-content {
+            background-color: #082138;
+            box-shadow: 0px 0px 0px;
+            color: var(--app-item-backgound-color);
+        }
+        `}static get _getButtons(){return _cmsLogin.html`
+            <div inputs name="[[itemLabel]]" aria-label="mode-category" on-click="open">
+                [[lang]]
+            </div>`}static get _getListItem(){return _cmsLogin.html`
+            <paper-listbox class="dropdown-content" slot="dropdown-content">
+                <dom-repeat repeat items="[[langs]]" as="item">
+                    <template>
+                        <paper-item class="form-al" on-click="_setResValue">[[item]]</paper-item>
+                    </template>
+                </dom-repeat>
+            </paper-listbox>`}static get is(){return"cms-langs-menu"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Array,value:[],notify:!0},list:{type:Array,notify:!0}}}ready(){super.ready()}_setResValue(evt){this.lang=evt.model.__data.item;this.$.dropdown.close();this.opened=!1}}_exports.cmsLangsMenu=cmsLangsMenu;customElements.define(cmsLangsMenu.is,cmsLangsMenu);var cmsLangsMenu$1={cmsLangsMenu:cmsLangsMenu};_exports.$cmsLangsMenu=cmsLangsMenu$1;class cmsSidebarItemLink extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+    <style>
+        a {
+            text-decoration: none;
+            color: var(--app-item-backgound-color);
+        }    
+        
+        .inline-top-div-flex-less {
+            flex-basis: 15%;
+            padding-left: unset !important;
+            margin-inline-start: -6px;
+            margin-block-end: 6px;
+        }
+
+        .inline-top-div-flex-less iron-icon {
+            height: 16px;
+        }
+     
+        .colorlink {
+            display: flex;
+            padding-inline-start: 22px;
+            color: var(--light-primary-color);
+            font-size: 12px;
+            text-transform: capitalize;
+        }
+
+        a[lit] {
+            color: #7dfff2!important;  
+            transition: color 1s ease-out;
+        }  
+
+        [hovered] {
+            background-color: #364e5a !important;
+            transition: background-color 0.5s ease;
+        }
+    </style>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
+    </app-route>    
+    <main>                        
+        <a hovered$="[[hovered]]"  lit$="[[lit]]" class="inline-bottom colorlink" href="[[rootPath]][[url]]" on-mouseover="_mouseOver" on-mouseout="_mouseOut">
+            <div class="inline-top-div-flex-less">
+                <iron-icon icon="[[iconString]]" aria-label="[[_translate(title)]]">
+                </iron-icon>
+            </div>
+
+            <span>
+              [[title]]  [[_translate(title)]]
+            </span>
+        </a> 
+    </main>
+    `}static get is(){return"cms-sidebar-item-link"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},lang:{type:String,notify:!0},langs:{type:Object,notify:!0,value:{}},litAnchor:{type:Object},hovered:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},lit:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},url:String,view:String,views:{type:Array,value:[]},iconString:String,title:String}}static get observers(){return["_routePageChanged(routeData)"]}ready(){super.ready();this.translator.target("cms-content","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-content","setLangObject")}_setLang(res,lang){this.lang=lang;res.call(this)}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_routePageChanged(routeData){if(0<this.views.length){let view=this.views.filter(item=>{if(routeData.page===item)return item}).pop();if(!!view){this.lit=!0}else{this.lit=!1}}}_translate(word){// console.log(word)
+}_mouseOver(){this.hovered=!0}_mouseOut(){this.hovered=!1}}customElements.define(cmsSidebarItemLink.is,cmsSidebarItemLink);class cmsSidebarItem extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+    <style>
+        .incolumn {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid var(--paper-blue-grey-700);
+            width: 100%;
+            height: auto;
+        }
+    
+        [hovered] {
+            background-color: #364e5a !important;
+            transition: background-color 0.5s ease;
+        }
+  
+        .closed{
+            visibility: hidden; 
+            height: 0px;
+        }
+        
+        [openlabel]{
+            visibility: visible;
+            transition: visibility 0.2s ease-out 0.2s;
+        }
+
+        [open] {
+            visibility: visible;
+            box-sizing: border-box;
+            height: auto!important;
+            padding-block-start: 4px;
+            padding-block-end: 8px;
+            transition: visibility 0.2s ease-out 0.2s;
+        }
+    
+        [opendrop] {
+            padding-block-start: 6px;
+            transition: padding-block-start 0.5s ease;
+        }
+    
+        .holder {
+            display: flex;
+            flex-direction: column;
+            height: 50px;
+            background-color: #1d3746;
+            transition: background-color 0.5s ease;
+        }
+    
+        .inline-top {
+            display: flex;
+            flex-direction: row;
+        }
+    
+        .inline-top-div-flex {
+            flex-basis: 75%;
+        }
+        
+        .inline-top div paper-icon-button {
+            bottom: -18px;
+        }
+    
+        .inline-bottom {
+            display: flex;
+            margin-inline-start: 20px;
+            padding-block-end: 2px;
+        }
+    
+        .colorsmooth {
+            color: var(--paper-blue-grey-400);
+            font-size: 10px;
+            transition: visibility 0.2s ease-in 0.1s;
+        }
+       
+        .push-her-down {
+            box-sizing: border-box;
+            padding-block-start: 12px;
+            font-size: larger;
+            letter-spacing: 0px;
+            height: 30px;
+            transition: padding-block-start 0.5s ease;
+        }
+    
+        paper-icon-button.opener {
+            height: 0px;
+            width: 0px;
+            padding: 0;
+            transition: height 0.5s ease-out, width 0.5s ease-out, padding 0.5s ease-out;
+        }
+    
+        paper-icon-button[hovered] {
+            height: 32px;
+            width: 32px;
+            padding: 8px;
+            color: var(--disabled-text-color);
+            transition: height 0.5s ease-out, width 0.5s ease-out, padding 0.5s ease-out;
+        }
+
+        .back{
+            background-color: #1d3746;
+            border-bottom: 1px solid var(--paper-blue-grey-700);
+        }
+
+    </style>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
+    </app-route>    
+    <main>
+        <nav class="incolumn">            
+            <nav class="holder" hovered$="[[hovered]]" on-mouseover="_mouseOver" on-mouseout="_mouseOut">
+                <div class="push-her-down inline-bottom">
+                    <div opendrop$="[[open]]" class="inline-top-div-flex" on-click="_toggleOpen">
+                        <span>
+                            [[content.title]]
+                        </span>
+                    </div>
+                    <div>
+                        <dom-if if="[[!open]]"> 
+                            <template>        
+                                <paper-icon-button hovered$="[[hovered]]" class="opener" title="open" icon="icons:unfold-more" on-click="_open">
+                                </paper-icon-button>                       
+                            </template>
+                        </dom-if>
+
+                        <dom-if if="[[open]]"> 
+                            <template>
+                                <paper-icon-button hovered$="[[hovered]]" class="opener" title="close" icon="icons:unfold-less" on-click="_close">
+                                </paper-icon-button>                   
+                            </template>
+                        </dom-if>    
+                    </div>
+                </div>
+                <div openlabel$="[[!open]]" class="closed inline-bottom colorsmooth"> 
+                    <span>
+                        [[content.description]]
+                    </span>  
+                </div>
+            </nav>                          
+            <div open$="[[open]]" class="closed back" on-mouseover="_mouseOverDiv" on-mouseout="_mouseOutDiv">
+                <iron-selector attr-for-selected="name" class="drawer-list" role="navigation"> 
+                    <dom-repeat repeat items="[[pages]]" as="page">
+                        <template> 
+                            <cms-sidebar-item-link
+                                route="[[route]]" 
+                                views="[[page.views]]"
+                                url="[[page.url]]" 
+                                icon-string="[[page.iconString]]" 
+                                title="[[page.title]]">
+                            </cms-sidebar-item-link>
+                        </template>                            
+                    </dom-repeat> 
+                </iron-selector>
+            </div>
+        </nav>
+    </main>
+    `}static get is(){return"cms-sidebar-item"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},content:{type:Object,notify:!0,observer:"_settPagesArray"},pages:{type:Array,value:[0],notify:!0},lang:{type:String,notify:!0},langs:{type:Object,notify:!0,value:{}},hovered:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},hovereddiv:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},open:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},opendrop:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0}}}static get observers(){return["_routePageChanged(route, routeData)"]}ready(){super.ready();this.translator.target("cms-content","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-content","setLangObject")}_routePageChanged(route){let prefix=route.prefix.split("/")[1],title=this.content.title;prefix=prefix.toLowerCase();title=title.toLowerCase();if(prefix===title){setTimeout(()=>{this.open=!0},500)}else{setTimeout(()=>{this.open=!1},500)}}_setLang(res,lang){this.lang=lang;res.call(this)}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_settPagesArray(data){this.pages=[];setTimeout(()=>{this.pages=data.pages},250)}_toggleOpen(){this.open=!this.open}_open(){this.open=!0}_close(){this.open=!1}_mouseOver(){this.hovered=!0}_mouseOut(){this.hovered=!1}_mouseOverDiv(){this.hovereddiv=!0}_mouseOutDiv(){this.hovereddiv=!1}_translate(word){// console.log(word)
+}}customElements.define(cmsSidebarItem.is,cmsSidebarItem);const $_documentContainer=document.createElement("template");$_documentContainer.innerHTML=`
 <dom-module id="cms-common-styles">
   <template>
     <style>
@@ -1138,309 +2039,189 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
       }
     </style>
   </template>
-</dom-module>`;document.head.appendChild($_documentContainer.content);const _DBW=new _cmsLogin.dataBaseworker,__DEV=!0,_STYLES=_DBW.getElementAssets("cms-confirm",__DEV);class cmsConfirm extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
-    <style  include="cms-comon-style_v3">
-        nav[bottom2]{
-            box-sizing: border-box;
-            background-color: rgba(0, 0, 0, 0.45098039215686275);
-            display: none;
-            position: fixed;
-            top: 0%;
-            width: 100%;
-            height: 100%;
-            padding: 118px;
-        }
-
-        nav[bottom2][confirm]{
-            @apply --layout-vertical;
-        }
-
-        nav[bottom2] div {
-            text-align: center;
-            word-break: break-word;
-            letter-spacing: 2px;
-            color: #356ea1;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 5px;
-            width: auto;
-            padding: 34px;
-        }
-
-        nav[bottom2] div[one] {
-            height: 44px;
-            color: #3bdbdd;
-            font-size: 26px;
-            text-shadow: 1px 1px 1px black;;
-        }
-
-
-        nav[bottom2]div[tow] {
-            width: 61%;
-        }
-
-        h2 {
-            text-align: center;
-            margin-left: auto;
-            text-shadow: 2px 2px 2px #161616;
-            margin-right: auto;
-            width: 42%;
-            border-radius: 5px;
-            height: 35px;
-        }
-        .typeKind{
-            color: #ff5600;
-            font-size: 44px;
-        }
-        .typeheader {
-            color: #32bbff;
-            font-size: 40px;
-        }
-        h2[pub="publish"] {
-            color: #75ff32;
-            font-size: 64px;
-        }
-        paper-button {
-            background-color: #e3e3e3
-        }
-
-        paper-button[right] {
-            float: right;
-        }
-
-        paper-button[left] {
-            float: left;
-        }
-        
-    </style>
-
-    <nav id="navbottom" bottom2 confirm$="[[open]]" id="animated">
-        <h2 class="typeKind" pub$="[[headderMsgKind]]"> [[headderMsg]] </h2>    
-        <h2 class="typeheader">[[type]]</h1>
-        <div one>
-            <h3>[[title]]</h3>
-        </div>
-        <div tow>
-            <paper-button left on-click="openConfirm">
-                cancel 
-            </paper-button>
-            <paper-button right on-click="execute">
-                confirm 
-            </paper-button>
-        </div>     
-    </nav>
-    `}static get is(){return"cms-confirm"}static get properties(){return{user:{type:Object,notify:!0},lang:{type:String,observer:"__changeLang"},langs:{type:Object,value:{}},confirm:{type:Boolean,notify:!0,value:!1,reflectToAttribute:!0},pub:{type:String,notify:!0,value:!1,reflectToAttribute:!0},open:{type:Boolean,notify:!0,value:!1},title:{type:Object,notify:!0},headderMsg:{type:Object,notify:!0},type:{type:Object,notify:!0},method:Object}}ready(){super.ready();_STYLES.then(querySnapshot=>{let langs=querySnapshot.data();this._setLangObject(langs)}).catch(function(error){console.error("Error reteaving assets: ",error)})}__changeLang(){if(this.langs[this.lang]){let obj=this.langs[this.lang];for(let par in obj){this.set(par,obj[par])}}}_setLangObject(langs){for(let par in langs){if("styles"!==par){this.langs[par]=langs[par].pop()}}this.__changeLang()}execute(){this.method(this.argument);this.open=!this.open;this.confirm=!1}_cleanUnderscore(data){let cleaned=data;cleaned=cleaned.split("_").join(" ");return cleaned}openConfirm(event){if(!1===this.confirm){this.title=this._cleanUnderscore(event.detail.name);this.method=event.detail.method;this.argument=event.detail.argument||event;this.headderMsg=this[event.detail.headderMsgKind]||event.detail.headderMsgKind;this.headderMsgKind=event.detail.headderMsgKind;this.type=this[event.detail.type]||event.detail.type;this.confirm=!0}else{this.open=!1;this.confirm=!1}}}customElements.define(cmsConfirm.is,cmsConfirm);(0,_cmsLogin.setPassiveTouchGestures)(!0);(0,_cmsLogin.setRootPath)("/");class cmsControler extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+</dom-module>`;document.head.appendChild($_documentContainer.content);(0,_cmsLogin.setPassiveTouchGestures)(!0);(0,_cmsLogin.setRootPath)("/");class cmsControler extends(0,_cmsLogin.cmslangsLib)(_cmsLogin.PolymerElement){static get template(){return _cmsLogin.html`
     <style>
         :host {
             display: var(--app-block)
-        }
-
-        app-header,
-        nav[toolbar] {
-            background-color: var(--app-primary-color)
-        }
-
-        .cart-btn-container,
-        .sellector-list a,
-        .sellector-list a.iron-selected {
-            font-weight: var(--app-default-font-weight)
-        }
-
-        :host {
-            display: var(--app-block)
-        }
-
-        nav {
-            display: var(--app-flex);
-            flex-flow: var(--app-flexrow);
-            flex-grow: var(--app-flexgrowshrink);
-            color: var(--app-secondary-text-color)
-        }
-
-        .sellector-list a,
-        nav[toolbar] {
-            display: var(--app-block);
-            color: var(--app-secondary-text-color)
-        }
-
-        nav div {
-            flex-grow: var(--app-flexgrowshrink)
-        }
-
-        nav[toolbar] {
-            height: var(--app-tollbar-height);
-            padding: var(--app-default-padding);
-            font-size: var(--app-tollbar-default-font-size)
-        }
-
-        paper-icon-button {
-            color: var(--app-secondary-text-color)
-        }
-
-        .sellector-list {
-            margin: var(--app-tollbar-sellector-list-margin)
-        }
-
-        .sellector-list a {
-            padding: var(--app-tollbar-sellector-list-padding);
+          }
+          
+          nav[toolbar] {
+            background-color: #082138;
+          }
+          
+          .sellector-list a{
+            font-weight: 400;
+            font-size: larger;
+            letter-spacing: 0px;
+          }
+          
+          .topcontainer,
+            div[rows] {
+            display: flex;
+          }
+          
+          div[rows] {
+            flex-direction: row;
+          }
+          
+          .topcontainer {
+            flex-direction: column
+          }
+          
+          div[pages] {
+            height: auto;
+            flex: 1;
+          }
+          
+          a,
+            nav[toolbar] {
+            color: var(--app-item-backgound-color)
+          }
+          
+          nav[toolbar] {
+            font-size: var(--app-tollbar-default-font-size);
+            flex-basis: 230px;
+            height: 100vh;
+          }
+          
+           a {
+            position: relative;
             text-decoration: var(--app-none);
-            line-height: var(--app-tollbar-sellector-list-line-height)
-        }
-
-        .cart-btn-container,
-        .content-wrapper {
-            display: var(--app-flex);
-            position: var(--app-default-position)
-        }
-
-        .sellector-list a.iron-selected {
+            line-height: var(--app-tollbar-sellector-list-line-height);
+            top: -3px;
+          }
+          
+          a.{
             color: var(--app-content-title-text-color)
-        }
-
-        .content-wrapper {
-            top: var(--app-tollbar-content-wrapper-top);
-            flex-direction: var(--app-flexrow);
-            max-width: var(--app-tollbar-content-wrapper-max-width);
-            padding-left: var(--app-tollbar-content-wrapper-padding-left)
-        }
-
-        .cart-btn-container {
-            flex-flow: var(--app-flexrow);
-            top: var(--app-tollbar-cart-btn-top);
-            width: var(--app-tollbar-cart-btn-width);
-            float: var(--app-tollbar-cart-btn-float);
-            height: var(--app-tollbar-cart-btn-height)
-        }
-
-        span[role] {
+          }
+          
+          span[role] {
             color: var(--app-dropDwonMenu-icon-color)
-        }
+          }          
+          
+          paper-icon-button {
+            height: 30px;
+            float: right;
+          }       
 
-        .user-badge {
-            margin-top: var(--app-tollbar-user-badge-margin-top)
-        }
-
-        cms-image-viewer.diferent {
-            --main-style: {
-                position: (--app-unset-position);
-                margin-left: -46px
-            }
-        }
-
-        .background {
-            background-color: var(--app-secondary-text-color)
-        }
-        div[rows]{
-          display: flex;
-          flex-direction: column
-        }
-        div[pages]{
-          min-height: 1470px;
-          height: 1877px;
-        }
-        paper-dropdown-menu {
-            width: 82px;
+          div[ty6] {
             box-sizing: border-box;
-            color: var(--app-primary-color);
+            width: 99%;
+            padding: 2px;
+            padding-left: 15px;
+            max-height: 50px;
+          }
+          
+          div[ty6] h1 {
+            font-size: large;
+            margin-block-start: 4px;
+            margin-block-end: 4px;
+          }
+          
+          div[ty6] div {
+            box-sizing: border-box;
+            height: 24px;
+            width: 35px;
+            border-right: 1px solid #3d5058;
+            padding-left: 8px;
+          }
 
-            --paper-dropdown-menu-icon: {
-                color: var(--app-dropDwonMenu-icon-color, red)
-            }
+      </style>
 
-            ;
-        }
+      <app-location route="{{route}}"> </app-location>
+      <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
+      </app-route>
+      <app-route route="{{subroute}}" pattern="/:layer" tail="{{popOutRoute}}">
+      </app-route>
+      <div>
+          <div rows>
+              <nav toolbar>
+                <div class="content-wrapper">
+                    <nav class="slight">
+                        <div ty6>
+                            <h1>Ty6</h1>
+                        </div>
+                    </nav>
+                    <nav>
+                        <div ty6>
+                          <cms-langs-menu langs="[[langsArray]]" lang="{{lang}}">
+                          </cms-langs-menu>
+                        </div>
+                    </nav>
+                    <dom-repeat repeat items="[[pageArray]]" as="page">
+                      <template>  
+                        <cms-sidebar-item content="[[page]]" route="[[subroute]]" route="[[route]]">
+                        </cms-sidebar-item>
+                      </template>                            
+                    </dom-repeat>                      
+                    <nav id="login" class="">   
+                      <div>
+                          <div>
+                              <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
+                          </div>
+                          <div>
+                              <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
+                          </div>
+                          <div>
+                              <paper-button icon="perm-identity" aria-label\$="logout" on-click="_logout">
+                                  logout
+                              </paper-button>
+                          </div>
+                      </div>
+                    </nav>
 
-        paper-tabs {
-            color: var(-app-content-title-text-color)
-        }
-    </style>
-  <app-location route="{{route}}">
-  </app-location>
-
-  <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" active="{{active}}">
-  </app-route>
-
-  <shop-category-data lang="{{lang}}">
-  </shop-category-data>
-  <div rows>
-    <nav toolbar>
-      <iron-selector selected="[[page]]" attr-for-selected="name" class="sellector-list" role="navigation">
-          <div class="content-wrapper">
-              <nav>
-                  <paper-icon-button icon="arrow-back" aria-label="Go back"></paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="Preview" href="[[rootPath]]app">[[preview]]</a>
-                  </div>
+                </div>
               </nav>
-              <nav>
-                  <paper-icon-button icon="social:pages" aria-label="content">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="content" href="[[rootPath]]content/search">[[content]]</a>
-                  </div>
-              </nav>
-              <nav>
-                  <paper-icon-button icon="social:person-outline" aria-label="users">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="users" href="[[rootPath]]users/search">[[users]]</a>
-                  </div>
-              </nav>
-              <nav>
-                  <paper-icon-button icon="image:photo-library" aria-label="galleries">
-                  </paper-icon-button>
-                  <div>
-                      <a on-click="_resetEvent" name="media" id="media" href="[[rootPath]]media/search">[[galleries]]</a>
-                  </div>
-              </nav>
+              <div pages>
+                  <iron-pages selected="[[page]]" attr-for-selected="name">
+                      <article name="cmshome">
+                          <h1>
+                              <b>Cms Home</b>
+                          </h1>
+                      </article>
+                      <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
+                      </cms-user-viewer>
+
+                      <cms-settings route="[[subroute]]" name="settings" user="[[user]]">
+                      </cms-settings>
+
+                      <cms-content route="[[subroute]]" name="content" user="[[user]]">
+                      </cms-content>
+
+                      <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
+                      </cms-media>
+
+                      <my-view404 name="view404"></my-view404>
+                  </iron-pages>
+              </div>
           </div>
-      </iron-selector>
-      <div class="cart-btn-container">
-        <div class="background">
-          <paper-dropdown-menu label="[[language]]" value="{{lang}}">
-            <paper-tabs slot="dropdown-content" class="dropdown-content">
-              <paper-tab>pt</paper-tab>
-              <paper-tab>en</paper-tab>
-            </paper-tabs>
-          </paper-dropdown-menu>
-        </div>
-        <div>
-          <paper-icon-button icon="perm-identity" aria-label\$=""></paper-icon-button>
-        </div>
-        <div class="user-badge">
-          <span> [[user.displayName]]</span> <span role> [[user.role]]</span>
-        </div>
       </div>
-    </nav>
-    <div pages>
-      <iron-pages selected="[[page]]" attr-for-selected="name">
-            <article name="home">
-              <h1> 
-                <b>Home</b>
-              </h1>
-            </article>
-        <cms-user-viewer route="[[subroute]]" name="users" user="[[user]]" lang="[[lang]]">
-        </cms-user-viewer>
 
-        <cms-content route="[[subroute]]" name="content" user="[[user]]">
-        </cms-content>
+      <iron-pages class="flexy" selected="[[popout]]" attr-for-selected="name">
 
-        <cms-media name="media" route="[[subroute]]" user="[[user]]" lang="[[lang]]">
-        </cms-media>
+          <cms-page-cats-content name="add-category-pages" user="[[user]]" route="[[popOutRoute]]">
+          </cms-page-cats-content>
 
-        <my-view404 name="view404"></my-view404>
+          <cms-subcats-content name="add-subcategory-pages" user="[[user]]" route="[[popOutRoute]]">
+          </cms-subcats-content>
+
+          <cms-article-content name="add-articles" user="[[user]]" route="[[popOutRoute]]">
+          </cms-article-content>
+
+          <cms-images-content name="add-images" user="[[user]]" route="[[popOutRoute]]">
+          </cms-images-content>
+
+     </iron-pages>
+
+      <iron-pages class="flexy" selected="[[confirm]]" attr-for-selected="name">
+
+          <cms-confirm name="confirm" id="confirm" type="gallery" user="[[user]]" lang="[[lang]]">
+          </cms-confirm>
+
       </iron-pages>
-    </div>
-    <div>
-      <ul>
-        <li>sera</li>
-        <li>sempre</li>
-        <li>a subir</li>
-      </ul>
-    </div>
-  </div>
-  <cms-confirm id="confirm" bottom2 open="{{confirm}}" type="gallery" user="[[user]]" lang="[[lang]]">
-  </cms-confirm>       
-        `}static get is(){return"cms-controler"}static get properties(){return{user:{type:Object,notify:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},stylesSet:{type:Boolean,notify:!0,value:!1},lang:{type:String,notify:!0,observer:"__changeLang"},langs:{type:Object,notify:!0,value:{},observer:"_setLang"},openMain:{type:Boolean,notify:!0},page:{type:String,reflectToAttribute:!0,observer:"_pageChanged"},open:{type:Boolean,value:!1},categories:{type:Array,notify:!0},confirm:{type:Boolean,notify:!0,value:!1},routeData:Object,subroute:Object}}static get observers(){return["_routePageChanged(routeData, route)"]}static connectedCallback(){console.log("aloo")}ready(){super.ready();this.addEventListener("confirm",this.openConfirm);this.translator.target("cms-controler","setLangObject",this._setLObj.bind(this));this.translator.target("cms-controler","changeLang",this.__setLang.bind(this),!1);this.translator.shoot("cms-controler","setLangObject")}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)};}__setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.translator.shoot(void 0,"changeLang",this.lang);window.localStorage.setItem("lang",this.lang)}_setLang(){let lang=window.localStorage.getItem("lang");if(!0===!!lang){if(0<lang.split("").length){this.set("lang",lang)}}else{this.set("lang","en")}}_resetEvent(){this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{window.dispatchEvent(new CustomEvent("reset"))})}openConfirm(event){this.$.confirm.openConfirm(event);this.confirm=!this.confirm}_routePageChanged(page,route){if(this.page!==page.page&&"NaN"!==page.page){if(!page){this.page="home"}else if(-1!==["app","content","users","home","media"].indexOf(page.page)){this.page=page.page}else{// this.page = 'view404';
-}}}_pageChanged(page){if("home"===page){/*- import('./cms-home-viewer');
-                           return;*/}if("content"===page){new Promise((res,rej)=>_require.default(["./cms-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsContent||{});return}if("users"===page){new Promise((res,rej)=>_require.default(["./cms-user-viewer.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsUserViewer||{});return}if("media"===page){new Promise((res,rej)=>_require.default(["./cms-media.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsMedia||{});return}if("view404"===page){new Promise((res,rej)=>_require.default(["./cms-404-warning.js"],res,rej)).then(bundle=>bundle&&bundle.$cms$404Warning||{});return}}}customElements.define(cmsControler.is,cmsControler)});
+
+        `}static get is(){return"cms-controler"}static get properties(){return{user:{type:Object,notify:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},stylesSet:{type:Boolean,notify:!0,value:!1},lang:{type:String,notify:!0,observer:"__changeLang"},langsArray:{type:Array,notify:!0},pageArray:{type:Array,notify:!0,value:function(){return[{title:"settings",description:"CMS settings & tools",pages:[{url:"settings/projects/",views:["projects"],iconString:"av:library-books",title:"project management"},{url:"settings/templates/",views:["templates"],iconString:"av:library-books",title:"app templates"},{url:"settings/tools/",views:["tools"],iconString:"settings",title:"tools"}]},{title:"Content",description:"pages sub-categories articles",pages:[{url:"content/pages/",views:["pages"],iconString:"av:library-books",title:"pages & categories"},{url:"content/articles/",views:["articles"],iconString:"av:library-books",title:"articles"}]},{title:"Media",description:"images videos",pages:[{url:"media/galleries",views:["galleries","view-images"],iconString:"av:art-track",title:"galleries & images"},{url:"media/playlists",views:["playlists","view-videos"],iconString:"av:art-track",title:"playlists & videos"}]},{title:"Users",description:"users groups permissions",pages:[{url:"users/accounts/",views:["accounts"],iconString:"perm-identity",title:"users & groups"},{url:"users/login/",views:["login"],iconString:"perm-identity",title:"login & logout"}]},{title:"Preview",description:"preview the app",pages:[{views:["Preview"],url:"",iconString:"",title:"Preview the app"}]}]}},langs:{type:Object,notify:!0,value:{},observer:"_setLang"},openMain:{type:Boolean,notify:!0},popout:{type:String,observer:"_pageChanged"},page:{type:String,observer:"_pageChanged"},confirm:{type:String,observer:"_pageChanged"},categories:{type:Array,notify:!0},routeData:Object,subroute:Object}}static get observers(){return["_routePageChanged(routeData.page, route)","_routePopoutChanged(popOutRoute.path)"]}connectedCallback(){super.connectedCallback();/* this._observer = new FlattenedNodesObserver(this, (info) => {
+                                    this.info = info;
+                                });*/}disconnectedCallback(){super.disconnectedCallback();//this._observer.disconnect();
+}ready(){super.ready();this.addEventListener("confirm",this.openConfirm);this.addEventListener("closepopout",this._closeConfirm);this.translator.target("cms-controler","setLangObject",this._setLObj.bind(this));this.translator.target("cms-controler","changeLang",this.__setLang.bind(this),!1);this.translator.shoot("cms-controler","setLangObject");this.getLangs().then(querySnapshot=>{this.langsArray=querySnapshot["west-europe"]})}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)};}__setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.translator.shoot(void 0,"changeLang",this.lang);window.localStorage.setItem("lang",this.lang)}_setLang(){let lang=window.localStorage.getItem("lang");if(!0===!!lang){if(0<lang.split("").length){this.set("lang",lang)}}else{this.set("lang","en")}}_logout(){this.translator.logoutFire();window.location.reload()}openConfirm(event){this.confirm="confirm";if(!this.$.confirm.openConfirm){setTimeout(()=>{this.$.confirm.openConfirm(event)},500)}else{this.$.confirm.openConfirm(event)}}_closeConfirm(){this.confirm=""}_routePopoutChanged(popOutRoute){if(!!popOutRoute){if(-1!==["/add-category-pages","/edit-category-pages"].indexOf(popOutRoute)){this.popout="add-category-pages"}else if(-1!==["/add-subcategory-pages","/edit-subcategory-pages"].indexOf(popOutRoute)){this.popout="add-subcategory-pages"}else if(-1!==["/add-gallery","/edit-gallery"].indexOf(popOutRoute)){this.popout="add-gallery"}else if(-1!==["/add-images","/edit-images"].indexOf(popOutRoute)){this.popout="add-images"}else if(-1!==["/add-articles","/edit-articles"].indexOf(popOutRoute)){this.popout="add-articles"}else{this.popout=""}}}_routePageChanged(page){if(!page){this.page="cmshome";return}if(!!page){if(-1!==["settings","app","content","users","cmshome","media"].indexOf(page)){this.page=page}else{this.page="view404"}}}_resetEvent(){this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{window.dispatchEvent(new CustomEvent("reset"))})}_pageChanged(page){if("settings"===page){new Promise((res,rej)=>_require.default(["./cms-settings.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsSettings||{});return}if("content"===page){new Promise((res,rej)=>_require.default(["./cms-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsContent||{});return}if("users"===page){new Promise((res,rej)=>_require.default(["./cms-user-viewer.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsUserViewer||{});return}if("media"===page){new Promise((res,rej)=>_require.default(["./cms-media.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsMedia||{});return}if("view404"===page){new Promise((res,rej)=>_require.default(["./cms-404-warning.js"],res,rej)).then(bundle=>bundle&&bundle.$cms$404Warning||{});return}if("add-category-pages"===page){new Promise((res,rej)=>_require.default(["./pages/cms-page-cats-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsPageCatsContent||{}).then(item=>{});return}if("add-subcategory-pages"===page){new Promise((res,rej)=>_require.default(["./sub-categories/cms-subcats-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsSubcatsContent||{}).then(item=>{});return}if("add-articles"===page){new Promise((res,rej)=>_require.default(["./articles/cms-article-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsArticleContent||{}).then(item=>{});return}if("add-images"===page){new Promise((res,rej)=>_require.default(["./media/cms-images-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsImagesContent||{}).then(item=>{});return}if("confirm"===page){new Promise((res,rej)=>_require.default(["./tools/cms-confirm.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsConfirm||{}).then(item=>{});return}}}customElements.define(cmsControler.is,cmsControler)});

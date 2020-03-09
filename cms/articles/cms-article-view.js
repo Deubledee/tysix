@@ -1,216 +1,110 @@
-define(["exports","../cms-login.js"],function(_exports,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0});_exports.cmsArticleItem=_exports.$cmsArticleItem=void 0;class cmsArticleItem extends _cmsLogin.cmsItemTemplate{static get _getStyles(){return _cmsLogin.html`
-        <style include="cms-comon-style_v3">    
-        :host {
-            position: relative;
-            display: block;
-        } 
+define(["exports","../../src/cms-login.js"],function(_exports,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0/* ignoreName */ /* skipSlots */});_exports.cmsArticleItem=_exports.$cmsArticleItem=void 0;class cmsArticleItem extends(0,_cmsLogin.cmsArticlesLib)(_cmsLogin.cmsItemTemplate){static get _getStyles(){return _cmsLogin.html`
         shop-image{
             top: 1px; 
-        }
-        </style> `}static get _getElement(){return _cmsLogin.html`
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>                
-                <article centerlistitem>
-                    <div>
-                        <shop-image class="bigger" title="[[item.title]]" aria-label="image" src="[[_getImage()]]"
-                            alt="[[item.title]]">
-                        </shop-image>
-                    </div>
-                    <div title="[[item.title]]">
-                        <paper-button title="[[item.title]]">
-                            [[item.title]]
-                        </paper-button>
-                    </div>
-                    <div>
-                        <paper-button on-click="_showPage">
-                            <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>
-                            <paper-icon-button icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                        </paper-button>
-                    </div>
-                    <div class="paddingSmall" title="[[item.stock]]">
-                        <h3 title="[[item.stock]]">
-                            [[item.stock]]
-                        </h3>
-                    </div>
-                    <div title="[[item.page]]">
-                        <paper-button title="[[item.page]]">
-                            [[item.type]]
-                        </paper-button>
-                    </div>
-                    <div published$="[[_getPublished()]]" title="[[_getPublished()]]" on-click="_confirmPublish">
-                        <paper-button title="[[_getPublished()]]">
-                            [[_getPublished()]]
-                        </paper-button>
-                    </div>
-                    <div>
-                        <paper-button on-click="_openConfirm">
-                            <paper-icon-button icon="av:not-interested" aria-label="delete">
-                            </paper-icon-button>
-                        </paper-button>
-                    </div>
-                
-                </article>
-            </template>                            
-        </dom-repeat>
-        `}static get is(){return"cms-article-item"}static get properties(){return{article:{type:Object,notify:!0,observer:"_putRow"},published:{type:String,reflectToAttribute:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},papgePath:{type:String,value:"edit-articles"}}}ready(){super.ready()}_putRow(item){if(item.image){this.set("content",item.items);this.set("images",item.image);this.set("info",item.info)}}_showPage(){let string=window.btoa(`${JSON.stringify(this.article)}`);window.history.pushState({},null,`${this.rootPath}content/articles/edit-articles?content=${string}&add=false`);window.dispatchEvent(new CustomEvent("location-changed"))}_getParameter(item){return item}_getImage(){return this.images[0].url}_getPublished(){return this.info[0].published}_openConfirm(event){let index=event.srcElement.parentElement.getAttribute("value");this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:this.content[index].name,method:this._deleteImg.bind(this),argument:index,headderMsgKind:"delete",type:"article"}}))})}_confirmPublish(event){let index=event.srcElement.parentElement.getAttribute("value");this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:this.content[index].name,method:this.__publish.bind(this),argument:index,headderMsgKind:"publish",type:"article"}}))})}__delete(data){let page=data;this.translator._DBW.deletePage(msg=>{if("error"!==msg){this.log(msg)}else{this.error(msg)}},page,this.translator.__DEV)}__publish(){console.log("!!to be done!!")}}_exports.cmsArticleItem=cmsArticleItem;customElements.define(cmsArticleItem.is,cmsArticleItem);var cmsArticleItem$1={cmsArticleItem:cmsArticleItem};_exports.$cmsArticleItem=cmsArticleItem$1;const Consts=new _cmsLogin.Setter;Consts.assets=Consts.getAssets("cms-articles");class cmsArticle extends _cmsLogin.cmsItemImageTemplate{static get _getStyles(){return _cmsLogin.html`        
+        }`}static get is(){return"cms-article-item"}static get properties(){return{user:{type:Object,notify:!0},article:{type:Array,notify:!0,observer:"_putRow"},published:{type:String,reflectToAttribute:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},papgePath:{type:String,value:"edit-articles"},objMedia:{type:Object,value:{}},objInfo:{type:Object,value:{}},objData:{type:Object,value:{}}}}ready(){super.ready()}_putRow(data){let artInfo,artContent;[artInfo,artContent]=data.map(item=>{return item});this.objInfo=artInfo;for(let item in artContent){if("images"===item||"videos"===item){this.objMedia[item]=artContent[item]}else{this.objData[item]=artContent[item]}}const articleTemplate=(objData,objInfo)=>_cmsLogin.html$2`
+                   <article centerListItem slot="table">
+                       <div>   
+                           <span> 
+                               <paper-button class="button-normal" @click="${this.showPage.bind(this)}"> 
+                                   ${objData.pt.articleName}
+                               </paper-button>                        
+                           </span>
+                       </div>    
+                       <div>   
+                           <span> 
+                               <paper-button class="button-normal"> 
+                                   ${objData.pt.type}
+                               </paper-button>                        
+                           </span>
+                       </div> 
+                       <div >                    
+                           <span> 
+                               <paper-button class="button-normal">
+                                   ${objInfo.categories[0]} 
+                               </paper-button>
+                           </span>
+                       </div>  
+                       <div>                    
+                           <span> 
+                               <paper-button  class="${objInfo.Published}" @click="${this._confirmPublish.bind(this)}">
+                                   ${objInfo.Published} 
+                               </paper-button>
+                           </span>
+                       </div>   
+                       <div>                    
+                           <span> 
+                               <paper-button class="button-normal">
+                                   ${objInfo.stock} 
+                               </paper-button>
+                           </span>
+                       </div> 
+                       <div>
+                            <paper-button class="button-del" @click="${this._openConfirm.bind(this)}">
+                                <paper-icon-button icon="av:not-interested" aria-label="mode-delete">
+                                </paper-icon-button> 
+                            </paper-button> 
+                       </div>
+                   </article>`;(0,_cmsLogin.render)(articleTemplate(this.objData,this.objInfo),this);localStorage.setItem(`article-${this.objInfo.id}-info`,JSON.stringify(this.objInfo));localStorage.setItem(`article-${this.objInfo.id}-data`,JSON.stringify(this.objData));localStorage.setItem(`article-${this.objInfo.id}-media`,JSON.stringify(this.objMedia))}_getPagename(cats){return cats}error(data){console.error("error from cms-article-viewer",data)}showPage(){let arr=Object.keys(this.objData);window.history.pushState({},null,`content/articles/edit-articles?content=${this.objInfo.id}&add=false&lang=${arr[0]}`);window.dispatchEvent(new CustomEvent("location-changed"))}__delete(){// console.log(this.objInfo)
+this.objInfo.removed=!0;this.getArticleData(this.objInfo.id,"info").then(this.removeArticle.bind(this)).catch(err=>console.log(err))}__publish(data){console.log(data)}_openConfirm(){this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:this.objInfo.id,method:this.__delete.bind(this),argument:this.objInfo.id,headderMsgKind:"remove ?",type:"article"}}))})}_confirmPublish(){this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:this.objInfo.id,method:this.__publish.bind(this),argument:"!!to be done!!",headderMsgKind:"publish ?",type:"article"}}))})}__reset(){this._debounceEvent=_cmsLogin.Debouncer.debounce(this._debounceEvent,_cmsLogin.microTask,()=>{window.dispatchEvent(new CustomEvent("reset-list-type",{bubbles:!0,composed:!0}))})}}_exports.cmsArticleItem=cmsArticleItem;customElements.define(cmsArticleItem.is,cmsArticleItem);var cmsArticleItem$1={cmsArticleItem:cmsArticleItem};_exports.$cmsArticleItem=cmsArticleItem$1;class cmsArticleView extends(0,_cmsLogin.cmsArticlesLib)(_cmsLogin.cmsMiddlePageTemplate){static get _getStyles(){return _cmsLogin.html`
         div[arow]{
-            font-size: var(--app-images-article-font-size);
-            height: 41px;
-            padding-top: unset;
+            color: #5487b6; 
         }
-        div[arow] h4{
-            margin-block-start: 8px;
-        }
-        `}static get _getMenu(){return _cmsLogin.html`                           
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[item]]">  [[item]]   </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[title]]"> 
-                    [[title]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">
-                    <h4 title="[[viewedit]]"> [[viewedit]] </h4>
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4 title="[[stock]]"> 
-                    [[stock]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[type]]"> 
-                    [[type]]     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[published]]"> 
-                    [[published]] </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4 title="[[delete]]"> 
-                    [[delete]]      </h4>     
-                </div>  
-            </section>`}static get _getItem(){return _cmsLogin.html` 
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>
-                <cms-article-item article="[[item]]">
-                </cms-article-item>
-            </template>                            
-        </dom-repeat>`}static get is(){return"cms-article"}static get properties(){return{lang:{type:String,notify:!0//observer: '__changeLang'
-},langs:{type:Object,value:{}},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},article:{type:Array,notify:!0},content:{type:Array,notify:!0,computed:"_getArticle(article)"}}}ready(){super.ready();this.translator.target("cms-articles","setLangObject",this._setLObj.bind(this));this.translator.target("cms-articles","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-articles","setLangObject")}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}__publish(data){console.log(data)}_deleteImg(data){console.log(data)}_getArticle(data){return[data]}}customElements.define(cmsArticle.is,cmsArticle);class cmsArticleView extends _cmsLogin.cmsMiddlePageTemplate{static get _getShoutAnchor(){return _cmsLogin.html`        
-            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-                <a id="reset" href="[[rootPath]]content/articles">
-                    <paper-icon-button  icon="arrow-back" aria-label="Go back">
-                    </paper-icon-button>
-                </a>
-            </iron-selector>`}static get _getSilentAnchor(){return _cmsLogin.html`
-        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-            <a href="[[rootPath]][[url]]">
-                <paper-tab name=" add-category-pages">
-                    <span class="spanpadding"> 
-                    [[ADD]] [[articles]] 
-                    </span>
-                    <paper-icon-button-light>
-                        <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                    </paper-icon-button-light>
-                </paper-tab>
-            </a>
-        </iron-selector>
+        `}static get _getSilentAnchor(){return _cmsLogin.html`            
+        <a href="[[rootPath]]content/articles/add-articles?&add=true">
+            <div class="add-btn-group" title="[[ADD]]">
+                <div class="add-btn-group-item group-item-top-left" ></div>
+
+                <div class="add-btn-group-item group-item-top-right"></div>
+
+                <div class="add-btn-group-item group-item-bottom-left"></div>
+
+                <div class="add-btn-group-item group-item-bottom-right"></div>
+            </div>
+        </a>
+        `}static get _topLabel(){return _cmsLogin.html`       
+            <h2>[[articles]]</h2>               
         `}static get _getTable(){return _cmsLogin.html`
-        <div table> 
-            <dom-repeat items="[[contents]]" as="item">
+        <div table class="scroll">          
+            <dom-repeat repeat items="[[contents]]" as="item">
                 <template>
-                    <cms-article article="[[item]]" route="[[routeData]]" lang="[[lang]]">
-                    </cms-article>
-                </template>
+                    <slot name="article-[[index]]">                    
+                </template>                            
             </dom-repeat>
-        </div>    `}static get _getNavside(){return _cmsLogin.html`
-        <dom-repeat repeat items="[[info]]" as="detail">
-            <template>
-                <div class="center-menu">
-                    <aside>
-                        <span>
-                            [[Info]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="row-menu">
-                    <aside>
-                        <span>
-                        [[Category]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[articlecount]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[Type]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="center-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                        <b> [[detail.id]]</b>
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                        <b> [[detail.items]]</b>
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                        <b> [[detail.type]]</b>
-                        </span>
-                    </aside>
-                </div>
-                <div class="collumn-left-menu">
-                    <aside>
-                        <span>
-                        [[Published]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="collumn-left-menu">
-                    <aside class="asideBackgrc">
-                        <span>
-                        <b> [[detail.publishedCount]] </b>
-                        </span>
-                    </aside>
-                </div>
-                <div rightSide>                            
-                    <dom-repeat repeat items="[[detail.published]]" as="published">
-                        <template>
-                            <section>
-                                <aside>
-                                    <span>
-                                        [[published.article]]
-                                    </span>
-                                </aside>
-                                <aside>
-                                    <span>
-                                        [[published.datePublished]]
-                                    </span>
-                                </aside>
-                            </section>
-                        </template>
-                    </dom-repeat>
-                </div>
-            </template>
-        </dom-repeat>
-        `}static get is(){return"cms-article-view"}static get properties(){return{lang:{type:String,notify:!0,observer:"__changeLang"},langs:{type:Object,value:{}},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},route:{type:Object,notify:!0},user:{type:Object,notify:!0},contents:{type:Array,notify:!0,value:[],observer:"_killSpinner"},hidebottom:{type:Boolean,value:!0,reflectToAttribute:!0},url:{type:String,notify:!0},obj:{type:Object,notify:!0,value:{contentText:[{description:""}],image:[],info:[{author:"",dateAdded:"",publishedBy:[{author:"",date:"",uid:""}],unPublishedBy:[{author:"",date:"",uid:""}]}],items:[{brand:"",category:"",lang:"",price:"",stock:"",title:"",type:""}]}}}}static get observers(){return["_routePageChanged(routeData, query, active)"]}ready(){super.ready();this.translator.target("cms-article-view","setLangObject",this._setLObj.bind(this));this.translator.target("cms-article-view","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-article-view","setLangObject");this.$.reset.addEventListener("click",this._removeInnerHTML.bind(this));window.addEventListener("reset",this._removeInnerHTML.bind(this))}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_routePageChanged(routeData,query,active){if(!0===!!active&&!0===!!routeData.page&&"view-articles"===routeData.page){if("content"in query){this._setContent(query.content,query);console.log}}}_setContent(cont,query){let content=JSON.parse(atob(cont)),info;info=content.info;content=content.content;if(!0===content instanceof Array){this.obj.items[0].type=query.type;this.obj.items[0].category=query.category;this.obj.info[0].author=this.user.displayName;let obj=btoa(JSON.stringify(this.obj));this.url=`content/articles/add-articles?content=${obj}&add=true`;this.set("contents",[]);this.set("contents",content);this.set("info",[]);this.set("info",info)}this.set("add","true"===query.add);this.slashed=!1}_killSpinner(data){if(0<data.length&&0<this.childElementCount&&"spinner"===this.children[0].getAttribute("slot")){this.removeChild(this.children[0])}}_removeInnerHTML(){this.set("contents",[]);this.set("info",[]);this.set("add",!1);this.slashed=!0;window.onbeforeunload=function(){}}}customElements.define(cmsArticleView.is,cmsArticleView)});
+        </div>    `}static get _getBottom(){return _cmsLogin.html`       
+        <div class="count">
+            <span> [[contents.length]] </span>
+        </div>
+        <section class="flexchildbotom noFlex">
+            <div class="center">            
+                <h4> [[viewedit]] </h4>
+            </div>
+        </section>                       
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[Type]] </h4>
+            </div>
+        </section>                       
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[Category]] </h4>
+            </div>
+        </section>                       
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[Published]] </h4>
+            </div>
+        </section>   
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[STOCK]]  </h4>
+            </div>
+        </section>                          
+        <section class="flexchildbotom noFlex">
+            <div aria-delete="delete" class="center">
+                <h4> [[delete]] </h4>
+            </div>
+        </section>
+        `}static get is(){return"cms-article-view"}static get properties(){return{route:{type:Object,notify:!0},user:{type:Object,notify:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];// MyAppGlobals.translator
+}},lang:{type:String,notify:!0,observer:"__changeLang"},langs:{type:Object,value:{}},contents:{type:Array,notify:!0,value:[],observer:"_setArticleElements"}}}static get observers(){return["_routePageChanged(routeData.page, query.reset)"]}ready(){super.ready();const articleTemplate=()=>_cmsLogin.html$2`<paper-spinner-lite active="false" slot="spinner">`;(0,_cmsLogin.render)(articleTemplate(),this);this.translator.target("cms-article-view","setLangObject",this._setLObj.bind(this));this.translator.target("cms-article-view","changeLang",this._setLang.bind(this),/* ignoreName */!1/* skipSlots */ /* skipSlots */);this.translator.shoot("cms-article-view","setLangObject")}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_routePageChanged(page,rst){if("number"===typeof this.time)clearInterval(this.time);let reset="true"===rst;this.scrollTo(0,0);if(!rst){if(!!page&&"articles"===page){if(0===this.contents.length){this.time=setTimeout(()=>{(0,_cmsLogin.afterNextRender)(this,()=>{this.getArticles({q:"removed",v:!1})})},120)}}}else if(!0===reset){const articleTemplate=()=>_cmsLogin.html$2`<paper-spinner-lite active="false" slot="spinner">`;(0,_cmsLogin.render)(articleTemplate(),this);this.time=setTimeout(()=>{(0,_cmsLogin.afterNextRender)(this,()=>{this._contentChanged()})},500)}else if(!1===reset){this.time=setTimeout(()=>{(0,_cmsLogin.afterNextRender)(this,()=>{window.history.pushState({},null,`${this.rootPath}content/articles`);window.dispatchEvent(new CustomEvent("location-changed"))})},60)}}_setContent(data,art){let temp=this.contents,arr=[];this.contents=[];arr.push(data);arr.push(art);temp.push(arr);this.contents=temp}_contentChanged(){if("number"===typeof this.time)clearTimeout(this.time);if("articles"===this.routeData.page){this.contents=[];(0,_cmsLogin.afterNextRender)(this,()=>{window.history.pushState({},null,`${this.rootPath}content/articles`);window.dispatchEvent(new CustomEvent("location-changed"))})}else{this.contents=[]}}_setArticleElements(data){if("number"===typeof this.time)clearTimeout(this.time);this.time=setTimeout(()=>{const articleTemplate=articles=>_cmsLogin.html$2`${articles.map((article,idx)=>{return _cmsLogin.html$2`<cms-article-item slot="article-${idx}" .article="${article}" .user="${this.user}">
+                       </cms-article-item>`})} `;(0,_cmsLogin.render)(articleTemplate(data),this)},60)}}customElements.define(cmsArticleView.is,cmsArticleView)});

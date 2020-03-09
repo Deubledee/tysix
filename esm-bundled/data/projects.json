@@ -1,0 +1,63 @@
+{
+    "main": {
+        "name": "tysix",
+        "state": " active",
+        "licence": "tySix-CMS_@Copyright",
+        "origins": [
+            "localhost",
+            "127.0.0.1"
+        ],
+        "server": {
+            "type": "service_account",
+            "project_id": "tysix-75b86",
+            "private_key_id": "831d1b948507f0010d315b439533552d9a7a698c",
+            "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCzPULsraKGPuxl\n+5Beu1eg/lZ/IV4b2B34KaUAL946BK1buFTOaYipgmppDGbIgFyAjKjBoPMJXMdN\n/3wPaSinrCy7/22szlY8s4Pjydq0y4fZ8muat93j0POte6Feb8iCeNukCl+XX4wz\nCzPrZ1ZnOTwT5RRBLEDF44n1Q/3oi/hdO9eZ68c4pE6+A04/9vHuL/DYjHjHpW+q\nuPhkoD55LBqPNHGTzlT5ksuo3u3ExzTD9HSuewMciJ41bupH4S7YJK42vWnSBgBN\n3Nyy+MOZ8SUOLKtJfGGG2oxi9ByMmvazqbL8UhtQVVVKJji+x8gyV3w/Vyctyj76\nHonjDv0/AgMBAAECggEABYJ2Ci+lQqLjuajv9wQsB+/NyJg9UULc46QaeJlEWtPw\npRAxFufB+BLhRORRodfmqrCoMf/JwUQNxFQnWU9BjACUnum3ygLePieyw+ldM4+o\nNctGArHGmlYC5WvBMW8njT5eWpPb2oIktx+g5qx8yKSTwJc0oNmRY51znek+mgd0\nISp4+ULXULI8rZPX8XRQOw35A/VMwAHvwiRKdBI2rRxXmiX0EQGr6WDqTsD1QmvD\nG9mJNOwI5sSWc1VEBU81Km7/E5pyL0NjRgKlTkKRZwWC33jo26MuI3B8xdCtUvCI\nXeyMGbjD3thMtMPpZ7sV5A6jq392tY5AybZdKN824QKBgQDZ6v9aouAhRbBMsVSX\n32RQREx8/M2qb2xl2x9iaq7RI/BEYgzhYzHh0BI2KLKjiJ2E1koIlbtIwsgSZyVk\n2avG4PajKjxzqp8xzng8UIxtchREyLFRo2E0xuHiE0Jv3yMSWa81xiKkodNvCfPt\ns65T4PuktJ9MkW0vnZ9Kxc0X9wKBgQDSj+VLvnXt++fJWJuk4Qo9+vishsAWpWGU\ngDaTrUYEFK9aEgRCbr4Vr8sbkPBTOepCcAyPgFYkKaWE0XUy9gHsDVr0eLtkk/q0\n1j0vIye1Ds5IvSouuqdgkbh9dQotqqyFpZU/khzcTsnmFODF5UUZIotNNtsnqLqH\nGxE0vYNC+QKBgCLnWekph16s69UM3jDJLicRGXM3hrWSzTjvRPKdhcynxfceAVQk\ncDvr+M7F6/73hcteC1Oer/WyhRs1fC7QEoxzQe3WeQJJxN/UYzu95xAsooR15Ljf\nw1URueJdFVoX0mVBCihByRC3fscdP/3FttlmgsfZyl4YOPXUeEwgrH33AoGBAMNI\nG0OlT6A46Z4uJKPE5ofXNDxl+M7H8PkV9AgAQphUStDBNtwZ8wcP89IMGSdG5kFZ\nw/xu7PU6/rxwuj5aNCwlsr5bHojISVLgAvytoQzlv2FstyuBhuwkGbOZEaiKythk\nWkgMDeIw3EUcBd7jpLML+5/QCW79qIjXDJ0aShuZAoGAXiDaIJFMkc/Ha4K80cOB\nVuGuyKkv7P18v6M2S1asHWndCA1F8c0jzITE+1lnUi2SXi+UCv5Fu8/WnNLHrhty\nerTXZaYxlpnk1G5pq03/wPqJ1v4lDSFkkBer2X37izHLg48BZFcNup6tk85qPyn/\nzp5ntPaHgEgxOrjPv4mUSw8=\n-----END PRIVATE KEY-----\n",
+            "client_email": "diogo-279@tysix-75b86.iam.gserviceaccount.com",
+            "client_id": "116283630562493973731",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/diogo-279%40tysix-75b86.iam.gserviceaccount.com"
+        },
+        "client": {
+            "apiKey": "AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18",
+            "authDomain": "tysix-75b86.firebaseapp.com",
+            "databaseURL": "https://tysix-75b86.firebaseio.com",
+            "projectId": "tysix-75b86",
+            "storageBucket": "tysix-75b86.appspot.com",
+            "messagingSenderId": "954772075724"
+        }
+    },
+    "projects": [
+        {
+            "name": "anadiastrad",
+            "state": " active",
+            "licence": "tySix-Free",
+            "origins": [
+                "localhost",
+                "127.0.0.1"
+            ],
+            "server": {
+                "type": "service_account",
+                "project_id": "anadiastrad-ad4bd",
+                "private_key_id": "f5c327804ae5cc358d5cd4841af078742928b518",
+                "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDKcaBYMl6oMVLE\nBrRzDdS4ye8J0ssWc6C4f28+Iyvu4YOj5UFFaZkqhuNaFO42SNOPaUeknI3l47kl\nILFa6sSMGJJTNkdHXDBXMxRi2sJosrVPq/laVurf7A94/PWfgreIqAxfCocaRrCO\nl/gg5qNxWec+yfH9zzQ4TQnlt+lSw9QNunp9goQW8IG2XKIPxvhcb1LVNDDd5DSv\ngfLvNfLDriACs8j7NC7ZQYiNicAFZi8gS3VNBoHvbaxrpx7EiOwdK7FlhRpNeCO6\n+BL3xA5zkBdzHqpkgZqElkQjA18w4k5MkXg5qHUdpXTSykmeE/F6NAjas38FwHBa\n0Rp7czBlAgMBAAECggEAD3/CiG4WzCa2kPZ4c0SQUDN5nxVp4gapO+bZw/aaYvgW\nBYLETAWpKdXY6ykmEbbip5ymVQZ9YKfeIWcO3QiTUqyA62kA7Qg0VUC+Y1EfSDfC\nZN6kQRPdeJZQmvE29ubhmU9QXyhlro/R7aDZ6N7vjXqWFzsL0WQ/Ob5ALzu029aq\ndelCpqG39dfW/NaNsmI4SRWyT6tqZR/57rAEurLuv5FLUZ440P935r2ykKlidbD/\n6R0WTTfqbV7TSFgUk2zxRmcmM2BHxaz1284/yKonrd0ETlNimKiUMPS6/YPyKauo\nnYVjDpyC6wPf0TLO+q5N7Cp1mM1nxHKHXR0f6LErUwKBgQDlggpLVZ2KtrGkoWgR\nN2caVaGaUbA/fg3rtZxk7qvLnYr63s9GbZ1zayFOFB53eJG0n0GEj5a8Bpe+Jlvw\nmeWnRHNl4Z7Vut1E3UBw7c5NobD2On4jbQGCM38iKl+est/PT3+kNwMcdbC+Wuqy\n57KHrgIbiRDNAQ2wtynBm7BOGwKBgQDhz9dxKFWzhkRHz0IKQP+Hu9qibaQiU810\nl1NodvpGc1slmpeFoO/YoRdcTwXYu5fcILXjDPfJ7PScwVv4cNEZ+I+msHExDyly\nvPTAh1KewxdFLH/tsjrXUE2z7lYqLVqe+EYE45IB+CWMf9oRwEoq8NWdqT08WE6n\neS3QHthjfwKBgAy8k7+sh6qsCt29C15xOaqPeAFtaR+M6k7bbEt5p1UMcCsN9GjP\nKn6+QkHoAezVZxikAenOYiobH46w6EdI8yK+PL05sSvhS+hHcw0RVXKfd4eipV9n\n7D6ChxqpSVcwTBVgLxA48VZB/cYCm6XED/dRo9JNX/5Qgab98zZIYpdjAoGAOnNW\nTRAnvuSOYBgh/A1/F19k5I6E4e3XTMqu6GeDuSC7AyzU894It4ZbSaWa2dMVKAG/\nkxoUOcyANONILzLkrVhNttQNOKm4DN8ka4GbvUS6jUlLg/eSi5FZy61x2FENGAEj\n/rf5X1EgRxIBHH8ts5fLc5gPJcOl+GvBlBGn6XkCgYBz/dSnIWUdDzTR08Mr8ppk\nuN+qXUZpIkzxxlHtwGreoLP+CSxANquWKck1GilIehoZNgge7exZ0ECTit6VC5o2\nuDFRD7CFC6ycWyliBECK/e+lpZOryGlGLPdbG6/A/HyOlLVdUpvxjGw9srvOtMg7\nZiVqKKO7HPvzT/agDMiO+Q==\n-----END PRIVATE KEY-----\n",
+                "client_email": "diogo-287@anadiastrad-ad4bd.iam.gserviceaccount.com",
+                "client_id": "117117169559291984319",
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/diogo-287%40anadiastrad-ad4bd.iam.gserviceaccount.com"
+            },
+            "client": {
+                "apiKey": "AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18",
+                "authDomain": "tysix-75b86.firebaseapp.com",
+                "databaseURL": "https://tysix-75b86.firebaseio.com",
+                "projectId": "tysix-75b86",
+                "storageBucket": "tysix-75b86.appspot.com",
+                "messagingSenderId": "954772075724",
+                "appId": "1:954772075724:web:7af07115e63712395a7e69"
+            }
+        }
+    ]
+}

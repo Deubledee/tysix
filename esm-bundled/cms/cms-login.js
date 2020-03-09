@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         * @param {string} prop Property name
                                         * @param {?Object} obj Reference object
                                         * @return {string} Potentially renamed property name
-                                        */window.JSCompiler_renameProperty=function(prop,obj){return prop};/* eslint-enable */let CSS_URL_RX=/(url\()([^)]*)(\))/g,ABS_URL=/(^\/)|(^#)|(^[\w-\d]*:)/,workingURL,resolveDoc;/**
+                                        */window.JSCompiler_renameProperty=function(prop,obj){return prop};/* eslint-enable */let CSS_URL_RX=/(url\()([^)]*)(\))/g,ABS_URL=/(^\/[^\/])|(^#)|(^[\w-\d]*:)/,workingURL,resolveDoc;/**
                  * Resolves the given URL against the provided `baseUri'.
                  *
                  * Note that this function performs no resolution for URLs that start
@@ -23,9 +23,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                  * @param {string} url Input URL to resolve
                  * @param {?string=} baseURI Base URI to resolve the URL against
                  * @return {string} resolved URL
-                 */function resolveUrl(url,baseURI){if(url&&ABS_URL.test(url)){return url}// Lazy feature detection.
-if(workingURL===void 0){workingURL=!1;try{const u=new URL("b","http://a");u.pathname="c%20d";workingURL="http://a/c%20d"===u.href}catch(e){// silently fail
-}}if(!baseURI){baseURI=document.baseURI||window.location.href}if(workingURL){return new URL(url,baseURI).href}// Fallback to creating an anchor into a disconnected document.
+                 */function resolveUrl(url,baseURI){if(url&&ABS_URL.test(url)){return url}if("//"===url){return url}// Lazy feature detection.
+if(workingURL===void 0){workingURL=/* ignoreName */ /* ignoreName */!1/* skipSlots */ /* skipSlots */;try{const u=new URL("b","http://a");u.pathname="c%20d";workingURL="http://a/c%20d"===u.href}catch(e){// silently fail
+}}if(!baseURI){baseURI=document.baseURI||window.location.href}if(workingURL){try{return new URL(url,baseURI).href}catch(e){// Bad url or baseURI structure. Do not attempt to resolve.
+return url}}// Fallback to creating an anchor into a disconnected document.
 if(!resolveDoc){resolveDoc=document.implementation.createHTMLDocument("temp");resolveDoc.base=resolveDoc.createElement("base");resolveDoc.head.appendChild(resolveDoc.base);resolveDoc.anchor=resolveDoc.createElement("a");resolveDoc.body.appendChild(resolveDoc.anchor)}resolveDoc.base.href=baseURI;resolveDoc.anchor.href=url;return resolveDoc.anchor.href||url}/**
    * Resolves any relative URL's in the given CSS text against the provided
    * `ownerDocument`'s `baseURI`.
@@ -46,13 +47,13 @@ if(!resolveDoc){resolveDoc=document.implementation.createHTMLDocument("temp");re
                                                                                           * document URL, but can be overridden by users.  It may be useful to set
                                                                                           * `rootPath` to provide a stable application mount path when
                                                                                           * using client side routing.
-                                                                                          */let rootPath=void 0||pathFromUrl(document.baseURI||window.location.href);/**
-                                                                                           * Sets the global rootPath property used by `ElementMixin` and
-                                                                                           * available via `rootPath`.
-                                                                                           *
-                                                                                           * @param {string} path The new root path
-                                                                                           * @return {void}
-                                                                                           */const setRootPath=function(path){rootPath=path};/**
+                                                                                          */let rootPath=pathFromUrl(document.baseURI||window.location.href);/**
+                                                                              * Sets the global rootPath property used by `ElementMixin` and
+                                                                              * available via `rootPath`.
+                                                                              *
+                                                                              * @param {string} path The new root path
+                                                                              * @return {void}
+                                                                              */const setRootPath=function(path){rootPath=path};/**
     * A global callback used to sanitize any value before inserting it into the DOM.
     * The callback signature is:
     *
@@ -101,10 +102,43 @@ if(!resolveDoc){resolveDoc=document.implementation.createHTMLDocument("temp");re
     */let allowTemplateFromDomModule=!1;/**
                                                 * Sets `lookupTemplateFromDomModule` globally for all elements
                                                 *
-                                                * @param {boolean} allowDomModule enable or disable template lookup 
+                                                * @param {boolean} allowDomModule enable or disable template lookup
                                                 *   globally
                                                 * @return {void}
-                                                */const setAllowTemplateFromDomModule=function(allowDomModule){allowTemplateFromDomModule=allowDomModule};var settings={useShadow:useShadow,useNativeCSSProperties:useNativeCSSProperties,useNativeCustomElements:useNativeCustomElements,get rootPath(){return rootPath},setRootPath:setRootPath,get sanitizeDOMValue(){return sanitizeDOMValue},setSanitizeDOMValue:setSanitizeDOMValue,get passiveTouchGestures(){return passiveTouchGestures},setPassiveTouchGestures:setPassiveTouchGestures,get strictTemplatePolicy(){return strictTemplatePolicy},setStrictTemplatePolicy:setStrictTemplatePolicy,get allowTemplateFromDomModule(){return allowTemplateFromDomModule},setAllowTemplateFromDomModule:setAllowTemplateFromDomModule};let dedupeId=0;/**
+                                                */const setAllowTemplateFromDomModule=function(allowDomModule){allowTemplateFromDomModule=allowDomModule};/**
+    * Setting to skip processing style includes and re-writing urls in css styles.
+    * Normally "included" styles are pulled into the element and all urls in styles
+    * are re-written to be relative to the containing script url.
+    * If no includes or relative urls are used in styles, these steps can be
+    * skipped as an optimization.
+    */let legacyOptimizations=!1;/**
+                                         * Sets `legacyOptimizations` globally for all elements to enable optimizations
+                                         * when only legacy based elements are used.
+                                         *
+                                         * @param {boolean} useLegacyOptimizations enable or disable legacy optimizations
+                                         * includes and url rewriting
+                                         * @return {void}
+                                         */const setLegacyOptimizations=function(useLegacyOptimizations){legacyOptimizations=useLegacyOptimizations};/**
+    * Setting to perform initial rendering synchronously when running under ShadyDOM.
+    * This matches the behavior of Polymer 1.
+    */let syncInitialRender=!1;/**
+                                       * Sets `syncInitialRender` globally for all elements to enable synchronous
+                                       * initial rendering.
+                                       *
+                                       * @param {boolean} useSyncInitialRender enable or disable synchronous initial
+                                       * rendering globally.
+                                       * @return {void}
+                                       */const setSyncInitialRender=function(useSyncInitialRender){syncInitialRender=useSyncInitialRender};/**
+    * Setting to cancel synthetic click events fired by older mobile browsers. Modern browsers
+    * no longer fire synthetic click events, and the cancellation behavior can interfere
+    * when programmatically clicking on elements.
+    */let cancelSyntheticClickEvents=!0/* skipSlots */;/**
+                                               * Sets `setCancelSyntheticEvents` globally for all elements to cancel synthetic click events.
+                                               *
+                                               * @param {boolean} useCancelSyntheticClickEvents enable or disable cancelling synthetic
+                                               * events
+                                               * @return {void}
+                                               */const setCancelSyntheticClickEvents=function(useCancelSyntheticClickEvents){cancelSyntheticClickEvents=useCancelSyntheticClickEvents};var settings={useShadow:useShadow,useNativeCSSProperties:useNativeCSSProperties,useNativeCustomElements:useNativeCustomElements,get rootPath(){return rootPath},setRootPath:setRootPath,get sanitizeDOMValue(){return sanitizeDOMValue},setSanitizeDOMValue:setSanitizeDOMValue,get passiveTouchGestures(){return passiveTouchGestures},setPassiveTouchGestures:setPassiveTouchGestures,get strictTemplatePolicy(){return strictTemplatePolicy},setStrictTemplatePolicy:setStrictTemplatePolicy,get allowTemplateFromDomModule(){return allowTemplateFromDomModule},setAllowTemplateFromDomModule:setAllowTemplateFromDomModule,get legacyOptimizations(){return legacyOptimizations},setLegacyOptimizations:setLegacyOptimizations,get syncInitialRender(){return syncInitialRender},setSyncInitialRender:setSyncInitialRender,get cancelSyntheticClickEvents(){return cancelSyntheticClickEvents},setCancelSyntheticClickEvents:setCancelSyntheticClickEvents};let dedupeId=0;/**
                    * @constructor
                    * @extends {Function}
                    * @private
@@ -159,7 +193,7 @@ modules[id]=lcModules[id.toLowerCase()]=module}/**
    * @summary Custom element that provides a registry of relocatable DOM content
    *   by `id` that is agnostic to bundling.
    * @unrestricted
-   */class DomModule extends HTMLElement{static get observedAttributes(){return["id"]}/**
+   */class DomModule extends HTMLElement{/** @override */static get observedAttributes(){return["id"]}/**
      * Retrieves the element specified by the css `selector` in the module
      * registered by `id`. For example, this.import('foo', 'img');
      * @param {string} id The id of the dom-module in which to search.
@@ -224,12 +258,12 @@ if(template){styles.push(...stylesFromTemplate(template,/** @type {templateWithA
    * Returns the `<style>` elements within a given template.
    *
    * @param {!HTMLTemplateElement} template Template to gather styles from
-   * @param {string} baseURI baseURI for style content
+   * @param {string=} baseURI baseURI for style content
    * @return {!Array<!HTMLStyleElement>} Array of styles
    */function stylesFromTemplate(template,baseURI){if(!template._styles){const styles=[],e$=template.content.querySelectorAll("style");// if element is a template, get content from its .content
 for(let i=0;i<e$.length;i++){let e=e$[i],include=e.getAttribute(INCLUDE_ATTR);// support style sharing by allowing styles to "include"
 // other dom-modules that contain styling
-if(include){styles.push(...stylesFromModules(include).filter(function(item,index,self){return self.indexOf(item)===index}))}if(baseURI){e.textContent=resolveCss(e.textContent,baseURI)}styles.push(e)}template._styles=styles}return template._styles}/**
+if(include){styles.push(...stylesFromModules(include).filter(function(item,index,self){return self.indexOf(item)===index}))}if(baseURI){e.textContent=resolveCss(e.textContent,/** @type {string} */baseURI)}styles.push(e)}template._styles=styles}return template._styles}/**
    * Returns a list of <style> elements  from stylesheets loaded via `<link rel="import" type="css">` links within the specified `dom-module`.
    *
    * @param {string} moduleId Id of `dom-module` to gather CSS from
@@ -285,7 +319,23 @@ for(let i=0,e;i<e$.length;i++){e=e$[i];if(e.parentNode){e.parentNode.removeChild
    * @deprecated
    * @param {!HTMLElement} module dom-module element that could contain `<link rel="import" type="css">` styles
    * @return {string} Concatenated CSS content from links in the dom-module
-   */function _cssFromModuleImports(module){let cssText="",styles=_stylesFromModuleImports(module);for(let i=0;i<styles.length;i++){cssText+=styles[i].textContent}return cssText}var styleGather={stylesFromModules:stylesFromModules,stylesFromModule:stylesFromModule,stylesFromTemplate:stylesFromTemplate,stylesFromModuleImports:stylesFromModuleImports,cssFromModules:cssFromModules,cssFromModule:cssFromModule,cssFromTemplate:cssFromTemplate,cssFromModuleImports:cssFromModuleImports};function isPath(path){return 0<=path.indexOf(".")}/**
+   */function _cssFromModuleImports(module){let cssText="",styles=_stylesFromModuleImports(module);for(let i=0;i<styles.length;i++){cssText+=styles[i].textContent}return cssText}var styleGather={stylesFromModules:stylesFromModules,stylesFromModule:stylesFromModule,stylesFromTemplate:stylesFromTemplate,stylesFromModuleImports:stylesFromModuleImports,cssFromModules:cssFromModules,cssFromModule:cssFromModule,cssFromTemplate:cssFromTemplate,cssFromModuleImports:cssFromModuleImports};/**
+   @license
+   Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+   The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+   The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+   Code distributed by Google as part of the polymer project is also
+   subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+   */ /* eslint-disable valid-jsdoc */ /**
+                                        * Node wrapper to ensure ShadowDOM safe operation regardless of polyfill
+                                        * presence or mode. Note that with the introduction of `ShadyDOM.noPatch`,
+                                        * a node wrapper must be used to access ShadowDOM API.
+                                        * This is similar to using `Polymer.dom` but relies exclusively
+                                        * on the presence of the ShadyDOM polyfill rather than requiring the loading
+                                        * of legacy (Polymer.dom) API.
+                                        * @type {function(Node):Node}
+                                        */const wrap=window.ShadyDOM&&window.ShadyDOM.noPatch&&window.ShadyDOM.wrap?window.ShadyDOM.wrap:window.ShadyDOM?n=>ShadyDOM.patch(n):n=>n;var wrap$1={wrap:wrap};function isPath(path){return 0<=path.indexOf(".")}/**
    * Returns the root property name for the given path.
    *
    * Example:
@@ -502,6 +552,7 @@ prop[path]=value}return parts.join(".")}/**
      * @param {!Object} props Object whose keys are names of accessors.
      * @return {void}
      * @protected
+     * @nocollapse
      */static createProperties(props){const proto=this.prototype;for(let prop in props){// don't stomp an existing accessor
 if(!(prop in proto)){proto._createPropertyAccessor(prop)}}}/**
        * Returns an attribute name that corresponds to the given property.
@@ -511,12 +562,14 @@ if(!(prop in proto)){proto._createPropertyAccessor(prop)}}}/**
        * @return {string} Attribute name corresponding to the given property.
        *
        * @protected
+       * @nocollapse
        */static attributeNameForProperty(property){return property.toLowerCase()}/**
        * Override point to provide a type to which to deserialize a value to
        * a given property.
        * @param {string} name Name of property
        *
        * @protected
+       * @nocollapse
        */static typeForProperty(name){}//eslint-disable-line no-unused-vars
 /**
      * Creates a setter/getter pair for the named property with its own
@@ -534,20 +587,20 @@ if(!(prop in proto)){proto._createPropertyAccessor(prop)}}}/**
      * @return {void}
      * @protected
      * @override
-     */_createPropertyAccessor(property,readOnly){this._addPropertyToAttributeMap(property);if(!this.hasOwnProperty("__dataHasAccessor")){this.__dataHasAccessor=Object.assign({},this.__dataHasAccessor)}if(!this.__dataHasAccessor[property]){this.__dataHasAccessor[property]=!0;this._definePropertyAccessor(property,readOnly)}}/**
+     */_createPropertyAccessor(property,readOnly){this._addPropertyToAttributeMap(property);if(!this.hasOwnProperty(JSCompiler_renameProperty("__dataHasAccessor",this))){this.__dataHasAccessor=Object.assign({},this.__dataHasAccessor)}if(!this.__dataHasAccessor[property]){this.__dataHasAccessor[property]=!0;this._definePropertyAccessor(property,readOnly)}}/**
        * Adds the given `property` to a map matching attribute names
        * to property names, using `attributeNameForProperty`. This map is
        * used when deserializing attribute values to properties.
        *
        * @param {string} property Name of the property
        * @override
-       */_addPropertyToAttributeMap(property){if(!this.hasOwnProperty("__dataAttributes")){this.__dataAttributes=Object.assign({},this.__dataAttributes)}if(!this.__dataAttributes[property]){const attr=this.constructor.attributeNameForProperty(property);this.__dataAttributes[attr]=property}}/**
+       */_addPropertyToAttributeMap(property){if(!this.hasOwnProperty(JSCompiler_renameProperty("__dataAttributes",this))){this.__dataAttributes=Object.assign({},this.__dataAttributes)}if(!this.__dataAttributes[property]){const attr=this.constructor.attributeNameForProperty(property);this.__dataAttributes[attr]=property}}/**
        * Defines a property accessor for the given property.
        * @param {string} property Name of the property
        * @param {boolean=} readOnly When true, no setter is created
        * @return {void}
        * @override
-       */_definePropertyAccessor(property,readOnly){Object.defineProperty(this,property,{/* eslint-disable valid-jsdoc */ /** @this {PropertiesChanged} */get(){return this._getProperty(property)},/** @this {PropertiesChanged} */set:readOnly?function(){}:function(value){this._setProperty(property,value)}/* eslint-enable */})}constructor(){super();this.__dataEnabled=!1;this.__dataReady=!1;this.__dataInvalid=!1;this.__data={};this.__dataPending=null;this.__dataOld=null;this.__dataInstanceProps=null;this.__serializing=!1;this._initializeProperties()}/**
+       */_definePropertyAccessor(property,readOnly){Object.defineProperty(this,property,{/* eslint-disable valid-jsdoc */ /** @this {PropertiesChanged} */get(){return this._getProperty(property)},/** @this {PropertiesChanged} */set:readOnly?function(){}:function(value){this._setProperty(property,value)}/* eslint-enable */})}constructor(){super();/** @type {boolean} */this.__dataEnabled=!1;this.__dataReady=!1;this.__dataInvalid=!1;this.__data={};this.__dataPending=null;this.__dataOld=null;this.__dataInstanceProps=null;this.__serializing=!1;this._initializeProperties()}/**
        * Lifecycle callback called when properties are enabled via
        * `_enableProperties`.
        *
@@ -733,7 +786,7 @@ old===old||value===value))}/**
        * @param {string} attribute Attribute name to serialize to.
        * @return {void}
        * @override
-       */_valueToNodeAttribute(node,value,attribute){const str=this._serializeValue(value);if(str===void 0){node.removeAttribute(attribute)}else{node.setAttribute(attribute,str)}}/**
+       */_valueToNodeAttribute(node,value,attribute){const str=this._serializeValue(value);if("class"===attribute||"name"===attribute||"slot"===attribute){node=/** @type {?Element} */wrap(node)}if(str===void 0){node.removeAttribute(attribute)}else{node.setAttribute(attribute,str)}}/**
        * Converts a typed JavaScript value to a string.
        *
        * This method is called when setting JS property values to
@@ -773,6 +826,9 @@ old===old||value===value))}/**
                               * @polymer
                               * @summary Element class mixin for reacting to property changes from
                               *   generated property accessors.
+                              * @template T
+                              * @param {function(new:T)} superClass Class to apply mixin to.
+                              * @return {function(new:T)} superClass with mixin applied.
                               */var propertiesChanged={PropertiesChanged:PropertiesChanged};// that won't have their values "saved" by `saveAccessorValue`, since
 // reading from an HTMLElement accessor from the context of a prototype throws
 const nativeProperties={};let proto=HTMLElement.prototype;while(proto){let props=Object.getOwnPropertyNames(proto);for(let i=0;i<props.length;i++){nativeProperties[props[i]]=!0}proto=Object.getPrototypeOf(proto)}/**
@@ -799,16 +855,18 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
    *
    * For basic usage of this mixin:
    *
-   * -   Declare attributes to observe via the standard `static get observedAttributes()`. Use
-   *     `dash-case` attribute names to represent `camelCase` property names.
+   * -   Declare attributes to observe via the standard `static get
+   *     observedAttributes()`. Use `dash-case` attribute names to represent
+   *     `camelCase` property names.
    * -   Implement the `_propertiesChanged` callback on the class.
-   * -   Call `MyClass.createPropertiesForAttributes()` **once** on the class to generate
-   *     property accessors for each observed attribute. This must be called before the first
-   *     instance is created, for example, by calling it before calling `customElements.define`.
-   *     It can also be called lazily from the element's `constructor`, as long as it's guarded so
-   *     that the call is only made once, when the first instance is created.
-   * -   Call `this._enableProperties()` in the element's `connectedCallback` to enable
-   *     the accessors.
+   * -   Call `MyClass.createPropertiesForAttributes()` **once** on the class to
+   *     generate property accessors for each observed attribute. This must be
+   *     called before the first instance is created, for example, by calling it
+   *     before calling `customElements.define`. It can also be called lazily from
+   *     the element's `constructor`, as long as it's guarded so that the call is
+   *     only made once, when the first instance is created.
+   * -   Call `this._enableProperties()` in the element's `connectedCallback` to
+   *     enable the accessors.
    *
    * Any `observedAttributes` will automatically be
    * deserialized via `attributeChangedCallback` and set to the associated
@@ -819,9 +877,11 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
    * @appliesMixin PropertiesChanged
    * @summary Element class mixin for reacting to property changes from
    *   generated property accessors.
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
    */const PropertyAccessors=dedupingMixin(superClass=>{/**
    * @constructor
-   * @extends {superClass}
    * @implements {Polymer_PropertiesChanged}
    * @unrestricted
    * @private
@@ -839,13 +899,15 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
      * `camelCase` convention
      *
      * @return {void}
-     */static createPropertiesForAttributes(){let a$=this.observedAttributes;for(let i=0;i<a$.length;i++){this.prototype._createPropertyAccessor(dashToCamelCase(a$[i]))}}/**
+     * @nocollapse
+     */static createPropertiesForAttributes(){let a$=/** @type {?} */this.observedAttributes;for(let i=0;i<a$.length;i++){this.prototype._createPropertyAccessor(dashToCamelCase(a$[i]))}}/**
        * Returns an attribute name that corresponds to the given property.
        * By default, converts camel to dash case, e.g. `fooBar` to `foo-bar`.
        * @param {string} property Property to convert
        * @return {string} Attribute name corresponding to the given property.
        *
        * @protected
+       * @nocollapse
        */static attributeNameForProperty(property){return camelToDashCase(property)}/**
        * Overrides PropertiesChanged implementation to initialize values for
        * accessors created for values that already existed on the element
@@ -853,6 +915,7 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
        *
        * @return {void}
        * @protected
+       * @override
        */_initializeProperties(){if(this.__dataProto){this._initializeProtoProperties(this.__dataProto);this.__dataProto=null}super._initializeProperties()}/**
        * Called at instance time with bag of properties that were overwritten
        * by accessors on the prototype when accessors were created.
@@ -865,20 +928,25 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
        *   when creating property accessors.
        * @return {void}
        * @protected
+       * @override
        */_initializeProtoProperties(props){for(let p in props){this._setProperty(p,props[p])}}/**
        * Ensures the element has the given attribute. If it does not,
        * assigns the given value to the attribute.
        *
-       * @suppress {invalidCasts} Closure can't figure out `this` is infact an element
+       * @suppress {invalidCasts} Closure can't figure out `this` is infact an
+       *     element
        *
        * @param {string} attribute Name of attribute to ensure is set.
        * @param {string} value of the attribute.
        * @return {void}
+       * @override
        */_ensureAttribute(attribute,value){const el=/** @type {!HTMLElement} */this;if(!el.hasAttribute(attribute)){this._valueToNodeAttribute(el,value,attribute)}}/**
        * Overrides PropertiesChanged implemention to serialize objects as JSON.
        *
        * @param {*} value Property value to serialize.
-       * @return {string | undefined} String serialized from the provided property value.
+       * @return {string | undefined} String serialized from the provided property
+       *     value.
+       * @override
        */_serializeValue(value){/* eslint-disable no-fallthrough */switch(typeof value){case"object":if(value instanceof Date){return value.toString()}else if(value){try{return JSON.stringify(value)}catch(x){return""}}default:return super._serializeValue(value);}}/**
        * Converts a string to a typed JavaScript value.
        *
@@ -893,6 +961,7 @@ if(!model.__dataProto){model.__dataProto={}}else if(!model.hasOwnProperty(JSComp
        * @param {?string} value Attribute value to deserialize.
        * @param {*=} type Type to deserialize the string to.
        * @return {*} Typed value deserialized from the provided string.
+       * @override
        */_deserializeValue(value,type){/**
        * @type {*}
        */let outValue;switch(type){case Object:try{outValue=JSON.parse(/** @type {string} */value)}catch(x){// allow non-JSON literals like Strings and Numbers
@@ -910,24 +979,52 @@ outValue=value}break;case Array:try{outValue=JSON.parse(/** @type {string} */val
                                           * for the values to take effect.
                                           * @protected
                                           * @return {void}
+                                          * @override
                                           */_definePropertyAccessor(property,readOnly){saveAccessorValue(this,property);super._definePropertyAccessor(property,readOnly)}/**
        * Returns true if this library created an accessor for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if an accessor was created
+       * @override
        */_hasAccessor(property){return this.__dataHasAccessor&&this.__dataHasAccessor[property]}/**
        * Returns true if the specified property has a pending change.
        *
        * @param {string} prop Property name
        * @return {boolean} True if property has a pending change
        * @protected
+       * @override
        */_isPropertyPending(prop){return!!(this.__dataPending&&prop in this.__dataPending)}}return PropertyAccessors});var propertyAccessors={PropertyAccessors:PropertyAccessors};// This is a clear layering violation and gives favored-nation status to
 // dom-if and dom-repeat templates.  This is a conceit we're choosing to keep
 // a.) to ease 1.x backwards-compatibility due to loss of `is`, and
 // b.) to maintain if/repeat capability in parser-constrained elements
 //     (e.g. table, select) in lieu of native CE type extensions without
 //     massive new invention in this space (e.g. directive system)
-const templateExtensions={"dom-if":!0,"dom-repeat":!0};function wrapTemplateExtension(node){let is=node.getAttribute("is");if(is&&templateExtensions[is]){let t=node;t.removeAttribute("is");node=t.ownerDocument.createElement(is);t.parentNode.replaceChild(node,t);node.appendChild(t);while(t.attributes.length){node.setAttribute(t.attributes[0].name,t.attributes[0].value);t.removeAttribute(t.attributes[0].name)}}return node}function findTemplateNode(root,nodeInfo){// recursively ascend tree until we hit root
+const templateExtensions={"dom-if":!0,"dom-repeat":!0};let placeholderBugDetect=!1,placeholderBug=!1;function hasPlaceholderBug(){if(!placeholderBugDetect){placeholderBugDetect=!0;const t=document.createElement("textarea");t.placeholder="a";placeholderBug=t.placeholder===t.textContent}return placeholderBug}/**
+   * Some browsers have a bug with textarea, where placeholder text is copied as
+   * a textnode child of the textarea.
+   *
+   * If the placeholder is a binding, this can break template stamping in two
+   * ways.
+   *
+   * One issue is that when the `placeholder` attribute is removed when the
+   * binding is processed, the textnode child of the textarea is deleted, and the
+   * template info tries to bind into that node.
+   *
+   * With `legacyOptimizations` in use, when the template is stamped and the
+   * `textarea.textContent` binding is processed, no corresponding node is found
+   * because it was removed during parsing. An exception is generated when this
+   * binding is updated.
+   *
+   * With `legacyOptimizations` not in use, the template is cloned before
+   * processing and this changes the above behavior. The cloned template also has
+   * a value property set to the placeholder and textContent. This prevents the
+   * removal of the textContent when the placeholder attribute is removed.
+   * Therefore the exception does not occur. However, there is an extra
+   * unnecessary binding.
+   *
+   * @param {!Node} node Check node for placeholder bug
+   * @return {void}
+   */function fixPlaceholder(node){if(hasPlaceholderBug()&&"textarea"===node.localName&&node.placeholder&&node.placeholder===node.textContent){node.textContent=null}}function wrapTemplateExtension(node){let is=node.getAttribute("is");if(is&&templateExtensions[is]){let t=node;t.removeAttribute("is");node=t.ownerDocument.createElement(is);t.parentNode.replaceChild(node,t);node.appendChild(t);while(t.attributes.length){node.setAttribute(t.attributes[0].name,t.attributes[0].value);t.removeAttribute(t.attributes[0].name)}}return node}function findTemplateNode(root,nodeInfo){// recursively ascend tree until we hit root
 let parent=nodeInfo.parentInfo&&findTemplateNode(root,nodeInfo.parentInfo);// unwind the stack, returning the indexed node at each level
 if(parent){// note: marginally faster than indexing via childNodes
 // (http://jsperf.com/childnodes-lookup)
@@ -948,6 +1045,9 @@ context=context._methodHost||context;let handler=function(e){if(context[methodNa
    * @mixinFunction
    * @polymer
    * @summary Element class mixin that provides basic template parsing and stamping
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
    */const TemplateStamp=dedupingMixin(/**
                                              * @template T
                                              * @param {function(new:T)} superClass Class to apply mixin to.
@@ -1030,8 +1130,19 @@ context=context._methodHost||context;let handler=function(e){if(context[methodNa
      * @param {TemplateInfo=} outerTemplateInfo Template metadata from the outer
      *   template, for parsing nested templates
      * @return {!TemplateInfo} Parsed template metadata
+     * @nocollapse
      */static _parseTemplate(template,outerTemplateInfo){// since a template may be re-used, memo-ize metadata
-if(!template._templateInfo){let templateInfo=template._templateInfo={};templateInfo.nodeInfoList=[];templateInfo.stripWhiteSpace=outerTemplateInfo&&outerTemplateInfo.stripWhiteSpace||template.hasAttribute("strip-whitespace");this._parseTemplateContent(template,templateInfo,{parent:null})}return template._templateInfo}static _parseTemplateContent(template,templateInfo,nodeInfo){return this._parseTemplateNode(template.content,templateInfo,nodeInfo)}/**
+if(!template._templateInfo){// TODO(rictic): fix typing
+let/** ? */templateInfo=template._templateInfo={};templateInfo.nodeInfoList=[];templateInfo.stripWhiteSpace=outerTemplateInfo&&outerTemplateInfo.stripWhiteSpace||template.hasAttribute("strip-whitespace");// TODO(rictic): fix typing
+this._parseTemplateContent(template,templateInfo,/** @type {?} */{parent:null})}return template._templateInfo}/**
+       * See docs for _parseTemplateNode.
+       *
+       * @param {!HTMLTemplateElement} template .
+       * @param {!TemplateInfo} templateInfo .
+       * @param {!NodeInfo} nodeInfo .
+       * @return {boolean} .
+       * @nocollapse
+       */static _parseTemplateContent(template,templateInfo,nodeInfo){return this._parseTemplateNode(template.content,templateInfo,nodeInfo)}/**
        * Parses template node and adds template and node metadata based on
        * the current node, and its `childNodes` and `attributes`.
        *
@@ -1043,8 +1154,9 @@ if(!template._templateInfo){let templateInfo=template._templateInfo={};templateI
        * @param {!NodeInfo} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */static _parseTemplateNode(node,templateInfo,nodeInfo){let noted,element=/** @type {Element} */node;if("template"==element.localName&&!element.hasAttribute("preserve-content")){noted=this._parseTemplateNestedTemplate(element,templateInfo,nodeInfo)||noted}else if("slot"===element.localName){// For ShadyDom optimization, indicating there is an insertion point
-templateInfo.hasInsertionPoint=!0}if(element.firstChild){noted=this._parseTemplateChildNodes(element,templateInfo,nodeInfo)||noted}if(element.hasAttributes&&element.hasAttributes()){noted=this._parseTemplateNodeAttributes(element,templateInfo,nodeInfo)||noted}return noted}/**
+       * @nocollapse
+       */static _parseTemplateNode(node,templateInfo,nodeInfo){let noted=!1,element=/** @type {!HTMLTemplateElement} */node;if("template"==element.localName&&!element.hasAttribute("preserve-content")){noted=this._parseTemplateNestedTemplate(element,templateInfo,nodeInfo)||noted}else if("slot"===element.localName){// For ShadyDom optimization, indicating there is an insertion point
+templateInfo.hasInsertionPoint=!0}fixPlaceholder(element);if(element.firstChild){this._parseTemplateChildNodes(element,templateInfo,nodeInfo)}if(element.hasAttributes&&element.hasAttributes()){noted=this._parseTemplateNodeAttributes(element,templateInfo,nodeInfo)||noted}return noted}/**
        * Parses template child nodes for the given root node.
        *
        * This method also wraps whitelisted legacy template extensions
@@ -1062,7 +1174,7 @@ if("template"==node.localName){node=wrapTemplateExtension(node)}// collapse adja
 // note that root.normalize() should work but does not so we do this
 // manually.
 next=node.nextSibling;if(node.nodeType===Node.TEXT_NODE){let/** Node */n=next;while(n&&n.nodeType===Node.TEXT_NODE){node.textContent+=n.textContent;next=n.nextSibling;root.removeChild(n);n=next}// optionally strip whitespace
-if(templateInfo.stripWhiteSpace&&!node.textContent.trim()){root.removeChild(node);continue}}let childInfo={parentIndex,parentInfo:nodeInfo};if(this._parseTemplateNode(node,templateInfo,childInfo)){childInfo.infoIndex=templateInfo.nodeInfoList.push(/** @type {!NodeInfo} */childInfo)-1}// Increment if not removed
+if(templateInfo.stripWhiteSpace&&!node.textContent.trim()){root.removeChild(node);continue}}let childInfo=/** @type {!NodeInfo} */{parentIndex,parentInfo:nodeInfo};if(this._parseTemplateNode(node,templateInfo,childInfo)){childInfo.infoIndex=templateInfo.nodeInfoList.push(childInfo)-1}// Increment if not removed
 if(node.parentNode){parentIndex++}}}/**
        * Parses template content for the given nested `<template>`.
        *
@@ -1079,15 +1191,19 @@ if(node.parentNode){parentIndex++}}}/**
        * @param {!NodeInfo} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */static _parseTemplateNestedTemplate(node,outerTemplateInfo,nodeInfo){let templateInfo=this._parseTemplate(node,outerTemplateInfo),content=templateInfo.content=node.content.ownerDocument.createDocumentFragment();content.appendChild(node.content);nodeInfo.templateInfo=templateInfo;return!0}/**
+       * @nocollapse
+       */static _parseTemplateNestedTemplate(node,outerTemplateInfo,nodeInfo){// TODO(rictic): the type of node should be non-null
+let element=/** @type {!HTMLTemplateElement} */node,templateInfo=this._parseTemplate(element,outerTemplateInfo),content=templateInfo.content=element.content.ownerDocument.createDocumentFragment();content.appendChild(element.content);nodeInfo.templateInfo=templateInfo;return!0}/**
        * Parses template node attributes and adds node metadata to `nodeInfo`
        * for nodes of interest.
        *
        * @param {Element} node Node to parse
-       * @param {TemplateInfo} templateInfo Template metadata for current template
-       * @param {NodeInfo} nodeInfo Node metadata for current template.
+       * @param {!TemplateInfo} templateInfo Template metadata for current
+       *     template
+       * @param {!NodeInfo} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
+       * @nocollapse
        */static _parseTemplateNodeAttributes(node,templateInfo,nodeInfo){// Make copy of original attribute list, since the order may change
 // as attributes are added and removed
 let noted=!1,attrs=Array.from(node.attributes);for(let i=attrs.length-1,a;a=attrs[i];i--){noted=this._parseTemplateNodeAttribute(node,templateInfo,nodeInfo,a.name,a.value)||noted}return noted}/**
@@ -1104,6 +1220,7 @@ let noted=!1,attrs=Array.from(node.attributes);for(let i=attrs.length-1,a;a=attr
        * @param {string} value Attribute value
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
+       * @nocollapse
        */static _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){// events (on-*)
 if("on-"===name.slice(0,3)){node.removeAttribute(name);nodeInfo.events=nodeInfo.events||[];nodeInfo.events.push({name:name.slice(3),value});return!0}// static id
 else if("id"===name){nodeInfo.id=value;return!0}return!1}/**
@@ -1115,6 +1232,7 @@ else if("id"===name){nodeInfo.id=value;return!0}return!1}/**
        *
        * @param {HTMLTemplateElement} template Template to retrieve `content` for
        * @return {DocumentFragment} Content fragment
+       * @nocollapse
        */static _contentForTemplate(template){let templateInfo=/** @type {HTMLTemplateElementWithInfo} */template._templateInfo;return templateInfo&&templateInfo.content||template.content}/**
        * Clones the provided template content and returns a document fragment
        * containing the cloned dom.
@@ -1173,13 +1291,13 @@ return dom}/**
 let dedupeId$1=0;/**
                     * Property effect types; effects are stored on the prototype using these keys
                     * @enum {string}
-                    */const TYPES={COMPUTE:"__computeEffects",REFLECT:"__reflectEffects",NOTIFY:"__notifyEffects",PROPAGATE:"__propagateEffects",OBSERVE:"__observeEffects",READ_ONLY:"__readOnly"},capitalAttributeRegex=/[A-Z]/;/** @const {RegExp} */ /**
+                    */const TYPES={COMPUTE:"__computeEffects",REFLECT:"__reflectEffects",NOTIFY:"__notifyEffects",PROPAGATE:"__propagateEffects",OBSERVE:"__observeEffects",READ_ONLY:"__readOnly"},capitalAttributeRegex=/[A-Z]/;/** @const {!RegExp} */ /**
                                         * @typedef {{
                                         * name: (string | undefined),
                                         * structured: (boolean | undefined),
                                         * wildcard: (boolean | undefined)
                                         * }}
-                                        */let DataTrigger,DataEffect,PropertyEffectsType;//eslint-disable-line no-unused-vars
+                                        */let DataTrigger,DataEffect;//eslint-disable-line no-unused-vars
 /**
  * @typedef {{
  * info: ?,
@@ -1213,19 +1331,19 @@ let dedupeId$1=0;/**
  * Runs all effects of a given type for the given set of property changes
  * on an instance.
  *
- * @param {!PropertyEffectsType} inst The instance with effects to run
- * @param {Object} effects Object map of property-to-Array of effects
- * @param {Object} props Bag of current property changes
- * @param {Object=} oldProps Bag of previous values for changed properties
+ * @param {!Polymer_PropertyEffects} inst The instance with effects to run
+ * @param {?Object} effects Object map of property-to-Array of effects
+ * @param {?Object} props Bag of current property changes
+ * @param {?Object=} oldProps Bag of previous values for changed properties
  * @param {boolean=} hasPaths True with `props` contains one or more paths
  * @param {*=} extraArgs Additional metadata to pass to effect function
  * @return {boolean} True if an effect ran for this property
  * @private
- */function runEffects(inst,effects,props,oldProps,hasPaths,extraArgs){if(effects){let ran=!1,id=dedupeId$1++;for(let prop in props){if(runEffectsForProperty(inst,effects,id,prop,props,oldProps,hasPaths,extraArgs)){ran=!0}}return ran}return!1}/**
+ */function runEffects(inst,effects,props,oldProps,hasPaths,extraArgs){if(effects){let ran=!1,id=dedupeId$1++;for(let prop in props){if(runEffectsForProperty(inst,/** @type {!Object} */effects,id,prop,props,oldProps,hasPaths,extraArgs)){ran=!0}}return ran}return!1}/**
    * Runs a list of effects for a given property.
    *
-   * @param {!PropertyEffectsType} inst The instance with effects to run
-   * @param {Object} effects Object map of property-to-Array of effects
+   * @param {!Polymer_PropertyEffects} inst The instance with effects to run
+   * @param {!Object} effects Object map of property-to-Array of effects
    * @param {number} dedupeId Counter used for de-duping effects
    * @param {string} prop Name of changed property
    * @param {*} props Changed properties
@@ -1249,15 +1367,15 @@ let dedupeId$1=0;/**
    * If no trigger is given, the path is deemed to match.
    *
    * @param {string} path Path or property that changed
-   * @param {DataTrigger} trigger Descriptor
+   * @param {?DataTrigger} trigger Descriptor
    * @return {boolean} Whether the path matched the trigger
-   */function pathMatchesTrigger(path,trigger){if(trigger){let triggerPath=trigger.name;return triggerPath==path||trigger.structured&&isAncestor(triggerPath,path)||trigger.wildcard&&isDescendant(triggerPath,path)}else{return!0}}/**
+   */function pathMatchesTrigger(path,trigger){if(trigger){let triggerPath=/** @type {string} */trigger.name;return triggerPath==path||!!(trigger.structured&&isAncestor(triggerPath,path))||!!(trigger.wildcard&&isDescendant(triggerPath,path))}else{return!0}}/**
    * Implements the "observer" effect.
    *
    * Calls the method with `info.methodName` on the instance, passing the
    * new and old values.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} property Name of property
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1274,7 +1392,7 @@ let dedupeId$1=0;/**
    * `notify: true` to ensure object sub-property notifications were
    * sent.
    *
-   * @param {!PropertyEffectsType} inst The instance with effects to run
+   * @param {!Polymer_PropertyEffects} inst The instance with effects to run
    * @param {Object} notifyProps Bag of properties to notify
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1290,7 +1408,8 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    * Dispatches {property}-changed events with path information in the detail
    * object to indicate a sub-path of the property was changed.
    *
-   * @param {!PropertyEffectsType} inst The element from which to fire the event
+   * @param {!Polymer_PropertyEffects} inst The element from which to fire the
+   *     event
    * @param {string} path The path that was changed
    * @param {Object} props Bag of current property changes
    * @return {boolean} Returns true if the path was notified
@@ -1299,21 +1418,23 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    * Dispatches {property}-changed events to indicate a property (or path)
    * changed.
    *
-   * @param {!PropertyEffectsType} inst The element from which to fire the event
-   * @param {string} eventName The name of the event to send ('{property}-changed')
+   * @param {!Polymer_PropertyEffects} inst The element from which to fire the
+   *     event
+   * @param {string} eventName The name of the event to send
+   *     ('{property}-changed')
    * @param {*} value The value of the changed property
-   * @param {string | null | undefined} path If a sub-path of this property changed, the path
-   *   that changed (optional).
+   * @param {string | null | undefined} path If a sub-path of this property
+   *     changed, the path that changed (optional).
    * @return {void}
    * @private
    * @suppress {invalidCasts}
-   */function dispatchNotifyEvent(inst,eventName,value,path){let detail={value:value,queueProperty:!0};if(path){detail.path=path}/** @type {!HTMLElement} */inst.dispatchEvent(new CustomEvent(eventName,{detail}))}/**
+   */function dispatchNotifyEvent(inst,eventName,value,path){let detail={value:value,queueProperty:!0};if(path){detail.path=path}wrap(/** @type {!HTMLElement} */inst).dispatchEvent(new CustomEvent(eventName,{detail}))}/**
    * Implements the "notify" effect.
    *
    * Dispatches a non-bubbling event named `info.eventName` on the instance
    * with a detail object containing the new `value`.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} property Name of property
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1332,7 +1453,8 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    * scope's name for that path first.
    *
    * @param {CustomEvent} event Notification event (e.g. '<property>-changed')
-   * @param {!PropertyEffectsType} inst Host element instance handling the notification event
+   * @param {!Polymer_PropertyEffects} inst Host element instance handling the
+   *     notification event
    * @param {string} fromProp Child element property that was bound
    * @param {string} toPath Host property/path that was bound
    * @param {boolean} negate Whether the binding was negated
@@ -1343,7 +1465,7 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    *
    * Sets the attribute named `info.attrName` to the given property value.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} property Name of property
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1360,21 +1482,21 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    * computed before other effects (binding propagation, observers, and notify)
    * run.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
-   * @param {!Object} changedProps Bag of changed properties
-   * @param {!Object} oldProps Bag of previous values for changed properties
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
+   * @param {?Object} changedProps Bag of changed properties
+   * @param {?Object} oldProps Bag of previous values for changed properties
    * @param {boolean} hasPaths True with `props` contains one or more paths
    * @return {void}
    * @private
-   */function runComputedEffects(inst,changedProps,oldProps,hasPaths){let computeEffects=inst[TYPES.COMPUTE];if(computeEffects){let inputProps=changedProps;while(runEffects(inst,computeEffects,inputProps,oldProps,hasPaths)){Object.assign(oldProps,inst.__dataOld);Object.assign(changedProps,inst.__dataPending);inputProps=inst.__dataPending;inst.__dataPending=null}}}/**
+   */function runComputedEffects(inst,changedProps,oldProps,hasPaths){let computeEffects=inst[TYPES.COMPUTE];if(computeEffects){let inputProps=changedProps;while(runEffects(inst,computeEffects,inputProps,oldProps,hasPaths)){Object.assign(/** @type {!Object} */oldProps,inst.__dataOld);Object.assign(/** @type {!Object} */changedProps,inst.__dataPending);inputProps=inst.__dataPending;inst.__dataPending=null}}}/**
    * Implements the "computed property" effect by running the method with the
    * values of the arguments specified in the `info` object and setting the
    * return value to the computed property specified.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} property Name of property
-   * @param {Object} props Bag of current property changes
-   * @param {Object} oldProps Bag of previous values for changed properties
+   * @param {?Object} props Bag of current property changes
+   * @param {?Object} oldProps Bag of previous values for changed properties
    * @param {?} info Effect metadata
    * @return {void}
    * @private
@@ -1382,8 +1504,8 @@ let host;if(notified&&(host=inst.__dataHost)&&host._invalidateProperties){host._
    * Computes path changes based on path links set up using the `linkPaths`
    * API.
    *
-   * @param {!PropertyEffectsType} inst The instance whose props are changing
-   * @param {string | !Array<(string|number)>} path Path that has changed
+   * @param {!Polymer_PropertyEffects} inst The instance whose props are changing
+   * @param {string} path Path that has changed
    * @param {*} value Value of changed path
    * @return {void}
    * @private
@@ -1427,7 +1549,7 @@ let index=templateInfo.nodeInfoList.length;for(let i=0,part;i<binding.parts.leng
    * there is no support for _path_ bindings via custom binding parts,
    * as this is specific to Polymer's path binding syntax.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} path Name of property
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1444,7 +1566,7 @@ applyBindingValue(inst,node,binding,part,value)}}/**
    * Sets the value for an "binding" (binding) effect to a node,
    * either as a property or attribute.
    *
-   * @param {!PropertyEffectsType} inst The instance owning the binding effect
+   * @param {!Polymer_PropertyEffects} inst The instance owning the binding effect
    * @param {Node} node Target node for binding
    * @param {!Binding} binding Binding metadata
    * @param {!BindingPart} part Binding part metadata
@@ -1480,7 +1602,8 @@ if("textContent"===binding.target||"value"===binding.target&&("input"===node.loc
    * Setup compound binding storage structures, notify listeners, and dataHost
    * references onto the bound nodeList.
    *
-   * @param {!PropertyEffectsType} inst Instance that bas been previously bound
+   * @param {!Polymer_PropertyEffects} inst Instance that bas been previously
+   *     bound
    * @param {TemplateInfo} templateInfo Template metadata
    * @return {void}
    * @private
@@ -1500,11 +1623,15 @@ let{nodeList,nodeInfoList}=templateInfo;if(nodeInfoList.length){for(let i=0;i<no
    * @private
    */function setupCompoundStorage(node,binding){if(binding.isCompound){// Create compound storage map
 let storage=node.__dataCompoundStorage||(node.__dataCompoundStorage={}),parts=binding.parts,literals=Array(parts.length);for(let j=0;j<parts.length;j++){literals[j]=parts[j].literal}let target=binding.target;storage[target]=literals;// Configure properties with their literal parts
-if(binding.literal&&"property"==binding.kind){node[target]=binding.literal}}}/**
+if(binding.literal&&"property"==binding.kind){// Note, className needs style scoping so this needs wrapping.
+// We may also want to consider doing this for `textContent` and
+// `innerHTML`.
+if("className"===target){node=wrap(node)}node[target]=binding.literal}}}/**
    * Adds a 2-way binding notification event listener to the node specified
    *
    * @param {Object} node Child element to add listener to
-   * @param {!PropertyEffectsType} inst Host element instance to handle notification event
+   * @param {!Polymer_PropertyEffects} inst Host element instance to handle
+   *     notification event
    * @param {Binding} binding Binding metadata
    * @return {void}
    * @private
@@ -1533,7 +1660,7 @@ if(binding.literal&&"property"==binding.kind){node[target]=binding.literal}}}/**
    * functions call this function to invoke the method, then use the return
    * value accordingly.
    *
-   * @param {!PropertyEffectsType} inst The instance the effect will be run on
+   * @param {!Polymer_PropertyEffects} inst The instance the effect will be run on
    * @param {string} property Name of property
    * @param {Object} props Bag of current property changes
    * @param {Object} oldProps Bag of previous values for changed properties
@@ -1591,26 +1718,30 @@ let arg=rawArg.trim()// replace comma entity with comma
 .replace(/\\(.)/g,"$1"),a={name:arg,value:"",literal:!1},fc=arg[0];// basic argument descriptor
 if("-"===fc){fc=arg[1]}if("0"<=fc&&"9">=fc){fc="#"}switch(fc){case"'":case"\"":a.value=arg.slice(1,-1);a.literal=!0;break;case"#":a.value=+arg;a.literal=!0;break;}// if not literal, look for structured path
 if(!a.literal){a.rootProperty=root(arg);// detect structured path (has dots)
-a.structured=isPath(arg);if(a.structured){a.wildcard=".*"==arg.slice(-2);if(a.wildcard){a.name=arg.slice(0,-2)}}}return a}// data api
+a.structured=isPath(arg);if(a.structured){a.wildcard=".*"==arg.slice(-2);if(a.wildcard){a.name=arg.slice(0,-2)}}}return a}function getArgValue(data,props,path){let value=get(data,path);// when data is not stored e.g. `splices`, get the value from changedProps
+// TODO(kschaaf): Note, this can cause a rare issue where the wildcard
+// info.value could pull a stale value out of changedProps during a reentrant
+// change that sets the value back to undefined.
+// https://github.com/Polymer/polymer/issues/5479
+if(value===void 0){value=props[path]}return value}// data api
 /**
  * Sends array splice notifications (`.splices` and `.length`)
  *
  * Note: this implementation only accepts normalized paths
  *
- * @param {!PropertyEffectsType} inst Instance to send notifications to
+ * @param {!Polymer_PropertyEffects} inst Instance to send notifications to
  * @param {Array} array The array the mutations occurred on
  * @param {string} path The path to the array that was mutated
  * @param {Array} splices Array of splice records
  * @return {void}
  * @private
- */function notifySplices(inst,array,path,splices){let splicesPath=path+".splices";inst.notifyPath(splicesPath,{indexSplices:splices});inst.notifyPath(path+".length",array.length);// Null here to allow potentially large splice records to be GC'ed.
-inst.__data[splicesPath]={indexSplices:null}}/**
+ */function notifySplices(inst,array,path,splices){inst.notifyPath(path+".splices",{indexSplices:splices});inst.notifyPath(path+".length",array.length)}/**
    * Creates a splice record and sends an array splice notification for
    * the described mutation
    *
    * Note: this implementation only accepts normalized paths
    *
-   * @param {!PropertyEffectsType} inst Instance to send notifications to
+   * @param {!Polymer_PropertyEffects} inst Instance to send notifications to
    * @param {Array} array The array the mutations occurred on
    * @param {string} path The path to the array that was mutated
    * @param {number} index Index at which the array mutation occurred
@@ -1658,9 +1789,11 @@ inst.__data[splicesPath]={indexSplices:null}}/**
    * @appliesMixin PropertyAccessors
    * @summary Element class mixin that provides meta-programming for Polymer's
    * template binding and data observation system.
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
    */const PropertyEffects=dedupingMixin(superClass=>{/**
    * @constructor
-   * @extends {superClass}
    * @implements {Polymer_PropertyAccessors}
    * @implements {Polymer_TemplateStamp}
    * @unrestricted
@@ -1675,7 +1808,10 @@ inst.__data[splicesPath]={indexSplices:null}}/**
 this.__isPropertyEffectsClient=!0;/** @type {number} */ // NOTE: used to track re-entrant calls to `_flushProperties`
 // path changes dirty check against `__dataTemp` only during one "turn"
 // and are cleared when `__dataCounter` returns to 0.
-this.__dataCounter=0;/** @type {boolean} */this.__dataClientsReady;/** @type {Array} */this.__dataPendingClients;/** @type {Object} */this.__dataToNotify;/** @type {Object} */this.__dataLinkedPaths;/** @type {boolean} */this.__dataHasPaths;/** @type {Object} */this.__dataCompoundStorage;/** @type {Polymer_PropertyEffects} */this.__dataHost;/** @type {!Object} */this.__dataTemp;/** @type {boolean} */this.__dataClientsInitialized;/** @type {!Object} */this.__data;/** @type {!Object} */this.__dataPending;/** @type {!Object} */this.__dataOld;/** @type {Object} */this.__computeEffects;/** @type {Object} */this.__reflectEffects;/** @type {Object} */this.__notifyEffects;/** @type {Object} */this.__propagateEffects;/** @type {Object} */this.__observeEffects;/** @type {Object} */this.__readOnly;/** @type {!TemplateInfo} */this.__templateInfo}get PROPERTY_EFFECT_TYPES(){return TYPES}/**
+this.__dataCounter=0;/** @type {boolean} */this.__dataClientsReady;/** @type {Array} */this.__dataPendingClients;/** @type {Object} */this.__dataToNotify;/** @type {Object} */this.__dataLinkedPaths;/** @type {boolean} */this.__dataHasPaths;/** @type {Object} */this.__dataCompoundStorage;/** @type {Polymer_PropertyEffects} */this.__dataHost;/** @type {!Object} */this.__dataTemp;/** @type {boolean} */this.__dataClientsInitialized;/** @type {!Object} */this.__data;/** @type {!Object|null} */this.__dataPending;/** @type {!Object} */this.__dataOld;/** @type {Object} */this.__computeEffects;/** @type {Object} */this.__reflectEffects;/** @type {Object} */this.__notifyEffects;/** @type {Object} */this.__propagateEffects;/** @type {Object} */this.__observeEffects;/** @type {Object} */this.__readOnly;/** @type {!TemplateInfo} */this.__templateInfo}/**
+       * @return {!Object<string, string>} Effect prototype property name map.
+       */get PROPERTY_EFFECT_TYPES(){return TYPES}/**
+       * @override
        * @return {void}
        */_initializeProperties(){super._initializeProperties();hostStack.registerHost(this);this.__dataClientsReady=!1;this.__dataPendingClients=null;this.__dataToNotify=null;this.__dataLinkedPaths=null;this.__dataHasPaths=!1;// May be set on instance prior to upgrade
 this.__dataCompoundStorage=this.__dataCompoundStorage||null;this.__dataHost=this.__dataHost||null;this.__dataTemp={};this.__dataClientsInitialized=!1}/**
@@ -1699,6 +1835,7 @@ this.__dataCompoundStorage=this.__dataCompoundStorage||null;this.__dataHost=this
      * an instance to add effects at runtime.  See that method for
      * full API docs.
      *
+     * @override
      * @param {string} property Property that should trigger the effect
      * @param {string} type Effect type, from this.PROPERTY_EFFECT_TYPES
      * @param {Object=} effect Effect metadata object
@@ -1708,6 +1845,7 @@ this.__dataCompoundStorage=this.__dataCompoundStorage||null;this.__dataHost=this
 let effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[type][property]=[]}effects.push(effect)}/**
        * Removes the given property effect.
        *
+       * @override
        * @param {string} property Property the effect was associated with
        * @param {string} type Effect type, from this.PROPERTY_EFFECT_TYPES
        * @param {Object=} effect Effect metadata object to remove
@@ -1716,37 +1854,47 @@ let effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
        * Returns whether the current prototype/instance has a property effect
        * of a certain type.
        *
+       * @override
        * @param {string} property Property name
        * @param {string=} type Effect type, from this.PROPERTY_EFFECT_TYPES
-       * @return {boolean} True if the prototype/instance has an effect of this type
+       * @return {boolean} True if the prototype/instance has an effect of this
+       *     type
        * @protected
        */_hasPropertyEffect(property,type){let effects=this[type];return!!(effects&&effects[property])}/**
        * Returns whether the current prototype/instance has a "read only"
        * accessor for the given property.
        *
+       * @override
        * @param {string} property Property name
-       * @return {boolean} True if the prototype/instance has an effect of this type
+       * @return {boolean} True if the prototype/instance has an effect of this
+       *     type
        * @protected
        */_hasReadOnlyEffect(property){return this._hasPropertyEffect(property,TYPES.READ_ONLY)}/**
        * Returns whether the current prototype/instance has a "notify"
        * property effect for the given property.
        *
+       * @override
        * @param {string} property Property name
-       * @return {boolean} True if the prototype/instance has an effect of this type
+       * @return {boolean} True if the prototype/instance has an effect of this
+       *     type
        * @protected
        */_hasNotifyEffect(property){return this._hasPropertyEffect(property,TYPES.NOTIFY)}/**
-       * Returns whether the current prototype/instance has a "reflect to attribute"
-       * property effect for the given property.
+       * Returns whether the current prototype/instance has a "reflect to
+       * attribute" property effect for the given property.
        *
+       * @override
        * @param {string} property Property name
-       * @return {boolean} True if the prototype/instance has an effect of this type
+       * @return {boolean} True if the prototype/instance has an effect of this
+       *     type
        * @protected
        */_hasReflectEffect(property){return this._hasPropertyEffect(property,TYPES.REFLECT)}/**
        * Returns whether the current prototype/instance has a "computed"
        * property effect for the given property.
        *
+       * @override
        * @param {string} property Property name
-       * @return {boolean} True if the prototype/instance has an effect of this type
+       * @return {boolean} True if the prototype/instance has an effect of this
+       *     type
        * @protected
        */_hasComputedEffect(property){return this._hasPropertyEffect(property,TYPES.COMPUTE)}// Runtime ----------------------------------------
 /**
@@ -1764,6 +1912,7 @@ let effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
      * `path` can be a path string or array of path parts as accepted by the
      * public API.
      *
+     * @override
      * @param {string | !Array<number|string>} path Path to set
      * @param {*} value Value to set
      * @param {boolean=} shouldNotify Set to true if this change should
@@ -1785,7 +1934,7 @@ let effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
 // already dirty checked at the point of entry and the underlying
 // object has already been updated
 if(!isPathNotification){let old=get(this,path);path=/** @type {string} */set(this,path,value);// Use property-accessor's simpler dirty check
-if(!path||!super._shouldPropertyChange(path,value,old)){return!1}}this.__dataHasPaths=!0;if(this._setPendingProperty(/**@type{string}*/path,value,shouldNotify)){computeLinkedPaths(this,path,value);return!0}}else{if(this.__dataHasAccessor&&this.__dataHasAccessor[path]){return this._setPendingProperty(/**@type{string}*/path,value,shouldNotify)}else{this[path]=value}}return!1}/**
+if(!path||!super._shouldPropertyChange(path,value,old)){return!1}}this.__dataHasPaths=!0;if(this._setPendingProperty(/**@type{string}*/path,value,shouldNotify)){computeLinkedPaths(this,/**@type{string}*/path,value);return!0}}else{if(this.__dataHasAccessor&&this.__dataHasAccessor[path]){return this._setPendingProperty(/**@type{string}*/path,value,shouldNotify)}else{this[path]=value}}return!1}/**
        * Applies a value to a non-Polymer element/node's property.
        *
        * The implementation makes a best-effort at binding interop:
@@ -1800,6 +1949,7 @@ if(!path||!super._shouldPropertyChange(path,value,old)){return!1}}this.__dataHas
        *
        * Users may override this method to provide alternate approaches.
        *
+       * @override
        * @param {!Node} node The node to set a property on
        * @param {string} prop The property to set
        * @param {*} value The value to set
@@ -1809,7 +1959,8 @@ if(!path||!super._shouldPropertyChange(path,value,old)){return!1}}this.__dataHas
 // "bad" and resettings objects is also "good"; alternatively we could
 // implement a whitelist of tag & property values that should never
 // be reset (e.g. <input>.value && <select>.value)
-if(value!==node[prop]||"object"==typeof value){node[prop]=value}}/**
+if(value!==node[prop]||"object"==typeof value){// Note, className needs style scoping so this needs wrapping.
+if("className"===prop){node=/** @type {!Node} */wrap(node)}node[prop]=value}}/**
        * Overrides the `PropertiesChanged` implementation to introduce special
        * dirty check logic depending on the property & value being set:
        *
@@ -1869,18 +2020,21 @@ if(propIsPath||this[TYPES.NOTIFY]&&this[TYPES.NOTIFY][property]){this.__dataToNo
        * pending property changes can later be flushed via a call to
        * `_flushClients`.
        *
+       * @override
        * @param {Object} client PropertyEffects client to enqueue
        * @return {void}
        * @protected
        */_enqueueClient(client){this.__dataPendingClients=this.__dataPendingClients||[];if(client!==this){this.__dataPendingClients.push(client)}}/**
        * Overrides superclass implementation.
        *
+       * @override
        * @return {void}
        * @protected
        */_flushProperties(){this.__dataCounter++;super._flushProperties();this.__dataCounter--}/**
        * Flushes any clients previously enqueued via `_enqueueClient`, causing
        * their `_flushProperties` method to run.
        *
+       * @override
        * @return {void}
        * @protected
        */_flushClients(){if(!this.__dataClientsReady){this.__dataClientsReady=!0;this._readyClients();// Override point where accessors are turned on; importantly,
@@ -1903,6 +2057,7 @@ __enableOrFlushClients(){let clients=this.__dataPendingClients;if(clients){this.
        * `_flushProperties` call on client dom and before any element
        * observers are called.
        *
+       * @override
        * @return {void}
        * @protected
        */_readyClients(){this.__enableOrFlushClients()}/**
@@ -1912,6 +2067,7 @@ __enableOrFlushClients(){let clients=this.__dataPendingClients;if(clients){this.
        * Property names must be simple properties, not paths.  Batched
        * path propagation is not supported.
        *
+       * @override
        * @param {Object} props Bag of one or more key-value pairs whose key is
        *   a property and value is the new value to set for that property.
        * @param {boolean=} setReadOnly When true, any private values set in
@@ -1945,6 +2101,7 @@ if(this.__dataPending){this._flushProperties()}}/**
        * Runs each class of effects for the batch of changed properties in
        * a specific order (compute, propagate, reflect, observe, notify).
        *
+       * @override
        * @param {!Object} currentProps Bag of all current accessor values
        * @param {?Object} changedProps Bag of properties changed since the last
        *   call to `_propertiesChanged`
@@ -1972,6 +2129,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * Called to propagate any property changes to stamped template nodes
        * managed by this element.
        *
+       * @override
        * @param {Object} changedProps Bag of changed properties
        * @param {Object} oldProps Bag of previous values for changed properties
        * @param {boolean} hasPaths True with `props` contains one or more paths
@@ -1981,6 +2139,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * Aliases one data path as another, such that path notifications from one
        * are routed to the other.
        *
+       * @override
        * @param {string | !Array<string|number>} to Target path to link.
        * @param {string | !Array<string|number>} from Source path to link.
        * @return {void}
@@ -1991,6 +2150,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * Note, the path to unlink should be the target (`to`) used when
        * linking the paths.
        *
+       * @override
        * @param {string | !Array<string|number>} path Target path to unlink.
        * @return {void}
        * @public
@@ -2004,8 +2164,10 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        *     this.items.splice(1, 1, {name: 'Sam'});
        *     this.items.push({name: 'Bob'});
        *     this.notifySplices('items', [
-       *       { index: 1, removed: [{name: 'Todd'}], addedCount: 1, object: this.items, type: 'splice' },
-       *       { index: 3, removed: [], addedCount: 1, object: this.items, type: 'splice'}
+       *       { index: 1, removed: [{name: 'Todd'}], addedCount: 1,
+       *         object: this.items, type: 'splice' },
+       *       { index: 3, removed: [], addedCount: 1,
+       *         object: this.items, type: 'splice'}
        *     ]);
        *
        * @param {string} path Path that should be notified.
@@ -2021,15 +2183,18 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        *   Note that splice records _must_ be normalized such that they are
        *   reported in index order (raw results from `Object.observe` are not
        *   ordered and must be normalized/merged before notifying).
+       *
+       * @override
        * @return {void}
        * @public
-      */notifySplices(path,splices){let info={path:""},array=/** @type {Array} */get(this,path,info);notifySplices(this,array,info.path,splices)}/**
+       */notifySplices(path,splices){let info={path:""},array=/** @type {Array} */get(this,path,info);notifySplices(this,array,info.path,splices)}/**
        * Convenience method for reading a value from a path.
        *
        * Note, if any part in the path is undefined, this method returns
        * `undefined` (this method does not throw when dereferencing undefined
        * paths).
        *
+       * @override
        * @param {(string|!Array<(string|number)>)} path Path to the value
        *   to read.  The path may be specified as a string (e.g. `foo.bar.baz`)
        *   or an array of path parts (e.g. `['foo.bar', 'baz']`).  Note that
@@ -2049,6 +2214,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * this method does nothing (this method does not throw when
        * dereferencing undefined paths).
        *
+       * @override
        * @param {(string|!Array<(string|number)>)} path Path to the value
        *   to write.  The path may be specified as a string (e.g. `'foo.bar.baz'`)
        *   or an array of path parts (e.g. `['foo.bar', 'baz']`).  Note that
@@ -2061,7 +2227,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        *   When specified, no notification will occur.
        * @return {void}
        * @public
-      */set(path,value,root){if(root){set(root,path,value)}else{if(!this[TYPES.READ_ONLY]||!this[TYPES.READ_ONLY][/** @type {string} */path]){if(this._setPendingPropertyOrPath(path,value,!0)){this._invalidateProperties()}}}}/**
+       */set(path,value,root){if(root){set(root,path,value)}else{if(!this[TYPES.READ_ONLY]||!this[TYPES.READ_ONLY][/** @type {string} */path]){if(this._setPendingPropertyOrPath(path,value,!0)){this._invalidateProperties()}}}}/**
        * Adds items onto the end of the array at the path specified.
        *
        * The arguments after `path` and return value match that of
@@ -2070,6 +2236,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * This method notifies other paths to the same array that a
        * splice occurred to the array.
        *
+       * @override
        * @param {string | !Array<string|number>} path Path to array.
        * @param {...*} items Items to push onto array
        * @return {number} New length of the array.
@@ -2083,6 +2250,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * This method notifies other paths to the same array that a
        * splice occurred to the array.
        *
+       * @override
        * @param {string | !Array<string|number>} path Path to array.
        * @return {*} Item that was removed.
        * @public
@@ -2096,6 +2264,7 @@ if(1==this.__dataCounter){this.__dataTemp={}}// ----------------------------
        * This method notifies other paths to the same array that a
        * splice occurred to the array.
        *
+       * @override
        * @param {string | !Array<string|number>} path Path to array.
        * @param {number} start Index from which to start removing/inserting.
        * @param {number=} deleteCount Number of items to remove.
@@ -2130,6 +2299,7 @@ if(items.length||ret.length){notifySplice(this,array,info.path,start,items.lengt
        * This method notifies other paths to the same array that a
        * splice occurred to the array.
        *
+       * @override
        * @param {string | !Array<string|number>} path Path to array.
        * @return {*} Item that was removed.
        * @public
@@ -2142,6 +2312,7 @@ if(items.length||ret.length){notifySplice(this,array,info.path,start,items.lengt
        * This method notifies other paths to the same array that a
        * splice occurred to the array.
        *
+       * @override
        * @param {string | !Array<string|number>} path Path to array.
        * @param {...*} items Items to insert info array
        * @return {number} New length of the array.
@@ -2154,17 +2325,19 @@ if(items.length||ret.length){notifySplice(this,array,info.path,start,items.lengt
        *     this.item.user.name = 'Bob';
        *     this.notifyPath('item.user.name');
        *
+       * @override
        * @param {string} path Path that should be notified.
        * @param {*=} value Value at the path (optional).
        * @return {void}
        * @public
-      */notifyPath(path,value){/** @type {string} */let propPath;if(1==arguments.length){// Get value if not supplied
+       */notifyPath(path,value){/** @type {string} */let propPath;if(1==arguments.length){// Get value if not supplied
 let info={path:""};value=get(this,path,info);propPath=info.path}else if(Array.isArray(path)){// Normalize path if needed
 propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPendingPropertyOrPath(propPath,value,!0,!0)){this._invalidateProperties()}}/**
        * Equivalent to static `createReadOnlyProperty` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} property Property name
        * @param {boolean=} protectedSetter Creates a custom protected setter
        *   when `true`.
@@ -2175,8 +2348,10 @@ propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPend
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} property Property name
-       * @param {string|function(*,*)} method Function or name of observer method to call
+       * @param {string|function(*,*)} method Function or name of observer method
+       *     to call
        * @param {boolean=} dynamicFn Whether the method name should be included as
        *   a dependency to the effect.
        * @return {void}
@@ -2186,6 +2361,7 @@ propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPend
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} expression Method expression
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating
        *   whether method names should be included as a dependency to the effect.
@@ -2196,6 +2372,7 @@ propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPend
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} property Property name
        * @return {void}
        * @protected
@@ -2204,14 +2381,17 @@ propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPend
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} property Property name
        * @return {void}
        * @protected
+       * @suppress {missingProperties} go/missingfnprops
        */_createReflectedProperty(property){let attr=this.constructor.attributeNameForProperty(property);if("-"===attr[0]){console.warn("Property "+property+" cannot be reflected to attribute "+attr+" because \"-\" is not a valid starting attribute name. Use a lowercase first letter for the property instead.")}else{this._addPropertyEffect(property,TYPES.REFLECT,{fn:runReflectEffect,info:{attrName:attr}})}}/**
        * Equivalent to static `createComputedProperty` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
+       * @override
        * @param {string} property Name of computed property to set
        * @param {string} expression Method expression
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating
@@ -2230,10 +2410,7 @@ propPath=normalize(path)}else{propPath=/** @type{string} */path}if(this._setPend
        * @param {Object} props Bag of current property changes
        * @return {Array<*>} Array of argument values
        * @private
-       */_marshalArgs(args,path,props){const data=this.__data;let values=[];for(let i=0,l=args.length;i<l;i++){let arg=args[i],name=arg.name,v;if(arg.literal){v=arg.value}else{if(arg.structured){v=get(data,name);// when data is not stored e.g. `splices`
-if(v===void 0){v=props[name]}}else{v=data[name]}}if(arg.wildcard){// Only send the actual path changed info if the change that
-// caused the observer to run matched the wildcard
-let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!baseChanged;values[i]={path:matches?path:name,value:matches?props[path]:v,base:v}}else{values[i]=v}}return values}// -- static class methods ------------
+       */_marshalArgs(args,path,props){const data=this.__data,values=[];for(let i=0,l=args.length;i<l;i++){let{name,structured,wildcard,value,literal}=args[i];if(!literal){if(wildcard){const matches=isDescendant(name,path),pathValue=getArgValue(data,props,matches?path:name);value={path:matches?path:name,value:pathValue,base:matches?get(data,name):pathValue}}else{value=structured?getArgValue(data,props,name):data[name]}}values[i]=value}return values}// -- static class methods ------------
 /**
      * Ensures an accessor exists for the specified property, and adds
      * to a list of "property effects" that will run when the accessor for
@@ -2269,6 +2446,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
      * @param {Object=} effect Effect metadata object
      * @return {void}
      * @protected
+     * @nocollapse
      */static addPropertyEffect(property,type,effect){this.prototype._addPropertyEffect(property,type,effect)}/**
        * Creates a single-property observer for the given property.
        *
@@ -2278,6 +2456,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        *   a dependency to the effect.
        * @return {void}
        * @protected
+       * @nocollapse
        */static createPropertyObserver(property,method,dynamicFn){this.prototype._createPropertyObserver(property,method,dynamicFn)}/**
        * Creates a multi-property "method observer" based on the provided
        * expression, which should be a string in the form of a normal JavaScript
@@ -2290,6 +2469,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        * @return {void}
        *   whether method names should be included as a dependency to the effect.
        * @protected
+       * @nocollapse
        */static createMethodObserver(expression,dynamicFn){this.prototype._createMethodObserver(expression,dynamicFn)}/**
        * Causes the setter for the given property to dispatch `<property>-changed`
        * events to notify of changes to the property.
@@ -2297,6 +2477,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        * @param {string} property Property name
        * @return {void}
        * @protected
+       * @nocollapse
        */static createNotifyingProperty(property){this.prototype._createNotifyingProperty(property)}/**
        * Creates a read-only accessor for the given property.
        *
@@ -2312,6 +2493,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        *   when `true`.
        * @return {void}
        * @protected
+       * @nocollapse
        */static createReadOnlyProperty(property,protectedSetter){this.prototype._createReadOnlyProperty(property,protectedSetter)}/**
        * Causes the setter for the given property to reflect the property value
        * to a (dash-cased) attribute of the same name.
@@ -2319,6 +2501,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        * @param {string} property Property name
        * @return {void}
        * @protected
+       * @nocollapse
        */static createReflectedProperty(property){this.prototype._createReflectedProperty(property)}/**
        * Creates a computed property whose value is set to the result of the
        * method described by the given `expression` each time one or more
@@ -2332,6 +2515,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        *   method names should be included as a dependency to the effect.
        * @return {void}
        * @protected
+       * @nocollapse
        */static createComputedProperty(property,expression,dynamicFn){this.prototype._createComputedProperty(property,expression,dynamicFn)}/**
        * Parses the provided template to ensure binding effects are created
        * for them, and then ensures property accessors are created for any
@@ -2343,6 +2527,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
        *   bindings
        * @return {!TemplateInfo} Template metadata object
        * @protected
+       * @nocollapse
        */static bindTemplate(template){return this.prototype._bindTemplate(template)}// -- binding ----------------------------------------------
 /**
      * Equivalent to static `bindTemplate` API but can be called on
@@ -2355,6 +2540,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
      * create and link an instance of the template metadata associated with a
      * particular stamping.
      *
+     * @override
      * @param {!HTMLTemplateElement} template Template containing binding
      *   bindings
      * @param {boolean=} instanceBinding When false (default), performs
@@ -2365,6 +2551,7 @@ let baseChanged=0===name.indexOf(path+"."),matches=0===path.indexOf(name)&&!base
      * @return {!TemplateInfo} Template metadata object; for `runtimeBinding`,
      *   this is an instance of the prototypical template info
      * @protected
+     * @suppress {missingProperties} go/missingfnprops
      */_bindTemplate(template,instanceBinding){let templateInfo=this.constructor._parseTemplate(template),wasPreBound=this.__templateInfo==templateInfo;// Optimization: since this is called twice for proto-bound templates,
 // don't attempt to recreate accessors if this template was pre-bound
 if(!wasPreBound){for(let prop in templateInfo.propertyEffects){this._createPropertyAccessor(prop)}}if(instanceBinding){// For instance-time binding, create instance of template metadata
@@ -2381,6 +2568,7 @@ templateInfo=/** @type {!TemplateInfo} */Object.create(templateInfo);templateInf
        * @param {Object=} effect Effect metadata object
        * @return {void}
        * @protected
+       * @nocollapse
        */static _addTemplatePropertyEffect(templateInfo,prop,effect){let hostProps=templateInfo.hostProps=templateInfo.hostProps||{};hostProps[prop]=!0;let effects=templateInfo.propertyEffects=templateInfo.propertyEffects||{},propEffects=effects[prop]=effects[prop]||[];propEffects.push(effect)}/**
        * Stamps the provided template and performs instance-time setup for
        * Polymer template features, including data bindings, declarative event
@@ -2410,6 +2598,7 @@ if(this.__dataReady){runEffects(this,templateInfo.propertyEffects,this.__data,nu
        * Removes and unbinds the nodes previously contained in the provided
        * DocumentFragment returned from `_stampTemplate`.
        *
+       * @override
        * @param {!StampedTemplate} dom DocumentFragment previously returned
        *   from `_stampTemplate` associated with the nodes to be removed
        * @return {void}
@@ -2424,7 +2613,6 @@ let nodes=templateInfo.childNodes;for(let i=0,node;i<nodes.length;i++){node=node
        * with one or more metadata objects capturing the source(s) of the
        * binding.
        *
-       * @override
        * @param {Node} node Node to parse
        * @param {TemplateInfo} templateInfo Template metadata for current template
        * @param {NodeInfo} nodeInfo Node metadata for current template node
@@ -2432,7 +2620,10 @@ let nodes=templateInfo.childNodes;for(let i=0,node;i<nodes.length;i++){node=node
        *   metadata to `nodeInfo`
        * @protected
        * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-       */static _parseTemplateNode(node,templateInfo,nodeInfo){let noted=super._parseTemplateNode(node,templateInfo,nodeInfo);if(node.nodeType===Node.TEXT_NODE){let parts=this._parseBindings(node.textContent,templateInfo);if(parts){// Initialize the textContent with any literal parts
+       * @nocollapse
+       */static _parseTemplateNode(node,templateInfo,nodeInfo){// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+let noted=propertyEffectsBase._parseTemplateNode.call(this,node,templateInfo,nodeInfo);if(node.nodeType===Node.TEXT_NODE){let parts=this._parseBindings(node.textContent,templateInfo);if(parts){// Initialize the textContent with any literal parts
 // NOTE: default to a space here so the textNode remains; some browsers
 // (IE) omit an empty textNode following cloneNode/importNode.
 node.textContent=literalFromParts(parts)||" ";addBinding(this,templateInfo,nodeInfo,"text","textContent",parts);noted=!0}}return noted}/**
@@ -2443,7 +2634,6 @@ node.textContent=literalFromParts(parts)||" ";addBinding(this,templateInfo,nodeI
        * with one or more metadata objects capturing the source(s) of the
        * binding.
        *
-       * @override
        * @param {Element} node Node to parse
        * @param {TemplateInfo} templateInfo Template metadata for current template
        * @param {NodeInfo} nodeInfo Node metadata for current template node
@@ -2453,12 +2643,15 @@ node.textContent=literalFromParts(parts)||" ";addBinding(this,templateInfo,nodeI
        *   metadata to `nodeInfo`
        * @protected
        * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+       * @nocollapse
        */static _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){let parts=this._parseBindings(value,templateInfo);if(parts){// Attribute or property
 let origName=name,kind="property";// The only way we see a capital letter here is if the attr has
 // a capital letter in it per spec. In this case, to make sure
 // this binding works, we go ahead and make the binding to the attribute.
 if(capitalAttributeRegex.test(name)){kind="attribute"}else if("$"==name[name.length-1]){name=name.slice(0,-1);kind="attribute"}// Initialize attribute bindings with any literal parts
-let literal=literalFromParts(parts);if(literal&&"attribute"==kind){node.setAttribute(name,literal)}// Clear attribute before removing, since IE won't allow removing
+let literal=literalFromParts(parts);if(literal&&"attribute"==kind){// Ensure a ShadyCSS template scoped style is not removed
+// when a class$ binding's initial literal value is set.
+if("class"==name&&node.hasAttribute("class")){literal+=" "+node.getAttribute(name)}node.setAttribute(name,literal)}// Clear attribute before removing, since IE won't allow removing
 // `value` attribute if it previously had a value (can't
 // unconditionally set '' before removing since attributes with `$`
 // can't be set using setAttribute)
@@ -2467,12 +2660,13 @@ node.removeAttribute(origName);// Case hackery: attributes are lower-case, but b
 // (properties) are case sensitive. Gambit is to map dash-case to
 // camel-case: `foo-bar` becomes `fooBar`.
 // Attribute bindings are excepted.
-if("property"===kind){name=dashToCamelCase(name)}addBinding(this,templateInfo,nodeInfo,kind,name,parts,literal);return!0}else{return super._parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value)}}/**
+if("property"===kind){name=dashToCamelCase(name)}addBinding(this,templateInfo,nodeInfo,kind,name,parts,literal);return!0}else{// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+return propertyEffectsBase._parseTemplateNodeAttribute.call(this,node,templateInfo,nodeInfo,name,value)}}/**
        * Overrides default `TemplateStamp` implementation to add support for
        * binding the properties that a nested template depends on to the template
        * as `_host_<property>`.
        *
-       * @override
        * @param {Node} node Node to parse
        * @param {TemplateInfo} templateInfo Template metadata for current template
        * @param {NodeInfo} nodeInfo Node metadata for current template node
@@ -2480,7 +2674,10 @@ if("property"===kind){name=dashToCamelCase(name)}addBinding(this,templateInfo,no
        *   metadata to `nodeInfo`
        * @protected
        * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-       */static _parseTemplateNestedTemplate(node,templateInfo,nodeInfo){let noted=super._parseTemplateNestedTemplate(node,templateInfo,nodeInfo),hostProps=nodeInfo.templateInfo.hostProps,mode="{";// Merge host props into outer template and add bindings
+       * @nocollapse
+       */static _parseTemplateNestedTemplate(node,templateInfo,nodeInfo){// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+let noted=propertyEffectsBase._parseTemplateNestedTemplate.call(this,node,templateInfo,nodeInfo),hostProps=nodeInfo.templateInfo.hostProps,mode="{";// Merge host props into outer template and add bindings
 for(let source in hostProps){let parts=[{mode,source,dependencies:[source]}];addBinding(this,templateInfo,nodeInfo,"property","_host_"+source,parts)}return noted}/**
        * Called to parse text in a template (either attribute values or
        * textContent) into binding metadata.
@@ -2524,6 +2721,7 @@ for(let source in hostProps){let parts=[{mode,source,dependencies:[source]}];add
        * @param {Object} templateInfo Current template metadata
        * @return {Array<!BindingPart>} Array of binding part metadata
        * @protected
+       * @nocollapse
        */static _parseBindings(text,templateInfo){let parts=[],lastIndex=0,m;// Example: "literal1{{prop}}literal2[[!compute(foo,bar)]]final"
 // Regex matches:
 //        Iteration 1:  Iteration 2:
@@ -2539,8 +2737,8 @@ if(lastIndex&&lastIndex<text.length){let literal=text.substring(lastIndex);if(li
        * Called to evaluate a previously parsed binding part based on a set of
        * one or more changed dependencies.
        *
-       * @param {this} inst Element that should be used as scope for
-       *   binding dependencies
+       * @param {!Polymer_PropertyEffects} inst Element that should be used as
+       *     scope for binding dependencies
        * @param {BindingPart} part Binding part metadata
        * @param {string} path Property/path that triggered this effect
        * @param {Object} props Bag of current property changes
@@ -2548,8 +2746,8 @@ if(lastIndex&&lastIndex<text.length){let literal=text.substring(lastIndex);if(li
        * @param {boolean} hasPaths True with `props` contains one or more paths
        * @return {*} Value the binding part evaluated to
        * @protected
-       */static _evaluateBinding(inst,part,path,props,oldProps,hasPaths){let value;if(part.signature){value=runMethodEffect(inst,path,props,oldProps,part.signature)}else if(path!=part.source){value=get(inst,part.source)}else{if(hasPaths&&isPath(path)){value=get(inst,path)}else{value=inst.__data[path]}}if(part.negate){value=!value}return value}}// make a typing for closure :P
-PropertyEffectsType=PropertyEffects;return PropertyEffects});/**
+       * @nocollapse
+       */static _evaluateBinding(inst,part,path,props,oldProps,hasPaths){let value;if(part.signature){value=runMethodEffect(inst,path,props,oldProps,part.signature)}else if(path!=part.source){value=get(inst,part.source)}else{if(hasPaths&&isPath(path)){value=get(inst,path)}else{value=inst.__data[path]}}if(part.negate){value=!value}return value}}return PropertyEffects});/**
      * Helper api for enqueuing client dom created by a host element.
      *
      * By default elements are flushed via `_flushProperties` when
@@ -2580,7 +2778,31 @@ PropertyEffectsType=PropertyEffects;return PropertyEffects});/**
      */beginHosting(inst){this.stack.push(inst)}/**
      * @param {*} inst Instance to end hosting
      * @return {void}
-     */endHosting(inst){let stackLen=this.stack.length;if(stackLen&&this.stack[stackLen-1]==inst){this.stack.pop()}}}const hostStack=new HostStack;var propertyEffects={PropertyEffects:PropertyEffects};function normalizeProperties(props){const output={};for(let p in props){const o=props[p];output[p]="function"===typeof o?{type:o}:o}return output}/**
+     */endHosting(inst){let stackLen=this.stack.length;if(stackLen&&this.stack[stackLen-1]==inst){this.stack.pop()}}}const hostStack=new HostStack;var propertyEffects={PropertyEffects:PropertyEffects};/**
+   @license
+   Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+   This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+   The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+   The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+   Code distributed by Google as part of the polymer project is also
+   subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+   */ /**
+       * Total number of Polymer element instances created.
+       * @type {number}
+       */let instanceCount=0;function incrementInstanceCount(){instanceCount++}/**
+   * Array of Polymer element classes that have been finalized.
+   * @type {!Array<!PolymerElementConstructor>}
+   */const registrations=[];/**
+                                  * @param {!PolymerElementConstructor} prototype Element prototype to log
+                                  * @private
+                                  */function _regLog(prototype){console.log("["+/** @type {?} */prototype.is+"]: registered")}/**
+   * Registers a class prototype for telemetry purposes.
+   * @param {!PolymerElementConstructor} prototype Element prototype to register
+   * @protected
+   */function register(prototype){registrations.push(prototype)}/**
+   * Logs all elements registered with an `is` to the console.
+   * @public
+   */function dumpRegistrations(){registrations.forEach(_regLog)}var telemetry={get instanceCount(){return instanceCount},incrementInstanceCount:incrementInstanceCount,registrations:registrations,register:register,dumpRegistrations:dumpRegistrations};function normalizeProperties(props){const output={};for(let p in props){const o=props[p];output[p]="function"===typeof o?{type:o}:o}return output}/**
    * Mixin that provides a minimal starting point to using the PropertiesChanged
    * mixin by providing a mechanism to declare properties in a static
    * getter (e.g. static get properties() { return { foo: String } }). Changes
@@ -2596,6 +2818,9 @@ PropertyEffectsType=PropertyEffects;return PropertyEffects});/**
    * @appliesMixin PropertiesChanged
    * @summary Mixin that provides a minimal starting point for using
    * the PropertiesChanged mixin by providing a declarative `properties` object.
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
    */const PropertiesMixin=dedupingMixin(superClass=>{/**
    * @constructor
    * @implements {Polymer_PropertiesChanged}
@@ -2627,25 +2852,29 @@ return superCtor.prototype instanceof PropertiesMixin?/** @type {!PropertiesMixi
      * Implements standard custom elements getter to observes the attributes
      * listed in `properties`.
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-     */static get observedAttributes(){const props=this._properties;return props?Object.keys(props).map(p=>this.attributeNameForProperty(p)):[]}/**
+     * @nocollapse
+     */static get observedAttributes(){if(!this.hasOwnProperty(JSCompiler_renameProperty("__observedAttributes",this))){register(this.prototype);const props=this._properties;this.__observedAttributes=props?Object.keys(props).map(p=>this.attributeNameForProperty(p)):[]}return this.__observedAttributes}/**
        * Finalizes an element definition, including ensuring any super classes
        * are also finalized. This includes ensuring property
        * accessors exist on the element prototype. This method calls
        * `_finalizeClass` to finalize each constructor in the prototype chain.
        * @return {void}
+       * @nocollapse
        */static finalize(){if(!this.hasOwnProperty(JSCompiler_renameProperty("__finalized",this))){const superCtor=superPropertiesClass(/** @type {!PropertiesMixinConstructor} */this);if(superCtor){superCtor.finalize()}this.__finalized=!0;this._finalizeClass()}}/**
        * Finalize an element class. This includes ensuring property
        * accessors exist on the element prototype. This method is called by
        * `finalize` and finalizes the class constructor.
        *
        * @protected
-       */static _finalizeClass(){const props=ownProperties(/** @type {!PropertiesMixinConstructor} */this);if(props){this.createProperties(props)}}/**
+       * @nocollapse
+       */static _finalizeClass(){const props=ownProperties(/** @type {!PropertiesMixinConstructor} */this);if(props){/** @type {?} */this.createProperties(props)}}/**
        * Returns a memoized version of all properties, including those inherited
        * from super classes. Properties not in object format are converted to
        * at least {type}.
        *
        * @return {Object} Object containing properties for this class
        * @protected
+       * @nocollapse
        */static get _properties(){if(!this.hasOwnProperty(JSCompiler_renameProperty("__properties",this))){const superCtor=superPropertiesClass(/** @type {!PropertiesMixinConstructor} */this);this.__properties=Object.assign({},superCtor&&superCtor._properties,ownProperties(/** @type {PropertiesMixinConstructor} */this))}return this.__properties}/**
        * Overrides `PropertiesChanged` method to return type specified in the
        * static `properties` object for the given property.
@@ -2653,12 +2882,13 @@ return superCtor.prototype instanceof PropertiesMixin?/** @type {!PropertiesMixi
        * @return {*} Type to which to deserialize attribute
        *
        * @protected
+       * @nocollapse
        */static typeForProperty(name){const info=this._properties[name];return info&&info.type}/**
        * Overrides `PropertiesChanged` method and adds a call to
        * `finalize` which lazily configures the element's property accessors.
        * @override
        * @return {void}
-       */_initializeProperties(){this.constructor.finalize();super._initializeProperties()}/**
+       */_initializeProperties(){incrementInstanceCount();this.constructor.finalize();super._initializeProperties()}/**
        * Called when the element is added to a document.
        * Calls `_enableProperties` to turn on property system from
        * `PropertiesChanged`.
@@ -2670,11 +2900,11 @@ return superCtor.prototype instanceof PropertiesMixin?/** @type {!PropertiesMixi
        * @suppress {missingProperties} Super may or may not implement the callback
        * @return {void}
        * @override
-       */disconnectedCallback(){if(super.disconnectedCallback){super.disconnectedCallback()}}}return PropertiesMixin});var propertiesMixin={PropertiesMixin:PropertiesMixin};const bundledImportMeta={...import.meta,url:new URL("../node_modules/%40polymer/polymer/lib/mixins/element-mixin.js",import.meta.url).href},version="3.0.5",ElementMixin=dedupingMixin(base=>{/**
+       */disconnectedCallback(){if(super.disconnectedCallback){super.disconnectedCallback()}}}return PropertiesMixin});var propertiesMixin={PropertiesMixin:PropertiesMixin};const bundledImportMeta={...import.meta,url:new URL("../node_modules/%40polymer/polymer/lib/mixins/element-mixin.js",import.meta.url).href},version="3.3.1",builtCSS=window.ShadyCSS&&window.ShadyCSS.cssBuild,ElementMixin=dedupingMixin(base=>{/**
    * @constructor
-   * @extends {base}
    * @implements {Polymer_PropertyEffects}
    * @implements {Polymer_PropertiesMixin}
+   * @extends {HTMLElement}
    * @private
    */const polymerElementBase=PropertiesMixin(PropertyEffects(base));/**
                                                                          * Returns a list of properties with default values.
@@ -2738,7 +2968,6 @@ return superCtor.prototype instanceof PropertiesMixin?/** @type {!PropertiesMixi
      * disables the effect, the setter would fail unexpectedly.
      * Based on feedback, we may want to try to make effects more malleable
      * and/or provide an advanced api for manipulating them.
-     * Also consider adding warnings when an effect cannot be changed.
      *
      * @param {!PolymerElement} proto Element class prototype to add accessors
      *   and effects to
@@ -2755,7 +2984,7 @@ if(info.computed){info.readOnly=!0}// Note, since all computed properties are re
 // setup where multiple triggers for setting a property)
 // While we do have `hasComputedEffect` this is set on the property's
 // dependencies rather than itself.
-if(info.computed&&!proto._hasReadOnlyEffect(name)){proto._createComputedProperty(name,info.computed,allProps)}if(info.readOnly&&!proto._hasReadOnlyEffect(name)){proto._createReadOnlyProperty(name,!info.computed)}if(info.reflectToAttribute&&!proto._hasReflectEffect(name)){proto._createReflectedProperty(name)}if(info.notify&&!proto._hasNotifyEffect(name)){proto._createNotifyingProperty(name)}// always add observer
+if(info.computed){if(proto._hasReadOnlyEffect(name)){console.warn(`Cannot redefine computed property '${name}'.`)}else{proto._createComputedProperty(name,info.computed,allProps)}}if(info.readOnly&&!proto._hasReadOnlyEffect(name)){proto._createReadOnlyProperty(name,!info.computed)}else if(!1===info.readOnly&&proto._hasReadOnlyEffect(name)){console.warn(`Cannot make readOnly property '${name}' non-readOnly.`)}if(info.reflectToAttribute&&!proto._hasReflectEffect(name)){proto._createReflectedProperty(name)}else if(!1===info.reflectToAttribute&&proto._hasReflectEffect(name)){console.warn(`Cannot make reflected property '${name}' non-reflected.`)}if(info.notify&&!proto._hasNotifyEffect(name)){proto._createNotifyingProperty(name)}else if(!1===info.notify&&proto._hasNotifyEffect(name)){console.warn(`Cannot make notify property '${name}' non-notify.`)}// always add observer
 if(info.observer){proto._createPropertyObserver(name,info.observer,allProps[info.observer])}// always create the mapping from attribute back to property for deserialization.
 proto._addPropertyToAttributeMap(name)}/**
      * Process all style elements in the element template. Styles with the
@@ -2766,44 +2995,49 @@ proto._addPropertyToAttributeMap(name)}/**
      * @param {string} is Name of element
      * @param {string} baseURI Base URI for element
      * @private
-     */function processElementStyles(klass,template,is,baseURI){const templateStyles=template.content.querySelectorAll("style"),stylesWithImports=stylesFromTemplate(template),linkedStyles=stylesFromModuleImports(is),firstTemplateChild=template.content.firstElementChild;for(let idx=0,s;idx<linkedStyles.length;idx++){s=linkedStyles[idx];s.textContent=klass._processStyleText(s.textContent,baseURI);template.content.insertBefore(s,firstTemplateChild)}// keep track of the last "concrete" style in the template we have encountered
+     */function processElementStyles(klass,template,is,baseURI){if(!builtCSS){const templateStyles=template.content.querySelectorAll("style"),stylesWithImports=stylesFromTemplate(template),linkedStyles=stylesFromModuleImports(is),firstTemplateChild=template.content.firstElementChild;for(let idx=0,s;idx<linkedStyles.length;idx++){s=linkedStyles[idx];s.textContent=klass._processStyleText(s.textContent,baseURI);template.content.insertBefore(s,firstTemplateChild)}// keep track of the last "concrete" style in the template we have encountered
 let templateStyleIndex=0;// ensure all gathered styles are actually in this template.
 for(let i=0;i<stylesWithImports.length;i++){let s=stylesWithImports[i],templateStyle=templateStyles[templateStyleIndex];// if the style is not in this template, it's been "included" and
 // we put a clone of it in the template before the style that included it
-if(templateStyle!==s){s=s.cloneNode(!0);templateStyle.parentNode.insertBefore(s,templateStyle)}else{templateStyleIndex++}s.textContent=klass._processStyleText(s.textContent,baseURI)}if(window.ShadyCSS){window.ShadyCSS.prepareTemplate(template,is)}}/**
+if(templateStyle!==s){s=s.cloneNode(!0);templateStyle.parentNode.insertBefore(s,templateStyle)}else{templateStyleIndex++}s.textContent=klass._processStyleText(s.textContent,baseURI)}}if(window.ShadyCSS){window.ShadyCSS.prepareTemplate(template,is)}}/**
      * Look up template from dom-module for element
      *
-     * @param {!string} is Element name to look up
-     * @return {!HTMLTemplateElement} Template found in dom module, or
+     * @param {string} is Element name to look up
+     * @return {?HTMLTemplateElement|undefined} Template found in dom module, or
      *   undefined if not found
      * @protected
      */function getTemplateFromDomModule(is){let template=null;// Under strictTemplatePolicy in 3.x+, dom-module lookup is only allowed
 // when opted-in via allowTemplateFromDomModule
-if(is&&(!strictTemplatePolicy||allowTemplateFromDomModule)){template=DomModule.import(is,"template");// Under strictTemplatePolicy, require any element with an `is`
+if(is&&(!strictTemplatePolicy||allowTemplateFromDomModule)){template=/** @type {?HTMLTemplateElement} */DomModule.import(is,"template");// Under strictTemplatePolicy, require any element with an `is`
 // specified to have a dom-module
 if(strictTemplatePolicy&&!template){throw new Error(`strictTemplatePolicy: expecting dom-module or null template for ${is}`)}}return template}/**
      * @polymer
      * @mixinClass
      * @unrestricted
      * @implements {Polymer_ElementMixin}
+     * @extends {polymerElementBase}
      */class PolymerElement extends polymerElementBase{/**
      * Current Polymer version in Semver notation.
      * @type {string} Semver notation of the current version of Polymer.
+     * @nocollapse
      */static get polymerElementVersion(){return version}/**
        * Override of PropertiesMixin _finalizeClass to create observers and
        * find the template.
        * @return {void}
        * @protected
-       * @override
        * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-       */static _finalizeClass(){super._finalizeClass();if(this.hasOwnProperty(JSCompiler_renameProperty("is",this))&&this.is){register(this.prototype)}const observers=ownObservers(this);if(observers){this.createObservers(observers,this._properties)}// note: create "working" template that is finalized at instance time
-let template=/** @type {PolymerElementConstructor} */this.template;if(template){if("string"===typeof template){console.error("template getter must return HTMLTemplateElement");template=null}else{template=template.cloneNode(!0)}}this.prototype._template=template}/**
+       * @nocollapse
+       */static _finalizeClass(){// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+polymerElementBase._finalizeClass.call(this);const observers=ownObservers(this);if(observers){this.createObservers(observers,this._properties)}this._prepareTemplate()}/** @nocollapse */static _prepareTemplate(){// note: create "working" template that is finalized at instance time
+let template=/** @type {PolymerElementConstructor} */this.template;if(template){if("string"===typeof template){console.error("template getter must return HTMLTemplateElement");template=null}else if(!legacyOptimizations){template=template.cloneNode(!0)}}/** @override */this.prototype._template=template}/**
        * Override of PropertiesChanged createProperties to create accessors
        * and property effects for all of the properties.
+       * @param {!Object} props .
        * @return {void}
        * @protected
-       * @override
-       */static createProperties(props){for(let p in props){createPropertyFromConfig(this.prototype,p,props[p],props)}}/**
+       * @nocollapse
+       */static createProperties(props){for(let p in props){createPropertyFromConfig(/** @type {?} */this.prototype,p,props[p],props)}}/**
        * Creates observers for the given `observers` array.
        * Leverages `PropertyEffects` to create observers.
        * @param {Object} observers Array of observer descriptors for
@@ -2813,6 +3047,7 @@ let template=/** @type {PolymerElementConstructor} */this.template;if(template){
        *   reference is changed
        * @return {void}
        * @protected
+       * @nocollapse
        */static createObservers(observers,dynamicFns){const proto=this.prototype;for(let i=0;i<observers.length;i++){proto._createMethodObserver(observers[i],dynamicFns)}}/**
        * Returns the template that will be stamped into this element's shadow root.
        *
@@ -2848,6 +3083,7 @@ let template=/** @type {PolymerElementConstructor} */this.template;if(template){
        *   }
        *
        * @return {!HTMLTemplateElement|string} Template to be stamped
+       * @nocollapse
        */static get template(){// Explanation of template-related properties:
 // - constructor.template (this getter): the template for the class.
 //     This can come from the prototype (for legacy elements), from a
@@ -2870,6 +3106,7 @@ Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).con
        * Set the template.
        *
        * @param {!HTMLTemplateElement|string} value Template to set.
+       * @nocollapse
        */static set template(value){this._template=value}/**
        * Path matching the url from which the element was imported.
        *
@@ -2888,6 +3125,7 @@ Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).con
        *
        * @return {string} The import path for this element class
        * @suppress {missingProperties}
+       * @nocollapse
        */static get importPath(){if(!this.hasOwnProperty(JSCompiler_renameProperty("_importPath",this))){const meta=this.importMeta;if(meta){this._importPath=pathFromUrl(meta.url)}else{const module=DomModule.import(/** @type {PolymerElementConstructor} */this.is);this._importPath=module&&module.assetpath||Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).constructor.importPath}}return this._importPath}constructor(){super();/** @type {HTMLTemplateElement} */this._template;/** @type {string} */this._importPath;/** @type {string} */this.rootPath;/** @type {string} */this.importPath;/** @type {StampedTemplate | HTMLElement | ShadowRoot} */this.root;/** @type {!Object<string, !Element>} */this.$}/**
        * Overrides the default `PropertyAccessors` to ensure class
        * metaprogramming related to property accessors and effects has
@@ -2898,8 +3136,8 @@ Object.getPrototypeOf(/** @type {PolymerElementConstructor}*/this.prototype).con
        *
        * @return {void}
        * @override
-       * @suppress {invalidCasts}
-       */_initializeProperties(){instanceCount++;this.constructor.finalize();// note: finalize template when we have access to `localName` to
+       * @suppress {invalidCasts,missingProperties} go/missingfnprops
+       */_initializeProperties(){this.constructor.finalize();// note: finalize template when we have access to `localName` to
 // avoid dependence on `is` for polyfilling styling.
 this.constructor._finalizeTemplate(/** @type {!HTMLElement} */this.localName);super._initializeProperties();// set path defaults
 this.rootPath=rootPath;this.importPath=this.constructor.importPath;// apply property defaults...
@@ -2915,6 +3153,7 @@ if(this._hasAccessor(p)){this._setPendingProperty(p,value,!0)}else{this[p]=value
        * @param {string} baseURI Base URI to rebase CSS paths against
        * @return {string} The processed CSS text
        * @protected
+       * @nocollapse
        */static _processStyleText(cssText,baseURI){return resolveCss(cssText,baseURI)}/**
       * Configures an element `proto` to function with a given `template`.
       * The element name `is` and extends `ext` must be specified for ShadyCSS
@@ -2923,6 +3162,7 @@ if(this._hasAccessor(p)){this._setPendingProperty(p,value,!0)}else{this[p]=value
       * @param {string} is Tag name (or type extension name) for this element
       * @return {void}
       * @protected
+      * @nocollapse
       */static _finalizeTemplate(is){/** @const {HTMLTemplateElement} */const template=this.prototype._template;if(template&&!template.__polymerFinalized){template.__polymerFinalized=!0;const importPath=this.importPath,baseURI=importPath?resolveUrl(importPath):"";// e.g. support `include="module-name"`, and ShadyCSS
 processElementStyles(this,template,is,baseURI);this.prototype._bindTemplate(template)}}/**
        * Provides a default implementation of the standard Custom Elements
@@ -2932,7 +3172,9 @@ processElementStyles(this,template,is,baseURI);this.prototype._bindTemplate(temp
        * flushes any pending properties, and updates shimmed CSS properties
        * when using the ShadyCSS scoping/custom properties polyfill.
        *
-       * @suppress {missingProperties, invalidCasts} Super may or may not implement the callback
+       * @override
+       * @suppress {missingProperties, invalidCasts} Super may or may not
+       *     implement the callback
        * @return {void}
        */connectedCallback(){if(window.ShadyCSS&&this._template){window.ShadyCSS.styleElement(/** @type {!HTMLElement} */this)}super.connectedCallback()}/**
        * Stamps the element template.
@@ -2958,11 +3200,12 @@ super._readyClients()}/**
        * However, this method may be overridden to allow an element
        * to put its dom in another location.
        *
+       * @override
        * @throws {Error}
        * @suppress {missingReturn}
        * @param {StampedTemplate} dom to attach to the element.
        * @return {ShadowRoot} node to which the dom has been attached.
-       */_attachDom(dom){if(this.attachShadow){if(dom){if(!this.shadowRoot){this.attachShadow({mode:"open"})}this.shadowRoot.appendChild(dom);return this.shadowRoot}return null}else{throw new Error("ShadowDOM not available. "+// TODO(sorvell): move to compile-time conditional when supported
+       */_attachDom(dom){const n=wrap(this);if(n.attachShadow){if(dom){if(!n.shadowRoot){n.attachShadow({mode:"open",shadyUpgradeFragment:dom});n.shadowRoot.appendChild(dom)}if(syncInitialRender&&window.ShadyDOM){window.ShadyDOM.flushInitial(n.shadowRoot)}return n.shadowRoot}return null}else{throw new Error("ShadowDOM not available. "+// TODO(sorvell): move to compile-time conditional when supported
 "PolymerElement can create dom as children instead of in "+"ShadowDOM by setting `this.root = this;` before `ready`.")}}/**
        * When using the ShadyCSS scoping and custom property shim, causes all
        * shimmed styles in this element (and its subtree) to be updated
@@ -2979,6 +3222,7 @@ super._readyClients()}/**
        * Note: This function does not support updating CSS mixins.
        * You can not dynamically change the value of an `@apply`.
        *
+       * @override
        * @param {Object=} properties Bag of custom property key/values to
        *   apply to this element.
        * @return {void}
@@ -2993,54 +3237,47 @@ super._readyClients()}/**
        * with `/` (absolute URLs) or `#` (hash identifiers).  For general purpose
        * URL resolution, use `window.URL`.
        *
+       * @override
        * @param {string} url URL to resolve.
        * @param {string=} base Optional base URL to resolve against, defaults
        * to the element's `importPath`
        * @return {string} Rewritten URL relative to base
        */resolveUrl(url,base){if(!base&&this.importPath){base=resolveUrl(this.importPath)}return resolveUrl(url,base)}/**
-       * Overrides `PropertyAccessors` to add map of dynamic functions on
+       * Overrides `PropertyEffects` to add map of dynamic functions on
        * template info, for consumption by `PropertyEffects` template binding
        * code. This map determines which method templates should have accessors
        * created for them.
        *
-       * @override
+       * @param {!HTMLTemplateElement} template Template
+       * @param {!TemplateInfo} templateInfo Template metadata for current template
+       * @param {!NodeInfo} nodeInfo Node metadata for current template.
+       * @return {boolean} .
        * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-       */static _parseTemplateContent(template,templateInfo,nodeInfo){templateInfo.dynamicFns=templateInfo.dynamicFns||this._properties;return super._parseTemplateContent(template,templateInfo,nodeInfo)}}return PolymerElement});/**
-     * Total number of Polymer element instances created.
-     * @type {number}
-     */let instanceCount=0;/**
-                               * Array of Polymer element classes that have been finalized.
-                               * @type {Array<PolymerElement>}
-                               */const registrations=[];/**
-                                  * @param {!PolymerElementConstructor} prototype Element prototype to log
-                                  * @this {this}
-                                  * @private
-                                  */function _regLog(prototype){console.log("["+prototype.is+"]: registered")}/**
-   * Registers a class prototype for telemetry purposes.
-   * @param {HTMLElement} prototype Element prototype to register
-   * @this {this}
-   * @protected
-   */function register(prototype){registrations.push(prototype)}/**
-   * Logs all elements registered with an `is` to the console.
-   * @public
-   * @this {this}
-   */function dumpRegistrations(){registrations.forEach(_regLog)}/**
-   * When using the ShadyCSS scoping and custom property shim, causes all
-   * shimmed `styles` (via `custom-style`) in the document (and its subtree)
-   * to be updated based on current custom property values.
-   *
-   * The optional parameter overrides inline custom property styles with an
-   * object of properties where the keys are CSS properties, and the values
-   * are strings.
-   *
-   * Example: `updateStyles({'--color': 'blue'})`
-   *
-   * These properties are retained unless a value of `null` is set.
-   *
-   * @param {Object=} props Bag of custom property key/values to
-   *   apply to the document.
-   * @return {void}
-   */const updateStyles=function(props){if(window.ShadyCSS){window.ShadyCSS.styleDocument(props)}};var elementMixin={version:version,ElementMixin:ElementMixin,get instanceCount(){return instanceCount},registrations:registrations,register:register,dumpRegistrations:dumpRegistrations,updateStyles:updateStyles};class LiteralString{constructor(string){/** @type {string} */this.value=string.toString()}/**
+       * @nocollapse
+       */static _parseTemplateContent(template,templateInfo,nodeInfo){templateInfo.dynamicFns=templateInfo.dynamicFns||this._properties;// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+return polymerElementBase._parseTemplateContent.call(this,template,templateInfo,nodeInfo)}/**
+       * Overrides `PropertyEffects` to warn on use of undeclared properties in
+       * template.
+       *
+       * @param {Object} templateInfo Template metadata to add effect to
+       * @param {string} prop Property that should trigger the effect
+       * @param {Object=} effect Effect metadata object
+       * @return {void}
+       * @protected
+       * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
+       * @nocollapse
+       */static _addTemplatePropertyEffect(templateInfo,prop,effect){// Warn if properties are used in template without being declared.
+// Properties must be listed in `properties` to be included in
+// `observedAttributes` since CE V1 reads that at registration time, and
+// since we want to keep template parsing lazy, we can't automatically
+// add undeclared properties used in templates to `observedAttributes`.
+// The warning is only enabled in `legacyOptimizations` mode, since
+// we don't want to spam existing users who might have adopted the
+// shorthand when attribute deserialization is not important.
+if(legacyOptimizations&&!(prop in this._properties)){console.warn(`Property '${prop}' used in template but not declared in 'properties'; `+`attribute will not be observed.`)}// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+return polymerElementBase._addTemplatePropertyEffect.call(this,templateInfo,prop,effect)}}return PolymerElement}),updateStyles=function(props){if(window.ShadyCSS){window.ShadyCSS.styleDocument(props)}};var elementMixin={version:version,ElementMixin:ElementMixin,updateStyles:updateStyles};class LiteralString{constructor(string){/** @type {string} */this.value=string.toString()}/**
      * @return {string} LiteralString string value
      * @override
      */toString(){return this.value}}/**
@@ -3121,11 +3358,11 @@ super._readyClients()}/**
 // so fall back on native if we do not detect ShadyDOM
 // Edge 15: custom properties used in ::before and ::after will also be used in the parent element
 // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12414257/
-nativeCssVariables_=nativeShadow||!!(!navigator.userAgent.match(/AppleWebKit\/601|Edge\/15/)&&window.CSS&&CSS.supports&&CSS.supports("box-shadow","0 0 0 var(--foo)"))}}if(window.ShadyCSS&&window.ShadyCSS.nativeCss!==void 0){nativeCssVariables_=window.ShadyCSS.nativeCss}else if(window.ShadyCSS){calcCssVariables(window.ShadyCSS);// reset window variable to let ShadyCSS API take its place
+nativeCssVariables_=nativeShadow||!!(!navigator.userAgent.match(/AppleWebKit\/601|Edge\/15/)&&window.CSS&&CSS.supports&&CSS.supports("box-shadow","0 0 0 var(--foo)"))}}/** @type {string | undefined} */let cssBuild;if(window.ShadyCSS&&window.ShadyCSS.cssBuild!==void 0){cssBuild=window.ShadyCSS.cssBuild}/** @type {boolean} */const disableRuntime=!!(window.ShadyCSS&&window.ShadyCSS.disableRuntime);if(window.ShadyCSS&&window.ShadyCSS.nativeCss!==void 0){nativeCssVariables_=window.ShadyCSS.nativeCss}else if(window.ShadyCSS){calcCssVariables(window.ShadyCSS);// reset window variable to let ShadyCSS API take its place
 window.ShadyCSS=void 0}else{calcCssVariables(window.WebComponents&&window.WebComponents.flags)}// Hack for type error under new type inference which doesn't like that
 // nativeCssVariables is updated in a function and assigns the type
 // `function(): ?` instead of `boolean`.
-const nativeCssVariables=/** @type {boolean} */nativeCssVariables_;var styleSettings={nativeShadow:nativeShadow,nativeCssVariables:nativeCssVariables};/**
+const nativeCssVariables=/** @type {boolean} */nativeCssVariables_;var styleSettings={nativeShadow:nativeShadow,get cssBuild(){return cssBuild},disableRuntime:disableRuntime,nativeCssVariables:nativeCssVariables};/**
    @license
    Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -3201,7 +3438,7 @@ if(cssText){if(node.selector){text+=node.selector+" "+OPEN_BRACE+"\n"}text+=cssT
                                                    *
                                                    * @param {!HTMLStyleElement} style
                                                    * @return {undefined}
-                                                   */function processUnscopedStyle(style){const text=style.textContent;if(!styleTextSet.has(text)){styleTextSet.add(text);const newStyle=style.cloneNode(!0);document.head.appendChild(newStyle)}}/**
+                                                   */function processUnscopedStyle(style){const text=style.textContent;if(!styleTextSet.has(text)){styleTextSet.add(text);const newStyle=document.createElement("style");newStyle.setAttribute("shady-unscoped","");newStyle.textContent=text;document.head.appendChild(newStyle)}}/**
    * Check if a style is supposed to be unscoped
    * @param {!HTMLStyleElement} style
    * @return {boolean} true if the style has the unscoping attribute
@@ -3274,9 +3511,11 @@ let value=inner.substring(0,comma).trim(),fallback=inner.substring(comma+1).trim
    * @param {string} value
    */function setElementClassRaw(element,value){// use native setAttribute provided by ShadyDOM when setAttribute is patched
 if(nativeShadow){element.setAttribute("class",value)}else{window.ShadyDOM.nativeMethods.setAttribute.call(element,"class",value)}}/**
-   * @param {Element | {is: string, extends: string}} element
-   * @return {{is: string, typeExtension: string}}
-   */function getIsExtends(element){let localName=element.localName,is="",typeExtension="";/*
+   * @type {function(*):*}
+   */const wrap$2=window.ShadyDOM&&window.ShadyDOM.wrap||(node=>node);/**
+                                                                                         * @param {Element | {is: string, extends: string}} element
+                                                                                         * @return {{is: string, typeExtension: string}}
+                                                                                         */function getIsExtends(element){let localName=element.localName,is="",typeExtension="";/*
                           NOTE: technically, this can be wrong for certain svg elements
                           with `-` in the name like `<font-face>`
                           */if(localName){if(-1<localName.indexOf("-")){is=localName}else{typeExtension=localName;is=element.getAttribute&&element.getAttribute("is")||""}}else{is=/** @type {?} */element.is;typeExtension=/** @type {?} */element.extends}return{is,typeExtension}}/**
@@ -3296,7 +3535,7 @@ if(part){parts.push(part)}return parts}const CSS_BUILD_ATTR="css-build";/**
                                      *
                                      * @param {!HTMLElement} element
                                      * @return {string} Can be "", "shady", or "shadow"
-                                     */function getCssBuild(element){if(element.__cssBuild===void 0){// try attribute first, as it is the common case
+                                     */function getCssBuild(element){if(cssBuild!==void 0){return(/** @type {string} */cssBuild)}if(element.__cssBuild===void 0){// try attribute first, as it is the common case
 const attrValue=element.getAttribute(CSS_BUILD_ATTR);if(attrValue){element.__cssBuild=attrValue}else{const buildComment=getBuildComment(element);if(""!==buildComment){// remove build comment so it is not needlessly copied into every element instance
 removeBuildComment(element)}element.__cssBuild=buildComment}}return element.__cssBuild||""}/**
    * Check if the given element, either a <template> or <style>, has been processed
@@ -3318,9 +3557,15 @@ removeBuildComment(element)}element.__cssBuild=buildComment}}return element.__cs
    *
    * @param {!HTMLElement} element
    * @return {string}
-   */function getBuildComment(element){const buildComment="template"===element.localName?element.content.firstChild:element.firstChild;if(buildComment instanceof Comment){const commentParts=buildComment.textContent.trim().split(":");if(commentParts[0]===CSS_BUILD_ATTR){return commentParts[1]}}return""}/**
+   */function getBuildComment(element){const buildComment="template"===element.localName?/** @type {!HTMLTemplateElement} */element.content.firstChild:element.firstChild;if(buildComment instanceof Comment){const commentParts=buildComment.textContent.trim().split(":");if(commentParts[0]===CSS_BUILD_ATTR){return commentParts[1]}}return""}/**
+   * Check if the css build status is optimal, and do no unneeded work.
+   *
+   * @param {string=} cssBuild CSS build status
+   * @return {boolean} css build is optimal or not
+   */function isOptimalCssBuild(cssBuild=""){// CSS custom property shim always requires work
+if(""===cssBuild||!nativeCssVariables){return!1}return nativeShadow?"shadow"===cssBuild:"shady"===cssBuild}/**
    * @param {!HTMLElement} element
-   */function removeBuildComment(element){const buildComment="template"===element.localName?element.content.firstChild:element.firstChild;buildComment.parentNode.removeChild(buildComment)}var styleUtil={toCssText:toCssText,rulesForStyle:rulesForStyle,isKeyframesSelector:isKeyframesSelector,forEachRule:forEachRule,applyCss:applyCss,createScopeStyle:createScopeStyle,applyStylePlaceHolder:applyStylePlaceHolder,applyStyle:applyStyle,isTargetedBuild:isTargetedBuild,findMatchingParen:findMatchingParen,processVariableAndFallback:processVariableAndFallback,setElementClassRaw:setElementClassRaw,getIsExtends:getIsExtends,gatherStyleText:gatherStyleText,splitSelectorList:splitSelectorList,getCssBuild:getCssBuild,elementHasBuiltCss:elementHasBuiltCss,getBuildComment:getBuildComment};/**
+   */function removeBuildComment(element){const buildComment="template"===element.localName?/** @type {!HTMLTemplateElement} */element.content.firstChild:element.firstChild;buildComment.parentNode.removeChild(buildComment)}var styleUtil={toCssText:toCssText,rulesForStyle:rulesForStyle,isKeyframesSelector:isKeyframesSelector,forEachRule:forEachRule,applyCss:applyCss,createScopeStyle:createScopeStyle,applyStylePlaceHolder:applyStylePlaceHolder,applyStyle:applyStyle,isTargetedBuild:isTargetedBuild,findMatchingParen:findMatchingParen,processVariableAndFallback:processVariableAndFallback,setElementClassRaw:setElementClassRaw,wrap:wrap$2,getIsExtends:getIsExtends,gatherStyleText:gatherStyleText,splitSelectorList:splitSelectorList,getCssBuild:getCssBuild,elementHasBuiltCss:elementHasBuiltCss,getBuildComment:getBuildComment,isOptimalCssBuild:isOptimalCssBuild};/**
    @license
    Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -3507,10 +3752,11 @@ value="apply-shim-inherit"}}return value}/**
      * "parse" a mixin definition into a map of properties and values
      * cssTextToMap('border: 2px solid black') -> ('border', '2px solid black')
      * @param {string} text
+     * @param {boolean=} replaceInitialOrInherit
      * @return {!Object<string, string>}
-     */_cssTextToMap(text){let props=text.split(";"),property,value,out={};for(let i=0,p,sp;i<props.length;i++){p=props[i];if(p){sp=p.split(":");// ignore lines that aren't definitions like @media
+     */_cssTextToMap(text,replaceInitialOrInherit=!1){let props=text.split(";"),property,value,out={};for(let i=0,p,sp;i<props.length;i++){p=props[i];if(p){sp=p.split(":");// ignore lines that aren't definitions like @media
 if(1<sp.length){property=sp[0].trim();// some properties may have ':' in the value, like data urls
-value=this._replaceInitialOrInherit(property,sp.slice(1).join(":"));out[property]=value}}}return out}/**
+value=sp.slice(1).join(":");if(replaceInitialOrInherit){value=this._replaceInitialOrInherit(property,value)}out[property]=value}}}return out}/**
      * @param {MixinMapEntry} mixinEntry
      */_invalidateMixinEntry(mixinEntry){if(!invalidCallback){return}for(let elementName in mixinEntry.dependants){if(elementName!==this._currentElement){invalidCallback(elementName)}}}/**
      * @param {string} matchText
@@ -3521,7 +3767,7 @@ value=this._replaceInitialOrInherit(property,sp.slice(1).join(":"));out[property
      * @return {string}
      */_produceCssProperties(matchText,propertyName,valueProperty,valueMixin,rule){// handle case where property value is a mixin
 if(valueProperty){// form: --mixin2: var(--mixin1), where --mixin1 is in the map
-processVariableAndFallback(valueProperty,(prefix,value)=>{if(value&&this._map.get(value)){valueMixin=`@apply ${value};`}})}if(!valueMixin){return matchText}let mixinAsProperties=this._consumeCssProperties(""+valueMixin,rule),prefix=matchText.slice(0,matchText.indexOf("--")),mixinValues=this._cssTextToMap(mixinAsProperties),combinedProps=mixinValues,mixinEntry=this._map.get(propertyName),oldProps=mixinEntry&&mixinEntry.properties;if(oldProps){// NOTE: since we use mixin, the map of properties is updated here
+processVariableAndFallback(valueProperty,(prefix,value)=>{if(value&&this._map.get(value)){valueMixin=`@apply ${value};`}})}if(!valueMixin){return matchText}let mixinAsProperties=this._consumeCssProperties(""+valueMixin,rule),prefix=matchText.slice(0,matchText.indexOf("--")),mixinValues=this._cssTextToMap(mixinAsProperties,!0),combinedProps=mixinValues,mixinEntry=this._map.get(propertyName),oldProps=mixinEntry&&mixinEntry.properties;if(oldProps){// NOTE: since we use mixin, the map of properties is updated here
 // and this is what we want.
 combinedProps=Object.assign(Object.create(oldProps),mixinValues)}else{this._map.set(propertyName,combinedProps)}let out=[],p,v,needToInvalidate=!1;for(p in combinedProps){v=mixinValues[p];// if property not defined by current mixin, set initial
 if(v===void 0){v="initial"}if(oldProps&&!(p in oldProps)){needToInvalidate=!0}out.push(`${propertyName}${MIXIN_VAR_SEP}${p}: ${v}`)}if(needToInvalidate){this._invalidateMixinEntry(mixinEntry)}if(mixinEntry){mixinEntry.properties=combinedProps}// because the mixinMap is global, the mixin might conflict with
@@ -3534,7 +3780,7 @@ if(v===void 0){v="initial"}if(oldProps&&!(p in oldProps)){needToInvalidate=!0}ou
 // --mixin1: 10px solid red;
 // --foo: var(--mixin1);
 // In this case, we leave the original variable definition in place.
-if(valueProperty){prefix=`${matchText};${prefix}`}return`${prefix}${out.join("; ")};`}}/* exports */ApplyShim.prototype.detectMixin=ApplyShim.prototype.detectMixin;ApplyShim.prototype.transformStyle=ApplyShim.prototype.transformStyle;ApplyShim.prototype.transformCustomStyle=ApplyShim.prototype.transformCustomStyle;ApplyShim.prototype.transformRules=ApplyShim.prototype.transformRules;ApplyShim.prototype.transformRule=ApplyShim.prototype.transformRule;ApplyShim.prototype.transformTemplate=ApplyShim.prototype.transformTemplate;ApplyShim.prototype._separator=MIXIN_VAR_SEP;Object.defineProperty(ApplyShim.prototype,"invalidCallback",{/** @return {?function(string)} */get(){return invalidCallback},/** @param {?function(string)} cb */set(cb){invalidCallback=cb}});var applyShim={default:ApplyShim};/**
+if(valueProperty){prefix=`${matchText};${prefix}`}return`${prefix}${out.join("; ")};`}}/* exports */ /* eslint-disable no-self-assign */ApplyShim.prototype.detectMixin=ApplyShim.prototype.detectMixin;ApplyShim.prototype.transformStyle=ApplyShim.prototype.transformStyle;ApplyShim.prototype.transformCustomStyle=ApplyShim.prototype.transformCustomStyle;ApplyShim.prototype.transformRules=ApplyShim.prototype.transformRules;ApplyShim.prototype.transformRule=ApplyShim.prototype.transformRule;ApplyShim.prototype.transformTemplate=ApplyShim.prototype.transformTemplate;ApplyShim.prototype._separator=MIXIN_VAR_SEP;/* eslint-enable no-self-assign */Object.defineProperty(ApplyShim.prototype,"invalidCallback",{/** @return {?function(string)} */get(){return invalidCallback},/** @param {?function(string)} cb */set(cb){invalidCallback=cb}});var applyShim={default:ApplyShim};/**
    @license
    Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -3643,7 +3889,7 @@ documentWait(()=>{if(window.ShadyCSS.flushCustomStyles){window.ShadyCSS.flushCus
      * @return {!Array<!CustomStyleProvider>}
      */processStyles(){const cs=this.customStyles;for(let i=0;i<cs.length;i++){const customStyle=cs[i];if(customStyle[CACHED_STYLE]){continue}const style=this.getStyleForCustomStyle(customStyle);if(style){// HTMLImports polyfill may have cloned the style into the main document,
 // which is referenced with __appliedElement.
-const styleToTransform=/** @type {!HTMLStyleElement} */style.__appliedElement||style;if(transformFn){transformFn(styleToTransform)}customStyle[CACHED_STYLE]=styleToTransform}}return cs}}CustomStyleInterface.prototype.addCustomStyle=CustomStyleInterface.prototype.addCustomStyle;CustomStyleInterface.prototype.getStyleForCustomStyle=CustomStyleInterface.prototype.getStyleForCustomStyle;CustomStyleInterface.prototype.processStyles=CustomStyleInterface.prototype.processStyles;Object.defineProperties(CustomStyleInterface.prototype,{transformCallback:{/** @return {?function(!HTMLStyleElement)} */get(){return transformFn},/** @param {?function(!HTMLStyleElement)} fn */set(fn){transformFn=fn}},validateCallback:{/** @return {?function()} */get(){return validateFn},/**
+const styleToTransform=/** @type {!HTMLStyleElement} */style.__appliedElement||style;if(transformFn){transformFn(styleToTransform)}customStyle[CACHED_STYLE]=styleToTransform}}return cs}}/* eslint-disable no-self-assign */CustomStyleInterface.prototype.addCustomStyle=CustomStyleInterface.prototype.addCustomStyle;CustomStyleInterface.prototype.getStyleForCustomStyle=CustomStyleInterface.prototype.getStyleForCustomStyle;CustomStyleInterface.prototype.processStyles=CustomStyleInterface.prototype.processStyles;/* eslint-enable no-self-assign */Object.defineProperties(CustomStyleInterface.prototype,{transformCallback:{/** @return {?function(!HTMLStyleElement)} */get(){return transformFn},/** @param {?function(!HTMLStyleElement)} fn */set(fn){transformFn=fn}},validateCallback:{/** @return {?function()} */get(){return validateFn},/**
      * @param {?function()} fn
      * @this {CustomStyleInterface}
      */set(fn){let needsEnqueue=!1;if(!validateFn){needsEnqueue=!0}validateFn=fn;if(needsEnqueue){this.enqueueDocumentValidation()}}}});/** @typedef {{
@@ -3654,7 +3900,7 @@ const styleToTransform=/** @type {!HTMLStyleElement} */style.__appliedElement||s
      * transformCallback: ?function(!HTMLStyleElement),
      * validateCallback: ?function()
      * }}
-     */let CustomStyleInterfaceInterface;var customStyleInterface={CustomStyleProvider:CustomStyleProvider,default:CustomStyleInterface,CustomStyleInterfaceInterface:CustomStyleInterfaceInterface};/**
+     */const CustomStyleInterfaceInterface={};var customStyleInterface={CustomStyleProvider:CustomStyleProvider,default:CustomStyleInterface,CustomStyleInterfaceInterface:CustomStyleInterfaceInterface};/**
    @license
    Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -3662,14 +3908,14 @@ const styleToTransform=/** @type {!HTMLStyleElement} */style.__appliedElement||s
    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
    Code distributed by Google as part of the polymer project is also
    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-   */"use strict";const applyShim$1=new ApplyShim;class ApplyShimInterface{constructor(){/** @type {?CustomStyleInterfaceInterface} */this.customStyleInterface=null;applyShim$1.invalidCallback=invalidate}ensure(){if(this.customStyleInterface){return}this.customStyleInterface=window.ShadyCSS.CustomStyleInterface;if(this.customStyleInterface){this.customStyleInterface.transformCallback=style=>{applyShim$1.transformCustomStyle(style)};this.customStyleInterface.validateCallback=()=>{requestAnimationFrame(()=>{if(this.customStyleInterface.enqueued){this.flushCustomStyles()}})}}}/**
+   */"use strict";const applyShim$1=new ApplyShim;class ApplyShimInterface{constructor(){/** @type {?CustomStyleInterfaceInterface} */this.customStyleInterface=null;applyShim$1.invalidCallback=invalidate}ensure(){if(this.customStyleInterface){return}if(window.ShadyCSS.CustomStyleInterface){this.customStyleInterface=/** @type {!CustomStyleInterfaceInterface} */window.ShadyCSS.CustomStyleInterface;this.customStyleInterface.transformCallback=style=>{applyShim$1.transformCustomStyle(style)};this.customStyleInterface.validateCallback=()=>{requestAnimationFrame(()=>{if(this.customStyleInterface.enqueued){this.flushCustomStyles()}})}}}/**
      * @param {!HTMLTemplateElement} template
      * @param {string} elementName
      */prepareTemplate(template,elementName){this.ensure();if(elementHasBuiltCss(template)){return}templateMap[elementName]=template;let ast=applyShim$1.transformTemplate(template,elementName);// save original style ast to use for revalidating instances
 template._styleAst=ast}flushCustomStyles(){this.ensure();if(!this.customStyleInterface){return}let styles=this.customStyleInterface.processStyles();if(!this.customStyleInterface.enqueued){return}for(let i=0;i<styles.length;i++){let cs=styles[i],style=this.customStyleInterface.getStyleForCustomStyle(cs);if(style){applyShim$1.transformCustomStyle(style)}}this.customStyleInterface.enqueued=!1}/**
      * @param {HTMLElement} element
      * @param {Object=} properties
-     */styleSubtree(element,properties){this.ensure();if(properties){updateNativeProperties(element,properties)}if(element.shadowRoot){this.styleElement(element);let shadowChildren=element.shadowRoot.children||element.shadowRoot.childNodes;for(let i=0;i<shadowChildren.length;i++){this.styleSubtree(/** @type {HTMLElement} */shadowChildren[i])}}else{let children=element.children||element.childNodes;for(let i=0;i<children.length;i++){this.styleSubtree(/** @type {HTMLElement} */children[i])}}}/**
+     */styleSubtree(element,properties){this.ensure();if(properties){updateNativeProperties(element,properties)}if(element.shadowRoot){this.styleElement(element);let shadowChildren=/** @type {!ParentNode} */element.shadowRoot.children||element.shadowRoot.childNodes;for(let i=0;i<shadowChildren.length;i++){this.styleSubtree(/** @type {HTMLElement} */shadowChildren[i])}}else{let children=element.children||element.childNodes;for(let i=0;i<children.length;i++){this.styleSubtree(/** @type {HTMLElement} */children[i])}}}/**
      * @param {HTMLElement} element
      */styleElement(element){this.ensure();let{is}=getIsExtends(element),template=templateMap[is];if(template&&elementHasBuiltCss(template)){return}if(template&&!templateIsValid(template)){// only revalidate template once
 if(!templateIsValidating(template)){this.prepareTemplate(template,is);startValidatingTemplate(template)}// update this element instance
@@ -3685,7 +3931,7 @@ applyShimInterface.flushCustomStyles();applyShimInterface.prepareTemplate(templa
      * @param {!HTMLTemplateElement} template
      * @param {string} elementName
      * @param {string=} elementExtends
-     */prepareTemplateStyles(template,elementName,elementExtends){this.prepareTemplate(template,elementName,elementExtends)},/**
+     */prepareTemplateStyles(template,elementName,elementExtends){window.ShadyCSS.prepareTemplate(template,elementName,elementExtends)},/**
      * @param {!HTMLTemplateElement} template
      * @param {string} elementName
      */prepareTemplateDom(template,elementName){},// eslint-disable-line no-unused-vars
@@ -3700,7 +3946,7 @@ applyShimInterface.flushCustomStyles();applyShimInterface.prepareTemplate(templa
      * @param {Element} element
      * @param {string} property
      * @return {string}
-     */getComputedStyleValue(element,property){return getComputedStyleValue(element,property)},flushCustomStyles(){applyShimInterface.flushCustomStyles()},nativeCss:nativeCssVariables,nativeShadow:nativeShadow};if(CustomStyleInterface){window.ShadyCSS.CustomStyleInterface=CustomStyleInterface}}window.ShadyCSS.ApplyShim=applyShim$1;class Debouncer{constructor(){this._asyncModule=null;this._callback=null;this._timer=null}/**
+     */getComputedStyleValue(element,property){return getComputedStyleValue(element,property)},flushCustomStyles(){applyShimInterface.flushCustomStyles()},nativeCss:nativeCssVariables,nativeShadow:nativeShadow,cssBuild:cssBuild,disableRuntime:disableRuntime};if(CustomStyleInterface){window.ShadyCSS.CustomStyleInterface=CustomStyleInterface}}window.ShadyCSS.ApplyShim=applyShim$1;class Debouncer{constructor(){this._asyncModule=null;this._callback=null;this._timer=null}/**
      * Sets the scheduler; that is, a module with the Async interface,
      * a callback and optional arguments to be passed to the run function
      * from the async module.
@@ -3708,11 +3954,19 @@ applyShimInterface.flushCustomStyles();applyShimInterface.prepareTemplate(templa
      * @param {!AsyncInterface} asyncModule Object with Async interface.
      * @param {function()} callback Callback to run.
      * @return {void}
-     */setConfig(asyncModule,callback){this._asyncModule=asyncModule;this._callback=callback;this._timer=this._asyncModule.run(()=>{this._timer=null;this._callback()})}/**
+     */setConfig(asyncModule,callback){this._asyncModule=asyncModule;this._callback=callback;this._timer=this._asyncModule.run(()=>{this._timer=null;debouncerQueue.delete(this);this._callback()})}/**
      * Cancels an active debouncer and returns a reference to itself.
      *
      * @return {void}
-     */cancel(){if(this.isActive()){this._asyncModule.cancel(/** @type {number} */this._timer);this._timer=null}}/**
+     */cancel(){if(this.isActive()){this._cancelAsync();// Canceling a debouncer removes its spot from the flush queue,
+// so if a debouncer is manually canceled and re-debounced, it
+// will reset its flush order (this is a very minor difference from 1.x)
+// Re-debouncing via the `debounce` API retains the 1.x FIFO flush order
+debouncerQueue.delete(this)}}/**
+     * Cancels a debouncer's async callback.
+     *
+     * @return {void}
+     */_cancelAsync(){if(this.isActive()){this._asyncModule.cancel(/** @type {number} */this._timer);this._timer=null}}/**
      * Flushes an active debouncer and returns a reference to itself.
      *
      * @return {void}
@@ -3753,18 +4007,31 @@ applyShimInterface.flushCustomStyles();applyShimInterface.prepareTemplate(templa
      * @param {!AsyncInterface} asyncModule Object with Async interface
      * @param {function()} callback Callback to run.
      * @return {!Debouncer} Returns a debouncer object.
-     */static debounce(debouncer,asyncModule,callback){if(debouncer instanceof Debouncer){debouncer.cancel()}else{debouncer=new Debouncer}debouncer.setConfig(asyncModule,callback);return debouncer}}var debounce={Debouncer:Debouncer};let HAS_NATIVE_TA="string"===typeof document.head.style.touchAction,GESTURE_KEY="__polymerGestures",HANDLED_OBJ="__polymerGesturesHandled",TOUCH_ACTION="__polymerGesturesTouchAction",TAP_DISTANCE=25,TRACK_DISTANCE=5,TRACK_LENGTH=2,MOUSE_TIMEOUT=2500,MOUSE_EVENTS=["mousedown","mousemove","mouseup","click"],MOUSE_WHICH_TO_BUTTONS=[0,1,4,2],MOUSE_HAS_BUTTONS=function(){try{return 1===new MouseEvent("test",{buttons:1}).buttons}catch(e){return!1}}();/**
+     */static debounce(debouncer,asyncModule,callback){if(debouncer instanceof Debouncer){// Cancel the async callback, but leave in debouncerQueue if it was
+// enqueued, to maintain 1.x flush order
+debouncer._cancelAsync()}else{debouncer=new Debouncer}debouncer.setConfig(asyncModule,callback);return debouncer}}let debouncerQueue=new Set;/**
+                                 * Adds a `Debouncer` to a list of globally flushable tasks.
+                                 *
+                                 * @param {!Debouncer} debouncer Debouncer to enqueue
+                                 * @return {void}
+                                 */const enqueueDebouncer=function(debouncer){debouncerQueue.add(debouncer)},flushDebouncers=function(){const didFlush=!!debouncerQueue.size;// If new debouncers are added while flushing, Set.forEach will ensure
+// newly added ones are also flushed
+debouncerQueue.forEach(debouncer=>{try{debouncer.flush()}catch(e){setTimeout(()=>{throw e})}});return didFlush};/**
+    * Flushes any enqueued debouncers
+    *
+    * @return {boolean} Returns whether any debouncers were flushed
+    */var debounce={Debouncer:Debouncer,enqueueDebouncer:enqueueDebouncer,flushDebouncers:flushDebouncers};let HAS_NATIVE_TA="string"===typeof document.head.style.touchAction,GESTURE_KEY="__polymerGestures",HANDLED_OBJ="__polymerGesturesHandled",TOUCH_ACTION="__polymerGesturesTouchAction",TAP_DISTANCE=25,TRACK_DISTANCE=5,TRACK_LENGTH=2,MOUSE_TIMEOUT=2500,MOUSE_EVENTS=["mousedown","mousemove","mouseup","click"],MOUSE_WHICH_TO_BUTTONS=[0,1,4,2],MOUSE_HAS_BUTTONS=function(){try{return 1===new MouseEvent("test",{buttons:1}).buttons}catch(e){return!1}}();/**
       * @param {string} name Possible mouse event name
       * @return {boolean} true if mouse event, false if not
       */function isMouseEvent(name){return-1<MOUSE_EVENTS.indexOf(name)}/* eslint no-empty: ["error", { "allowEmptyCatch": true }] */ // check for passive event listeners
-let SUPPORTS_PASSIVE=!1;(function(){try{let opts=Object.defineProperty({},"passive",{get(){SUPPORTS_PASSIVE=!0}});window.addEventListener("test",null,opts);window.removeEventListener("test",null,opts)}catch(e){}})();/**
+let supportsPassive=!1;(function(){try{let opts=Object.defineProperty({},"passive",{get(){supportsPassive=!0}});window.addEventListener("test",null,opts);window.removeEventListener("test",null,opts)}catch(e){}})();/**
        * Generate settings for event listeners, dependant on `passiveTouchGestures`
        *
        * @param {string} eventName Event name to determine if `{passive}` option is
        *   needed
        * @return {{passive: boolean} | undefined} Options to use for addEventListener
        *   and removeEventListener
-       */function PASSIVE_TOUCH(eventName){if(isMouseEvent(eventName)||"touchend"===eventName){return}if(HAS_NATIVE_TA&&SUPPORTS_PASSIVE&&passiveTouchGestures){return{passive:!0}}else{return}}// Check for touch-only devices
+       */function PASSIVE_TOUCH(eventName){if(isMouseEvent(eventName)||"touchend"===eventName){return}if(HAS_NATIVE_TA&&supportsPassive&&passiveTouchGestures){return{passive:!0}}else{return}}// Check for touch-only devices
 let IS_TOUCH_ONLY=navigator.userAgent.match(/iP(?:[oa]d|hone)|Android/);// keep track of any labels hit by the mouseCanceller
 /** @type {!Array<!HTMLLabelElement>} */const clickedLabels=[],labellable={button:!0,input:!0,keygen:!0,meter:!0,output:!0,textarea:!0,progress:!0,select:!0},canBeDisabled={button:!0,command:!0,fieldset:!0,input:!0,keygen:!0,optgroup:!0,option:!0,select:!0,textarea:!0};/** @type {!Object<boolean>} */ /**
     * @param {HTMLElement} el Element to check labelling status
@@ -3788,14 +4055,14 @@ let mouseCanceller=function(mouseEvent){// Check for sourceCapabilities, used to
 // http://wicg.github.io/InputDeviceCapabilities/#dom-inputdevicecapabilities-firestouchevents
 let sc=mouseEvent.sourceCapabilities;if(sc&&!sc.firesTouchEvents){return}// skip synthetic mouse events
 mouseEvent[HANDLED_OBJ]={skip:!0};// disable "ghost clicks"
-if("click"===mouseEvent.type){let clickFromLabel=!1,path=mouseEvent.composedPath&&mouseEvent.composedPath();if(path){for(let i=0;i<path.length;i++){if(path[i].nodeType===Node.ELEMENT_NODE){if("label"===path[i].localName){clickedLabels.push(path[i])}else if(canBeLabelled(path[i])){let ownerLabels=matchingLabels(path[i]);// check if one of the clicked labels is labelling this element
-for(let j=0;j<ownerLabels.length;j++){clickFromLabel=clickFromLabel||-1<clickedLabels.indexOf(ownerLabels[j])}}}if(path[i]===POINTERSTATE.mouse.target){return}}}// if one of the clicked labels was labelling the target element,
+if("click"===mouseEvent.type){let clickFromLabel=!1,path=getComposedPath(mouseEvent);for(let i=0;i<path.length;i++){if(path[i].nodeType===Node.ELEMENT_NODE){if("label"===path[i].localName){clickedLabels.push(/** @type {!HTMLLabelElement} */path[i])}else if(canBeLabelled(/** @type {!HTMLElement} */path[i])){let ownerLabels=matchingLabels(/** @type {!HTMLElement} */path[i]);// check if one of the clicked labels is labelling this element
+for(let j=0;j<ownerLabels.length;j++){clickFromLabel=clickFromLabel||-1<clickedLabels.indexOf(ownerLabels[j])}}}if(path[i]===POINTERSTATE.mouse.target){return}}// if one of the clicked labels was labelling the target element,
 // this is not a ghost click
 if(clickFromLabel){return}mouseEvent.preventDefault();mouseEvent.stopPropagation()}};/**
     * @param {boolean=} setup True to add, false to remove.
     * @return {void}
     */function setupTeardownMouseCanceller(setup){let events=IS_TOUCH_ONLY?["click"]:MOUSE_EVENTS;for(let i=0,en;i<events.length;i++){en=events[i];if(setup){// reset clickLabels array
-clickedLabels.length=0;document.addEventListener(en,mouseCanceller,!0)}else{document.removeEventListener(en,mouseCanceller,!0)}}}function ignoreMouse(e){if(!POINTERSTATE.mouse.mouseIgnoreJob){setupTeardownMouseCanceller(!0)}let unset=function(){setupTeardownMouseCanceller();POINTERSTATE.mouse.target=null;POINTERSTATE.mouse.mouseIgnoreJob=null};POINTERSTATE.mouse.target=e.composedPath()[0];POINTERSTATE.mouse.mouseIgnoreJob=Debouncer.debounce(POINTERSTATE.mouse.mouseIgnoreJob,timeOut.after(MOUSE_TIMEOUT),unset)}/**
+clickedLabels.length=0;document.addEventListener(en,mouseCanceller,!0)}else{document.removeEventListener(en,mouseCanceller,!0)}}}function ignoreMouse(e){if(!cancelSyntheticClickEvents){return}if(!POINTERSTATE.mouse.mouseIgnoreJob){setupTeardownMouseCanceller(!0)}let unset=function(){setupTeardownMouseCanceller();POINTERSTATE.mouse.target=null;POINTERSTATE.mouse.mouseIgnoreJob=null};POINTERSTATE.mouse.target=getComposedPath(e)[0];POINTERSTATE.mouse.mouseIgnoreJob=Debouncer.debounce(POINTERSTATE.mouse.mouseIgnoreJob,timeOut.after(MOUSE_TIMEOUT),unset)}/**
    * @param {MouseEvent} ev event to test for left mouse button down
    * @return {boolean} has left mouse button down
    */function hasLeftMouseButton(ev){let type=ev.type;// exit early if the event is not a mouse event
@@ -3813,9 +4080,13 @@ let t=_findOriginalTarget(ev);// make sure the target of the event is an element
 // if not, just assume it is a synthetic click
 if(!t.nodeType||/** @type {Element} */t.nodeType!==Node.ELEMENT_NODE){return!0}let bcr=/** @type {Element} */t.getBoundingClientRect(),x=ev.pageX,y=ev.pageY;// use page x/y to account for scrolling
 // ev is a synthetic click if the position is outside the bounding box of the target
-return!(x>=bcr.left&&x<=bcr.right&&y>=bcr.top&&y<=bcr.bottom)}return!1}let POINTERSTATE={mouse:{target:null,mouseIgnoreJob:null},touch:{x:0,y:0,id:-1,scrollDecided:!1}};function firstTouchAction(ev){let ta="auto",path=ev.composedPath&&ev.composedPath();if(path){for(let i=0,n;i<path.length;i++){n=path[i];if(n[TOUCH_ACTION]){ta=n[TOUCH_ACTION];break}}}return ta}function trackDocument(stateObj,movefn,upfn){stateObj.movefn=movefn;stateObj.upfn=upfn;document.addEventListener("mousemove",movefn);document.addEventListener("mouseup",upfn)}function untrackDocument(stateObj){document.removeEventListener("mousemove",stateObj.movefn);document.removeEventListener("mouseup",stateObj.upfn);stateObj.movefn=null;stateObj.upfn=null}// use a document-wide touchend listener to start the ghost-click prevention mechanism
+return!(x>=bcr.left&&x<=bcr.right&&y>=bcr.top&&y<=bcr.bottom)}return!1}let POINTERSTATE={mouse:{target:null,mouseIgnoreJob:null},touch:{x:0,y:0,id:-1,scrollDecided:!1}};function firstTouchAction(ev){let ta="auto",path=getComposedPath(ev);for(let i=0,n;i<path.length;i++){n=path[i];if(n[TOUCH_ACTION]){ta=n[TOUCH_ACTION];break}}return ta}function trackDocument(stateObj,movefn,upfn){stateObj.movefn=movefn;stateObj.upfn=upfn;document.addEventListener("mousemove",movefn);document.addEventListener("mouseup",upfn)}function untrackDocument(stateObj){document.removeEventListener("mousemove",stateObj.movefn);document.removeEventListener("mouseup",stateObj.upfn);stateObj.movefn=null;stateObj.upfn=null}if(cancelSyntheticClickEvents){// use a document-wide touchend listener to start the ghost-click prevention mechanism
 // Use passive event listeners, if supported, to not affect scrolling performance
-document.addEventListener("touchend",ignoreMouse,SUPPORTS_PASSIVE?{passive:!0}:!1);/** @type {!Object<string, !GestureRecognizer>} */const gestures={},recognizers=[];/** @type {!Array<!GestureRecognizer>} */ /**
+document.addEventListener("touchend",ignoreMouse,supportsPassive?{passive:!0}:!1)}/**
+   * Returns the composedPath for the given event.
+   * @param {Event} event to process
+   * @return {!Array<!EventTarget>} Path of the event
+   */const getComposedPath=window.ShadyDOM&&window.ShadyDOM.noPatch?window.ShadyDOM.composedPath:event=>event.composedPath&&event.composedPath()||[],gestures={},recognizers=[];/** @type {!Object<string, !GestureRecognizer>} */ /**
                                 * Finds the element rendered on the screen at the provided coordinates.
                                 *
                                 * Similar to `document.elementFromPoint`, but pierces through
@@ -3836,10 +4107,8 @@ if(oldNext===next){break}if(next){node=next}}return node}/**
    * @private
    * @param {Event|Touch} ev Event.
    * @return {EventTarget} Returns the event target.
-   */function _findOriginalTarget(ev){// shadowdom
-if(ev.composedPath){const targets=/** @type {!Array<!EventTarget>} */ev.composedPath();// It shouldn't be, but sometimes targets is empty (window on Safari).
-return 0<targets.length?targets[0]:ev.target}// shadydom
-return ev.target}/**
+   */function _findOriginalTarget(ev){const path=getComposedPath(/** @type {?Event} */ev);// It shouldn't be, but sometimes path is empty (window on Safari).
+return 0<path.length?path[0]:ev.target}/**
    * @private
    * @param {Event} ev Event.
    * @return {void}
@@ -3916,7 +4185,7 @@ microTask.run(()=>{node.style.touchAction=value})}node[TOUCH_ACTION]=value}/**
    * @param {string} type The type of event to fire.
    * @param {!Object=} detail The detail object to populate on the event.
    * @return {void}
-   */function _fire(target,type,detail){let ev=new Event(type,{bubbles:!0,cancelable:!0,composed:!0});ev.detail=detail;target.dispatchEvent(ev);// forward `preventDefault` in a clean way
+   */function _fire(target,type,detail){let ev=new Event(type,{bubbles:!0,cancelable:!0,composed:!0});ev.detail=detail;wrap(/** @type {!Node} */target).dispatchEvent(ev);// forward `preventDefault` in a clean way
 if(ev.defaultPrevented){let preventer=detail.preventer||detail.sourceEvent;if(preventer&&preventer.preventDefault){preventer.preventDefault()}}}/**
    * Prevents the dispatch and default action of the given event name.
    *
@@ -4014,11 +4283,7 @@ this.info.state="end";this.info.addMove({x:ct.clientX,y:ct.clientY});trackFire(t
      * @return {void}
      */function trackForward(info,e,preventer){let dx=Math.abs(e.clientX-info.x),dy=Math.abs(e.clientY-info.y),t=_findOriginalTarget(preventer||e);if(!t||canBeDisabled[/** @type {!HTMLElement} */t.localName]&&t.hasAttribute("disabled")){return}// dx,dy can be NaN if `click` has been simulated and there was no `down` for `start`
 if(isNaN(dx)||isNaN(dy)||dx<=TAP_DISTANCE&&dy<=TAP_DISTANCE||isSyntheticClick(e)){// prevent taps from being generated if an event has canceled them
-if(!info.prevent){_fire(t,"tap",{x:e.clientX,y:e.clientY,sourceEvent:e,preventer:preventer})}}}/* eslint-enable valid-jsdoc */ /** @deprecated */const findOriginalTarget=_findOriginalTarget,add=addListener,remove=removeListener;/** @deprecated */var gestures$1={gestures:gestures,recognizers:recognizers,deepTargetFind:deepTargetFind,addListener:addListener,removeListener:removeListener,register:register$1,setTouchAction:setTouchAction,prevent:prevent,resetMouseCanceller:resetMouseCanceller,findOriginalTarget:findOriginalTarget,add:add,remove:remove};const GestureEventListeners=dedupingMixin(/**
-                                                     * @template T
-                                                     * @param {function(new:T)} superClass Class to apply mixin to.
-                                                     * @return {function(new:T)} superClass with mixin applied.
-                                                     */superClass=>{/**
+if(!info.prevent){_fire(t,"tap",{x:e.clientX,y:e.clientY,sourceEvent:e,preventer:preventer})}}}/* eslint-enable valid-jsdoc */ /** @deprecated */const findOriginalTarget=_findOriginalTarget,add=addListener,remove=removeListener;/** @deprecated */var gestures$1={gestures:gestures,recognizers:recognizers,deepTargetFind:deepTargetFind,addListener:addListener,removeListener:removeListener,register:register$1,setTouchAction:setTouchAction,prevent:prevent,resetMouseCanceller:resetMouseCanceller,findOriginalTarget:findOriginalTarget,add:add,remove:remove};const GestureEventListeners=dedupingMixin(superClass=>{/**
    * @polymer
    * @mixinClass
    * @implements {Polymer_GestureEventListeners}
@@ -4038,9 +4303,9 @@ if(!info.prevent){_fire(t,"tap",{x:e.clientX,y:e.clientY,sourceEvent:e,preventer
        * @param {function(!Event):void} handler Listener function to remove
        * @return {void}
        * @override
-       */_removeEventListenerFromNode(node,eventName,handler){if(!removeListener(node,eventName,handler)){super._removeEventListenerFromNode(node,eventName,handler)}}}return GestureEventListeners});var gestureEventListeners={GestureEventListeners:GestureEventListeners};const HOST_DIR=/:host\(:dir\((ltr|rtl)\)\)/g,HOST_DIR_REPLACMENT=":host([dir=\"$1\"])",EL_DIR=/([\s\w-#\.\[\]\*]*):dir\((ltr|rtl)\)/g,EL_DIR_REPLACMENT=":host([dir=\"$2\"]) $1",DIR_INSTANCES=[];/** @type {MutationObserver} */let observer=null,DOCUMENT_DIR="";function getRTL(){DOCUMENT_DIR=document.documentElement.getAttribute("dir")}/**
+       */_removeEventListenerFromNode(node,eventName,handler){if(!removeListener(node,eventName,handler)){super._removeEventListenerFromNode(node,eventName,handler)}}}return GestureEventListeners});var gestureEventListeners={GestureEventListeners:GestureEventListeners};const HOST_DIR=/:host\(:dir\((ltr|rtl)\)\)/g,HOST_DIR_REPLACMENT=":host([dir=\"$1\"])",EL_DIR=/([\s\w-#\.\[\]\*]*):dir\((ltr|rtl)\)/g,EL_DIR_REPLACMENT=":host([dir=\"$2\"]) $1",DIR_CHECK=/:dir\((?:ltr|rtl)\)/,SHIM_SHADOW=!!(window.ShadyDOM&&window.ShadyDOM.inUse),DIR_INSTANCES=[];/** @type {?MutationObserver} */let observer=null,documentDir="";function getRTL(){documentDir=document.documentElement.getAttribute("dir")}/**
    * @param {!Polymer_DirMixin} instance Instance to set RTL status on
-   */function setRTL(instance){if(!instance.__autoDirOptOut){const el=/** @type {!HTMLElement} */instance;el.setAttribute("dir",DOCUMENT_DIR)}}function updateDirection(){getRTL();DOCUMENT_DIR=document.documentElement.getAttribute("dir");for(let i=0;i<DIR_INSTANCES.length;i++){setRTL(DIR_INSTANCES[i])}}function takeRecords(){if(observer&&observer.takeRecords().length){updateDirection()}}/**
+   */function setRTL(instance){if(!instance.__autoDirOptOut){const el=/** @type {!HTMLElement} */instance;el.setAttribute("dir",documentDir)}}function updateDirection(){getRTL();documentDir=document.documentElement.getAttribute("dir");for(let i=0;i<DIR_INSTANCES.length;i++){setRTL(DIR_INSTANCES[i])}}function takeRecords(){if(observer&&observer.takeRecords().length){updateDirection()}}/**
    * Element class mixin that allows elements to use the `:dir` CSS Selector to
    * have text direction specific styling.
    *
@@ -4062,9 +4327,11 @@ if(!info.prevent){_fire(t,"tap",{x:e.clientX,y:e.clientY,sourceEvent:e,preventer
    * @mixinFunction
    * @polymer
    * @appliesMixin PropertyAccessors
-   */const DirMixin=dedupingMixin(base=>{if(!observer){getRTL();observer=new MutationObserver(updateDirection);observer.observe(document.documentElement,{attributes:!0,attributeFilter:["dir"]})}/**
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
+   */const DirMixin=dedupingMixin(base=>{if(!SHIM_SHADOW){if(!observer){getRTL();observer=new MutationObserver(updateDirection);observer.observe(document.documentElement,{attributes:!0,attributeFilter:["dir"]})}}/**
      * @constructor
-     * @extends {base}
      * @implements {Polymer_PropertyAccessors}
      * @private
      */const elementBase=PropertyAccessors(base);/**
@@ -4072,21 +4339,33 @@ if(!info.prevent){_fire(t,"tap",{x:e.clientX,y:e.clientY,sourceEvent:e,preventer
                                                 * @mixinClass
                                                 * @implements {Polymer_DirMixin}
                                                 */class Dir extends elementBase{/**
-     * @override
+     * @param {string} cssText .
+     * @param {string} baseURI .
+     * @return {string} .
      * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
-     */static _processStyleText(cssText,baseURI){cssText=super._processStyleText(cssText,baseURI);cssText=this._replaceDirInCssText(cssText);return cssText}/**
+     * @nocollapse
+     */static _processStyleText(cssText,baseURI){// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+cssText=elementBase._processStyleText.call(this,cssText,baseURI);if(!SHIM_SHADOW&&DIR_CHECK.test(cssText)){cssText=this._replaceDirInCssText(cssText);this.__activateDir=!0}return cssText}/**
        * Replace `:dir` in the given CSS text
        *
        * @param {string} text CSS text to replace DIR
        * @return {string} Modified CSS
-       */static _replaceDirInCssText(text){let replacedText=text;replacedText=replacedText.replace(HOST_DIR,HOST_DIR_REPLACMENT);replacedText=replacedText.replace(EL_DIR,EL_DIR_REPLACMENT);if(text!==replacedText){this.__activateDir=!0}return replacedText}constructor(){super();/** @type {boolean} */this.__autoDirOptOut=!1}/**
-       * @suppress {invalidCasts} Closure doesn't understand that `this` is an HTMLElement
+       * @nocollapse
+       */static _replaceDirInCssText(text){let replacedText=text;replacedText=replacedText.replace(HOST_DIR,HOST_DIR_REPLACMENT);replacedText=replacedText.replace(EL_DIR,EL_DIR_REPLACMENT);return replacedText}constructor(){super();/** @type {boolean} */this.__autoDirOptOut=!1}/**
+       * @override
+       * @suppress {invalidCasts} Closure doesn't understand that `this` is an
+       *     HTMLElement
        * @return {void}
        */ready(){super.ready();this.__autoDirOptOut=/** @type {!HTMLElement} */this.hasAttribute("dir")}/**
-       * @suppress {missingProperties} If it exists on elementBase, it can be super'd
+       * @override
+       * @suppress {missingProperties} If it exists on elementBase, it can be
+       *   super'd
        * @return {void}
        */connectedCallback(){if(elementBase.prototype.connectedCallback){super.connectedCallback()}if(this.constructor.__activateDir){takeRecords();DIR_INSTANCES.push(this);setRTL(this)}}/**
-       * @suppress {missingProperties} If it exists on elementBase, it can be super'd
+       * @override
+       * @suppress {missingProperties} If it exists on elementBase, it can be
+       *   super'd
        * @return {void}
        */disconnectedCallback(){if(elementBase.prototype.disconnectedCallback){super.disconnectedCallback()}if(this.constructor.__activateDir){const idx=DIR_INSTANCES.indexOf(this);if(-1<idx){DIR_INSTANCES.splice(idx,1)}}}}Dir.__activateDir=!1;return Dir});var dirMixin={DirMixin:DirMixin};let scheduled=!1,beforeRenderQueue=[],afterRenderQueue=[];function schedule(){scheduled=!0;// before next render
 requestAnimationFrame(function(){scheduled=!1;flushQueue(beforeRenderQueue);// after the render
@@ -4255,7 +4534,8 @@ function spliceOperationsFromEditDistances(distances){let i=distances.length-1,j
    *
    * @summary Class that listens for changes (additions or removals) to
    * "flattened nodes" on a given `node`.
-   */class FlattenedNodesObserver{/**
+   * @implements {PolymerDomApi.ObserveHandle}
+   */let FlattenedNodesObserver=class{/**
    * Returns the list of flattened nodes for the given `node`.
    * This list consists of a node's children and, for any children
    * that are `<slot>` elements, the expanded flattened list of `assignedNodes`.
@@ -4268,13 +4548,15 @@ function spliceOperationsFromEditDistances(distances){let i=distances.length-1,j
    *      return the list of flattened nodes.
    * @return {!Array<!Node>} The list of flattened nodes for the given `node`.
    * @nocollapse See https://github.com/google/closure-compiler/issues/2763
-   */static getFlattenedNodes(node){if(isSlot(node)){node=/** @type {!HTMLSlotElement} */node;// eslint-disable-line no-self-assign
-return node.assignedNodes({flatten:!0})}else{return Array.from(node.childNodes).map(node=>{if(isSlot(node)){node=/** @type {!HTMLSlotElement} */node;// eslint-disable-line no-self-assign
-return node.assignedNodes({flatten:!0})}else{return[node]}}).reduce((a,b)=>a.concat(b),[])}}/**
+   */ // eslint-disable-next-line
+static getFlattenedNodes(node){const wrapped=wrap(node);if(isSlot(node)){node=/** @type {!HTMLSlotElement} */node;// eslint-disable-line no-self-assign
+return wrapped.assignedNodes({flatten:!0})}else{return Array.from(wrapped.childNodes).map(node=>{if(isSlot(node)){node=/** @type {!HTMLSlotElement} */node;// eslint-disable-line no-self-assign
+return wrap(node).assignedNodes({flatten:!0})}else{return[node]}}).reduce((a,b)=>a.concat(b),[])}}/**
      * @param {!HTMLElement} target Node on which to listen for changes.
      * @param {?function(this: Element, { target: !HTMLElement, addedNodes: !Array<!Element>, removedNodes: !Array<!Element> }):void} callback Function called when there are additions
      * or removals from the target's list of flattened nodes.
-     */constructor(target,callback){/**
+     */ // eslint-disable-next-line
+constructor(target,callback){/**
      * @type {MutationObserver}
      * @private
      */this._shadyChildrenObserver=null;/**
@@ -4292,14 +4574,15 @@ return node.assignedNodes({flatten:!0})}else{return[node]}}).reduce((a,b)=>a.con
      * re-activate an observer that has been deactivated via the `disconnect` method.
      *
      * @return {void}
-     */connect(){if(isSlot(this._target)){this._listenSlots([this._target])}else if(this._target.children){this._listenSlots(/** @type {!NodeList<!Node>} */this._target.children);if(window.ShadyDOM){this._shadyChildrenObserver=ShadyDOM.observeChildren(this._target,mutations=>{this._processMutations(mutations)})}else{this._nativeChildrenObserver=new MutationObserver(mutations=>{this._processMutations(mutations)});this._nativeChildrenObserver.observe(this._target,{childList:!0})}}this._connected=!0}/**
+     */connect(){if(isSlot(this._target)){this._listenSlots([this._target])}else if(wrap(this._target).children){this._listenSlots(/** @type {!NodeList<!Node>} */wrap(this._target).children);if(window.ShadyDOM){this._shadyChildrenObserver=window.ShadyDOM.observeChildren(this._target,mutations=>{this._processMutations(mutations)})}else{this._nativeChildrenObserver=new MutationObserver(mutations=>{this._processMutations(mutations)});this._nativeChildrenObserver.observe(this._target,{childList:!0})}}this._connected=!0}/**
      * Deactivates the flattened nodes observer. After calling this method
      * the observer callback will not be called when changes to flattened nodes
      * occur. The `connect` method may be subsequently called to reactivate
      * the observer.
      *
      * @return {void}
-     */disconnect(){if(isSlot(this._target)){this._unlistenSlots([this._target])}else if(this._target.children){this._unlistenSlots(/** @type {!NodeList<!Node>} */this._target.children);if(window.ShadyDOM&&this._shadyChildrenObserver){ShadyDOM.unobserveChildren(this._shadyChildrenObserver);this._shadyChildrenObserver=null}else if(this._nativeChildrenObserver){this._nativeChildrenObserver.disconnect();this._nativeChildrenObserver=null}}this._connected=!1}/**
+     * @override
+     */disconnect(){if(isSlot(this._target)){this._unlistenSlots([this._target])}else if(wrap(this._target).children){this._unlistenSlots(/** @type {!NodeList<!Node>} */wrap(this._target).children);if(window.ShadyDOM&&this._shadyChildrenObserver){window.ShadyDOM.unobserveChildren(this._shadyChildrenObserver);this._shadyChildrenObserver=null}else if(this._nativeChildrenObserver){this._nativeChildrenObserver.disconnect();this._nativeChildrenObserver=null}}this._connected=!1}/**
      * @return {void}
      * @private
      */_schedule(){if(!this._scheduled){this._scheduled=!0;microTask.run(()=>this.flush())}}/**
@@ -4328,38 +4611,30 @@ this._effectiveNodes=newNodes;let didFlush=!1;if(info.addedNodes.length||info.re
      * @param {!Array<!Node>|!NodeList<!Node>} nodeList Nodes that could change
      * @return {void}
      * @private
-     */_unlistenSlots(nodeList){for(let i=0,n;i<nodeList.length;i++){n=nodeList[i];if(isSlot(n)){n.removeEventListener("slotchange",this._boundSchedule)}}}}var flattenedNodesObserver={FlattenedNodesObserver:FlattenedNodesObserver};/* eslint-enable no-unused-vars */let debouncerQueue=[];/**
-                          * Adds a `Debouncer` to a list of globally flushable tasks.
-                          *
-                          * @param {!Debouncer} debouncer Debouncer to enqueue
-                          * @return {void}
-                          */const enqueueDebouncer=function(debouncer){debouncerQueue.push(debouncer)};function flushDebouncers(){const didFlush=!!debouncerQueue.length;while(debouncerQueue.length){try{debouncerQueue.shift().flush()}catch(e){setTimeout(()=>{throw e})}}return didFlush}/**
-   * Forces several classes of asynchronously queued tasks to flush:
-   * - Debouncers added via `enqueueDebouncer`
-   * - ShadyDOM distribution
-   *
-   * @return {void}
-   */const flush$1=function(){let shadyDOM,debouncers;do{shadyDOM=window.ShadyDOM&&ShadyDOM.flush();if(window.ShadyCSS&&window.ShadyCSS.ScopingShim){window.ShadyCSS.ScopingShim.flush()}debouncers=flushDebouncers()}while(shadyDOM||debouncers)};var flush$2={enqueueDebouncer:enqueueDebouncer,flush:flush$1};/* eslint-enable no-unused-vars */const p=Element.prototype,normalizedMatchesSelector=p.matches||p.matchesSelector||p.mozMatchesSelector||p.msMatchesSelector||p.oMatchesSelector||p.webkitMatchesSelector,matchesSelector=function(node,selector){return normalizedMatchesSelector.call(node,selector)};/**
+     */_unlistenSlots(nodeList){for(let i=0,n;i<nodeList.length;i++){n=nodeList[i];if(isSlot(n)){n.removeEventListener("slotchange",this._boundSchedule)}}}};var flattenedNodesObserver={FlattenedNodesObserver:FlattenedNodesObserver};const flush$1=function(){let shadyDOM,debouncers;do{shadyDOM=window.ShadyDOM&&ShadyDOM.flush();if(window.ShadyCSS&&window.ShadyCSS.ScopingShim){window.ShadyCSS.ScopingShim.flush()}debouncers=flushDebouncers()}while(shadyDOM||debouncers)};var flush$2={enqueueDebouncer:enqueueDebouncer,flush:flush$1};/* eslint-enable no-unused-vars */const p=Element.prototype,normalizedMatchesSelector=p.matches||p.matchesSelector||p.mozMatchesSelector||p.msMatchesSelector||p.oMatchesSelector||p.webkitMatchesSelector,matchesSelector=function(node,selector){return normalizedMatchesSelector.call(node,selector)};/**
                               * @const {function(this:Node, string): boolean}
                               */ /**
     * Node API wrapper class returned from `Polymer.dom.(target)` when
     * `target` is a `Node`.
-    *
-    */class DomApi{/**
-   * @param {Node} node Node for which to create a Polymer.dom helper object.
-   */constructor(node){this.node=node}/**
+    * @implements {PolymerDomApi}
+    * @unrestricted
+    */class DomApiNative{/**
+   * @param {!Node} node Node for which to create a Polymer.dom helper object.
+   */constructor(node){if(window.ShadyDOM&&window.ShadyDOM.inUse){window.ShadyDOM.patch(node)}this.node=node}/**
      * Returns an instance of `FlattenedNodesObserver` that
      * listens for node changes on this element.
      *
      * @param {function(this:HTMLElement, { target: !HTMLElement, addedNodes: !Array<!Element>, removedNodes: !Array<!Element> }):void} callback Called when direct or distributed children
      *   of this element changes
-     * @return {!FlattenedNodesObserver} Observer instance
+     * @return {!PolymerDomApi.ObserveHandle} Observer instance
+     * @override
      */observeNodes(callback){return new FlattenedNodesObserver(/** @type {!HTMLElement} */this.node,callback)}/**
      * Disconnects an observer previously created via `observeNodes`
      *
-     * @param {!FlattenedNodesObserver} observerHandle Observer instance
+     * @param {!PolymerDomApi.ObserveHandle} observerHandle Observer instance
      *   to disconnect.
      * @return {void}
+     * @override
      */unobserveNodes(observerHandle){observerHandle.disconnect()}/**
      * Provided as a backwards-compatible API only.  This method does nothing.
      * @return {void}
@@ -4371,50 +4646,57 @@ this._effectiveNodes=newNodes;let didFlush=!1;if(info.addedNodes.length||info.re
                        * @param {Node} node Node to test
                        * @return {boolean} Returns true if the given `node` is contained within
                        *   this element's light or shadow DOM.
-                       */deepContains(node){if(this.node.contains(node)){return!0}let n=node,doc=node.ownerDocument;// walk from node to `this` or `document`
+                       * @override
+                       */deepContains(node){if(wrap(this.node).contains(node)){return!0}let n=node,doc=node.ownerDocument;// walk from node to `this` or `document`
 while(n&&n!==doc&&n!==this.node){// use logical parentnode, or native ShadowRoot host
-n=n.parentNode||n.host}return n===this.node}/**
+n=wrap(n).parentNode||wrap(n).host}return n===this.node}/**
      * Returns the root node of this node.  Equivalent to `getRootNode()`.
      *
      * @return {Node} Top most element in the dom tree in which the node
      * exists. If the node is connected to a document this is either a
      * shadowRoot or the document; otherwise, it may be the node
      * itself or a node or document fragment containing it.
-     */getOwnerRoot(){return this.node.getRootNode()}/**
+     * @override
+     */getOwnerRoot(){return wrap(this.node).getRootNode()}/**
      * For slot elements, returns the nodes assigned to the slot; otherwise
      * an empty array. It is equivalent to `<slot>.addignedNodes({flatten:true})`.
      *
      * @return {!Array<!Node>} Array of assigned nodes
-     */getDistributedNodes(){return"slot"===this.node.localName?this.node.assignedNodes({flatten:!0}):[]}/**
+     * @override
+     */getDistributedNodes(){return"slot"===this.node.localName?wrap(this.node).assignedNodes({flatten:!0}):[]}/**
      * Returns an array of all slots this element was distributed to.
      *
      * @return {!Array<!HTMLSlotElement>} Description
-     */getDestinationInsertionPoints(){let ip$=[],n=this.node.assignedSlot;while(n){ip$.push(n);n=n.assignedSlot}return ip$}/**
+     * @override
+     */getDestinationInsertionPoints(){let ip$=[],n=wrap(this.node).assignedSlot;while(n){ip$.push(n);n=wrap(n).assignedSlot}return ip$}/**
      * Calls `importNode` on the `ownerDocument` for this node.
      *
      * @param {!Node} node Node to import
      * @param {boolean} deep True if the node should be cloned deeply during
      *   import
      * @return {Node} Clone of given node imported to this owner document
-     */importNode(node,deep){let doc=this.node instanceof Document?this.node:this.node.ownerDocument;return doc.importNode(node,deep)}/**
+     */importNode(node,deep){let doc=this.node instanceof Document?this.node:this.node.ownerDocument;return wrap(doc).importNode(node,deep)}/**
      * @return {!Array<!Node>} Returns a flattened list of all child nodes and
      * nodes assigned to child slots.
+     * @override
      */getEffectiveChildNodes(){return FlattenedNodesObserver.getFlattenedNodes(/** @type {!HTMLElement} */this.node)}/**
      * Returns a filtered list of flattened child elements for this element based
      * on the given selector.
      *
      * @param {string} selector Selector to filter nodes against
      * @return {!Array<!HTMLElement>} List of flattened child elements
+     * @override
      */queryDistributedElements(selector){let c$=this.getEffectiveChildNodes(),list=[];for(let i=0,l=c$.length,c;i<l&&(c=c$[i]);i++){if(c.nodeType===Node.ELEMENT_NODE&&matchesSelector(c,selector)){list.push(c)}}return list}/**
      * For shadow roots, returns the currently focused element within this
      * shadow root.
      *
-     * @return {Node|undefined} Currently focused element
-     */get activeElement(){let node=this.node;return node._activeElement!==void 0?node._activeElement:node.activeElement}}function forwardMethods(proto,methods){for(let i=0,method;i<methods.length;i++){method=methods[i];/* eslint-disable valid-jsdoc */proto[method]=/** @this {DomApi} */function(){return this.node[method].apply(this.node,arguments)};/* eslint-enable */}}function forwardReadOnlyProperties(proto,properties){for(let i=0,name;i<properties.length;i++){name=properties[i];Object.defineProperty(proto,name,{get:function(){const domApi=/** @type {DomApi} */this;return domApi.node[name]},configurable:!0})}}function forwardProperties(proto,properties){for(let i=0,name;i<properties.length;i++){name=properties[i];Object.defineProperty(proto,name,{/**
-       * @this {DomApi}
+     * return {Node|undefined} Currently focused element
+     * @override
+     */get activeElement(){let node=this.node;return node._activeElement!==void 0?node._activeElement:node.activeElement}}function forwardMethods(proto,methods){for(let i=0,method;i<methods.length;i++){method=methods[i];/* eslint-disable valid-jsdoc */proto[method]=/** @this {DomApiNative} */function(){return this.node[method].apply(this.node,arguments)};/* eslint-enable */}}function forwardReadOnlyProperties(proto,properties){for(let i=0,name;i<properties.length;i++){name=properties[i];Object.defineProperty(proto,name,{get:function(){const domApi=/** @type {DomApiNative} */this;return domApi.node[name]},configurable:!0})}}function forwardProperties(proto,properties){for(let i=0,name;i<properties.length;i++){name=properties[i];Object.defineProperty(proto,name,{/**
+       * @this {DomApiNative}
        * @return {*} .
        */get:function(){return this.node[name]},/**
-       * @this {DomApi}
+       * @this {DomApiNative}
        * @param {*} value .
        */set:function(value){this.node[name]=value},configurable:!0})}}/**
    * Event API wrapper class returned from `dom.(target)` when
@@ -4423,7 +4705,7 @@ n=n.parentNode||n.host}return n===this.node}/**
      * Returns the first node on the `composedPath` of this event.
      *
      * @return {!EventTarget} The node this event was dispatched to
-     */get rootTarget(){return this.event.composedPath()[0]}/**
+     */get rootTarget(){return this.path[0]}/**
      * Returns the local (re-targeted) target for this event.
      *
      * @return {!EventTarget} The local (re-targeted) target for this event.
@@ -4434,55 +4716,89 @@ n=n.parentNode||n.host}return n===this.node}/**
    * @function
    * @param {boolean=} deep
    * @return {!Node}
-   */DomApi.prototype.cloneNode;/**
-                             * @function
-                             * @param {!Node} node
-                             * @return {!Node}
-                             */DomApi.prototype.appendChild;/**
-                               * @function
-                               * @param {!Node} newChild
-                               * @param {Node} refChild
-                               * @return {!Node}
-                               */DomApi.prototype.insertBefore;/**
-                                * @function
-                                * @param {!Node} node
-                                * @return {!Node}
-                                */DomApi.prototype.removeChild;/**
-                               * @function
-                               * @param {!Node} oldChild
-                               * @param {!Node} newChild
-                               * @return {!Node}
-                               */DomApi.prototype.replaceChild;/**
-                                * @function
-                                * @param {string} name
-                                * @param {string} value
-                                * @return {void}
-                                */DomApi.prototype.setAttribute;/**
-                                * @function
-                                * @param {string} name
-                                * @return {void}
-                                */DomApi.prototype.removeAttribute;/**
+   */DomApiNative.prototype.cloneNode;/**
                                    * @function
-                                   * @param {string} selector
-                                   * @return {?Element}
-                                   */DomApi.prototype.querySelector;/**
-                                 * @function
-                                 * @param {string} selector
-                                 * @return {!NodeList<!Element>}
-                                 */DomApi.prototype.querySelectorAll;/** @type {?Node} */DomApi.prototype.parentNode;/** @type {?Node} */DomApi.prototype.firstChild;/** @type {?Node} */DomApi.prototype.lastChild;/** @type {?Node} */DomApi.prototype.nextSibling;/** @type {?Node} */DomApi.prototype.previousSibling;/** @type {?HTMLElement} */DomApi.prototype.firstElementChild;/** @type {?HTMLElement} */DomApi.prototype.lastElementChild;/** @type {?HTMLElement} */DomApi.prototype.nextElementSibling;/** @type {?HTMLElement} */DomApi.prototype.previousElementSibling;/** @type {!Array<!Node>} */DomApi.prototype.childNodes;/** @type {!Array<!HTMLElement>} */DomApi.prototype.children;/** @type {?DOMTokenList} */DomApi.prototype.classList;/** @type {string} */DomApi.prototype.textContent;/** @type {string} */DomApi.prototype.innerHTML;forwardMethods(DomApi.prototype,["cloneNode","appendChild","insertBefore","removeChild","replaceChild","setAttribute","removeAttribute","querySelector","querySelectorAll"]);forwardReadOnlyProperties(DomApi.prototype,["parentNode","firstChild","lastChild","nextSibling","previousSibling","firstElementChild","lastElementChild","nextElementSibling","previousElementSibling","childNodes","children","classList"]);forwardProperties(DomApi.prototype,["textContent","innerHTML"]);/**
-                                                                    * Legacy DOM and Event manipulation API wrapper factory used to abstract
-                                                                    * differences between native Shadow DOM and "Shady DOM" when polyfilling on
-                                                                    * older browsers.
-                                                                    *
-                                                                    * Note that in Polymer 2.x use of `Polymer.dom` is no longer required and
-                                                                    * in the majority of cases simply facades directly to the standard native
-                                                                    * API.
-                                                                    *
-                                                                    * @summary Legacy DOM and Event manipulation API wrapper factory used to
-                                                                    * abstract differences between native Shadow DOM and "Shady DOM."
-                                                                    * @param {(Node|Event)=} obj Node or event to operate on
-                                                                    * @return {!DomApi|!EventApi} Wrapper providing either node API or event API
-                                                                    */const dom=function(obj){obj=obj||document;if(!obj.__domApi){let helper;if(obj instanceof Event){helper=new EventApi(obj)}else{helper=new DomApi(obj)}obj.__domApi=helper}return obj.__domApi};var polymer_dom={matchesSelector:matchesSelector,DomApi:DomApi,EventApi:EventApi,dom:dom,flush:flush$1,addDebouncer:enqueueDebouncer};const bundledImportMeta$1={...import.meta,url:new URL("../node_modules/%40polymer/polymer/lib/legacy/legacy-element-mixin.js",import.meta.url).href};let styleInterface=window.ShadyCSS;/**
+                                   * @param {!Node} node
+                                   * @return {!Node}
+                                   */DomApiNative.prototype.appendChild;/**
+                                     * @function
+                                     * @param {!Node} newChild
+                                     * @param {Node} refChild
+                                     * @return {!Node}
+                                     */DomApiNative.prototype.insertBefore;/**
+                                      * @function
+                                      * @param {!Node} node
+                                      * @return {!Node}
+                                      */DomApiNative.prototype.removeChild;/**
+                                     * @function
+                                     * @param {!Node} oldChild
+                                     * @param {!Node} newChild
+                                     * @return {!Node}
+                                     */DomApiNative.prototype.replaceChild;/**
+                                      * @function
+                                      * @param {string} name
+                                      * @param {string} value
+                                      * @return {void}
+                                      */DomApiNative.prototype.setAttribute;/**
+                                      * @function
+                                      * @param {string} name
+                                      * @return {void}
+                                      */DomApiNative.prototype.removeAttribute;/**
+                                         * @function
+                                         * @param {string} selector
+                                         * @return {?Element}
+                                         */DomApiNative.prototype.querySelector;/**
+                                       * @function
+                                       * @param {string} selector
+                                       * @return {!NodeList<!Element>}
+                                       */DomApiNative.prototype.querySelectorAll;/** @type {?Node} */DomApiNative.prototype.parentNode;/** @type {?Node} */DomApiNative.prototype.firstChild;/** @type {?Node} */DomApiNative.prototype.lastChild;/** @type {?Node} */DomApiNative.prototype.nextSibling;/** @type {?Node} */DomApiNative.prototype.previousSibling;/** @type {?HTMLElement} */DomApiNative.prototype.firstElementChild;/** @type {?HTMLElement} */DomApiNative.prototype.lastElementChild;/** @type {?HTMLElement} */DomApiNative.prototype.nextElementSibling;/** @type {?HTMLElement} */DomApiNative.prototype.previousElementSibling;/** @type {!Array<!Node>} */DomApiNative.prototype.childNodes;/** @type {!Array<!HTMLElement>} */DomApiNative.prototype.children;/** @type {?DOMTokenList} */DomApiNative.prototype.classList;/** @type {string} */DomApiNative.prototype.textContent;/** @type {string} */DomApiNative.prototype.innerHTML;let DomApiImpl=DomApiNative;if(window.ShadyDOM&&window.ShadyDOM.inUse&&window.ShadyDOM.noPatch&&window.ShadyDOM.Wrapper){/**
+   * @private
+   * @extends {HTMLElement}
+   */class Wrapper extends window.ShadyDOM.Wrapper{}// copy bespoke API onto wrapper
+Object.getOwnPropertyNames(DomApiNative.prototype).forEach(prop=>{if("activeElement"!=prop){Wrapper.prototype[prop]=DomApiNative.prototype[prop]}});// Note, `classList` is here only for legacy compatibility since it does not
+// trigger distribution in v1 Shadow DOM.
+forwardReadOnlyProperties(Wrapper.prototype,["classList"]);DomApiImpl=Wrapper;Object.defineProperties(EventApi.prototype,{// Returns the "lowest" node in the same root as the event's currentTarget.
+// When in `noPatch` mode, this must be calculated by walking the event's
+// path.
+localTarget:{get(){const current=this.event.currentTarget,currentRoot=current&&dom(current).getOwnerRoot(),p$=this.path;for(let i=0;i<p$.length;i++){const e=p$[i];if(dom(e).getOwnerRoot()===currentRoot){return e}}},configurable:!0},path:{get(){return window.ShadyDOM.composedPath(this.event)},configurable:!0}})}else{// Methods that can provoke distribution or must return the logical, not
+// composed tree.
+forwardMethods(DomApiNative.prototype,["cloneNode","appendChild","insertBefore","removeChild","replaceChild","setAttribute","removeAttribute","querySelector","querySelectorAll"]);// Properties that should return the logical, not composed tree. Note, `classList`
+// is here only for legacy compatibility since it does not trigger distribution
+// in v1 Shadow DOM.
+forwardReadOnlyProperties(DomApiNative.prototype,["parentNode","firstChild","lastChild","nextSibling","previousSibling","firstElementChild","lastElementChild","nextElementSibling","previousElementSibling","childNodes","children","classList"]);forwardProperties(DomApiNative.prototype,["textContent","innerHTML","className"])}const DomApi=DomApiImpl,dom=function(obj){obj=obj||document;if(obj instanceof DomApiImpl){return(/** @type {!DomApi} */obj)}if(obj instanceof EventApi){return(/** @type {!EventApi} */obj)}let helper=obj.__domApi;if(!helper){if(obj instanceof Event){helper=new EventApi(obj)}else{helper=new DomApiImpl(/** @type {Node} */obj)}obj.__domApi=helper}return helper};/**
+                                   * Legacy DOM and Event manipulation API wrapper factory used to abstract
+                                   * differences between native Shadow DOM and "Shady DOM" when polyfilling on
+                                   * older browsers.
+                                   *
+                                   * Note that in Polymer 2.x use of `Polymer.dom` is no longer required and
+                                   * in the majority of cases simply facades directly to the standard native
+                                   * API.
+                                   *
+                                   * @summary Legacy DOM and Event manipulation API wrapper factory used to
+                                   * abstract differences between native Shadow DOM and "Shady DOM."
+                                   * @param {(Node|Event|DomApiNative|EventApi)=} obj Node or event to operate on
+                                   * @return {!DomApiNative|!EventApi} Wrapper providing either node API or event API
+                                   */var polymer_dom={matchesSelector:matchesSelector,EventApi:EventApi,DomApi:DomApi,dom:dom,flush:flush$1,addDebouncer:enqueueDebouncer};const ShadyDOM$1=window.ShadyDOM,ShadyCSS=window.ShadyCSS;/**
+                                   * Return true if node scope is correct.
+                                   *
+                                   * @param {!Element} node Node to check scope
+                                   * @param {!Node} scope Scope reference
+                                   * @return {boolean} True if node is in scope
+                                   */function sameScope(node,scope){return wrap(node).getRootNode()===scope}/**
+   * Ensure that elements in a ShadowDOM container are scoped correctly.
+   * This function is only needed when ShadyDOM is used and unpatched DOM APIs are used in third party code.
+   * This can happen in noPatch mode or when specialized APIs like ranges or tables are used to mutate DOM.
+   *
+   * @param  {!Element} container Container element to scope
+   * @param  {boolean=} shouldObserve if true, start a mutation observer for added nodes to the container
+   * @return {?MutationObserver} Returns a new MutationObserver on `container` if `shouldObserve` is true.
+   */function scopeSubtree(container,shouldObserve=!1){// If using native ShadowDOM, abort
+if(!ShadyDOM$1||!ShadyCSS){return null}// ShadyCSS handles DOM mutations when ShadyDOM does not handle scoping itself
+if(!ShadyDOM$1.handlesDynamicScoping){return null}const ScopingShim=ShadyCSS.ScopingShim;// if ScopingShim is not available, abort
+if(!ScopingShim){return null}// capture correct scope for container
+const containerScope=ScopingShim.scopeForNode(container),root=wrap(container).getRootNode(),scopify=node=>{if(!sameScope(node,root)){return}// NOTE: native qSA does not honor scoped DOM, but it is faster, and the same behavior as Polymer v1
+const elements=Array.from(ShadyDOM$1.nativeMethods.querySelectorAll.call(node,"*"));elements.push(node);for(let i=0;i<elements.length;i++){const el=elements[i];if(!sameScope(el,root)){continue}const currentScope=ScopingShim.currentScopeForNode(el);if(currentScope!==containerScope){if(""!==currentScope){ScopingShim.unscopeNode(el,currentScope)}ScopingShim.scopeNode(el,containerScope)}}};// scope everything in container
+scopify(container);if(shouldObserve){const mo=new MutationObserver(mxns=>{for(let i=0;i<mxns.length;i++){const mxn=mxns[i];for(let j=0;j<mxn.addedNodes.length;j++){const addedNode=mxn.addedNodes[j];if(addedNode.nodeType===Node.ELEMENT_NODE){scopify(addedNode)}}}});mo.observe(container,{childList:!0,subtree:!0});return mo}else{return null}}var scopeSubtree$1={scopeSubtree:scopeSubtree};const bundledImportMeta$1={...import.meta,url:new URL("../node_modules/%40polymer/polymer/lib/legacy/legacy-element-mixin.js",import.meta.url).href};let styleInterface=window.ShadyCSS;/**
                                        * Element class mixin that provides Polymer's "legacy" API intended to be
                                        * backward-compatible to the greatest extent possible with the API
                                        * found on the Polymer 1.x `Polymer.Base` prototype applied to all elements
@@ -4497,10 +4813,10 @@ n=n.parentNode||n.host}return n===this.node}/**
                                        * @summary Element class mixin that provides Polymer's "legacy" API
                                        */const LegacyElementMixin=dedupingMixin(base=>{/**
    * @constructor
-   * @extends {base}
    * @implements {Polymer_ElementMixin}
    * @implements {Polymer_GestureEventListeners}
    * @implements {Polymer_DirMixin}
+   * @extends {HTMLElement}
    * @private
    */const legacyElementBase=DirMixin(GestureEventListeners(ElementMixin(base))),DIRECTION_MAP={x:"pan-x",y:"pan-y",none:"none",all:"auto"};/**
                                                                                      * Map of simple names to touch action names
@@ -4511,20 +4827,18 @@ n=n.parentNode||n.host}return n===this.node}/**
       * @extends {legacyElementBase}
       * @implements {Polymer_LegacyElementMixin}
       * @unrestricted
-      */class LegacyElement extends legacyElementBase{constructor(){super();/** @type {boolean} */this.isAttached;/** @type {WeakMap<!Element, !Object<string, !Function>>} */this.__boundListeners;/** @type {Object<string, Function>} */this._debouncers;// Ensure listeners are applied immediately so that they are
-// added before declarative event listeners. This allows an element to
-// decorate itself via an event prior to any declarative listeners
-// seeing the event. Note, this ensures compatibility with 1.x ordering.
-this._applyListeners()}/**
+      */class LegacyElement extends legacyElementBase{constructor(){super();/** @type {boolean} */this.isAttached;/** @type {?WeakMap<!Element, !Object<string, !Function>>} */this.__boundListeners;/** @type {?Object<string, ?Function>} */this._debouncers}/**
        * Forwards `importMeta` from the prototype (i.e. from the info object
        * passed to `Polymer({...})`) to the static API.
        *
        * @return {!Object} The `import.meta` object set on the prototype
        * @suppress {missingProperties} `this` is always in the instance in
        *  closure for some reason even in a static method, rather than the class
+       * @nocollapse
        */static get importMeta(){return this.prototype.importMeta}/**
        * Legacy callback called during the `constructor`, for overriding
        * by the user.
+       * @override
        * @return {void}
        */created(){}/**
                   * Provides an implementation of `connectedCallback`
@@ -4534,6 +4848,7 @@ this._applyListeners()}/**
                   */connectedCallback(){super.connectedCallback();this.isAttached=!0;this.attached()}/**
        * Legacy callback called during `connectedCallback`, for overriding
        * by the user.
+       * @override
        * @return {void}
        */attached(){}/**
                    * Provides an implementation of `disconnectedCallback`
@@ -4543,6 +4858,7 @@ this._applyListeners()}/**
                    */disconnectedCallback(){super.disconnectedCallback();this.isAttached=!1;this.detached()}/**
        * Legacy callback called during `disconnectedCallback`, for overriding
        * by the user.
+       * @override
        * @return {void}
        */detached(){}/**
                    * Provides an override implementation of `attributeChangedCallback`
@@ -4560,6 +4876,7 @@ this._applyListeners()}/**
        * @param {?string} old Old value of attribute.
        * @param {?string} value Current value of attribute.
        * @return {void}
+       * @override
        */attributeChanged(name,old,value){}// eslint-disable-line no-unused-vars
 /**
      * Overrides the default `Polymer.PropertyEffects` implementation to
@@ -4569,13 +4886,19 @@ this._applyListeners()}/**
      * @return {void}
      * @override
      * @suppress {invalidCasts}
-     */_initializeProperties(){let proto=Object.getPrototypeOf(this);if(!proto.hasOwnProperty("__hasRegisterFinished")){proto.__hasRegisterFinished=!0;this._registered()}super._initializeProperties();this.root=/** @type {HTMLElement} */this;this.created()}/**
+     */_initializeProperties(){let proto=Object.getPrototypeOf(this);if(!proto.hasOwnProperty(JSCompiler_renameProperty("__hasRegisterFinished",proto))){this._registered();// backstop in case the `_registered` implementation does not set this
+proto.__hasRegisterFinished=!0}super._initializeProperties();this.root=/** @type {HTMLElement} */this;this.created();// Ensure listeners are applied immediately so that they are
+// added before declarative event listeners. This allows an element to
+// decorate itself via an event prior to any declarative listeners
+// seeing the event. Note, this ensures compatibility with 1.x ordering.
+this._applyListeners()}/**
        * Called automatically when an element is initializing.
        * Users may override this method to perform class registration time
        * work. The implementation should ensure the work is performed
        * only once for the class.
        * @protected
        * @return {void}
+       * @override
        */_registered(){}/**
                       * Overrides the default `Polymer.PropertyEffects` implementation to
                       * add support for installing `hostAttributes` and `listeners`.
@@ -4592,6 +4915,7 @@ this._applyListeners()}/**
        * setting aria roles and focusability.
        * @protected
        * @return {void}
+       * @override
        */_ensureAttributes(){}/**
                             * Adds element event listeners. Called when the element
                             * is being readied via `ready`. Users should override to
@@ -4602,6 +4926,7 @@ this._applyListeners()}/**
                             * block render.
                             * @protected
                             * @return {void}
+                            * @override
                             */_applyListeners(){}/**
                           * Converts a typed JavaScript value to a string.
                           *
@@ -4613,6 +4938,7 @@ this._applyListeners()}/**
                           *
                           * @param {*} value Value to deserialize
                           * @return {string | undefined} Serialized value
+                          * @override
                           */serialize(value){return this._serializeValue(value)}/**
        * Converts a string to a typed JavaScript value.
        *
@@ -4625,6 +4951,7 @@ this._applyListeners()}/**
        * @param {string} value String to deserialize
        * @param {*} type Type to deserialize the string to
        * @return {*} Returns the deserialized value in the `type` given.
+       * @override
        */deserialize(value,type){return this._deserializeValue(value,type)}/**
        * Serializes a property to its associated attribute.
        *
@@ -4635,6 +4962,7 @@ this._applyListeners()}/**
        * @param {string=} attribute Attribute name to reflect.
        * @param {*=} value Property value to reflect.
        * @return {void}
+       * @override
        */reflectPropertyToAttribute(property,attribute,value){this._propertyToAttribute(property,attribute,value)}/**
        * Sets a typed value to an HTML attribute on a node.
        *
@@ -4645,6 +4973,7 @@ this._applyListeners()}/**
        * @param {string} attribute Attribute name to serialize to.
        * @param {Element} node Element to set attribute to.
        * @return {void}
+       * @override
        */serializeValueToAttribute(value,attribute,node){this._valueToNodeAttribute(/** @type {Element} */node||this,value,attribute)}/**
        * Copies own properties (including accessor descriptors) from a source
        * object to a target object.
@@ -4652,6 +4981,7 @@ this._applyListeners()}/**
        * @param {Object} prototype Target object to copy properties to.
        * @param {Object} api Source object to copy properties from.
        * @return {Object} prototype object that was passed as first argument.
+       * @override
        */extend(prototype,api){if(!(prototype&&api)){return prototype||api}let n$=Object.getOwnPropertyNames(api);for(let i=0,n,pd;i<n$.length&&(n=n$[i]);i++){pd=Object.getOwnPropertyDescriptor(api,n);if(pd){Object.defineProperty(prototype,n,pd)}}return prototype}/**
        * Copies props from a source object to a target object.
        *
@@ -4662,6 +4992,7 @@ this._applyListeners()}/**
        * @param {!Object} target Target object to copy properties to.
        * @param {!Object} source Source object to copy properties from.
        * @return {!Object} Target object that was passed as first argument.
+       * @override
        */mixin(target,source){for(let i in source){target[i]=source[i]}return target}/**
        * Sets the prototype of an object.
        *
@@ -4672,6 +5003,7 @@ this._applyListeners()}/**
        * `object`.
        * @return {Object} Returns the given `object` with its prototype set
        * to the given `prototype` object.
+       * @override
        */chainObject(object,prototype){if(object&&prototype&&object!==prototype){object.__proto__=prototype}return object}/* **** Begin Template **** */ /**
                                       * Calls `importNode` on the `content` of the `template` specified and
                                       * returns a document fragment containing the imported content.
@@ -4679,19 +5011,23 @@ this._applyListeners()}/**
                                       * @param {HTMLTemplateElement} template HTML template element to instance.
                                       * @return {!DocumentFragment} Document fragment containing the imported
                                       *   template content.
-                                     */instanceTemplate(template){let content=this.constructor._contentForTemplate(template),dom=/** @type {!DocumentFragment} */document.importNode(content,!0);return dom}/* **** Begin Events **** */ /**
+                                      * @override
+                                      * @suppress {missingProperties} go/missingfnprops
+                                      */instanceTemplate(template){let content=this.constructor._contentForTemplate(template),dom=/** @type {!DocumentFragment} */document.importNode(content,!0);return dom}/* **** Begin Events **** */ /**
                                     * Dispatches a custom event with an optional detail value.
                                     *
                                     * @param {string} type Name of event type.
                                     * @param {*=} detail Detail value containing event-specific
                                     *   payload.
-                                    * @param {{ bubbles: (boolean|undefined), cancelable: (boolean|undefined), composed: (boolean|undefined) }=}
+                                    * @param {{ bubbles: (boolean|undefined), cancelable: (boolean|undefined),
+                                    *     composed: (boolean|undefined) }=}
                                     *  options Object specifying options.  These may include:
                                     *  `bubbles` (boolean, defaults to `true`),
                                     *  `cancelable` (boolean, defaults to false), and
                                     *  `node` on which to fire the event (HTMLElement, defaults to `this`).
                                     * @return {!Event} The new event that was fired.
-                                    */fire(type,detail,options){options=options||{};detail=null===detail||detail===void 0?{}:detail;let event=new Event(type,{bubbles:options.bubbles===void 0?!0:options.bubbles,cancelable:!!options.cancelable,composed:options.composed===void 0?!0:options.composed});event.detail=detail;let node=options.node||this;node.dispatchEvent(event);return event}/**
+                                    * @override
+                                    */fire(type,detail,options){options=options||{};detail=null===detail||detail===void 0?{}:detail;let event=new Event(type,{bubbles:options.bubbles===void 0?!0:options.bubbles,cancelable:!!options.cancelable,composed:options.composed===void 0?!0:options.composed});event.detail=detail;let node=options.node||this;wrap(node).dispatchEvent(event);return event}/**
        * Convenience method to add an event listener on a given element,
        * late bound to a named method on this element.
        *
@@ -4699,7 +5035,8 @@ this._applyListeners()}/**
        * @param {string} eventName Name of event to listen for.
        * @param {string} methodName Name of handler method on `this` to call.
        * @return {void}
-       */listen(node,eventName,methodName){node=/** @type {!EventTarget} */node||this;let hbl=this.__boundListeners||(this.__boundListeners=new WeakMap),bl=hbl.get(node);if(!bl){bl={};hbl.set(node,bl)}let key=eventName+methodName;if(!bl[key]){bl[key]=this._addMethodEventListenerToNode(node,eventName,methodName,this)}}/**
+       * @override
+       */listen(node,eventName,methodName){node=/** @type {!EventTarget} */node||this;let hbl=this.__boundListeners||(this.__boundListeners=new WeakMap),bl=hbl.get(node);if(!bl){bl={};hbl.set(node,bl)}let key=eventName+methodName;if(!bl[key]){bl[key]=this._addMethodEventListenerToNode(/** @type {!Node} */node,eventName,methodName,this)}}/**
        * Convenience method to remove an event listener from a given element,
        * late bound to a named method on this element.
        *
@@ -4708,7 +5045,8 @@ this._applyListeners()}/**
        * @param {string} methodName Name of handler method on `this` to not call
        anymore.
        * @return {void}
-       */unlisten(node,eventName,methodName){node=/** @type {!EventTarget} */node||this;let bl=this.__boundListeners&&this.__boundListeners.get(node),key=eventName+methodName,handler=bl&&bl[key];if(handler){this._removeEventListenerFromNode(node,eventName,handler);bl[key]=null}}/**
+       * @override
+       */unlisten(node,eventName,methodName){node=/** @type {!EventTarget} */node||this;let bl=this.__boundListeners&&this.__boundListeners.get(/** @type {!Element} */node),key=eventName+methodName,handler=bl&&bl[key];if(handler){this._removeEventListenerFromNode(/** @type {!Node} */node,eventName,handler);bl[key]=/** @type {?} */null}}/**
        * Override scrolling behavior to all direction, one direction, or none.
        *
        * Valid scroll directions:
@@ -4722,62 +5060,78 @@ this._applyListeners()}/**
        * @param {Element=} node Element to apply scroll direction setting.
        * Defaults to `this`.
        * @return {void}
-       */setScrollDirection(direction,node){setTouchAction(/** @type {Element} */node||this,DIRECTION_MAP[direction]||"auto")}/* **** End Events **** */ /**
+       * @override
+       */setScrollDirection(direction,node){setTouchAction(/** @type {!Element} */node||this,DIRECTION_MAP[direction]||"auto")}/* **** End Events **** */ /**
                                   * Convenience method to run `querySelector` on this local DOM scope.
                                   *
                                   * This function calls `Polymer.dom(this.root).querySelector(slctr)`.
                                   *
                                   * @param {string} slctr Selector to run on this local DOM scope
                                   * @return {Element} Element found by the selector, or null if not found.
-                                  */$$(slctr){return this.root.querySelector(slctr)}/**
+                                  * @override
+                                  */$$(slctr){// Note, no need to `wrap` this because root is always patched
+return this.root.querySelector(slctr)}/**
        * Return the element whose local dom within which this element
        * is contained. This is a shorthand for
        * `this.getRootNode().host`.
        * @this {Element}
-       */get domHost(){let root=this.getRootNode();return root instanceof DocumentFragment?/** @type {ShadowRoot} */root.host:root}/**
+       * @return {?Node} The element whose local dom within which this element is
+       * contained.
+       * @override
+       */get domHost(){let root=wrap(this).getRootNode();return root instanceof DocumentFragment?/** @type {ShadowRoot} */root.host:root}/**
        * Force this element to distribute its children to its local dom.
        * This should not be necessary as of Polymer 2.0.2 and is provided only
        * for backwards compatibility.
        * @return {void}
-       */distributeContent(){if(window.ShadyDOM&&this.shadowRoot){ShadyDOM.flush()}}/**
+       * @override
+       */distributeContent(){const thisEl=/** @type {Element} */this,domApi=/** @type {PolymerDomApi} */dom(thisEl);if(window.ShadyDOM&&domApi.shadowRoot){ShadyDOM.flush()}}/**
        * Returns a list of nodes that are the effective childNodes. The effective
        * childNodes list is the same as the element's childNodes except that
        * any `<content>` elements are replaced with the list of nodes distributed
        * to the `<content>`, the result of its `getDistributedNodes` method.
        * @return {!Array<!Node>} List of effective child nodes.
-       * @suppress {invalidCasts} LegacyElementMixin must be applied to an HTMLElement
-       */getEffectiveChildNodes(){const thisEl=/** @type {Element} */this,domApi=/** @type {DomApi} */dom(thisEl);return domApi.getEffectiveChildNodes()}/**
+       * @suppress {invalidCasts} LegacyElementMixin must be applied to an
+       *     HTMLElement
+       * @override
+       */getEffectiveChildNodes(){const thisEl=/** @type {Element} */this,domApi=/** @type {PolymerDomApi} */dom(thisEl);return domApi.getEffectiveChildNodes()}/**
        * Returns a list of nodes distributed within this element that match
        * `selector`. These can be dom children or elements distributed to
        * children that are insertion points.
        * @param {string} selector Selector to run.
        * @return {!Array<!Node>} List of distributed elements that match selector.
-       * @suppress {invalidCasts} LegacyElementMixin must be applied to an HTMLElement
-       */queryDistributedElements(selector){const thisEl=/** @type {Element} */this,domApi=/** @type {DomApi} */dom(thisEl);return domApi.queryDistributedElements(selector)}/**
+       * @suppress {invalidCasts} LegacyElementMixin must be applied to an
+       * HTMLElement
+       * @override
+       */queryDistributedElements(selector){const thisEl=/** @type {Element} */this,domApi=/** @type {PolymerDomApi} */dom(thisEl);return domApi.queryDistributedElements(selector)}/**
        * Returns a list of elements that are the effective children. The effective
        * children list is the same as the element's children except that
        * any `<content>` elements are replaced with the list of elements
        * distributed to the `<content>`.
        *
        * @return {!Array<!Node>} List of effective children.
+       * @override
        */getEffectiveChildren(){let list=this.getEffectiveChildNodes();return list.filter(function(/** @type {!Node} */n){return n.nodeType===Node.ELEMENT_NODE})}/**
        * Returns a string of text content that is the concatenation of the
        * text content's of the element's effective childNodes (the elements
        * returned by <a href="#getEffectiveChildNodes>getEffectiveChildNodes</a>.
        *
        * @return {string} List of effective children.
+       * @override
        */getEffectiveTextContent(){let cn=this.getEffectiveChildNodes(),tc=[];for(let i=0,c;c=cn[i];i++){if(c.nodeType!==Node.COMMENT_NODE){tc.push(c.textContent)}}return tc.join("")}/**
        * Returns the first effective childNode within this element that
        * match `selector`. These can be dom child nodes or elements distributed
        * to children that are insertion points.
        * @param {string} selector Selector to run.
        * @return {Node} First effective child node that matches selector.
+       * @override
        */queryEffectiveChildren(selector){let e$=this.queryDistributedElements(selector);return e$&&e$[0]}/**
        * Returns a list of effective childNodes within this element that
        * match `selector`. These can be dom child nodes or elements distributed
        * to children that are insertion points.
        * @param {string} selector Selector to run.
-       * @return {!Array<!Node>} List of effective child nodes that match selector.
+       * @return {!Array<!Node>} List of effective child nodes that match
+       *     selector.
+       * @override
        */queryAllEffectiveChildren(selector){return this.queryDistributedElements(selector)}/**
        * Returns a list of nodes distributed to this element's `<slot>`.
        *
@@ -4787,7 +5141,9 @@ this._applyListeners()}/**
        * @param {string=} slctr CSS selector to choose the desired
        *   `<slot>`.  Defaults to `content`.
        * @return {!Array<!Node>} List of distributed nodes for the `<slot>`.
-       */getContentChildNodes(slctr){let content=this.root.querySelector(slctr||"slot");return content?/** @type {DomApi} */dom(content).getDistributedNodes():[]}/**
+       * @override
+       */getContentChildNodes(slctr){// Note, no need to `wrap` this because root is always
+let content=this.root.querySelector(slctr||"slot");return content?/** @type {PolymerDomApi} */dom(content).getDistributedNodes():[]}/**
        * Returns a list of element children distributed to this element's
        * `<slot>`.
        *
@@ -4801,31 +5157,37 @@ this._applyListeners()}/**
        * @return {!Array<!HTMLElement>} List of distributed nodes for the
        *   `<slot>`.
        * @suppress {invalidCasts}
+       * @override
        */getContentChildren(slctr){let children=/** @type {!Array<!HTMLElement>} */this.getContentChildNodes(slctr).filter(function(n){return n.nodeType===Node.ELEMENT_NODE});return children}/**
        * Checks whether an element is in this element's light DOM tree.
        *
        * @param {?Node} node The element to be checked.
        * @return {boolean} true if node is in this element's light DOM tree.
-       * @suppress {invalidCasts} LegacyElementMixin must be applied to an HTMLElement
-       */isLightDescendant(node){const thisNode=/** @type {Node} */this;return thisNode!==node&&thisNode.contains(node)&&thisNode.getRootNode()===node.getRootNode()}/**
+       * @suppress {invalidCasts} LegacyElementMixin must be applied to an
+       * HTMLElement
+       * @override
+       */isLightDescendant(node){const thisNode=/** @type {Node} */this;return thisNode!==node&&wrap(thisNode).contains(node)&&wrap(thisNode).getRootNode()===wrap(node).getRootNode()}/**
        * Checks whether an element is in this element's local DOM tree.
        *
        * @param {!Element} node The element to be checked.
        * @return {boolean} true if node is in this element's local DOM tree.
-       */isLocalDescendant(node){return this.root===node.getRootNode()}/**
+       * @override
+       */isLocalDescendant(node){return this.root===wrap(node).getRootNode()}/**
        * No-op for backwards compatibility. This should now be handled by
        * ShadyCss library.
-       * @param  {*} container Unused
-       * @param  {*} shouldObserve Unused
-       * @return {void}
-       */scopeSubtree(container,shouldObserve){}// eslint-disable-line no-unused-vars
-/**
-     * Returns the computed style value for the given property.
-     * @param {string} property The css property name.
-     * @return {string} Returns the computed css property value for the given
-     * `property`.
-     * @suppress {invalidCasts} LegacyElementMixin must be applied to an HTMLElement
-     */getComputedStyleValue(property){return styleInterface.getComputedStyleValue(/** @type {!Element} */this,property)}// debounce
+       * @param  {!Element} container Container element to scope
+       * @param  {boolean=} shouldObserve if true, start a mutation observer for added nodes to the container
+       * @return {?MutationObserver} Returns a new MutationObserver on `container` if `shouldObserve` is true.
+       * @override
+       */scopeSubtree(container,shouldObserve=!1){return scopeSubtree(container,shouldObserve)}/**
+       * Returns the computed style value for the given property.
+       * @param {string} property The css property name.
+       * @return {string} Returns the computed css property value for the given
+       * `property`.
+       * @suppress {invalidCasts} LegacyElementMixin must be applied to an
+       *     HTMLElement
+       * @override
+       */getComputedStyleValue(property){return styleInterface.getComputedStyleValue(/** @type {!Element} */this,property)}// debounce
 /**
      * Call `debounce` to collapse multiple requests for a named task into
      * one invocation which is made after the wait time has elapsed with
@@ -4842,45 +5204,52 @@ this._applyListeners()}/**
      * @param {string} jobName String to identify the debounce job.
      * @param {function():void} callback Function that is called (with `this`
      *   context) when the wait time elapses.
-     * @param {number} wait Optional wait time in milliseconds (ms) after the
+     * @param {number=} wait Optional wait time in milliseconds (ms) after the
      *   last signal that must elapse before invoking `callback`
      * @return {!Object} Returns a debouncer object on which exists the
      * following methods: `isActive()` returns true if the debouncer is
      * active; `cancel()` cancels the debouncer if it is active;
      * `flush()` immediately invokes the debounced callback if the debouncer
      * is active.
+     * @override
      */debounce(jobName,callback,wait){this._debouncers=this._debouncers||{};return this._debouncers[jobName]=Debouncer.debounce(this._debouncers[jobName],0<wait?timeOut.after(wait):microTask,callback.bind(this))}/**
        * Returns whether a named debouncer is active.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
        * @return {boolean} Whether the debouncer is active (has not yet fired).
+       * @override
        */isDebouncerActive(jobName){this._debouncers=this._debouncers||{};let debouncer=this._debouncers[jobName];return!!(debouncer&&debouncer.isActive())}/**
        * Immediately calls the debouncer `callback` and inactivates it.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
        * @return {void}
+       * @override
        */flushDebouncer(jobName){this._debouncers=this._debouncers||{};let debouncer=this._debouncers[jobName];if(debouncer){debouncer.flush()}}/**
        * Cancels an active debouncer.  The `callback` will not be called.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
        * @return {void}
+       * @override
        */cancelDebouncer(jobName){this._debouncers=this._debouncers||{};let debouncer=this._debouncers[jobName];if(debouncer){debouncer.cancel()}}/**
        * Runs a callback function asynchronously.
        *
        * By default (if no waitTime is specified), async callbacks are run at
        * microtask timing, which will occur before paint.
        *
-       * @param {!Function} callback The callback function to run, bound to `this`.
+       * @param {!Function} callback The callback function to run, bound to
+       *     `this`.
        * @param {number=} waitTime Time to wait before calling the
        *   `callback`.  If unspecified or 0, the callback will be run at microtask
        *   timing (before paint).
        * @return {number} Handle that may be used to cancel the async job.
+       * @override
        */async(callback,waitTime){return 0<waitTime?timeOut.run(callback.bind(this),waitTime):~microTask.run(callback.bind(this))}/**
        * Cancels an async operation started with `async`.
        *
        * @param {number} handle Handle returned from original `async` call to
        *   cancel.
        * @return {void}
+       * @override
        */cancelAsync(handle){0>handle?microTask.cancel(~handle):timeOut.cancel(handle)}// other
 /**
      * Convenience method for creating an element and configuring it.
@@ -4889,6 +5258,7 @@ this._applyListeners()}/**
      * @param {Object=} props Object of properties to configure on the
      *    instance.
      * @return {!Element} Newly created and configured element.
+     * @override
      */create(tag,props){let elt=document.createElement(tag);if(props){if(elt.setProperties){elt.setProperties(props)}else{for(let n in props){elt[n]=props[n]}}}return elt}/**
        * Polyfill for Element.prototype.matches, which is sometimes still
        * prefixed.
@@ -4896,6 +5266,7 @@ this._applyListeners()}/**
        * @param {string} selector Selector to test.
        * @param {!Element=} node Element to test the selector against.
        * @return {boolean} Whether the element matches the selector.
+       * @override
        */elementMatches(selector,node){return matchesSelector(node||this,selector)}/**
        * Toggles an HTML attribute on or off.
        *
@@ -4903,7 +5274,8 @@ this._applyListeners()}/**
        * @param {boolean=} bool Boolean to force the attribute on or off.
        *    When unspecified, the state of the attribute will be reversed.
        * @return {boolean} true if the attribute now exists
-       */toggleAttribute(name,bool){let node=/** @type {Element} */this;if(3===arguments.length){node=/** @type {Element} */arguments[2]}if(1==arguments.length){bool=!node.hasAttribute(name)}if(bool){node.setAttribute(name,"");return!0}else{node.removeAttribute(name);return!1}}/**
+       * @override
+       */toggleAttribute(name,bool){let node=/** @type {Element} */this;if(3===arguments.length){node=/** @type {Element} */arguments[2]}if(1==arguments.length){bool=!node.hasAttribute(name)}if(bool){wrap(node).setAttribute(name,"");return!0}else{wrap(node).removeAttribute(name);return!1}}/**
        * Toggles a CSS class on or off.
        *
        * @param {string} name CSS class name
@@ -4911,6 +5283,7 @@ this._applyListeners()}/**
        *    When unspecified, the state of the class will be reversed.
        * @param {Element=} node Node to target.  Defaults to `this`.
        * @return {void}
+       * @override
        */toggleClass(name,bool,node){node=/** @type {Element} */node||this;if(1==arguments.length){bool=!node.classList.contains(name)}if(bool){node.classList.add(name)}else{node.classList.remove(name)}}/**
        * Cross-platform helper for setting an element's CSS `transform` property.
        *
@@ -4918,16 +5291,18 @@ this._applyListeners()}/**
        * @param {Element=} node Element to apply the transform to.
        * Defaults to `this`
        * @return {void}
+       * @override
        */transform(transformText,node){node=/** @type {Element} */node||this;node.style.webkitTransform=transformText;node.style.transform=transformText}/**
        * Cross-platform helper for setting an element's CSS `translate3d`
        * property.
        *
-       * @param {number} x X offset.
-       * @param {number} y Y offset.
-       * @param {number} z Z offset.
+       * @param {number|string} x X offset.
+       * @param {number|string} y Y offset.
+       * @param {number|string} z Z offset.
        * @param {Element=} node Element to apply the transform to.
        * Defaults to `this`.
        * @return {void}
+       * @override
        */translate3d(x,y,z,node){node=/** @type {Element} */node||this;this.transform("translate3d("+x+","+y+","+z+")",node)}/**
        * Removes an item from an array, if it exists.
        *
@@ -4938,10 +5313,12 @@ this._applyListeners()}/**
        * If the array is passed directly, **no change
        * notification is generated**.
        *
-       * @param {string | !Array<number|string>} arrayOrPath Path to array from which to remove the item
+       * @param {string | !Array<number|string>} arrayOrPath Path to array from
+       *     which to remove the item
        *   (or the array itself).
        * @param {*} item Item to remove.
        * @return {Array} Array containing item removed.
+       * @override
        */arrayDelete(arrayOrPath,item){let index;if(Array.isArray(arrayOrPath)){index=arrayOrPath.indexOf(item);if(0<=index){return arrayOrPath.splice(index,1)}}else{let arr=get(this,arrayOrPath);index=arr.indexOf(item);if(0<=index){return this.splice(arrayOrPath,index,1)}}return null}// logging
 /**
      * Facades `console.log`/`warn`/`error` as override point.
@@ -4949,22 +5326,26 @@ this._applyListeners()}/**
      * @param {string} level One of 'log', 'warn', 'error'
      * @param {Array} args Array of strings or objects to log
      * @return {void}
+     * @override
      */_logger(level,args){// accept ['foo', 'bar'] and [['foo', 'bar']]
 if(Array.isArray(args)&&1===args.length&&Array.isArray(args[0])){args=args[0]}switch(level){case"log":case"warn":case"error":console[level](...args);}}/**
        * Facades `console.log` as an override point.
        *
        * @param {...*} args Array of strings or objects to log
        * @return {void}
+       * @override
        */_log(...args){this._logger("log",args)}/**
        * Facades `console.warn` as an override point.
        *
        * @param {...*} args Array of strings or objects to log
        * @return {void}
+       * @override
        */_warn(...args){this._logger("warn",args)}/**
        * Facades `console.error` as an override point.
        *
        * @param {...*} args Array of strings or objects to log
        * @return {void}
+       * @override
        */_error(...args){this._logger("error",args)}/**
        * Formats a message using the element type an a method name.
        *
@@ -4972,29 +5353,24 @@ if(Array.isArray(args)&&1===args.length&&Array.isArray(args[0])){args=args[0]}sw
        * @param {...*} args Array of strings or objects to log
        * @return {Array} Array with formatting information for `console`
        *   logging.
-       */_logf(methodName,...args){return["[%s::%s]",this.is,methodName,...args]}}LegacyElement.prototype.is="";return LegacyElement});var legacyElementMixin={LegacyElementMixin:LegacyElementMixin};let metaProps={attached:!0,detached:!0,ready:!0,created:!0,beforeRegister:!0,registered:!0,attributeChanged:!0,// meta objects
-behaviors:!0};/**
-    * Applies a "legacy" behavior or array of behaviors to the provided class.
-    *
-    * Note: this method will automatically also apply the `LegacyElementMixin`
-    * to ensure that any legacy behaviors can rely on legacy Polymer API on
-    * the underlying element.
-    *
-    * @function
-    * @template T
-    * @param {!Object|!Array<!Object>} behaviors Behavior object or array of behaviors.
-    * @param {function(new:T)} klass Element class.
-    * @return {?} Returns a new Element class extended by the
-    * passed in `behaviors` and also by `LegacyElementMixin`.
-    * @suppress {invalidCasts, checkTypes}
-    */function mixinBehaviors(behaviors,klass){if(!behaviors){klass=/** @type {HTMLElement} */klass;// eslint-disable-line no-self-assign
-return klass}// NOTE: ensure the behavior is extending a class with
-// legacy element api. This is necessary since behaviors expect to be able
-// to access 1.x legacy api.
-klass=LegacyElementMixin(klass);if(!Array.isArray(behaviors)){behaviors=[behaviors]}let superBehaviors=klass.prototype.behaviors;// get flattened, deduped list of behaviors *not* already on super class
-behaviors=flattenBehaviors(behaviors,null,superBehaviors);// mixin new behaviors
-klass=_mixinBehaviors(behaviors,klass);if(superBehaviors){behaviors=superBehaviors.concat(behaviors)}// Set behaviors on prototype for BC...
-klass.prototype.behaviors=behaviors;return klass}// NOTE:
+       * @override
+       */_logf(methodName,...args){return["[%s::%s]",this.is,methodName,...args]}}LegacyElement.prototype.is="";return LegacyElement});var legacyElementMixin={LegacyElementMixin:LegacyElementMixin};const lifecycleProps={attached:!0,detached:!0,ready:!0,created:!0,beforeRegister:!0,registered:!0,attributeChanged:!0,listeners:!0,hostAttributes:!0},excludeOnInfo={attached:!0,detached:!0,ready:!0,created:!0,beforeRegister:!0,registered:!0,attributeChanged:!0,behaviors:!0,_noAccessors:!0},excludeOnBehaviors=Object.assign({listeners:!0,hostAttributes:!0,properties:!0,observers:!0},excludeOnInfo);function copyProperties(source,target,excludeProps){const noAccessors=source._noAccessors,propertyNames=Object.getOwnPropertyNames(source);for(let i=0,p;i<propertyNames.length;i++){p=propertyNames[i];if(p in excludeProps){continue}if(noAccessors){target[p]=source[p]}else{let pd=Object.getOwnPropertyDescriptor(source,p);if(pd){// ensure property is configurable so that a later behavior can
+// re-configure it.
+pd.configurable=!0;Object.defineProperty(target,p,pd)}}}}/**
+   * Applies a "legacy" behavior or array of behaviors to the provided class.
+   *
+   * Note: this method will automatically also apply the `LegacyElementMixin`
+   * to ensure that any legacy behaviors can rely on legacy Polymer API on
+   * the underlying element.
+   *
+   * @function
+   * @template T
+   * @param {!Object|!Array<!Object>} behaviors Behavior object or array of behaviors.
+   * @param {function(new:T)} klass Element class.
+   * @return {?} Returns a new Element class extended by the
+   * passed in `behaviors` and also by `LegacyElementMixin`.
+   * @suppress {invalidCasts, checkTypes}
+   */function mixinBehaviors(behaviors,klass){return GenerateClassFromInfo({},LegacyElementMixin(klass),behaviors)}// NOTE:
 // 1.x
 // Behaviors were mixed in *in reverse order* and de-duped on the fly.
 // The rule was that behavior properties were copied onto the element
@@ -5024,42 +5400,84 @@ klass.prototype.behaviors=behaviors;return klass}// NOTE:
 // If lifecycle is called (super then me), order is
 // (1) C.created, (2) A.created, (3) B.created, (4) element.created
 // (again same as 1.x)
-function _mixinBehaviors(behaviors,klass){for(let i=0,b;i<behaviors.length;i++){b=behaviors[i];if(b){klass=Array.isArray(b)?_mixinBehaviors(b,klass):GenerateClassFromInfo(b,klass)}}return klass}/**
+function applyBehaviors(proto,behaviors,lifecycle){for(let i=0;i<behaviors.length;i++){applyInfo(proto,behaviors[i],lifecycle,excludeOnBehaviors)}}function applyInfo(proto,info,lifecycle,excludeProps){copyProperties(info,proto,excludeProps);for(let p in lifecycleProps){if(info[p]){lifecycle[p]=lifecycle[p]||[];lifecycle[p].push(info[p])}}}/**
    * @param {Array} behaviors List of behaviors to flatten.
    * @param {Array=} list Target list to flatten behaviors into.
    * @param {Array=} exclude List of behaviors to exclude from the list.
    * @return {!Array} Returns the list of flattened behaviors.
    */function flattenBehaviors(behaviors,list,exclude){list=list||[];for(let i=behaviors.length-1,b;0<=i;i--){b=behaviors[i];if(b){if(Array.isArray(b)){flattenBehaviors(b,list)}else{// dedup
 if(0>list.indexOf(b)&&(!exclude||0>exclude.indexOf(b))){list.unshift(b)}}}else{console.warn("behavior is null, check for missing or 404 import")}}return list}/**
-   * @param {!PolymerInit} info Polymer info object
-   * @param {function(new:HTMLElement)} Base base class to extend with info object
-   * @return {function(new:HTMLElement)} Generated class
-   * @suppress {checkTypes}
-   * @private
-   */function GenerateClassFromInfo(info,Base){/** @private */class PolymerGenerated extends Base{static get properties(){return info.properties}static get observers(){return info.observers}/**
+   * Copies property descriptors from source to target, overwriting all fields
+   * of any previous descriptor for a property *except* for `value`, which is
+   * merged in from the target if it does not exist on the source.
+   *
+   * @param {*} target Target properties object
+   * @param {*} source Source properties object
+   */function mergeProperties(target,source){for(const p in source){const targetInfo=target[p],sourceInfo=source[p];if(!("value"in sourceInfo)&&targetInfo&&"value"in targetInfo){target[p]=Object.assign({value:targetInfo.value},sourceInfo)}else{target[p]=sourceInfo}}}/* Note about construction and extension of legacy classes.
+    [Changed in Q4 2018 to optimize performance.]
+  
+    When calling `Polymer` or `mixinBehaviors`, the generated class below is
+    made. The list of behaviors was previously made into one generated class per
+    behavior, but this is no longer the case as behaviors are now called
+    manually. Note, there may *still* be multiple generated classes in the
+    element's prototype chain if extension is used with `mixinBehaviors`.
+  
+    The generated class is directly tied to the info object and behaviors
+    used to create it. That list of behaviors is filtered so it's only the
+    behaviors not active on the superclass. In order to call through to the
+    entire list of lifecycle methods, it's important to call `super`.
+  
+    The element's `properties` and `observers` are controlled via the finalization
+    mechanism provided by `PropertiesMixin`. `Properties` and `observers` are
+    collected by manually traversing the prototype chain and merging.
+  
+    To limit changes, the `_registered` method is called via `_initializeProperties`
+    and not `_finalizeClass`.
+  
+  */ /**
+      * @param {!PolymerInit} info Polymer info object
+      * @param {function(new:HTMLElement)} Base base class to extend with info object
+      * @param {Object=} behaviors behaviors to copy into the element
+      * @return {function(new:HTMLElement)} Generated class
+      * @suppress {checkTypes}
+      * @private
+      */function GenerateClassFromInfo(info,Base,behaviors){// manages behavior and lifecycle processing (filled in after class definition)
+let behaviorList;const lifecycle={};/** @private */class PolymerGenerated extends Base{// explicitly not calling super._finalizeClass
+/** @nocollapse */static _finalizeClass(){// if calling via a subclass that hasn't been generated, pass through to super
+if(!this.hasOwnProperty(JSCompiler_renameProperty("generatedFrom",this))){// TODO(https://github.com/google/closure-compiler/issues/3240):
+//     Change back to just super.methodCall()
+Base._finalizeClass.call(this)}else{// interleave properties and observers per behavior and `info`
+if(behaviorList){for(let i=0,b;i<behaviorList.length;i++){b=behaviorList[i];if(b.properties){this.createProperties(b.properties)}if(b.observers){this.createObservers(b.observers,b.properties)}}}if(info.properties){this.createProperties(info.properties)}if(info.observers){this.createObservers(info.observers,info.properties)}// make sure to prepare the element template
+this._prepareTemplate()}}/** @nocollapse */static get properties(){const properties={};if(behaviorList){for(let i=0;i<behaviorList.length;i++){mergeProperties(properties,behaviorList[i].properties)}}mergeProperties(properties,info.properties);return properties}/** @nocollapse */static get observers(){let observers=[];if(behaviorList){for(let i=0,b;i<behaviorList.length;i++){b=behaviorList[i];if(b.observers){observers=observers.concat(b.observers)}}}if(info.observers){observers=observers.concat(info.observers)}return observers}/**
        * @return {void}
-       */created(){super.created();if(info.created){info.created.call(this)}}/**
+       */created(){super.created();const list=lifecycle.created;if(list){for(let i=0;i<list.length;i++){list[i].call(this)}}}/**
        * @return {void}
-       */_registered(){super._registered();/* NOTE: `beforeRegister` is called here for bc, but the behavior
-                            is different than in 1.x. In 1.0, the method was called *after*
-                            mixing prototypes together but *before* processing of meta-objects.
-                            However, dynamic effects can still be set here and can be done either
-                            in `beforeRegister` or `registered`. It is no longer possible to set
-                            `is` in `beforeRegister` as you could in 1.x.
-                           */if(info.beforeRegister){info.beforeRegister.call(Object.getPrototypeOf(this))}if(info.registered){info.registered.call(Object.getPrototypeOf(this))}}/**
+       */_registered(){/* NOTE: `beforeRegister` is called here for bc, but the behavior
+        is different than in 1.x. In 1.0, the method was called *after*
+        mixing prototypes together but *before* processing of meta-objects.
+        However, dynamic effects can still be set here and can be done either
+        in `beforeRegister` or `registered`. It is no longer possible to set
+        `is` in `beforeRegister` as you could in 1.x.
+      */ // only proceed if the generated class' prototype has not been registered.
+const generatedProto=PolymerGenerated.prototype;if(!generatedProto.hasOwnProperty(JSCompiler_renameProperty("__hasRegisterFinished",generatedProto))){generatedProto.__hasRegisterFinished=!0;// ensure superclass is registered first.
+super._registered();// copy properties onto the generated class lazily if we're optimizing,
+if(legacyOptimizations){copyPropertiesToProto(generatedProto)}// make sure legacy lifecycle is called on the *element*'s prototype
+// and not the generated class prototype; if the element has been
+// extended, these are *not* the same.
+const proto=Object.getPrototypeOf(this);let list=lifecycle.beforeRegister;if(list){for(let i=0;i<list.length;i++){list[i].call(proto)}}list=lifecycle.registered;if(list){for(let i=0;i<list.length;i++){list[i].call(proto)}}}}/**
        * @return {void}
-       */_applyListeners(){super._applyListeners();if(info.listeners){for(let l in info.listeners){this._addMethodEventListenerToNode(this,l,info.listeners[l])}}}// note: exception to "super then me" rule;
+       */_applyListeners(){super._applyListeners();const list=lifecycle.listeners;if(list){for(let i=0;i<list.length;i++){const listeners=list[i];if(listeners){for(let l in listeners){this._addMethodEventListenerToNode(this,l,listeners[l])}}}}}// note: exception to "super then me" rule;
 // do work before calling super so that super attributes
 // only apply if not already set.
 /**
      * @return {void}
-     */_ensureAttributes(){if(info.hostAttributes){for(let a in info.hostAttributes){this._ensureAttribute(a,info.hostAttributes[a])}}super._ensureAttributes()}/**
+     */_ensureAttributes(){const list=lifecycle.hostAttributes;if(list){for(let i=list.length-1;0<=i;i--){const hostAttributes=list[i];for(let a in hostAttributes){this._ensureAttribute(a,hostAttributes[a])}}}super._ensureAttributes()}/**
        * @return {void}
-       */ready(){super.ready();if(info.ready){info.ready.call(this)}}/**
+       */ready(){super.ready();let list=lifecycle.ready;if(list){for(let i=0;i<list.length;i++){list[i].call(this)}}}/**
        * @return {void}
-       */attached(){super.attached();if(info.attached){info.attached.call(this)}}/**
+       */attached(){super.attached();let list=lifecycle.attached;if(list){for(let i=0;i<list.length;i++){list[i].call(this)}}}/**
        * @return {void}
-       */detached(){super.detached();if(info.detached){info.detached.call(this)}}/**
+       */detached(){super.detached();let list=lifecycle.detached;if(list){for(let i=0;i<list.length;i++){list[i].call(this)}}}/**
        * Implements native Custom Elements `attributeChangedCallback` to
        * set an attribute value to a property via `_attributeToProperty`.
        *
@@ -5067,9 +5485,13 @@ if(0>list.indexOf(b)&&(!exclude||0>exclude.indexOf(b))){list.unshift(b)}}}else{c
        * @param {?string} old Old attribute value
        * @param {?string} value New attribute value
        * @return {void}
-       */attributeChanged(name,old,value){super.attributeChanged(name,old,value);if(info.attributeChanged){info.attributeChanged.call(this,name,old,value)}}}PolymerGenerated.generatedFrom=info;for(let p in info){// NOTE: cannot copy `metaProps` methods onto prototype at least because
-// `super.ready` must be called and is not included in the user fn.
-if(!(p in metaProps)){let pd=Object.getOwnPropertyDescriptor(info,p);if(pd){Object.defineProperty(PolymerGenerated.prototype,p,pd)}}}return PolymerGenerated}/**
+       */attributeChanged(name,old,value){super.attributeChanged();let list=lifecycle.attributeChanged;if(list){for(let i=0;i<list.length;i++){list[i].call(this,name,old,value)}}}}// apply behaviors, note actual copying is done lazily at first instance creation
+if(behaviors){// NOTE: ensure the behavior is extending a class with
+// legacy element api. This is necessary since behaviors expect to be able
+// to access 1.x legacy api.
+if(!Array.isArray(behaviors)){behaviors=[behaviors]}let superBehaviors=Base.prototype.behaviors;// get flattened, deduped list of behaviors *not* already on super class
+behaviorList=flattenBehaviors(behaviors,null,superBehaviors);PolymerGenerated.prototype.behaviors=superBehaviors?superBehaviors.concat(behaviors):behaviorList}const copyPropertiesToProto=proto=>{if(behaviorList){applyBehaviors(proto,behaviorList,lifecycle)}applyInfo(proto,info,lifecycle,excludeOnInfo)};// copy properties if we're not optimizing
+if(!legacyOptimizations){copyPropertiesToProto(PolymerGenerated.prototype)}PolymerGenerated.generatedFrom=info;return PolymerGenerated}/**
    * Generates a class that extends `LegacyElement` based on the
    * provided info object.  Metadata objects on the `info` object
    * (`properties`, `observers`, `listeners`, `behaviors`, `is`) are used
@@ -5138,9 +5560,8 @@ if(!(p in metaProps)){let pd=Object.getOwnPropertyDescriptor(info,p);if(pd){Obje
    * @param {function(T):T} mixin Optional mixin to apply to legacy base class
    *   before extending with Polymer metaprogramming.
    * @return {function(new:HTMLElement)} Generated class
-   */const Class=function(info,mixin){if(!info){console.warn(`Polymer's Class function requires \`info\` argument`)}const baseWithBehaviors=info.behaviors?// note: mixinBehaviors ensures `LegacyElementMixin`.
-mixinBehaviors(info.behaviors,HTMLElement):LegacyElementMixin(HTMLElement),baseWithMixin=mixin?mixin(baseWithBehaviors):baseWithBehaviors,klass=GenerateClassFromInfo(info,baseWithMixin);// decorate klass with registration info
-klass.is=info.is;return klass};var _class={mixinBehaviors:mixinBehaviors,Class:Class};const Polymer=function(info){// if input is a `class` (aka a function with a prototype), use the prototype
+   */const Class=function(info,mixin){if(!info){console.warn("Polymer.Class requires `info` argument")}let klass=mixin?mixin(LegacyElementMixin(HTMLElement)):LegacyElementMixin(HTMLElement);klass=GenerateClassFromInfo(info,klass,info.behaviors);// decorate klass with registration info
+klass.is=klass.prototype.is=info.is;return klass};var _class={mixinBehaviors:mixinBehaviors,Class:Class};const Polymer=function(info){// if input is a `class` (aka a function with a prototype), use the prototype
 // remember that the `constructor` will never be called
 let klass;if("function"===typeof info){klass=info}else{klass=Polymer.Class(info)}customElements.define(klass.is,/** @type {!HTMLElement} */klass);return klass};Polymer.Class=Class;var polymerFn={Polymer:Polymer};function mutablePropertyChange(inst,property,value,old,mutableData){let isObject;if(mutableData){isObject="object"===typeof value&&null!==value;// Pull `old` for Objects from temp cache, but treat `null` as a primitive
 if(isObject){old=inst.__dataTemp[property]}}// Strict equality check, but return false for NaN===NaN
@@ -5184,6 +5605,9 @@ if(isObject&&shouldChange){inst.__dataTemp[property]=value}return shouldChange}/
    * @polymer
    * @summary Element class mixin to skip strict dirty-checking for objects
    *   and arrays
+   * @template T
+   * @param {function(new:T)} superClass Class to apply mixin to.
+   * @return {function(new:T)} superClass with mixin applied.
    */const MutableData=dedupingMixin(superClass=>{/**
    * @polymer
    * @mixinClass
@@ -5208,7 +5632,7 @@ if(isObject&&shouldChange){inst.__dataTemp[property]=value}return shouldChange}/
    * @mixinClass
    * @polymer
    * @implements {Polymer_OptionalMutableData}
-   */class OptionalMutableData extends superClass{static get properties(){return{/**
+   */class OptionalMutableData extends superClass{/** @nocollapse */static get properties(){return{/**
          * Instance-level flag for configuring the dirty-checking strategy
          * for this element.  When true, Objects and Arrays will skip dirty
          * checking, otherwise strict equality checking will be used.
@@ -5290,15 +5714,19 @@ let newInstance=null;/**
 function upgradeTemplate(template,constructor){newInstance=template;Object.setPrototypeOf(template,constructor.prototype);new constructor;newInstance=null}/**
    * Base class for TemplateInstance.
    * @constructor
+   * @extends {HTMLElement}
    * @implements {Polymer_PropertyEffects}
    * @private
-   */const base=PropertyEffects(class{});/**
-                                         * @polymer
-                                         * @customElement
-                                         * @appliesMixin PropertyEffects
-                                         * @unrestricted
-                                         */class TemplateInstanceBase extends base{constructor(props){super();this._configureProperties(props);this.root=this._stampTemplate(this.__dataHost);// Save list of stamped children
-let children=this.children=[];for(let n=this.root.firstChild;n;n=n.nextSibling){children.push(n);n.__templatizeInstance=this}if(this.__templatizeOwner&&this.__templatizeOwner.__hideTemplateChildren__){this._showHideChildren(!0)}// Flush props only when props are passed if instance props exist
+   */const templateInstanceBase=PropertyEffects(// This cast shouldn't be neccessary, but Closure doesn't understand that
+// "class {}" is a constructor function.
+/** @type {function(new:Object)} */class{});/**
+                                               * @polymer
+                                               * @customElement
+                                               * @appliesMixin PropertyEffects
+                                               * @unrestricted
+                                               */class TemplateInstanceBase extends templateInstanceBase{constructor(props){super();this._configureProperties(props);/** @type {!StampedTemplate} */this.root=this._stampTemplate(this.__dataHost);// Save list of stamped children
+let children=[];/** @suppress {invalidCasts} */this.children=/** @type {!NodeList} */children;// Polymer 1.x did not use `Polymer.dom` here so not bothering.
+for(let n=this.root.firstChild;n;n=n.nextSibling){children.push(n);n.__templatizeInstance=this}if(this.__templatizeOwner&&this.__templatizeOwner.__hideTemplateChildren__){this._showHideChildren(!0)}// Flush props only when props are passed if instance props exist
 // or when there isn't instance props.
 let options=this.__templatizeOptions;if(props&&options.instanceProps||!options.instanceProps){this._enableProperties()}}/**
      * Configure the given `props` by calling `_setPendingProperty`. Also
@@ -5340,7 +5768,7 @@ let templateHost=this.__dataHost.__dataHost;if(templateHost){templateHost._addEv
      * @protected
      */_showHideChildren(hide){let c=this.children;for(let i=0,n;i<c.length;i++){n=c[i];// Ignore non-changes
 if(!!hide!=!!n.__hideTemplateChildren__){if(n.nodeType===Node.TEXT_NODE){if(hide){n.__polymerTextContent__=n.textContent;n.textContent=""}else{n.textContent=n.__polymerTextContent__}// remove and replace slot
-}else if("slot"===n.localName){if(hide){n.__polymerReplaced__=document.createComment("hidden-slot");n.parentNode.replaceChild(n.__polymerReplaced__,n)}else{const replace=n.__polymerReplaced__;if(replace){replace.parentNode.replaceChild(n,replace)}}}else if(n.style){if(hide){n.__polymerDisplay__=n.style.display;n.style.display="none"}else{n.style.display=n.__polymerDisplay__}}}n.__hideTemplateChildren__=hide;if(n._showHideChildren){n._showHideChildren(hide)}}}/**
+}else if("slot"===n.localName){if(hide){n.__polymerReplaced__=document.createComment("hidden-slot");wrap(wrap(n).parentNode).replaceChild(n.__polymerReplaced__,n)}else{const replace=n.__polymerReplaced__;if(replace){wrap(wrap(replace).parentNode).replaceChild(n,replace)}}}else if(n.style){if(hide){n.__polymerDisplay__=n.style.display;n.style.display="none"}else{n.style.display=n.__polymerDisplay__}}}n.__hideTemplateChildren__=hide;if(n._showHideChildren){n._showHideChildren(hide)}}}/**
      * Overrides default property-effects implementation to intercept
      * textContent bindings while children are "hidden" and cache in
      * private storage for later retrieval.
@@ -5365,35 +5793,49 @@ model=model.__dataHost.__dataHost}while((options=model.__templatizeOptions)&&!op
      *
      * @param {Event} event Event to dispatch
      * @return {boolean} Always true.
+     * @override
      */dispatchEvent(event){// eslint-disable-line no-unused-vars
 return!0}}/** @type {!DataTemplate} */TemplateInstanceBase.prototype.__dataHost;/** @type {!TemplatizeOptions} */TemplateInstanceBase.prototype.__templatizeOptions;/** @type {!Polymer_PropertyEffects} */TemplateInstanceBase.prototype._methodHost;/** @type {!Object} */TemplateInstanceBase.prototype.__templatizeOwner;/** @type {!Object} */TemplateInstanceBase.prototype.__hostProps;/**
                                              * @constructor
                                              * @extends {TemplateInstanceBase}
                                              * @implements {Polymer_MutableData}
                                              * @private
-                                             */const MutableTemplateInstanceBase=MutableData(TemplateInstanceBase);function findMethodHost(template){// Technically this should be the owner of the outermost template.
+                                             */const MutableTemplateInstanceBase=MutableData(// This cast shouldn't be necessary, but Closure doesn't seem to understand
+// this constructor.
+/** @type {function(new:TemplateInstanceBase)} */TemplateInstanceBase);function findMethodHost(template){// Technically this should be the owner of the outermost template.
 // In shadow dom, this is always getRootNode().host, but we can
 // approximate this via cooperation with our dataHost always setting
 // `_methodHost` as long as there were bindings (or id's) on this
 // instance causing it to get a dataHost.
 let templateHost=template.__dataHost;return templateHost&&templateHost._methodHost||templateHost}/* eslint-disable valid-jsdoc */ /**
                                     * @suppress {missingProperties} class.prototype is not defined for some reason
-                                    */function createTemplatizerClass(template,templateInfo,options){// Anonymous class created by the templatize
-let base=options.mutableData?MutableTemplateInstanceBase:TemplateInstanceBase,klass=class extends base{};/**
-                                                                                        * @constructor
-                                                                                        * @extends {base}
-                                                                                        * @private
-                                                                                        */klass.prototype.__templatizeOptions=options;klass.prototype._bindTemplate(template);addNotifyEffects(klass,template,templateInfo,options);return klass}/**
+                                    */function createTemplatizerClass(template,templateInfo,options){/**
+   * @constructor
+   * @extends {TemplateInstanceBase}
+   */let templatizerBase=options.mutableData?MutableTemplateInstanceBase:TemplateInstanceBase;// Affordance for global mixins onto TemplatizeInstance
+if(templatize.mixin){templatizerBase=templatize.mixin(templatizerBase)}/**
+     * Anonymous class created by the templatize
+     * @constructor
+     * @private
+     */let klass=class extends templatizerBase{};/** @override */klass.prototype.__templatizeOptions=options;klass.prototype._bindTemplate(template);addNotifyEffects(klass,template,templateInfo,options);return klass}/**
+   * Adds propagate effects from the template to the template instance for
+   * properties that the host binds to the template using the `_host_` prefix.
+   * 
    * @suppress {missingProperties} class.prototype is not defined for some reason
-   */function addPropagateEffects(template,templateInfo,options){let userForwardHostProp=options.forwardHostProp;if(userForwardHostProp){// Provide data API and property effects on memoized template class
-let klass=templateInfo.templatizeTemplateClass;if(!klass){let base=options.mutableData?MutableDataTemplate:DataTemplate;/** @private */klass=templateInfo.templatizeTemplateClass=class TemplatizedTemplate extends base{};// Add template - >instances effects
+   */function addPropagateEffects(template,templateInfo,options){let userForwardHostProp=options.forwardHostProp;if(userForwardHostProp&&templateInfo.hasHostProps){// Provide data API and property effects on memoized template class
+let klass=templateInfo.templatizeTemplateClass;if(!klass){/**
+       * @constructor
+       * @extends {DataTemplate}
+       */let templatizedBase=options.mutableData?MutableDataTemplate:DataTemplate;/** @private */klass=templateInfo.templatizeTemplateClass=class TemplatizedTemplate extends templatizedBase{};// Add template - >instances effects
 // and host <- template effects
 let hostProps=templateInfo.hostProps;for(let prop in hostProps){klass.prototype._addPropertyEffect("_host_"+prop,klass.prototype.PROPERTY_EFFECT_TYPES.PROPAGATE,{fn:createForwardHostPropEffect(prop,userForwardHostProp)});klass.prototype._createNotifyingProperty("_host_"+prop)}}upgradeTemplate(template,klass);// Mix any pre-bound data into __data; no need to flush this to
 // instances since they pull from the template at instance-time
 if(template.__dataProto){// Note, generally `__dataProto` could be chained, but it's guaranteed
 // to not be since this is a vanilla template we just added effects to
 Object.assign(template.__data,template.__dataProto)}// Clear any pending data for performance
-template.__dataTemp={};template.__dataPending=null;template.__dataOld=null;template._enableProperties()}}/* eslint-enable valid-jsdoc */function createForwardHostPropEffect(hostProp,userForwardHostProp){return function forwardHostProp(template,prop,props){userForwardHostProp.call(template.__templatizeOwner,prop.substring("_host_".length),props[prop])}}function addNotifyEffects(klass,template,templateInfo,options){let hostProps=templateInfo.hostProps||{};for(let iprop in options.instanceProps){delete hostProps[iprop];let userNotifyInstanceProp=options.notifyInstanceProp;if(userNotifyInstanceProp){klass.prototype._addPropertyEffect(iprop,klass.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyInstancePropEffect(iprop,userNotifyInstanceProp)})}}if(options.forwardHostProp&&template.__dataHost){for(let hprop in hostProps){klass.prototype._addPropertyEffect(hprop,klass.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyHostPropEffect()})}}}function createNotifyInstancePropEffect(instProp,userNotifyInstanceProp){return function notifyInstanceProp(inst,prop,props){userNotifyInstanceProp.call(inst.__templatizeOwner,inst,prop,props[prop])}}function createNotifyHostPropEffect(){return function notifyHostProp(inst,prop,props){inst.__dataHost._setPendingPropertyOrPath("_host_"+prop,props[prop],!0,!0)}}/**
+template.__dataTemp={};template.__dataPending=null;template.__dataOld=null;template._enableProperties()}}/* eslint-enable valid-jsdoc */function createForwardHostPropEffect(hostProp,userForwardHostProp){return function forwardHostProp(template,prop,props){userForwardHostProp.call(template.__templatizeOwner,prop.substring("_host_".length),props[prop])}}function addNotifyEffects(klass,template,templateInfo,options){let hostProps=templateInfo.hostProps||{};for(let iprop in options.instanceProps){delete hostProps[iprop];let userNotifyInstanceProp=options.notifyInstanceProp;if(userNotifyInstanceProp){klass.prototype._addPropertyEffect(iprop,klass.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyInstancePropEffect(iprop,userNotifyInstanceProp)})}}if(options.forwardHostProp&&template.__dataHost){for(let hprop in hostProps){// As we're iterating hostProps in this function, note whether
+// there were any, for an optimization in addPropagateEffects
+if(!templateInfo.hasHostProps){templateInfo.hasHostProps=!0}klass.prototype._addPropertyEffect(hprop,klass.prototype.PROPERTY_EFFECT_TYPES.NOTIFY,{fn:createNotifyHostPropEffect()})}}}function createNotifyInstancePropEffect(instProp,userNotifyInstanceProp){return function notifyInstanceProp(inst,prop,props){userNotifyInstanceProp.call(inst.__templatizeOwner,inst,prop,props[prop])}}function createNotifyHostPropEffect(){return function notifyHostProp(inst,prop,props){inst.__dataHost._setPendingPropertyOrPath("_host_"+prop,props[prop],!0,!0)}}/**
    * Returns an anonymous `PropertyEffects` class bound to the
    * `<template>` provided.  Instancing the class will result in the
    * template being stamped into a document fragment stored as the instance's
@@ -5467,17 +5909,20 @@ template.__dataTemp={};template.__dataPending=null;template.__dataOld=null;templ
    * @param {Polymer_PropertyEffects=} owner Owner of the template instances;
    *   any optional callbacks will be bound to this owner.
    * @param {Object=} options Options dictionary (see summary for details)
-   * @return {function(new:TemplateInstanceBase)} Generated class bound to the template
-   *   provided
+   * @return {function(new:TemplateInstanceBase, Object=)} Generated class bound
+   *   to the template provided
    * @suppress {invalidCasts}
    */function templatize(template,owner,options){// Under strictTemplatePolicy, the templatized element must be owned
 // by a (trusted) Polymer element, indicated by existence of _methodHost;
 // e.g. for dom-if & dom-repeat in main document, _methodHost is null
 if(strictTemplatePolicy&&!findMethodHost(template)){throw new Error("strictTemplatePolicy: template owner not trusted")}options=/** @type {!TemplatizeOptions} */options||{};if(template.__templatizeOwner){throw new Error("A <template> can only be templatized once")}template.__templatizeOwner=owner;const ctor=owner?owner.constructor:TemplateInstanceBase;let templateInfo=ctor._parseTemplate(template),baseClass=templateInfo.templatizeInstanceClass;// Get memoized base class for the prototypical template, which
 // includes property effects for binding template & forwarding
-if(!baseClass){baseClass=createTemplatizerClass(template,templateInfo,options);templateInfo.templatizeInstanceClass=baseClass}// Host property forwarding must be installed onto template instance
+/**
+   * @constructor
+   * @extends {TemplateInstanceBase}
+   */if(!baseClass){baseClass=createTemplatizerClass(template,templateInfo,options);templateInfo.templatizeInstanceClass=baseClass}// Host property forwarding must be installed onto template instance
 addPropagateEffects(template,templateInfo,options);// Subclass base class and add reference for this specific template
-/** @private */let klass=class TemplateInstance extends baseClass{};klass.prototype._methodHost=findMethodHost(template);klass.prototype.__dataHost=template;klass.prototype.__templatizeOwner=owner;klass.prototype.__hostProps=templateInfo.hostProps;klass=/** @type {function(new:TemplateInstanceBase)} */klass;//eslint-disable-line no-self-assign
+/** @private */let klass=class TemplateInstance extends baseClass{};/** @override */klass.prototype._methodHost=findMethodHost(template);/** @override */klass.prototype.__dataHost=/** @type {!DataTemplate} */template;/** @override */klass.prototype.__templatizeOwner=/** @type {!Object} */owner;/** @override */klass.prototype.__hostProps=templateInfo.hostProps;klass=/** @type {function(new:TemplateInstanceBase)} */klass;//eslint-disable-line no-self-assign
 return klass}/**
    * Returns the template "model" associated with a given element, which
    * serves as the binding scope for the template instance the element is
@@ -5504,14 +5949,14 @@ if(model=node.__templatizeInstance){// Found an element stamped by another templ
 // from its __dataHost
 if(model.__dataHost!=template){node=model.__dataHost}else{return model}}else{// Still in a template scope, keep going up until
 // a __templatizeInstance is found
-node=node.parentNode}}return null}var templatize$1={templatize:templatize,modelForElement:modelForElement,TemplateInstanceBase:TemplateInstanceBase};/**
+node=wrap(node).parentNode}}return null}var templatize$1={templatize:templatize,modelForElement:modelForElement,TemplateInstanceBase:TemplateInstanceBase};/**
     * @typedef {{
     *   _templatizerTemplate: HTMLTemplateElement,
     *   _parentModel: boolean,
     *   _instanceProps: Object,
     *   _forwardHostPropV2: Function,
     *   _notifyInstancePropV2: Function,
-    *   ctor: TemplateInstanceBase
+    *   ctor: function(new:TemplateInstanceBase, Object=)
     * }}
     */let TemplatizerUser;// eslint-disable-line
 /**
@@ -5586,7 +6031,7 @@ node=node.parentNode}}return null}var templatize$1={templatize:templatize,modelF
    *   be "dirty"). Defaults to false.
    * @return {void}
    * @this {TemplatizerUser}
-   */templatize(template,mutableData){this._templatizerTemplate=template;this.ctor=templatize(template,this,{mutableData:!!mutableData,parentModel:this._parentModel,instanceProps:this._instanceProps,forwardHostProp:this._forwardHostPropV2,notifyInstanceProp:this._notifyInstancePropV2})},/**
+   */templatize(template,mutableData){this._templatizerTemplate=template;this.ctor=templatize(template,/** @type {!Polymer_PropertyEffects} */this,{mutableData:!!mutableData,parentModel:this._parentModel,instanceProps:this._instanceProps,forwardHostProp:this._forwardHostPropV2,notifyInstanceProp:this._notifyInstancePropV2})},/**
    * Creates an instance of the template prepared by `templatize`.  The object
    * returned is an instance of the anonymous class generated by `templatize`
    * whose `root` property is a document fragment containing newly cloned
@@ -5608,7 +6053,9 @@ node=node.parentNode}}return null}var templatize$1={templatize:templatize,modelF
    * @return {TemplateInstanceBase} Model representing the binding scope for
    *   the element.
    * @this {TemplatizerUser}
-   */modelForElement(el){return modelForElement(this._templatizerTemplate,el)}};var templatizerBehavior={Templatizer:Templatizer};const domBindBase=GestureEventListeners(OptionalMutableData(PropertyEffects(HTMLElement)));/**
+   */modelForElement(el){return modelForElement(this._templatizerTemplate,el)}};var templatizerBehavior={Templatizer:Templatizer};let elementsHidden=!1;/**
+                             * @return {boolean} True if elements will be hidden globally
+                             */function hideElementsGlobally(){if(legacyOptimizations&&!useShadow){if(!elementsHidden){elementsHidden=!0;const style=document.createElement("style");style.textContent="dom-bind,dom-if,dom-repeat{display:none;}";document.head.appendChild(style)}return!0}return!1}var hideTemplateControls={hideElementsGlobally:hideElementsGlobally};const domBindBase=GestureEventListeners(OptionalMutableData(PropertyEffects(HTMLElement)));/**
                                                                                                * Custom element to allow using Polymer's template features (data binding,
                                                                                                * declarative event listeners, etc.) in the main document without defining
                                                                                                * a new custom element.
@@ -5626,21 +6073,25 @@ node=node.parentNode}}return null}var templatize$1={templatize:templatize,modelF
                                                                                                * @extends {domBindBase}
                                                                                                * @summary Custom element to allow using Polymer's template features (data
                                                                                                *   binding, declarative event listeners, etc.) in the main document.
-                                                                                               */class DomBind extends domBindBase{static get observedAttributes(){return["mutable-data"]}constructor(){super();if(strictTemplatePolicy){throw new Error(`strictTemplatePolicy: dom-bind not allowed`)}this.root=null;this.$=null;this.__children=null}/**
-     * @override
-     * @return {void}
-     */attributeChangedCallback(){// assumes only one observed attribute
+                                                                                               */class DomBind extends domBindBase{static get observedAttributes(){return["mutable-data"]}constructor(){super();if(strictTemplatePolicy){throw new Error(`strictTemplatePolicy: dom-bind not allowed`)}this.root=null;this.$=null;this.__children=null}/* eslint-disable no-unused-vars */ /**
+                                         * @override
+                                         * @param {string} name Name of attribute that changed
+                                         * @param {?string} old Old attribute value
+                                         * @param {?string} value New attribute value
+                                         * @param {?string} namespace Attribute namespace.
+                                         * @return {void}
+                                         */attributeChangedCallback(name,old,value,namespace){// assumes only one observed attribute
 this.mutableData=!0}/**
      * @override
      * @return {void}
-     */connectedCallback(){this.style.display="none";this.render()}/**
+     */connectedCallback(){if(!hideElementsGlobally()){this.style.display="none"}this.render()}/**
      * @override
      * @return {void}
-     */disconnectedCallback(){this.__removeChildren()}__insertChildren(){this.parentNode.insertBefore(this.root,this)}__removeChildren(){if(this.__children){for(let i=0;i<this.__children.length;i++){this.root.appendChild(this.__children[i])}}}/**
+     */disconnectedCallback(){this.__removeChildren()}__insertChildren(){wrap(wrap(this).parentNode).insertBefore(this.root,this)}__removeChildren(){if(this.__children){for(let i=0;i<this.__children.length;i++){this.root.appendChild(this.__children[i])}}}/**
      * Forces the element to render its content. This is typically only
      * necessary to call if HTMLImports with the async attribute are used.
      * @return {void}
-     */render(){let template;if(!this.__children){template=/** @type {HTMLTemplateElement} */template||this.querySelector("template");if(!template){// Wait until childList changes and template should be there by then
+     */render(){let template;if(!this.__children){template=/** @type {?HTMLTemplateElement} */template||this.querySelector("template");if(!template){// Wait until childList changes and template should be there by then
 let observer=new MutationObserver(()=>{template=/** @type {HTMLTemplateElement} */this.querySelector("template");if(template){observer.disconnect();this.render()}else{throw new Error("dom-bind requires a <template> child")}});observer.observe(this,{childList:!0});return}this.root=this._stampTemplate(/** @type {!HTMLTemplateElement} */template);this.$=this.root.$;this.__children=[];for(let n=this.root.firstChild;n;n=n.nextSibling){this.__children[this.__children.length]=n}this._enableProperties()}this.__insertChildren();this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0}))}}customElements.define("dom-bind",DomBind);var domBind={DomBind:DomBind};const domRepeatBase=OptionalMutableData(PolymerElement);/**
                                                             * The `<dom-repeat>` element will automatically stamp and binds one instance
                                                             * of template content to each object in a user-provided array.
@@ -5812,14 +6263,14 @@ static get is(){return"dom-repeat"}static get template(){return null}static get 
        * Setting this to a higher number allows lower latency and higher
        * throughput for event handlers and other tasks, but results in a
        * longer time for the remaining items to complete rendering.
-       */targetFramerate:{type:Number,value:20},_targetFrameTime:{type:Number,computed:"__computeFrameTime(targetFramerate)"}}}static get observers(){return["__itemsChanged(items.*)"]}constructor(){super();this.__instances=[];this.__limit=1/0;this.__pool=[];this.__renderDebouncer=null;this.__itemsIdxToInstIdx={};this.__chunkCount=null;this.__lastChunkTime=null;this.__sortFn=null;this.__filterFn=null;this.__observePaths=null;/** @type {?function(new:Polymer.TemplateInstanceBase, *)} */this.__ctor=null;this.__isDetached=!0;this.template=null}/**
+       */targetFramerate:{type:Number,value:20},_targetFrameTime:{type:Number,computed:"__computeFrameTime(targetFramerate)"}}}static get observers(){return["__itemsChanged(items.*)"]}constructor(){super();this.__instances=[];this.__limit=1/0;this.__pool=[];this.__renderDebouncer=null;this.__itemsIdxToInstIdx={};this.__chunkCount=null;this.__lastChunkTime=null;this.__sortFn=null;this.__filterFn=null;this.__observePaths=null;/** @type {?function(new:TemplateInstanceBase, Object=)} */this.__ctor=null;this.__isDetached=!0;this.template=null}/**
      * @override
      * @return {void}
      */disconnectedCallback(){super.disconnectedCallback();this.__isDetached=!0;for(let i=0;i<this.__instances.length;i++){this.__detachInstance(i)}}/**
      * @override
      * @return {void}
-     */connectedCallback(){super.connectedCallback();this.style.display="none";// only perform attachment if the element was previously detached.
-if(this.__isDetached){this.__isDetached=!1;let parent=this.parentNode;for(let i=0;i<this.__instances.length;i++){this.__attachInstance(i,parent)}}}__ensureTemplatized(){// Templatizing (generating the instance constructor) needs to wait
+     */connectedCallback(){super.connectedCallback();if(!hideElementsGlobally()){this.style.display="none"}// only perform attachment if the element was previously detached.
+if(this.__isDetached){this.__isDetached=!1;let wrappedParent=wrap(wrap(this).parentNode);for(let i=0;i<this.__instances.length;i++){this.__attachInstance(i,wrappedParent)}}}__ensureTemplatized(){// Templatizing (generating the instance constructor) needs to wait
 // until ready, since won't have its template content handed back to
 // it until then
 if(!this.__ctor){let template=this.template=/** @type {HTMLTemplateElement} */this.querySelector("template");if(!template){// // Wait until childList changes and template should be there by then
@@ -5833,7 +6284,7 @@ let instanceProps={};instanceProps[this.as]=!0;instanceProps[this.indexAs]=!0;in
          * @param {Object} inst Instance to notify
          * @param {string} prop Property to notify
          * @param {*} value Value to notify
-         */notifyInstanceProp:function(inst,prop,value){if(matches(this.as,prop)){let idx=inst[this.itemsIndexAs];if(prop==this.as){this.items[idx]=value}let path=translate(this.as,"items."+idx,prop);this.notifyPath(path,value)}}})}return!0}__getMethodHost(){// Technically this should be the owner of the outermost template.
+         */notifyInstanceProp:function(inst,prop,value){if(matches(this.as,prop)){let idx=inst[this.itemsIndexAs];if(prop==this.as){this.items[idx]=value}let path=translate(this.as,`${JSCompiler_renameProperty("items",this)}.${idx}`,prop);this.notifyPath(path,value)}}})}return!0}__getMethodHost(){// Technically this should be the owner of the outermost template.
 // In shadow dom, this is always getRootNode().host, but we can
 // approximate this via cooperation with our dataHost always setting
 // `_methodHost` as long as there were bindings (or id's) on this
@@ -5875,9 +6326,10 @@ if(this.__filterFn){isntIdxToItemsIdx=isntIdxToItemsIdx.filter((i,idx,array)=>th
 if(this.__sortFn){isntIdxToItemsIdx.sort((a,b)=>this.__sortFn(items[a],items[b]))}// items->inst map kept for item path forwarding
 const itemsIdxToInstIdx=this.__itemsIdxToInstIdx={};let instIdx=0;// Generate instances and assign items
 const limit=Math.min(isntIdxToItemsIdx.length,this.__limit);for(;instIdx<limit;instIdx++){let inst=this.__instances[instIdx],itemIdx=isntIdxToItemsIdx[instIdx],item=items[itemIdx];itemsIdxToInstIdx[itemIdx]=instIdx;if(inst){inst._setPendingProperty(this.as,item);inst._setPendingProperty(this.indexAs,instIdx);inst._setPendingProperty(this.itemsIndexAs,itemIdx);inst._flushProperties()}else{this.__insertInstance(item,instIdx,itemIdx)}}// Remove any extra instances from previous state
-for(let i=this.__instances.length-1;i>=instIdx;i--){this.__detachAndRemoveInstance(i)}}__detachInstance(idx){let inst=this.__instances[idx];for(let i=0,el;i<inst.children.length;i++){el=inst.children[i];inst.root.appendChild(el)}return inst}__attachInstance(idx,parent){let inst=this.__instances[idx];parent.insertBefore(inst.root,this)}__detachAndRemoveInstance(idx){let inst=this.__detachInstance(idx);if(inst){this.__pool.push(inst)}this.__instances.splice(idx,1)}__stampInstance(item,instIdx,itemIdx){let model={};model[this.as]=item;model[this.indexAs]=instIdx;model[this.itemsIndexAs]=itemIdx;return new this.__ctor(model)}__insertInstance(item,instIdx,itemIdx){let inst=this.__pool.pop();if(inst){// TODO(kschaaf): If the pool is shared across turns, hostProps
+for(let i=this.__instances.length-1;i>=instIdx;i--){this.__detachAndRemoveInstance(i)}}__detachInstance(idx){let inst=this.__instances[idx];const wrappedRoot=wrap(inst.root);for(let i=0,el;i<inst.children.length;i++){el=inst.children[i];wrappedRoot.appendChild(el)}return inst}__attachInstance(idx,parent){let inst=this.__instances[idx];// Note, this is pre-wrapped as an optimization
+parent.insertBefore(inst.root,this)}__detachAndRemoveInstance(idx){let inst=this.__detachInstance(idx);if(inst){this.__pool.push(inst)}this.__instances.splice(idx,1)}__stampInstance(item,instIdx,itemIdx){let model={};model[this.as]=item;model[this.indexAs]=instIdx;model[this.itemsIndexAs]=itemIdx;return new this.__ctor(model)}__insertInstance(item,instIdx,itemIdx){let inst=this.__pool.pop();if(inst){// TODO(kschaaf): If the pool is shared across turns, hostProps
 // need to be re-set to reused instances in addition to item
-inst._setPendingProperty(this.as,item);inst._setPendingProperty(this.indexAs,instIdx);inst._setPendingProperty(this.itemsIndexAs,itemIdx);inst._flushProperties()}else{inst=this.__stampInstance(item,instIdx,itemIdx)}let beforeRow=this.__instances[instIdx+1],beforeNode=beforeRow?beforeRow.children[0]:this;this.parentNode.insertBefore(inst.root,beforeNode);this.__instances[instIdx]=inst;return inst}// Implements extension point from Templatize mixin
+inst._setPendingProperty(this.as,item);inst._setPendingProperty(this.indexAs,instIdx);inst._setPendingProperty(this.itemsIndexAs,itemIdx);inst._flushProperties()}else{inst=this.__stampInstance(item,instIdx,itemIdx)}let beforeRow=this.__instances[instIdx+1],beforeNode=beforeRow?beforeRow.children[0]:this;wrap(wrap(this).parentNode).insertBefore(inst.root,beforeNode);this.__instances[instIdx]=inst;return inst}// Implements extension point from Templatize mixin
 /**
    * Shows or hides the template instance top level child elements. For
    * text nodes, `textContent` is removed while "hidden" and replaced when
@@ -5966,10 +6418,10 @@ static get is(){return"dom-if"}static get template(){return null}static get prop
 this.__renderDebouncer=Debouncer.debounce(this.__renderDebouncer,microTask,()=>this.__render());enqueueDebouncer(this.__renderDebouncer)}/**
      * @override
      * @return {void}
-     */disconnectedCallback(){super.disconnectedCallback();if(!this.parentNode||this.parentNode.nodeType==Node.DOCUMENT_FRAGMENT_NODE&&!this.parentNode.host){this.__teardownInstance()}}/**
+     */disconnectedCallback(){super.disconnectedCallback();const parent=wrap(this).parentNode;if(!parent||parent.nodeType==Node.DOCUMENT_FRAGMENT_NODE&&!wrap(parent).host){this.__teardownInstance()}}/**
      * @override
      * @return {void}
-     */connectedCallback(){super.connectedCallback();this.style.display="none";if(this.if){this.__debounceRender()}}/**
+     */connectedCallback(){super.connectedCallback();if(!hideElementsGlobally()){this.style.display="none"}if(this.if){this.__debounceRender()}}/**
      * Forces the element to render its content. Normally rendering is
      * asynchronous to a provoking change. This is done for efficiency so
      * that multiple changes trigger only a single render. The render method
@@ -5977,9 +6429,9 @@ this.__renderDebouncer=Debouncer.debounce(this.__renderDebouncer,microTask,()=>t
      * validate application state.
      * @return {void}
      */render(){flush$1()}__render(){if(this.if){if(!this.__ensureInstance()){// No template found yet
-return}this._showHideChildren()}else if(this.restamp){this.__teardownInstance()}if(!this.restamp&&this.__instance){this._showHideChildren()}if(this.if!=this._lastIf){this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0}));this._lastIf=this.if}}__ensureInstance(){let parentNode=this.parentNode;// Guard against element being detached while render was queued
-if(parentNode){if(!this.__ctor){let template=/** @type {HTMLTemplateElement} */this.querySelector("template");if(!template){// Wait until childList changes and template should be there by then
-let observer=new MutationObserver(()=>{if(this.querySelector("template")){observer.disconnect();this.__render()}else{throw new Error("dom-if requires a <template> child")}});observer.observe(this,{childList:!0});return!1}this.__ctor=templatize(template,this,{// dom-if templatizer instances require `mutable: true`, as
+return}this._showHideChildren()}else if(this.restamp){this.__teardownInstance()}if(!this.restamp&&this.__instance){this._showHideChildren()}if(this.if!=this._lastIf){this.dispatchEvent(new CustomEvent("dom-change",{bubbles:!0,composed:!0}));this._lastIf=this.if}}__ensureInstance(){let parentNode=wrap(this).parentNode;// Guard against element being detached while render was queued
+if(parentNode){if(!this.__ctor){let template=/** @type {HTMLTemplateElement} */wrap(this).querySelector("template");if(!template){// Wait until childList changes and template should be there by then
+let observer=new MutationObserver(()=>{if(wrap(this).querySelector("template")){observer.disconnect();this.__render()}else{throw new Error("dom-if requires a <template> child")}});observer.observe(this,{childList:!0});return!1}this.__ctor=templatize(template,this,{// dom-if templatizer instances require `mutable: true`, as
 // `__syncHostProperties` relies on that behavior to sync objects
 mutableData:!0,/**
            * @param {string} prop Property to forward
@@ -5989,11 +6441,11 @@ mutableData:!0,/**
 // forwarding due to if being false, note the invalidated
 // properties so `__syncHostProperties` can sync them the next
 // time `if` becomes true
-this.__invalidProps=this.__invalidProps||Object.create(null);this.__invalidProps[root(prop)]=!0}}}})}if(!this.__instance){this.__instance=new this.__ctor;parentNode.insertBefore(this.__instance.root,this)}else{this.__syncHostProperties();let c$=this.__instance.children;if(c$&&c$.length){// Detect case where dom-if was re-attached in new position
-let lastChild=this.previousSibling;if(lastChild!==c$[c$.length-1]){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parentNode.insertBefore(n,this)}}}}}return!0}__syncHostProperties(){let props=this.__invalidProps;if(props){for(let prop in props){this.__instance._setPendingProperty(prop,this.__dataHost[prop])}this.__invalidProps=null;this.__instance._flushProperties()}}__teardownInstance(){if(this.__instance){let c$=this.__instance.children;if(c$&&c$.length){// use first child parent, for case when dom-if may have been detached
-let parent=c$[0].parentNode;// Instance children may be disconnected from parents when dom-if
+this.__invalidProps=this.__invalidProps||Object.create(null);this.__invalidProps[root(prop)]=!0}}}})}if(!this.__instance){this.__instance=new this.__ctor;wrap(parentNode).insertBefore(this.__instance.root,this)}else{this.__syncHostProperties();let c$=this.__instance.children;if(c$&&c$.length){// Detect case where dom-if was re-attached in new position
+let lastChild=wrap(this).previousSibling;if(lastChild!==c$[c$.length-1]){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){wrap(parentNode).insertBefore(n,this)}}}}}return!0}__syncHostProperties(){let props=this.__invalidProps;if(props){for(let prop in props){this.__instance._setPendingProperty(prop,this.__dataHost[prop])}this.__invalidProps=null;this.__instance._flushProperties()}}__teardownInstance(){if(this.__instance){let c$=this.__instance.children;if(c$&&c$.length){// use first child parent, for case when dom-if may have been detached
+let parent=wrap(c$[0]).parentNode;// Instance children may be disconnected from parents when dom-if
 // detaches if a tree was innerHTML'ed
-if(parent){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n)}}}this.__instance=null;this.__invalidProps=null}}/**
+if(parent){parent=wrap(parent);for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n)}}}this.__instance=null;this.__invalidProps=null}}/**
      * Shows or hides the template instance top level child elements. For
      * text nodes, `textContent` is removed while "hidden" and replaced when
      * "shown."
@@ -6002,7 +6454,6 @@ if(parent){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n)}}}thi
      * @suppress {visibility}
      */_showHideChildren(){let hidden=this.__hideTemplateChildren__||!this.if;if(this.__instance){this.__instance._showHideChildren(hidden)}}}customElements.define(DomIf.is,DomIf);var domIf={DomIf:DomIf};let ArraySelectorMixin=dedupingMixin(superClass=>{/**
    * @constructor
-   * @extends {superClass}
    * @implements {Polymer_ElementMixin}
    * @private
    */let elementBase=ElementMixin(superClass);/**
@@ -6020,7 +6471,7 @@ if(parent){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n)}}}thi
          * When `multi` is true, this is an array that contains any selected.
          * When `multi` is false, this is the currently selected item, or `null`
          * if no item is selected.
-         * @type {?(Object|Array<!Object>)}
+         * @type {?Object|?Array<!Object>}
          */selected:{type:Object,notify:!0},/**
          * When `multi` is false, this is the currently selected item, or `null`
          * if no item is selected.
@@ -6028,20 +6479,21 @@ if(parent){for(let i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n)}}}thi
          */selectedItem:{type:Object,notify:!0},/**
          * When `true`, calling `select` on an item that is already selected
          * will deselect the item.
-         */toggle:{type:Boolean,value:!1}}}static get observers(){return["__updateSelection(multi, items.*)"]}constructor(){super();this.__lastItems=null;this.__lastMulti=null;this.__selectedMap=null}__updateSelection(multi,itemsInfo){let path=itemsInfo.path;if("items"==path){// Case 1 - items array changed, so diff against previous array and
+         */toggle:{type:Boolean,value:!1}}}static get observers(){return["__updateSelection(multi, items.*)"]}constructor(){super();this.__lastItems=null;this.__lastMulti=null;this.__selectedMap=null}__updateSelection(multi,itemsInfo){let path=itemsInfo.path;if(path==JSCompiler_renameProperty("items",this)){// Case 1 - items array changed, so diff against previous array and
 // deselect any removed items and adjust selected indices
-let newItems=itemsInfo.base||[],lastItems=this.__lastItems,lastMulti=this.__lastMulti;if(multi!==lastMulti){this.clearSelection()}if(lastItems){let splices=calculateSplices(newItems,lastItems);this.__applySplices(splices)}this.__lastItems=newItems;this.__lastMulti=multi}else if("items.splices"==itemsInfo.path){// Case 2 - got specific splice information describing the array mutation:
+let newItems=itemsInfo.base||[],lastItems=this.__lastItems,lastMulti=this.__lastMulti;if(multi!==lastMulti){this.clearSelection()}if(lastItems){let splices=calculateSplices(newItems,lastItems);this.__applySplices(splices)}this.__lastItems=newItems;this.__lastMulti=multi}else if(`${JSCompiler_renameProperty("items",this)}.splices`==itemsInfo.path){// Case 2 - got specific splice information describing the array mutation:
 // deselect any removed items and adjust selected indices
 this.__applySplices(itemsInfo.value.indexSplices)}else{// Case 3 - an array element was changed, so deselect the previous
 // item for that index if it was previously selected
-let part=path.slice("items.".length),idx=parseInt(part,10);if(0>part.indexOf(".")&&part==idx){this.__deselectChangedIdx(idx)}}}__applySplices(splices){let selected=this.__selectedMap;// Adjust selected indices and mark removals
+let part=path.slice(`${JSCompiler_renameProperty("items",this)}.`.length),idx=parseInt(part,10);if(0>part.indexOf(".")&&part==idx){this.__deselectChangedIdx(idx)}}}__applySplices(splices){let selected=this.__selectedMap;// Adjust selected indices and mark removals
 for(let i=0,s;i<splices.length;i++){s=splices[i];selected.forEach((idx,item)=>{if(idx<s.index){// no change
 }else if(idx>=s.index+s.removed.length){// adjust index
 selected.set(item,idx+s.addedCount-s.removed.length)}else{// remove index
 selected.set(item,-1)}});for(let j=0,idx;j<s.addedCount;j++){idx=s.index+j;if(selected.has(this.items[idx])){selected.set(this.items[idx],idx)}}}// Update linked paths
 this.__updateLinks();// Remove selected items that were removed from the items array
-let sidx=0;selected.forEach((idx,item)=>{if(0>idx){if(this.multi){this.splice("selected",sidx,1)}else{this.selected=this.selectedItem=null}selected.delete(item)}else{sidx++}})}__updateLinks(){this.__dataLinkedPaths={};if(this.multi){let sidx=0;this.__selectedMap.forEach(idx=>{if(0<=idx){this.linkPaths("items."+idx,"selected."+sidx++)}})}else{this.__selectedMap.forEach(idx=>{this.linkPaths("selected","items."+idx);this.linkPaths("selectedItem","items."+idx)})}}/**
+let sidx=0;selected.forEach((idx,item)=>{if(0>idx){if(this.multi){this.splice(JSCompiler_renameProperty("selected",this),sidx,1)}else{this.selected=this.selectedItem=null}selected.delete(item)}else{sidx++}})}__updateLinks(){this.__dataLinkedPaths={};if(this.multi){let sidx=0;this.__selectedMap.forEach(idx=>{if(0<=idx){this.linkPaths(`${JSCompiler_renameProperty("items",this)}.${idx}`,`${JSCompiler_renameProperty("selected",this)}.${sidx++}`)}})}else{this.__selectedMap.forEach(idx=>{this.linkPaths(JSCompiler_renameProperty("selected",this),`${JSCompiler_renameProperty("items",this)}.${idx}`);this.linkPaths(JSCompiler_renameProperty("selectedItem",this),`${JSCompiler_renameProperty("items",this)}.${idx}`)})}}/**
        * Clears the selection state.
+       * @override
        * @return {void}
        */clearSelection(){// Unbind previous selection
 this.__dataLinkedPaths={};// The selected map stores 3 pieces of information:
@@ -6052,36 +6504,42 @@ this.__selectedMap=new Map;// Initialize selection
 this.selected=this.multi?[]:null;this.selectedItem=null}/**
        * Returns whether the item is currently selected.
        *
+       * @override
        * @param {*} item Item from `items` array to test
        * @return {boolean} Whether the item is selected
        */isSelected(item){return this.__selectedMap.has(item)}/**
        * Returns whether the item is currently selected.
        *
+       * @override
        * @param {number} idx Index from `items` array to test
        * @return {boolean} Whether the item is selected
-       */isIndexSelected(idx){return this.isSelected(this.items[idx])}__deselectChangedIdx(idx){let sidx=this.__selectedIndexForItemIndex(idx);if(0<=sidx){let i=0;this.__selectedMap.forEach((idx,item)=>{if(sidx==i++){this.deselect(item)}})}}__selectedIndexForItemIndex(idx){let selected=this.__dataLinkedPaths["items."+idx];if(selected){return parseInt(selected.slice("selected.".length),10)}}/**
+       */isIndexSelected(idx){return this.isSelected(this.items[idx])}__deselectChangedIdx(idx){let sidx=this.__selectedIndexForItemIndex(idx);if(0<=sidx){let i=0;this.__selectedMap.forEach((idx,item)=>{if(sidx==i++){this.deselect(item)}})}}__selectedIndexForItemIndex(idx){let selected=this.__dataLinkedPaths[`${JSCompiler_renameProperty("items",this)}.${idx}`];if(selected){return parseInt(selected.slice(`${JSCompiler_renameProperty("selected",this)}.`.length),10)}}/**
        * Deselects the given item if it is already selected.
        *
+       * @override
        * @param {*} item Item from `items` array to deselect
        * @return {void}
-       */deselect(item){let idx=this.__selectedMap.get(item);if(0<=idx){this.__selectedMap.delete(item);let sidx;if(this.multi){sidx=this.__selectedIndexForItemIndex(idx)}this.__updateLinks();if(this.multi){this.splice("selected",sidx,1)}else{this.selected=this.selectedItem=null}}}/**
+       */deselect(item){let idx=this.__selectedMap.get(item);if(0<=idx){this.__selectedMap.delete(item);let sidx;if(this.multi){sidx=this.__selectedIndexForItemIndex(idx)}this.__updateLinks();if(this.multi){this.splice(JSCompiler_renameProperty("selected",this),sidx,1)}else{this.selected=this.selectedItem=null}}}/**
        * Deselects the given index if it is already selected.
        *
+       * @override
        * @param {number} idx Index from `items` array to deselect
        * @return {void}
        */deselectIndex(idx){this.deselect(this.items[idx])}/**
        * Selects the given item.  When `toggle` is true, this will automatically
        * deselect the item if already selected.
        *
+       * @override
        * @param {*} item Item from `items` array to select
        * @return {void}
        */select(item){this.selectIndex(this.items.indexOf(item))}/**
        * Selects the given index.  When `toggle` is true, this will automatically
        * deselect the item if already selected.
        *
+       * @override
        * @param {number} idx Index from `items` array to select
        * @return {void}
-       */selectIndex(idx){let item=this.items[idx];if(!this.isSelected(item)){if(!this.multi){this.__selectedMap.clear()}this.__selectedMap.set(item,idx);this.__updateLinks();if(this.multi){this.push("selected",item)}else{this.selected=this.selectedItem=item}}else if(this.toggle){this.deselectIndex(idx)}}}return ArraySelectorMixin}),baseArraySelector=ArraySelectorMixin(PolymerElement);// export mixin
+       */selectIndex(idx){let item=this.items[idx];if(!this.isSelected(item)){if(!this.multi){this.__selectedMap.clear()}this.__selectedMap.set(item,idx);this.__updateLinks();if(this.multi){this.push(JSCompiler_renameProperty("selected",this),item)}else{this.selected=this.selectedItem=item}}else if(this.toggle){this.deselectIndex(idx)}}}return ArraySelectorMixin}),baseArraySelector=ArraySelectorMixin(PolymerElement);// export mixin
 /**
                                                              * Element implementing the `ArraySelector` mixin, which records
                                                              * dynamic associations between item paths in a master `items` array and a
@@ -6157,7 +6615,7 @@ this.selected=this.multi?[]:null;this.selectedItem=null}/**
                                                              *   an output `selected` item or array based on calls to its selection API.
                                                              */class ArraySelector extends baseArraySelector{// Not needed to find template; can be removed once the analyzer
 // can find the tag name from customElements.define call
-static get is(){return"array-selector"}}customElements.define(ArraySelector.is,ArraySelector);var arraySelector={ArraySelectorMixin:ArraySelectorMixin,ArraySelector:ArraySelector};/**
+static get is(){return"array-selector"}static get template(){return null}}customElements.define(ArraySelector.is,ArraySelector);var arraySelector={ArraySelectorMixin:ArraySelectorMixin,ArraySelector:ArraySelector};/**
    @license
    Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -6191,7 +6649,7 @@ customStyleInterface$1.processStyles()},/**
      * @param {Element} element
      * @param {string} property
      * @return {string}
-     */getComputedStyleValue(element,property){return getComputedStyleValue(element,property)},flushCustomStyles(){},nativeCss:nativeCssVariables,nativeShadow:nativeShadow}}window.ShadyCSS.CustomStyleInterface=customStyleInterface$1;const attr="include",CustomStyleInterface$1=window.ShadyCSS.CustomStyleInterface;/**
+     */getComputedStyleValue(element,property){return getComputedStyleValue(element,property)},flushCustomStyles(){},nativeCss:nativeCssVariables,nativeShadow:nativeShadow,cssBuild:cssBuild,disableRuntime:disableRuntime}}window.ShadyCSS.CustomStyleInterface=customStyleInterface$1;const attr="include",CustomStyleInterface$1=window.ShadyCSS.CustomStyleInterface;/**
                                                                      * Custom element for defining styles in the main document that can take
                                                                      * advantage of [shady DOM](https://github.com/webcomponents/shadycss) shims
                                                                      * for style encapsulation, custom properties, and custom mixins.
@@ -6243,7 +6701,7 @@ customStyleInterface$1.processStyles()},/**
      *
      * @export
      * @return {HTMLStyleElement} This element's light-DOM `<style>`
-     */getStyle(){if(this._style){return this._style}const style=/** @type {HTMLStyleElement} */this.querySelector("style");if(!style){return null}this._style=style;const include=style.getAttribute(attr);if(include){style.removeAttribute(attr);style.textContent=cssFromModules(include)+style.textContent}/*
+     */getStyle(){if(this._style){return this._style}const style=/** @type {HTMLStyleElement} */this.querySelector("style");if(!style){return null}this._style=style;const include=style.getAttribute(attr);if(include){style.removeAttribute(attr);/** @suppress {deprecated} */style.textContent=cssFromModules(include)+style.textContent}/*
       HTML Imports styling the main document are deprecated in Chrome
       https://crbug.com/523952
        If this element is not in the main document, then it must be in an HTML Import document.
@@ -6302,6 +6760,7 @@ customStyleInterface$1.processStyles()},/**
    * @param {*} old Previous property value
    * @return {boolean} Whether the property should be considered a change
    * @protected
+   * @override
    */_shouldPropertyChange(property,value,old){return mutablePropertyChange$1(this,property,value,old,!0)}},OptionalMutableDataBehavior={properties:{/**
      * Instance-level flag for configuring the dirty-checking strategy
      * for this element.  When true, Objects and Arrays will skip dirty
@@ -6321,8 +6780,8 @@ customStyleInterface$1.processStyles()},/**
    * @param {*} value New property value
    * @param {*} old Previous property value
    * @return {boolean} Whether the property should be considered a change
-   * @this {this}
    * @protected
+   * @override
    */_shouldPropertyChange(property,value,old){return mutablePropertyChange$1(this,property,value,old,this.mutableData)}};/**
     * Legacy element behavior to add the optional ability to skip strict
     * dirty-checking for objects and arrays (always consider them to be
@@ -6467,7 +6926,13 @@ if(_scrollTimer){window.cancelAnimationFrame(_scrollTimer)}_scrollTimer=window.r
     *
     * @param {string} effectName The effect name.
     * @param {Object} effectDef The effect definition.
-    */var helpers={_scrollEffects:_scrollEffects,get _scrollTimer(){return _scrollTimer},scrollTimingFunction:scrollTimingFunction,registerEffect:registerEffect,queryAllRoot:queryAllRoot,scroll:scroll};const AppScrollEffectsBehavior=[IronScrollTargetBehavior,{properties:{/**
+    */ /**
+    * @interface
+    * @extends {Polymer_LegacyElementMixin}
+    */class ElementWithBackground{/** @return {boolean} True if there's content below the current element */isContentBelow(){}/** @return {boolean} true if the element is on screen */isOnScreen(){}/**
+                   * @param {string} title
+                   * @return {?Element} Element in local dom by id.
+                   */_getDOMRef(title){}}var helpers={_scrollEffects:_scrollEffects,get _scrollTimer(){return _scrollTimer},scrollTimingFunction:scrollTimingFunction,registerEffect:registerEffect,queryAllRoot:queryAllRoot,scroll:scroll,ElementWithBackground:ElementWithBackground};const AppScrollEffectsBehavior=[IronScrollTargetBehavior,{properties:{/**
      * A space-separated list of the effects names that will be triggered when
      * the user scrolls. e.g. `waterfall parallax-background` installs the
      * `waterfall` and `parallax-background`.
@@ -6530,7 +6995,7 @@ if(_scrollTimer){window.cancelAnimationFrame(_scrollTimer)}_scrollTimer=window.r
    */_effects:null,/**
    * The clamped value of `_scrollTop`.
    * @type number
-   */get _clampedScrollTop(){return Math.max(0,this._scrollTop)},detached:function(){this._tearDownEffects()},/**
+   */get _clampedScrollTop(){return Math.max(0,this._scrollTop)},attached:function(){this._scrollStateChanged()},detached:function(){this._tearDownEffects()},/**
    * Creates an effect object from an effect's name that can be used to run
    * effects programmatically.
    *
@@ -6573,24 +7038,68 @@ if(!1!==effectDef.setUp()){this._effectsRunFn.push(effectDef.run)}},this)}},/**
    * @param {number} y The top position of the current element relative to the viewport.
    */_runEffects:function(p,y){if(this._effectsRunFn){this._effectsRunFn.forEach(function(run){run(p,y)})}},/**
    * Overrides the `_scrollHandler`.
-   */_scrollHandler:function(){if(!this.disabled){var scrollTop=this._clampedScrollTop;this._updateScrollState(scrollTop);if(0<this.threshold){this._setThresholdTriggered(scrollTop>=this.threshold)}}},/**
+   */_scrollHandler:function(){this._scrollStateChanged()},_scrollStateChanged:function(){if(!this.disabled){var scrollTop=this._clampedScrollTop;this._updateScrollState(scrollTop);if(0<this.threshold){this._setThresholdTriggered(scrollTop>=this.threshold)}}},/**
    * Override this method to return a reference to a node in the local DOM.
    * The node is consumed by a scroll effect.
    *
    * @param {string} id The id for the node.
-   */_getDOMRef:function(id){console.warn("_getDOMRef","`"+id+"` is undefined")},_getUndefinedMsg:function(effectName){return"Scroll effect `"+effectName+"` is undefined. "+"Did you forget to import app-layout/app-scroll-effects/effects/"+effectName+".html ?"}}];var appScrollEffectsBehavior={AppScrollEffectsBehavior:AppScrollEffectsBehavior};registerEffect("blend-background",{/** @this Polymer.AppLayout.ElementWithBackground */setUp:function setUp(){var fx={backgroundFrontLayer:this._getDOMRef("backgroundFrontLayer"),backgroundRearLayer:this._getDOMRef("backgroundRearLayer")};fx.backgroundFrontLayer.style.willChange="opacity";fx.backgroundFrontLayer.style.transform="translateZ(0)";fx.backgroundRearLayer.style.willChange="opacity";fx.backgroundRearLayer.style.transform="translateZ(0)";fx.backgroundRearLayer.style.opacity=0;this._fxBlendBackground=fx},/** @this Polymer.AppLayout.ElementWithBackground */run:function run(p,y){var fx=this._fxBlendBackground;fx.backgroundFrontLayer.style.opacity=1-p;fx.backgroundRearLayer.style.opacity=p},/** @this Polymer.AppLayout.ElementWithBackground */tearDown:function tearDown(){delete this._fxBlendBackground}});registerEffect("fade-background",{/** @this Polymer.AppLayout.ElementWithBackground */setUp:function setUp(config){var fx={},duration=config.duration||"0.5s";fx.backgroundFrontLayer=this._getDOMRef("backgroundFrontLayer");fx.backgroundRearLayer=this._getDOMRef("backgroundRearLayer");fx.backgroundFrontLayer.style.willChange="opacity";fx.backgroundFrontLayer.style.webkitTransform="translateZ(0)";fx.backgroundFrontLayer.style.transitionProperty="opacity";fx.backgroundFrontLayer.style.transitionDuration=duration;fx.backgroundRearLayer.style.willChange="opacity";fx.backgroundRearLayer.style.webkitTransform="translateZ(0)";fx.backgroundRearLayer.style.transitionProperty="opacity";fx.backgroundRearLayer.style.transitionDuration=duration;this._fxFadeBackground=fx},/** @this Polymer.AppLayout.ElementWithBackground */run:function run(p,y){var fx=this._fxFadeBackground;if(1<=p){fx.backgroundFrontLayer.style.opacity=0;fx.backgroundRearLayer.style.opacity=1}else{fx.backgroundFrontLayer.style.opacity=1;fx.backgroundRearLayer.style.opacity=0}},/** @this Polymer.AppLayout.ElementWithBackground */tearDown:function tearDown(){delete this._fxFadeBackground}});registerEffect("waterfall",{/**
-   *  @this Polymer.AppLayout.ElementWithBackground
-   */run:function run(){this.shadow=this.isOnScreen()&&this.isContentBelow()}});function interpolate(progress,points,fn,ctx){fn.apply(ctx,points.map(function(point){return point[0]+(point[1]-point[0])*progress}))}/**
+   */_getDOMRef:function(id){console.warn("_getDOMRef","`"+id+"` is undefined")},_getUndefinedMsg:function(effectName){return"Scroll effect `"+effectName+"` is undefined. "+"Did you forget to import app-layout/app-scroll-effects/effects/"+effectName+".html ?"}}];var appScrollEffectsBehavior={AppScrollEffectsBehavior:AppScrollEffectsBehavior};registerEffect("blend-background",{/** @this {BlendBackground} */setUp:function setUp(){var fx={backgroundFrontLayer:this._getDOMRef("backgroundFrontLayer"),backgroundRearLayer:this._getDOMRef("backgroundRearLayer")};fx.backgroundFrontLayer.style.willChange="opacity";fx.backgroundFrontLayer.style.transform="translateZ(0)";fx.backgroundRearLayer.style.willChange="opacity";fx.backgroundRearLayer.style.transform="translateZ(0)";fx.backgroundRearLayer.style.opacity=0;this._fxBlendBackground=fx},/** @this {BlendBackground} */run:function run(p,y){var fx=this._fxBlendBackground;fx.backgroundFrontLayer.style.opacity=1-p;fx.backgroundRearLayer.style.opacity=p},/** @this {BlendBackground} */tearDown:function tearDown(){delete this._fxBlendBackground}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class BlendBackground{constructor(){/**
+     * @typedef {{
+     *   backgroundFrontLayer: !HTMLElement,
+     *   backgroundRearLayer: !HTMLElement,
+     * }}
+     */this._fxBlendBackground}}registerEffect("fade-background",{/** @this {FadeBackground} */setUp:function setUp(config){var fx={},duration=config.duration||"0.5s";fx.backgroundFrontLayer=this._getDOMRef("backgroundFrontLayer");fx.backgroundRearLayer=this._getDOMRef("backgroundRearLayer");fx.backgroundFrontLayer.style.willChange="opacity";fx.backgroundFrontLayer.style.webkitTransform="translateZ(0)";fx.backgroundFrontLayer.style.transitionProperty="opacity";fx.backgroundFrontLayer.style.transitionDuration=duration;fx.backgroundRearLayer.style.willChange="opacity";fx.backgroundRearLayer.style.webkitTransform="translateZ(0)";fx.backgroundRearLayer.style.transitionProperty="opacity";fx.backgroundRearLayer.style.transitionDuration=duration;this._fxFadeBackground=fx},/** @this {FadeBackground} */run:function run(p,y){var fx=this._fxFadeBackground;if(1<=p){fx.backgroundFrontLayer.style.opacity=0;fx.backgroundRearLayer.style.opacity=1}else{fx.backgroundFrontLayer.style.opacity=1;fx.backgroundRearLayer.style.opacity=0}},/** @this {FadeBackground} */tearDown:function tearDown(){delete this._fxFadeBackground}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class FadeBackground{constructor(){/**
+     * @typedef {{
+     *   backgroundFrontLayer: !HTMLElement,
+     *   backgroundRearLayer: !HTMLElement,
+     * }}
+     */this._fxFadeBackground}}registerEffect("waterfall",{/** @this {Waterfall} */run:function run(){this.shadow=this.isOnScreen()&&this.isContentBelow()}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class Waterfall{constructor(){/** @type {boolean} */this.shadow}}function interpolate(progress,points,fn,ctx){fn.apply(ctx,points.map(function(point){return point[0]+(point[1]-point[0])*progress}))}/**
    * Transform the font size of a designated title element between two values
    * based on the scroll position.
-   */registerEffect("resize-title",{/** @this Polymer.AppLayout.ElementWithBackground */setUp:function setUp(){var title=this._getDOMRef("mainTitle"),condensedTitle=this._getDOMRef("condensedTitle");if(!condensedTitle){console.warn("Scroll effect `resize-title`: undefined `condensed-title`");return!1}if(!title){console.warn("Scroll effect `resize-title`: undefined `main-title`");return!1}condensedTitle.style.willChange="opacity";condensedTitle.style.webkitTransform="translateZ(0)";condensedTitle.style.transform="translateZ(0)";condensedTitle.style.webkitTransformOrigin="left top";condensedTitle.style.transformOrigin="left top";title.style.willChange="opacity";title.style.webkitTransformOrigin="left top";title.style.transformOrigin="left top";title.style.webkitTransform="translateZ(0)";title.style.transform="translateZ(0)";var titleClientRect=title.getBoundingClientRect(),condensedTitleClientRect=condensedTitle.getBoundingClientRect(),fx={};fx.scale=parseInt(window.getComputedStyle(condensedTitle)["font-size"],10)/parseInt(window.getComputedStyle(title)["font-size"],10);fx.titleDX=titleClientRect.left-condensedTitleClientRect.left;fx.titleDY=titleClientRect.top-condensedTitleClientRect.top;fx.condensedTitle=condensedTitle;fx.title=title;this._fxResizeTitle=fx},/** @this PolymerElement */run:function run(p,y){var fx=this._fxResizeTitle;if(!this.condenses){y=0}if(1<=p){fx.title.style.opacity=0;fx.condensedTitle.style.opacity=1}else{fx.title.style.opacity=1;fx.condensedTitle.style.opacity=0}interpolate(Math.min(1,p),[[1,fx.scale],[0,-fx.titleDX],[y,y-fx.titleDY]],function(scale,translateX,translateY){this.transform("translate("+translateX+"px, "+translateY+"px) "+"scale3d("+scale+", "+scale+", 1)",fx.title)},this)},/** @this Polymer.AppLayout.ElementWithBackground */tearDown:function tearDown(){delete this._fxResizeTitle}});registerEffect("parallax-background",{/**
+   */registerEffect("resize-title",{/** @this {ResizeTitle} */setUp:function setUp(){var title=this._getDOMRef("mainTitle"),condensedTitle=this._getDOMRef("condensedTitle");if(!condensedTitle){console.warn("Scroll effect `resize-title`: undefined `condensed-title`");return!1}if(!title){console.warn("Scroll effect `resize-title`: undefined `main-title`");return!1}condensedTitle.style.willChange="opacity";condensedTitle.style.webkitTransform="translateZ(0)";condensedTitle.style.transform="translateZ(0)";condensedTitle.style.webkitTransformOrigin="left top";condensedTitle.style.transformOrigin="left top";title.style.willChange="opacity";title.style.webkitTransformOrigin="left top";title.style.transformOrigin="left top";title.style.webkitTransform="translateZ(0)";title.style.transform="translateZ(0)";var titleClientRect=title.getBoundingClientRect(),condensedTitleClientRect=condensedTitle.getBoundingClientRect(),fx={};fx.scale=parseInt(window.getComputedStyle(condensedTitle)["font-size"],10)/parseInt(window.getComputedStyle(title)["font-size"],10);fx.titleDX=titleClientRect.left-condensedTitleClientRect.left;fx.titleDY=titleClientRect.top-condensedTitleClientRect.top;fx.condensedTitle=condensedTitle;fx.title=title;this._fxResizeTitle=fx},/** @this {ResizeTitle} */run:function run(p,y){var fx=this._fxResizeTitle;if(!this.condenses){y=0}if(1<=p){fx.title.style.opacity=0;fx.condensedTitle.style.opacity=1}else{fx.title.style.opacity=1;fx.condensedTitle.style.opacity=0}interpolate(Math.min(1,p),[[1,fx.scale],[0,-fx.titleDX],[y,y-fx.titleDY]],function(scale,translateX,translateY){this.transform("translate("+translateX+"px, "+translateY+"px) "+"scale3d("+scale+", "+scale+", 1)",fx.title)},this)},/** @this {ResizeTitle} */tearDown:function tearDown(){delete this._fxResizeTitle}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class ResizeTitle{constructor(){/** @type {boolean} */this.condenses;/**
+                                           * @typedef {{
+                                           *   title: !HTMLElement,
+                                           *   condensedTitle: !HTMLElement,
+                                           *   scale: number,
+                                           *   titleDX: number,
+                                           *   titleDY: number,
+                                           * }}
+                                           */this._fxResizeTitle}}registerEffect("parallax-background",{/**
    * @param {{scalar: string}} config
-   * @this Polymer.AppLayout.ElementWithBackground
-   */setUp:function setUp(config){var fx={},scalar=parseFloat(config.scalar);fx.background=this._getDOMRef("background");fx.backgroundFrontLayer=this._getDOMRef("backgroundFrontLayer");fx.backgroundRearLayer=this._getDOMRef("backgroundRearLayer");fx.deltaBg=fx.backgroundFrontLayer.offsetHeight-fx.background.offsetHeight;if(0===fx.deltaBg){if(isNaN(scalar)){scalar=.8}fx.deltaBg=(this._dHeight||0)*scalar}else{if(isNaN(scalar)){scalar=1}fx.deltaBg=fx.deltaBg*scalar}this._fxParallaxBackground=fx},/** @this Polymer.AppLayout.ElementWithBackground */run:function run(p,y){var fx=this._fxParallaxBackground;this.transform("translate3d(0px, "+fx.deltaBg*Math.min(1,p)+"px, 0px)",fx.backgroundFrontLayer);if(fx.backgroundRearLayer){this.transform("translate3d(0px, "+fx.deltaBg*Math.min(1,p)+"px, 0px)",fx.backgroundRearLayer)}},/** @this Polymer.AppLayout.ElementWithBackground */tearDown:function tearDown(){delete this._fxParallaxBackground}});registerEffect("material",{/**
-   * @this Polymer.AppLayout.ElementWithBackground
-   */setUp:function setUp(){this.effects="waterfall resize-title blend-background parallax-background";return!1}});registerEffect("resize-snapped-title",{/**
-   * @this Polymer.AppLayout.ElementWithBackground
-   */setUp:function setUp(config){var title=this._getDOMRef("mainTitle"),condensedTitle=this._getDOMRef("condensedTitle"),duration=config.duration||"0.2s",fx={};if(!condensedTitle){console.warn("Scroll effect `resize-snapped-title`: undefined `condensed-title`");return!1}if(!title){console.warn("Scroll effect `resize-snapped-title`: undefined `main-title`");return!1}title.style.transitionProperty="opacity";title.style.transitionDuration=duration;condensedTitle.style.transitionProperty="opacity";condensedTitle.style.transitionDuration=duration;fx.condensedTitle=condensedTitle;fx.title=title;this._fxResizeSnappedTitle=fx},/** @this Polymer.AppLayout.ElementWithBackground */run:function run(p,y){var fx=this._fxResizeSnappedTitle;if(0<p){fx.title.style.opacity=0;fx.condensedTitle.style.opacity=1}else{fx.title.style.opacity=1;fx.condensedTitle.style.opacity=0}},/** @this Polymer.AppLayout.ElementWithBackground */tearDown:function tearDown(){var fx=this._fxResizeSnappedTitle;fx.title.style.transition="";fx.condensedTitle.style.transition="";delete this._fxResizeSnappedTitle}});const template=html`
+   * @this {ParallaxBackground}
+   */setUp:function setUp(config){var fx={},scalar=parseFloat(config.scalar);fx.background=this._getDOMRef("background");fx.backgroundFrontLayer=this._getDOMRef("backgroundFrontLayer");fx.backgroundRearLayer=this._getDOMRef("backgroundRearLayer");fx.deltaBg=fx.backgroundFrontLayer.offsetHeight-fx.background.offsetHeight;if(0===fx.deltaBg){if(isNaN(scalar)){scalar=.8}fx.deltaBg=(this._dHeight||0)*scalar}else{if(isNaN(scalar)){scalar=1}fx.deltaBg=fx.deltaBg*scalar}this._fxParallaxBackground=fx},/** @this {ParallaxBackground} */run:function run(p,y){var fx=this._fxParallaxBackground;this.transform("translate3d(0px, "+fx.deltaBg*Math.min(1,p)+"px, 0px)",fx.backgroundFrontLayer);if(fx.backgroundRearLayer){this.transform("translate3d(0px, "+fx.deltaBg*Math.min(1,p)+"px, 0px)",fx.backgroundRearLayer)}},/** @this {ParallaxBackground} */tearDown:function tearDown(){delete this._fxParallaxBackground}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class ParallaxBackground{constructor(){/** @type {?number} */this._dHeight;/**
+                                          * @typedef {{
+                                          *   background: !HTMLElement,
+                                          *   backgroundFrontLayer: !HTMLElement,
+                                          *   backgroundRearLayer: !HTMLElement,
+                                          * }}
+                                          */this._fxParallaxBackground}}registerEffect("material",{/** @this {Material} */setUp:function setUp(){this.effects="waterfall resize-title blend-background parallax-background";return!1}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class Material{constructor(){/** @type {string} */this.effects}}registerEffect("resize-snapped-title",{/** @this {ResizeSnappedTitle} */setUp:function setUp(config){var title=this._getDOMRef("mainTitle"),condensedTitle=this._getDOMRef("condensedTitle"),duration=config.duration||"0.2s",fx={};if(!condensedTitle){console.warn("Scroll effect `resize-snapped-title`: undefined `condensed-title`");return!1}if(!title){console.warn("Scroll effect `resize-snapped-title`: undefined `main-title`");return!1}title.style.transitionProperty="opacity";title.style.transitionDuration=duration;condensedTitle.style.transitionProperty="opacity";condensedTitle.style.transitionDuration=duration;fx.condensedTitle=condensedTitle;fx.title=title;this._fxResizeSnappedTitle=fx},/** @this {ResizeSnappedTitle} */run:function run(p,y){var fx=this._fxResizeSnappedTitle;if(0<p){fx.title.style.opacity=0;fx.condensedTitle.style.opacity=1}else{fx.title.style.opacity=1;fx.condensedTitle.style.opacity=0}},/** @this {ResizeSnappedTitle} */tearDown:function tearDown(){var fx=this._fxResizeSnappedTitle;fx.title.style.transition="";fx.condensedTitle.style.transition="";delete this._fxResizeSnappedTitle}});/**
+     * @interface
+     * @extends {ElementWithBackground}
+     */class ResizeSnappedTitle{constructor(){/**
+     * @typedef {{
+     *   title: !HTMLElement,
+     *   condensedTitle: !HTMLElement,
+     * }}
+     */this._fxResizeSnappedTitle}}const template=html`
 <custom-style>
   <style is="custom-style">
     [hidden] {
@@ -7576,7 +8085,7 @@ _changedButtonState:function(){if(this._buttonStateChanged){this._buttonStateCha
 // of the wavefront (waveOpacity).
 var outerOpacity=.3*this.mouseUpElapsedSeconds,waveOpacity=this.opacity;return Math.max(0,Math.min(outerOpacity,waveOpacity))},get isOpacityFullyDecayed(){return .01>this.opacity&&this.radius>=Math.min(this.maxRadius,Ripple.MAX_RADIUS)},get isRestingAtMaxRadius(){return this.opacity>=this.initialOpacity&&this.radius>=Math.min(this.maxRadius,Ripple.MAX_RADIUS)},get isAnimationComplete(){return this.mouseUpStart?this.isOpacityFullyDecayed:this.isRestingAtMaxRadius},get translationFraction(){return Math.min(1,2*(this.radius/this.containerMetrics.size)/Math.sqrt(2))},get xNow(){if(this.xEnd){return this.xStart+this.translationFraction*(this.xEnd-this.xStart)}return this.xStart},get yNow(){if(this.yEnd){return this.yStart+this.translationFraction*(this.yEnd-this.yStart)}return this.yStart},get isMouseDown(){return this.mouseDownStart&&!this.mouseUpStart},resetInteractionState:function(){this.maxRadius=0;this.mouseDownStart=0;this.mouseUpStart=0;this.xStart=0;this.yStart=0;this.xEnd=0;this.yEnd=0;this.slideDistance=0;this.containerMetrics=new ElementMetrics(this.element)},draw:function(){var scale,dx,dy;this.wave.style.opacity=this.opacity;scale=this.radius/(this.containerMetrics.size/2);dx=this.xNow-this.containerMetrics.width/2;dy=this.yNow-this.containerMetrics.height/2;// 2d transform for safari because of border-radius and overflow:hidden
 // clipping bug. https://bugs.webkit.org/show_bug.cgi?id=98538
-this.waveContainer.style.webkitTransform="translate("+dx+"px, "+dy+"px)";this.waveContainer.style.transform="translate3d("+dx+"px, "+dy+"px, 0)";this.wave.style.webkitTransform="scale("+scale+","+scale+")";this.wave.style.transform="scale3d("+scale+","+scale+",1)"},/** @param {Event=} event */downAction:function(event){var xCenter=this.containerMetrics.width/2,yCenter=this.containerMetrics.height/2;this.resetInteractionState();this.mouseDownStart=Utility.now();if(this.center){this.xStart=xCenter;this.yStart=yCenter;this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)}else{this.xStart=event?event.detail.x-this.containerMetrics.boundingRect.left:this.containerMetrics.width/2;this.yStart=event?event.detail.y-this.containerMetrics.boundingRect.top:this.containerMetrics.height/2}if(this.recenters){this.xEnd=xCenter;this.yEnd=yCenter;this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)}this.maxRadius=this.containerMetrics.furthestCornerDistanceFrom(this.xStart,this.yStart);this.waveContainer.style.top=(this.containerMetrics.height-this.containerMetrics.size)/2+"px";this.waveContainer.style.left=(this.containerMetrics.width-this.containerMetrics.size)/2+"px";this.waveContainer.style.width=this.containerMetrics.size+"px";this.waveContainer.style.height=this.containerMetrics.size+"px"},/** @param {Event=} event */upAction:function(event){if(!this.isMouseDown){return}this.mouseUpStart=Utility.now()},remove:function(){dom(this.waveContainer.parentNode).removeChild(this.waveContainer)}};/**
+this.waveContainer.style.webkitTransform="translate("+dx+"px, "+dy+"px)";this.waveContainer.style.transform="translate3d("+dx+"px, "+dy+"px, 0)";this.wave.style.webkitTransform="scale("+scale+","+scale+")";this.wave.style.transform="scale3d("+scale+","+scale+",1)"},/** @param {Event=} event */downAction:function(event){var xCenter=this.containerMetrics.width/2,yCenter=this.containerMetrics.height/2;this.resetInteractionState();this.mouseDownStart=Utility.now();if(this.center){this.xStart=xCenter;this.yStart=yCenter;this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)}else{this.xStart=event?event.detail.x-this.containerMetrics.boundingRect.left:this.containerMetrics.width/2;this.yStart=event?event.detail.y-this.containerMetrics.boundingRect.top:this.containerMetrics.height/2}if(this.recenters){this.xEnd=xCenter;this.yEnd=yCenter;this.slideDistance=Utility.distance(this.xStart,this.yStart,this.xEnd,this.yEnd)}this.maxRadius=this.containerMetrics.furthestCornerDistanceFrom(this.xStart,this.yStart);this.waveContainer.style.top=(this.containerMetrics.height-this.containerMetrics.size)/2+"px";this.waveContainer.style.left=(this.containerMetrics.width-this.containerMetrics.size)/2+"px";this.waveContainer.style.width=this.containerMetrics.size+"px";this.waveContainer.style.height=this.containerMetrics.size+"px"},/** @param {Event=} event */upAction:function(event){if(!this.isMouseDown){return}this.mouseUpStart=Utility.now()},remove:function(){dom(dom(this.waveContainer).parentNode).removeChild(this.waveContainer)}};/**
    Material design: [Surface
    reaction](https://www.google.com/design/spec/animation/responsive-interaction.html#responsive-interaction-surface-reaction)
    
@@ -7635,11 +8144,9 @@ this.waveContainer.style.webkitTransform="translate("+dx+"px, "+dy+"px)";this.wa
    
        <paper-ripple class="circle"></paper-ripple>
    
-   @group Paper Elements
    @element paper-ripple
-   @hero hero.svg
    @demo demo/index.html
-   */Polymer({_template:html`
+   */Polymer({/** @override */_template:html`
     <style>
       :host {
         display: block;
@@ -7711,33 +8218,27 @@ this.waveContainer.style.webkitTransform="translate("+dx+"px, "+dy+"px)";this.wa
     <div id="waves"></div>
 `,is:"paper-ripple",behaviors:[IronA11yKeysBehavior],properties:{/**
      * The initial opacity set on the wave.
-     *
-     * @attribute initialOpacity
      * @type number
      * @default 0.25
      */initialOpacity:{type:Number,value:.25},/**
      * How fast (opacity per second) the wave fades out.
      *
-     * @attribute opacityDecayVelocity
      * @type number
      * @default 0.8
      */opacityDecayVelocity:{type:Number,value:.8},/**
      * If true, ripples will exhibit a gravitational pull towards
      * the center of their container as they fade away.
      *
-     * @attribute recenters
      * @type boolean
      * @default false
      */recenters:{type:Boolean,value:!1},/**
      * If true, ripples will center inside its container
      *
-     * @attribute recenters
      * @type boolean
      * @default false
      */center:{type:Boolean,value:!1},/**
      * A list of the visual ripples.
      *
-     * @attribute ripples
      * @type Array
      * @default []
      */ripples:{type:Array,value:function(){return[]}},/**
@@ -7753,11 +8254,11 @@ this.waveContainer.style.webkitTransform="translate("+dx+"px, "+dy+"px)";this.wa
      * still generate the ripple effect.
      */noink:{type:Boolean,value:!1},_animating:{type:Boolean},_boundAnimate:{type:Function,value:function(){return this.animate.bind(this)}}},get target(){return this.keyEventTarget},/**
    * @type {!Object}
-   */keyBindings:{"enter:keydown":"_onEnterKeydown","space:keydown":"_onSpaceKeydown","space:keyup":"_onSpaceKeyup"},attached:function(){// Set up a11yKeysBehavior to listen to key events on the target,
+   */keyBindings:{"enter:keydown":"_onEnterKeydown","space:keydown":"_onSpaceKeydown","space:keyup":"_onSpaceKeyup"},/** @override */attached:function(){// Set up a11yKeysBehavior to listen to key events on the target,
 // so that space and enter activate the ripple even if the target doesn't
 // handle key events. The key handlers deal with `noink` themselves.
-if(11==this.parentNode.nodeType){// DOCUMENT_FRAGMENT_NODE
-this.keyEventTarget=dom(this).getOwnerRoot().host}else{this.keyEventTarget=this.parentNode}var keyEventTarget=/** @type {!EventTarget} */this.keyEventTarget;this.listen(keyEventTarget,"up","uiUpAction");this.listen(keyEventTarget,"down","uiDownAction")},detached:function(){this.unlisten(this.keyEventTarget,"up","uiUpAction");this.unlisten(this.keyEventTarget,"down","uiDownAction");this.keyEventTarget=null},get shouldKeepAnimating(){for(var index=0;index<this.ripples.length;++index){if(!this.ripples[index].isAnimationComplete){return!0}}return!1},simulatedRipple:function(){this.downAction(null);// Please see polymer/polymer#1305
+if(11==dom(this).parentNode.nodeType){// DOCUMENT_FRAGMENT_NODE
+this.keyEventTarget=dom(this).getOwnerRoot().host}else{this.keyEventTarget=dom(this).parentNode}var keyEventTarget=/** @type {!EventTarget} */this.keyEventTarget;this.listen(keyEventTarget,"up","uiUpAction");this.listen(keyEventTarget,"down","uiDownAction")},/** @override */detached:function(){this.unlisten(this.keyEventTarget,"up","uiUpAction");this.unlisten(this.keyEventTarget,"down","uiDownAction");this.keyEventTarget=null},get shouldKeepAnimating(){for(var index=0;index<this.ripples.length;++index){if(!this.ripples[index].isAnimationComplete){return!0}}return!1},simulatedRipple:function(){this.downAction(null);// Please see polymer/polymer#1305
 this.async(function(){this.upAction()},1)},/**
    * Provokes a ripple down effect via a UI event,
    * respecting the `noink` property.
@@ -7774,13 +8275,14 @@ this.async(function(){this.upAction()},1)},/**
    * Provokes a ripple up effect via a UI event,
    * *not* respecting the `noink` property.
    * @param {Event=} event
-   */upAction:function(event){if(this.holdDown){return}this.ripples.forEach(function(ripple){ripple.upAction(event)});this._animating=!0;this.animate()},onAnimationComplete:function(){this._animating=!1;this.$.background.style.backgroundColor=null;this.fire("transitionend")},addRipple:function(){var ripple=new Ripple(this);dom(this.$.waves).appendChild(ripple.waveContainer);this.$.background.style.backgroundColor=ripple.color;this.ripples.push(ripple);this._setAnimating(!0);return ripple},removeRipple:function(ripple){var rippleIndex=this.ripples.indexOf(ripple);if(0>rippleIndex){return}this.ripples.splice(rippleIndex,1);ripple.remove();if(!this.ripples.length){this._setAnimating(!1)}},/**
+   */upAction:function(event){if(this.holdDown){return}this.ripples.forEach(function(ripple){ripple.upAction(event)});this._animating=!0;this.animate()},onAnimationComplete:function(){this._animating=!1;this.$.background.style.backgroundColor="";this.fire("transitionend")},addRipple:function(){var ripple=new Ripple(this);dom(this.$.waves).appendChild(ripple.waveContainer);this.$.background.style.backgroundColor=ripple.color;this.ripples.push(ripple);this._setAnimating(!0);return ripple},removeRipple:function(ripple){var rippleIndex=this.ripples.indexOf(ripple);if(0>rippleIndex){return}this.ripples.splice(rippleIndex,1);ripple.remove();if(!this.ripples.length){this._setAnimating(!1)}},/**
    * Deprecated. Please use animateRipple() instead.
    *
    * This method name conflicts with Element#animate().
    * https://developer.mozilla.org/en-US/docs/Web/API/Element/animate.
    *
    * @suppress {checkTypes}
+   * @override
    */animate:function(){if(!this._animating){return}var index,ripple;for(index=0;index<this.ripples.length;++index){ripple=this.ripples[index];ripple.draw();this.$.background.style.opacity=ripple.outerOpacity;if(ripple.isOpacityFullyDecayed&&!ripple.isRestingAtMaxRadius){this.removeRipple(ripple)}}if(!this.shouldKeepAnimating&&0===this.ripples.length){this.onAnimationComplete()}else{window.requestAnimationFrame(this._boundAnimate)}},/**
    * An alias for animate() whose name does not conflict with the platform
    * Element.animate() method.
@@ -7823,9 +8325,7 @@ var domContainer=dom(this._rippleContainer||this),target=dom(optTriggeringEvent)
    * Create the element's ripple effect via creating a `<paper-ripple>`.
    * Override this method to customize the ripple element.
    * @return {!PaperRippleElement} Returns a `<paper-ripple>` element.
-   */_createRipple:function(){var element=/** @type {!PaperRippleElement} */document.createElement("paper-ripple");return element},_noinkChanged:function(noink){if(this.hasRipple()){this._ripple.noink=noink}}};var paperRippleBehavior={PaperRippleBehavior:PaperRippleBehavior};const PaperInkyFocusBehaviorImpl={observers:["_focusedChanged(receivedFocusFromKeyboard)"],_focusedChanged:function(receivedFocusFromKeyboard){if(receivedFocusFromKeyboard){this.ensureRipple()}if(this.hasRipple()){this._ripple.holdDown=receivedFocusFromKeyboard}},_createRipple:function(){var ripple=PaperRippleBehavior._createRipple();ripple.id="ink";ripple.setAttribute("center","");ripple.classList.add("circle");return ripple}},PaperInkyFocusBehavior=[IronButtonState,IronControlState,PaperRippleBehavior,PaperInkyFocusBehaviorImpl];/** @polymerBehavior */var paperInkyFocusBehavior={PaperInkyFocusBehaviorImpl:PaperInkyFocusBehaviorImpl,PaperInkyFocusBehavior:PaperInkyFocusBehavior};const template$3=html`
-<dom-module id="paper-icon-button">
-  <template strip-whitespace>
+   */_createRipple:function(){var element=/** @type {!PaperRippleElement} */document.createElement("paper-ripple");return element},_noinkChanged:function(noink){if(this.hasRipple()){this._ripple.noink=noink}}};var paperRippleBehavior={PaperRippleBehavior:PaperRippleBehavior};const PaperInkyFocusBehaviorImpl={observers:["_focusedChanged(receivedFocusFromKeyboard)"],_focusedChanged:function(receivedFocusFromKeyboard){if(receivedFocusFromKeyboard){this.ensureRipple()}if(this.hasRipple()){this._ripple.holdDown=receivedFocusFromKeyboard}},_createRipple:function(){var ripple=PaperRippleBehavior._createRipple();ripple.id="ink";ripple.setAttribute("center","");ripple.classList.add("circle");return ripple}},PaperInkyFocusBehavior=[IronButtonState,IronControlState,PaperRippleBehavior,PaperInkyFocusBehaviorImpl];/** @polymerBehavior */var paperInkyFocusBehavior={PaperInkyFocusBehaviorImpl:PaperInkyFocusBehaviorImpl,PaperInkyFocusBehavior:PaperInkyFocusBehavior};Polymer({is:"paper-icon-button",_template:html`
     <style>
       :host {
         display: inline-block;
@@ -7843,7 +8343,10 @@ var domContainer=dom(this._rippleContainer||this),target=dom(optTriggeringEvent)
         width: 40px;
         height: 40px;
 
-        /* NOTE: Both values are needed, since some phones require the value to be \`transparent\`. */
+        /*
+          NOTE: Both values are needed, since some phones require the value to
+          be \`transparent\`.
+        */
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -webkit-tap-highlight-color: transparent;
 
@@ -7880,53 +8383,9 @@ var domContainer=dom(this._rippleContainer||this),target=dom(optTriggeringEvent)
       }
     </style>
 
-    <iron-icon id="icon" src="[[src]]" icon="[[icon]]" alt\$="[[alt]]"></iron-icon>
-  </template>
-</dom-module>
-`;template$3.setAttribute("style","display: none;");document.body.appendChild(template$3.content);/**
-                                               Material design: [Icon
-                                               toggles](https://www.google.com/design/spec/components/buttons.html#buttons-toggle-buttons)
-                                                                                           `paper-icon-button` is a button with an image placed at the center. When the
-                                               user touches the button, a ripple effect emanates from the center of the button.
-                                                                                           `paper-icon-button` does not include a default icon set. To use icons from the
-                                               default set, include `PolymerElements/iron-icons/iron-icons.html`, and use the
-                                               `icon` attribute to specify which icon from the icon set to use.
-                                                                                               <paper-icon-button icon="menu"></paper-icon-button>
-                                                                                           See [`iron-iconset`](iron-iconset) for more information about
-                                               how to use a custom icon set.
-                                                                                           Example:
-                                                                                               <script type="module">
-                                                   import '@polymer/iron-icons/iron-icons.js';
-                                                 </script>
-                                                                                               <paper-icon-button icon="favorite"></paper-icon-button>
-                                                 <paper-icon-button src="star.png"></paper-icon-button>
-                                                                                           To use `paper-icon-button` as a link, wrap it in an anchor tag. Since
-                                               `paper-icon-button` will already receive focus, you may want to prevent the
-                                               anchor tag from receiving focus as well by setting its tabindex to -1.
-                                                                                               <a href="https://www.polymer-project.org" tabindex="-1">
-                                                   <paper-icon-button icon="polymer"></paper-icon-button>
-                                                 </a>
-                                                                                           ### Styling
-                                                                                           Style the button with CSS as you would a normal DOM element. If you are using
-                                               the icons provided by `iron-icons`, they will inherit the foreground color of
-                                               the button.
-                                                                                               /* make a red "favorite" button *\/
-                                                 <paper-icon-button icon="favorite" style="color: red;"></paper-icon-button>
-                                                                                           By default, the ripple is the same color as the foreground at 25% opacity. You
-                                               may customize the color using the `--paper-icon-button-ink-color` custom
-                                               property.
-                                                                                           The following custom properties and mixins are available for styling:
-                                                                                           Custom property | Description | Default
-                                               ----------------|-------------|----------
-                                               `--paper-icon-button-disabled-text` | The color of the disabled button | `--disabled-text-color`
-                                               `--paper-icon-button-ink-color` | Selected/focus ripple color | `--primary-text-color`
-                                               `--paper-icon-button` | Mixin for a button | `{}`
-                                               `--paper-icon-button-disabled` | Mixin for a disabled button | `{}`
-                                               `--paper-icon-button-hover` | Mixin for button on hover | `{}`
-                                                                                           @group Paper Elements
-                                               @element paper-icon-button
-                                               @demo demo/index.html
-                                               */Polymer({is:"paper-icon-button",hostAttributes:{role:"button",tabindex:"0"},behaviors:[PaperInkyFocusBehavior],properties:{/**
+    <iron-icon id="icon" src="[[src]]" icon="[[icon]]"
+               alt$="[[alt]]"></iron-icon>
+  `,hostAttributes:{role:"button",tabindex:"0"},behaviors:[PaperInkyFocusBehavior],registered:function(){this._template.setAttribute("strip-whitespace","")},properties:{/**
      * The URL of an image for the icon. If the src property is specified,
      * the icon property should not be.
      */src:{type:String},/**
@@ -7936,7 +8395,7 @@ var domContainer=dom(this._rippleContainer||this),target=dom(optTriggeringEvent)
      */icon:{type:String},/**
      * Specifies the alternate text for the button, for accessibility.
      */alt:{type:String,observer:"_altChanged"}},_altChanged:function(newValue,oldValue){var label=this.getAttribute("aria-label");// Don't stomp over a user-set aria-label.
-if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const template$4=html`
+if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const template$3=html`
 <custom-style>
   <style is="custom-style">
     html {
@@ -8000,7 +8459,7 @@ if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const t
       };
     }
   </style>
-</custom-style>`;template$4.setAttribute("style","display: none;");document.head.appendChild(template$4.content);const template$5=html`
+</custom-style>`;template$3.setAttribute("style","display: none;");document.head.appendChild(template$3.content);const template$4=html`
 <dom-module id="paper-material-styles">
   <template>
     <style>
@@ -8086,7 +8545,7 @@ if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const t
       }
     </style>
   </template>
-</dom-module>`;template$5.setAttribute("style","display: none;");document.head.appendChild(template$5.content);const PaperButtonBehaviorImpl={properties:{/**
+</dom-module>`;template$4.setAttribute("style","display: none;");document.head.appendChild(template$4.content);const PaperButtonBehaviorImpl={properties:{/**
      * The z-depth of this element, from 0-5. Setting to 0 will remove the
      * shadow, and each increasing number greater than 0 will be "deeper"
      * than the last.
@@ -8105,7 +8564,7 @@ if(this.hasRipple()&&1>this.getRipple().ripples.length){this._ripple.uiDownActio
    * create a ripple up effect.
    *
    * @param {!KeyboardEvent} event .
-   */_spaceKeyUpHandler:function(event){IronButtonStateImpl._spaceKeyUpHandler.call(this,event);if(this.hasRipple()){this._ripple.uiUpAction()}}},PaperButtonBehavior=[IronButtonState,IronControlState,PaperRippleBehavior,PaperButtonBehaviorImpl];/** @polymerBehavior */var paperButtonBehavior={PaperButtonBehaviorImpl:PaperButtonBehaviorImpl,PaperButtonBehavior:PaperButtonBehavior};const template$6=html`
+   */_spaceKeyUpHandler:function(event){IronButtonStateImpl._spaceKeyUpHandler.call(this,event);if(this.hasRipple()){this._ripple.uiUpAction()}}},PaperButtonBehavior=[IronButtonState,IronControlState,PaperRippleBehavior,PaperButtonBehaviorImpl];/** @polymerBehavior */var paperButtonBehavior={PaperButtonBehaviorImpl:PaperButtonBehaviorImpl,PaperButtonBehavior:PaperButtonBehavior};const template$5=html`
   <style include="paper-material-styles">
     /* Need to specify the same specificity as the styles imported from paper-material. */
     :host {
@@ -8191,7 +8650,7 @@ if(this.hasRipple()&&1>this.getRipple().ripples.length){this._ripple.uiDownActio
     }
   </style>
 
-  <slot></slot>`;template$6.setAttribute("strip-whitespace","");/**
+  <slot></slot>`;template$5.setAttribute("strip-whitespace","");/**
                                                  Material design:
                                                  [Buttons](https://www.google.com/design/spec/components/buttons.html)
                                                                                                `paper-button` is a button. When the user touches the button, a ripple effect
@@ -8241,7 +8700,7 @@ if(this.hasRipple()&&1>this.getRipple().ripples.length){this._ripple.uiDownActio
                                                  `--paper-button-flat-keyboard-focus` | Mixin applied to a flat button after it's been focused using the keyboard | `{}`
                                                  `--paper-button-raised-keyboard-focus` | Mixin applied to a raised button after it's been focused using the keyboard | `{}`
                                                                                                @demo demo/index.html
-                                                 */Polymer({_template:template$6,is:"paper-button",behaviors:[PaperButtonBehavior],properties:{/**
+                                                 */Polymer({_template:template$5,is:"paper-button",behaviors:[PaperButtonBehavior],properties:{/**
      * If true, the button should be styled with a shadow.
      */raised:{type:Boolean,reflectToAttribute:!0,value:!1,observer:"_calculateElevation"}},_calculateElevation:function(){if(!this.raised){this._setElevation(0)}else{PaperButtonBehaviorImpl._calculateElevation.apply(this)}}/**
     Fired when the animation finishes.
@@ -8326,7 +8785,7 @@ this._icons=this._icons||this._createIconMap();return this._prepareSvgClone(this
 // https://crbug.com/370136
 // TODO(sjmiles): inline style may not be ideal, but avoids requiring a
 // shadow-root
-svg.style.cssText=cssText;svg.appendChild(content).removeAttribute("id");return svg}return null}});const template$7=html`<iron-iconset-svg name="icons" size="24">
+svg.style.cssText=cssText;svg.appendChild(content).removeAttribute("id");return svg}return null}});const template$6=html`<iron-iconset-svg name="icons" size="24">
 <svg><defs>
 <g id="3d-rotation"><path d="M7.52 21.48C4.25 19.94 1.91 16.76 1.55 13H.05C.56 19.16 5.71 24 12 24l.66-.03-3.81-3.81-1.33 1.32zm.89-6.52c-.19 0-.37-.03-.52-.08-.16-.06-.29-.13-.4-.24-.11-.1-.2-.22-.26-.37-.06-.14-.09-.3-.09-.47h-1.3c0 .36.07.68.21.95.14.27.33.5.56.69.24.18.51.32.82.41.3.1.62.15.96.15.37 0 .72-.05 1.03-.15.32-.1.6-.25.83-.44s.42-.43.55-.72c.13-.29.2-.61.2-.97 0-.19-.02-.38-.07-.56-.05-.18-.12-.35-.23-.51-.1-.16-.24-.3-.4-.43-.17-.13-.37-.23-.61-.31.2-.09.37-.2.52-.33.15-.13.27-.27.37-.42.1-.15.17-.3.22-.46.05-.16.07-.32.07-.48 0-.36-.06-.68-.18-.96-.12-.28-.29-.51-.51-.69-.2-.19-.47-.33-.77-.43C9.1 8.05 8.76 8 8.39 8c-.36 0-.69.05-1 .16-.3.11-.57.26-.79.45-.21.19-.38.41-.51.67-.12.26-.18.54-.18.85h1.3c0-.17.03-.32.09-.45s.14-.25.25-.34c.11-.09.23-.17.38-.22.15-.05.3-.08.48-.08.4 0 .7.1.89.31.19.2.29.49.29.86 0 .18-.03.34-.08.49-.05.15-.14.27-.25.37-.11.1-.25.18-.41.24-.16.06-.36.09-.58.09H7.5v1.03h.77c.22 0 .42.02.6.07s.33.13.45.23c.12.11.22.24.29.4.07.16.1.35.1.57 0 .41-.12.72-.35.93-.23.23-.55.33-.95.33zm8.55-5.92c-.32-.33-.7-.59-1.14-.77-.43-.18-.92-.27-1.46-.27H12v8h2.3c.55 0 1.06-.09 1.51-.27.45-.18.84-.43 1.16-.76.32-.33.57-.73.74-1.19.17-.47.26-.99.26-1.57v-.4c0-.58-.09-1.1-.26-1.57-.18-.47-.43-.87-.75-1.2zm-.39 3.16c0 .42-.05.79-.14 1.13-.1.33-.24.62-.43.85-.19.23-.43.41-.71.53-.29.12-.62.18-.99.18h-.91V9.12h.97c.72 0 1.27.23 1.64.69.38.46.57 1.12.57 1.99v.4zM12 0l-.66.03 3.81 3.81 1.33-1.33c3.27 1.55 5.61 4.72 5.96 8.48h1.5C23.44 4.84 18.29 0 12 0z"></path></g>
 <g id="accessibility"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"></path></g>
@@ -8638,7 +9097,7 @@ svg.style.cssText=cssText;svg.appendChild(content).removeAttribute("id");return 
 <g id="zoom-in"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm2.5-4h-2v2H9v-2H7V9h2V7h1v2h2v1z"></path></g>
 <g id="zoom-out"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$7.content);class IronSelection{/**
+</iron-iconset-svg>`;document.head.appendChild(template$6.content);class IronSelection{/**
    * @param {!Function} selectCallback
    * @suppress {missingProvide}
    */constructor(selectCallback){this.selection=[];this.selectCallback=selectCallback}/**
@@ -8822,8 +9281,9 @@ if(this._defaultFocusAsync){this.cancelAsync(this._defaultFocusAsync);this._defa
    * Resets all tabindex attributes to the appropriate value based on the
    * current selection state. The appropriate value is `0` (focusable) for
    * the default selected item, and `-1` (not keyboard focusable) for all
-   * other items.
-   */_resetTabindices:function(){var selectedItem=this.multi?this.selectedItems&&this.selectedItems[0]:this.selectedItem;this.items.forEach(function(item){item.setAttribute("tabindex",item===selectedItem?"0":"-1")},this)},/**
+   * other items. Also sets the correct initial values for aria-selected
+   * attribute, true for default selected item and false for others.
+   */_resetTabindices:function(){var firstSelectedItem=this.multi?this.selectedItems&&this.selectedItems[0]:this.selectedItem;this.items.forEach(function(item){item.setAttribute("tabindex",item===firstSelectedItem?"0":"-1");item.setAttribute("aria-selected",this._selection.isSelected(item))},this)},/**
    * Sets appropriate ARIA based on whether or not the menu is meant to be
    * multi-selectable.
    *
@@ -8855,7 +9315,7 @@ if(dom(owner).activeElement==item){return}}}},/**
    * @param {Element} item An item in the menu.
    * @param {boolean} isSelected True if the item should be shown in a
    * selected state, otherwise false.
-   */_applySelection:function(item,isSelected){if(isSelected){item.setAttribute("aria-selected","true")}else{item.removeAttribute("aria-selected")}IronSelectableBehavior._applySelection.apply(this,arguments)},/**
+   */_applySelection:function(item,isSelected){if(isSelected){item.setAttribute("aria-selected","true")}else{item.setAttribute("aria-selected","false")}IronSelectableBehavior._applySelection.apply(this,arguments)},/**
    * Discretely updates tabindex values among menu items as the focused item
    * changes.
    *
@@ -8883,7 +9343,7 @@ return}// Do not focus the selected tab if the deepest target is part of the
 var rootTarget=/** @type {?HTMLElement} */dom(event).rootTarget;if(rootTarget!==this&&"undefined"!==typeof rootTarget.tabIndex&&!this.isLightDescendant(rootTarget)){return}// clear the cached focus item
 this._defaultFocusAsync=this.async(function(){// focus the selected item when the menu receives focus, or the first item
 // if no item is selected
-var selectedItem=this.multi?this.selectedItems&&this.selectedItems[0]:this.selectedItem;this._setFocusedItem(null);if(selectedItem){this._setFocusedItem(selectedItem)}else if(this.items[0]){// We find the first none-disabled item (if one exists)
+var firstSelectedItem=this.multi?this.selectedItems&&this.selectedItems[0]:this.selectedItem;this._setFocusedItem(null);if(firstSelectedItem){this._setFocusedItem(firstSelectedItem)}else if(this.items[0]){// We find the first none-disabled item (if one exists)
 this._focusNext()}})},/**
    * Handler that is called when the up key is pressed.
    *
@@ -8922,7 +9382,7 @@ _activateHandler:function(event){IronSelectableBehavior._activateHandler.call(th
 
     <slot></slot>
 `,is:"paper-listbox",behaviors:[IronMenuBehavior],/** @private */hostAttributes:{role:"listbox"}});// Give the user the choice to opt out of font loading.
-if(!window.polymerSkipLoadingFontRoboto){const link=document.createElement("link");link.rel="stylesheet";link.type="text/css";link.crossOrigin="anonymous";link.href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic";document.head.appendChild(link)}const template$8=html`<custom-style>
+if(!window.polymerSkipLoadingFontRoboto){const link=document.createElement("link");link.rel="stylesheet";link.type="text/css";link.crossOrigin="anonymous";link.href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic";document.head.appendChild(link)}const template$7=html`<custom-style>
   <style is="custom-style">
     html {
 
@@ -9078,7 +9538,7 @@ if(!window.polymerSkipLoadingFontRoboto){const link=document.createElement("link
     }
 
   </style>
-</custom-style>`;template$8.setAttribute("style","display: none;");document.head.appendChild(template$8.content);const $_documentContainer=document.createElement("template");$_documentContainer.setAttribute("style","display: none;");$_documentContainer.innerHTML=`<dom-module id="paper-item-shared-styles">
+</custom-style>`;template$7.setAttribute("style","display: none;");document.head.appendChild(template$7.content);const $_documentContainer=document.createElement("template");$_documentContainer.setAttribute("style","display: none;");$_documentContainer.innerHTML=`<dom-module id="paper-item-shared-styles">
   <template>
     <style>
       :host, .paper-item {
@@ -9309,7 +9769,7 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
    *     inputElement: The input element.
    *     value: The input value.
    *     invalid: True if the input value is invalid.
-   */update:function(state){}};var paperInputAddonBehavior={PaperInputAddonBehavior:PaperInputAddonBehavior};Polymer({_template:html`
+   */update:function(state){}};var paperInputAddonBehavior={PaperInputAddonBehavior:PaperInputAddonBehavior};Polymer({/** @override */_template:html`
     <style>
       :host {
         display: inline-block;
@@ -9339,7 +9799,7 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
    *     inputElement: The input element.
    *     value: The input value.
    *     invalid: True if the input value is invalid.
-   */update:function(state){if(!state.inputElement){return}state.value=state.value||"";var counter=state.value.toString().length.toString();if(state.inputElement.hasAttribute("maxlength")){counter+="/"+state.inputElement.getAttribute("maxlength")}this._charCounterStr=counter}});const template$9=html`
+   */update:function(state){if(!state.inputElement){return}state.value=state.value||"";var counter=state.value.toString().length.toString();if(state.inputElement.hasAttribute("maxlength")){counter+="/"+state.inputElement.getAttribute("maxlength")}this._charCounterStr=counter}});const template$8=html`
 <custom-style>
   <style is="custom-style">
     html {
@@ -9363,7 +9823,7 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
     }
   </style>
 </custom-style>
-`;template$9.setAttribute("style","display: none;");document.head.appendChild(template$9.content);/*
+`;template$8.setAttribute("style","display: none;");document.head.appendChild(template$8.content);/*
                                                `<paper-input-container>` is a container for a `<label>`, an `<iron-input>` or
                                                `<textarea>` and optional add-on elements such as an error message or character
                                                counter, used to implement Material Design text fields.
@@ -9451,9 +9911,11 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
                                                `--paper-input-container-underline-disabled` | Mixin applied to the underline when the input is disabled | `{}`
                                                `--paper-input-prefix` | Mixin applied to the input prefix | `{}`
                                                `--paper-input-suffix` | Mixin applied to the input suffix | `{}`
+                                               `--paper-input-container-label-before` | Mixin applied to label before pseudo element | {}
+                                               `--paper-input-container-label-after` | Mixin applied to label after pseudo element (useful for required asterisk) | {}
                                                                                            This element is `display:block` by default, but you can set the `inline`
                                                attribute to make it `display:inline-block`.
-                                               */Polymer({_template:html`
+                                               */Polymer({/** @override */_template:html`
     <style>
       :host {
         display: block;
@@ -9563,6 +10025,17 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
         @apply --paper-font-subhead;
         @apply --paper-input-container-label;
         @apply --paper-transition-easing;
+      }
+
+
+      .input-content ::slotted(label):before,
+      .input-content ::slotted(.paper-input-label):before {
+        @apply --paper-input-container-label-before;
+      }
+
+      .input-content ::slotted(label):after,
+      .input-content ::slotted(.paper-input-label):after {
+        @apply --paper-input-container-label-after;
       }
 
       .input-content.label-is-floating ::slotted(label),
@@ -9677,7 +10150,7 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
     <div class="input-wrapper">
       <span class="prefix"><slot name="prefix"></slot></span>
 
-      <div class\$="[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]]" id="labelAndInputContainer">
+      <div class$="[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]]" id="labelAndInputContainer">
         <slot name="label"></slot>
         <slot name="input"></slot>
       </div>
@@ -9685,12 +10158,12 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
       <span class="suffix"><slot name="suffix"></slot></span>
     </div>
 
-    <div class\$="[[_computeUnderlineClass(focused,invalid)]]">
+    <div class$="[[_computeUnderlineClass(focused,invalid)]]">
       <div class="unfocused-line"></div>
       <div class="focused-line"></div>
     </div>
 
-    <div class\$="[[_computeAddOnContentClass(focused,invalid)]]">
+    <div class$="[[_computeAddOnContentClass(focused,invalid)]]">
       <slot name="add-on"></slot>
     </div>
 `,is:"paper-input-container",properties:{/**
@@ -9711,13 +10184,13 @@ if(this.required&&""===this.bindValue){valid=!1}else if(this.hasValidator()){val
      */focused:{readOnly:!0,type:Boolean,value:!1,notify:!0},_addons:{type:Array// do not set a default value here intentionally - it will be initialized
 // lazily when a distributed child is attached, which may occur before
 // configuration for this element in polyfill.
-},_inputHasContent:{type:Boolean,value:!1},_inputSelector:{type:String,value:"input,iron-input,textarea,.paper-input-input"},_boundOnFocus:{type:Function,value:function(){return this._onFocus.bind(this)}},_boundOnBlur:{type:Function,value:function(){return this._onBlur.bind(this)}},_boundOnInput:{type:Function,value:function(){return this._onInput.bind(this)}},_boundValueChanged:{type:Function,value:function(){return this._onValueChanged.bind(this)}}},listeners:{"addon-attached":"_onAddonAttached","iron-input-validate":"_onIronInputValidate"},get _valueChangedEvent(){return this.attrForValue+"-changed"},get _propertyForValue(){return dashToCamelCase(this.attrForValue)},get _inputElement(){return dom(this).querySelector(this._inputSelector)},get _inputElementValue(){return this._inputElement[this._propertyForValue]||this._inputElement.value},ready:function(){// Paper-input treats a value of undefined differently at startup than
+},_inputHasContent:{type:Boolean,value:!1},_inputSelector:{type:String,value:"input,iron-input,textarea,.paper-input-input"},_boundOnFocus:{type:Function,value:function(){return this._onFocus.bind(this)}},_boundOnBlur:{type:Function,value:function(){return this._onBlur.bind(this)}},_boundOnInput:{type:Function,value:function(){return this._onInput.bind(this)}},_boundValueChanged:{type:Function,value:function(){return this._onValueChanged.bind(this)}}},listeners:{"addon-attached":"_onAddonAttached","iron-input-validate":"_onIronInputValidate"},get _valueChangedEvent(){return this.attrForValue+"-changed"},get _propertyForValue(){return dashToCamelCase(this.attrForValue)},get _inputElement(){return dom(this).querySelector(this._inputSelector)},get _inputElementValue(){return this._inputElement[this._propertyForValue]||this._inputElement.value},/** @override */ready:function(){// Paper-input treats a value of undefined differently at startup than
 // the rest of the time (specifically: it does not validate it at startup,
 // but it does after that. We need to track whether the first time we
 // encounter the value is basically this first time, so that we can validate
 // it correctly the rest of the time. See
 // https://github.com/PolymerElements/paper-input/issues/605
-this.__isFirstValueUpdate=!0;if(!this._addons){this._addons=[]}this.addEventListener("focus",this._boundOnFocus,!0);this.addEventListener("blur",this._boundOnBlur,!0)},attached:function(){if(this.attrForValue){this._inputElement.addEventListener(this._valueChangedEvent,this._boundValueChanged)}else{this.addEventListener("input",this._onInput)}// Only validate when attached if the input already has a value.
+this.__isFirstValueUpdate=!0;if(!this._addons){this._addons=[]}this.addEventListener("focus",this._boundOnFocus,!0);this.addEventListener("blur",this._boundOnBlur,!0)},/** @override */attached:function(){if(this.attrForValue){this._inputElement.addEventListener(this._valueChangedEvent,this._boundValueChanged)}else{this.addEventListener("input",this._onInput)}// Only validate when attached if the input already has a value.
 if(this._inputElementValue&&""!=this._inputElementValue){this._handleValueAndAutoValidate(this._inputElement)}else{this._handleValue(this._inputElement)}},/** @private */_onAddonAttached:function(event){if(!this._addons){this._addons=[]}var target=event.target;if(-1===this._addons.indexOf(target)){this._addons.push(target);if(this.isAttached){this._handleValue(this._inputElement)}}},/** @private */_onFocus:function(){this._setFocused(!0)},/** @private */_onBlur:function(){this._setFocused(!1);this._handleValueAndAutoValidate(this._inputElement)},/** @private */_onInput:function(event){this._handleValueAndAutoValidate(event.target)},/** @private */_onValueChanged:function(event){var input=event.target;// Paper-input treats a value of undefined differently at startup than
 // the rest of the time (specifically: it does not validate it at startup,
 // but it does after that. If this is in fact the bootup case, ignore
@@ -9730,7 +10203,7 @@ this._handleValue(inputElement)},/** @private */_onIronInputValidate:function(ev
    */updateAddons:function(state){for(var addon,index=0;addon=this._addons[index];index++){addon.update(state)}},/** @private */_computeInputContentClass:function(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent){var cls="input-content";if(!noLabelFloat){var label=this.querySelector("label");if(alwaysFloatLabel||_inputHasContent){cls+=" label-is-floating";// If the label is floating, ignore any offsets that may have been
 // applied from a prefix element.
 this.$.labelAndInputContainer.style.position="static";if(invalid){cls+=" is-invalid"}else if(focused){cls+=" label-is-highlighted"}}else{// When the label is not floating, it should overlap the input element.
-if(label){this.$.labelAndInputContainer.style.position="relative"}if(invalid){cls+=" is-invalid"}}}else{if(_inputHasContent){cls+=" label-is-hidden"}if(invalid){cls+=" is-invalid"}}if(focused){cls+=" focused"}return cls},/** @private */_computeUnderlineClass:function(focused,invalid){var cls="underline";if(invalid){cls+=" is-invalid"}else if(focused){cls+=" is-highlighted"}return cls},/** @private */_computeAddOnContentClass:function(focused,invalid){var cls="add-on-content";if(invalid){cls+=" is-invalid"}else if(focused){cls+=" is-highlighted"}return cls}});Polymer({_template:html`
+if(label){this.$.labelAndInputContainer.style.position="relative"}if(invalid){cls+=" is-invalid"}}}else{if(_inputHasContent){cls+=" label-is-hidden"}if(invalid){cls+=" is-invalid"}}if(focused){cls+=" focused"}return cls},/** @private */_computeUnderlineClass:function(focused,invalid){var cls="underline";if(invalid){cls+=" is-invalid"}else if(focused){cls+=" is-highlighted"}return cls},/** @private */_computeAddOnContentClass:function(focused,invalid){var cls="add-on-content";if(invalid){cls+=" is-invalid"}else if(focused){cls+=" is-highlighted"}return cls}});Polymer({/** @override */_template:html`
     <style>
       :host {
         display: inline-block;
@@ -9747,10 +10220,29 @@ if(label){this.$.labelAndInputContainer.style.position="relative"}if(invalid){cl
 
       :host([invalid]) {
         visibility: visible;
-      };
+      }
+
+      #a11yWrapper {
+        visibility: hidden;
+      }
+
+      :host([invalid]) #a11yWrapper {
+        visibility: visible;
+      }
     </style>
 
-    <slot></slot>
+    <!--
+    If the paper-input-error element is directly referenced by an
+    \`aria-describedby\` attribute, such as when used as a paper-input add-on,
+    then applying \`visibility: hidden;\` to the paper-input-error element itself
+    does not hide the error.
+
+    For more information, see:
+    https://www.w3.org/TR/accname-1.1/#mapping_additional_nd_description
+    -->
+    <div id="a11yWrapper">
+      <slot></slot>
+    </div>
 `,is:"paper-input-error",behaviors:[PaperInputAddonBehavior],properties:{/**
      * True if the error is showing.
      */invalid:{readOnly:!0,reflectToAttribute:!0,type:Boolean}},/**
@@ -9906,6 +10398,8 @@ value:""},/**
      * If you're using PaperInputBehavior to implement your own paper-input-like
      * element, bind this to the `<input is="iron-input">`'s `autocapitalize`
      * property.
+     *
+     * @type {string}
      */autocapitalize:{type:String,value:"none"},/**
      * If you're using PaperInputBehavior to implement your own paper-input-like
      * element, bind this to the `<input is="iron-input">`'s `autocorrect`
@@ -9937,9 +10431,9 @@ value:""},/**
 if(!this.$){this.$={}}if(!this.$.input){this._generateInputId();this.$.input=this.$$("#"+this._inputId)}return this.$.input},/**
    * Returns a reference to the focusable element.
    * @return {!HTMLElement}
-   */get _focusableElement(){return this.inputElement},created:function(){// These types have some default placeholder text; overlapping
+   */get _focusableElement(){return this.inputElement},/** @override */created:function(){// These types have some default placeholder text; overlapping
 // the label on top of it looks terrible. Auto-float the label in this case.
-this._typesThatHaveText=["date","datetime","datetime-local","month","time","week","file"]},attached:function(){this._updateAriaLabelledBy();// In the 2.0 version of the element, this is handled in `onIronInputReady`,
+this._typesThatHaveText=["date","datetime","datetime-local","month","time","week","file"]},/** @override */attached:function(){this._updateAriaLabelledBy();// In the 2.0 version of the element, this is handled in `onIronInputReady`,
 // i.e. after the native input has finished distributing. In the 1.0
 // version, the input is in the shadow tree, so it's already available.
 if(!PolymerElement&&this.inputElement&&-1!==this._typesThatHaveText.indexOf(this.inputElement.type)){this.alwaysFloatLabel=!0}},_appendStringWithSpace:function(str,more){if(str){str=str+" "+more}else{str=more}return str},_onAddonAttached:function(event){var target=dom(event).rootTarget;if(target.id){this._ariaDescribedBy=this._appendStringWithSpace(this._ariaDescribedBy,target.id)}else{var id="paper-input-add-on-"+PaperInputHelper.NextAddonID++;target.id=id;this._ariaDescribedBy=this._appendStringWithSpace(this._ariaDescribedBy,id)}},/**
@@ -9979,7 +10473,7 @@ if(this.autofocus&&this._focusableElement){// In IE 11, the default document.act
 // just a plain object. We identify the latter case as having no valid
 // activeElement.
 var activeElement=document.activeElement,isActiveElementValid=activeElement instanceof HTMLElement,isSomeElementActive=isActiveElementValid&&activeElement!==document.body&&activeElement!==document.documentElement;/* IE 11 */if(!isSomeElementActive){// No specific element has taken the focus yet, so we can take it.
-this._focusableElement.focus()}}}},PaperInputBehavior=[IronControlState,IronA11yKeysBehavior,PaperInputBehaviorImpl];var paperInputBehavior={PaperInputHelper:PaperInputHelper,PaperInputBehaviorImpl:PaperInputBehaviorImpl,PaperInputBehavior:PaperInputBehavior};Polymer({is:"paper-input",_template:html`
+this._focusableElement.focus()}}}},PaperInputBehavior=[IronControlState,IronA11yKeysBehavior,PaperInputBehaviorImpl];var paperInputBehavior={PaperInputHelper:PaperInputHelper,PaperInputBehaviorImpl:PaperInputBehaviorImpl,PaperInputBehavior:PaperInputBehavior};Polymer({is:"paper-input",/** @override */_template:html`
     <style>
       :host {
         display: block;
@@ -10061,15 +10555,15 @@ this._focusableElement.focus()}}}},PaperInputBehavior=[IronControlState,IronA11y
       }
     </style>
 
-    <paper-input-container id="container" no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate\$="[[autoValidate]]" disabled\$="[[disabled]]" invalid="[[invalid]]">
+    <paper-input-container id="container" no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
 
       <slot name="prefix" slot="prefix"></slot>
 
-      <label hidden\$="[[!label]]" aria-hidden="true" for\$="[[_inputId]]" slot="label">[[label]]</label>
+      <label hidden$="[[!label]]" aria-hidden="true" for$="[[_inputId]]" slot="label">[[label]]</label>
 
       <!-- Need to bind maxlength so that the paper-input-char-counter works correctly -->
-      <iron-input bind-value="{{value}}" slot="input" class="input-element" id\$="[[_inputId]]" maxlength\$="[[maxlength]]" allowed-pattern="[[allowedPattern]]" invalid="{{invalid}}" validator="[[validator]]">
-        <input aria-labelledby\$="[[_ariaLabelledBy]]" aria-describedby\$="[[_ariaDescribedBy]]" disabled\$="[[disabled]]" title\$="[[title]]" type\$="[[type]]" pattern\$="[[pattern]]" required\$="[[required]]" autocomplete\$="[[autocomplete]]" autofocus\$="[[autofocus]]" inputmode\$="[[inputmode]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]" min\$="[[min]]" max\$="[[max]]" step\$="[[step]]" name\$="[[name]]" placeholder\$="[[placeholder]]" readonly\$="[[readonly]]" list\$="[[list]]" size\$="[[size]]" autocapitalize\$="[[autocapitalize]]" autocorrect\$="[[autocorrect]]" on-change="_onChange" tabindex\$="[[tabIndex]]" autosave\$="[[autosave]]" results\$="[[results]]" accept\$="[[accept]]" multiple\$="[[multiple]]">
+      <iron-input bind-value="{{value}}" slot="input" class="input-element" id$="[[_inputId]]" maxlength$="[[maxlength]]" allowed-pattern="[[allowedPattern]]" invalid="{{invalid}}" validator="[[validator]]">
+        <input aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" title$="[[title]]" type$="[[type]]" pattern$="[[pattern]]" required$="[[required]]" autocomplete$="[[autocomplete]]" autofocus$="[[autofocus]]" inputmode$="[[inputmode]]" minlength$="[[minlength]]" maxlength$="[[maxlength]]" min$="[[min]]" max$="[[max]]" step$="[[step]]" name$="[[name]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" list$="[[list]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange" tabindex$="[[tabIndex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" role$="[[inputRole]]" aria-haspopup$="[[inputAriaHaspopup]]">
       </iron-input>
 
       <slot name="suffix" slot="suffix"></slot>
@@ -10084,7 +10578,7 @@ this._focusableElement.focus()}}}},PaperInputBehavior=[IronControlState,IronA11y
 
     </paper-input-container>
   `,behaviors:[PaperInputBehavior,IronFormElementBehavior],properties:{value:{// Required for the correct TypeScript type-generation
-type:String}},/**
+type:String},inputRole:{type:String,value:void 0},inputAriaHaspopup:{type:String,value:void 0}},/**
    * Returns a reference to the focusable element. Overridden from
    * PaperInputBehavior to correctly focus the native input.
    *
@@ -10094,7 +10588,7 @@ type:String}},/**
 // PaperInputBehavior::attached.
 listeners:{"iron-input-ready":"_onIronInputReady"},_onIronInputReady:function(){// Even though this is only used in the next line, save this for
 // backwards compatibility, since the native input had this ID until 2.0.5.
-if(!this.$.nativeInput){this.$.nativeInput=this.$$("input")}if(this.inputElement&&-1!==this._typesThatHaveText.indexOf(this.$.nativeInput.type)){this.alwaysFloatLabel=!0}// Only validate when attached if the input already has a value.
+if(!this.$.nativeInput){this.$.nativeInput=/** @type {!Element} */this.$$("input")}if(this.inputElement&&-1!==this._typesThatHaveText.indexOf(this.$.nativeInput.type)){this.alwaysFloatLabel=!0}// Only validate when attached if the input already has a value.
 if(!!this.inputElement.bindValue){this.$.container._handleValueAndAutoValidate(this.inputElement)}}});const IronFitBehavior={properties:{/**
      * The element that will receive a `max-height`/`width`. By default it is
      * the same as `this`, but it can be set to a child element. This is useful,
@@ -10158,12 +10652,15 @@ if(!!this.inputElement.bindValue){this.$.container._handleValueAndAutoValidate(t
 if("right"===this.horizontalAlign){return"left"}if("left"===this.horizontalAlign){return"right"}}return this.horizontalAlign},/**
    * True if the element should be positioned instead of centered.
    * @private
-   */get __shouldPosition(){return(this.horizontalAlign||this.verticalAlign)&&this.positionTarget},attached:function(){// Memoize this to avoid expensive calculations & relayouts.
+   */get __shouldPosition(){return(this.horizontalAlign||this.verticalAlign)&&this.positionTarget},/**
+   * True if the component is RTL.
+   * @private
+   */get _isRTL(){// Memoize this to avoid expensive calculations & relayouts.
 // Make sure we do it only once
-if("undefined"===typeof this._isRTL){this._isRTL="rtl"==window.getComputedStyle(this).direction}this.positionTarget=this.positionTarget||this._defaultPositionTarget;if(this.autoFitOnAttach){if("none"===window.getComputedStyle(this).display){setTimeout(function(){this.fit()}.bind(this))}else{// NOTE: shadydom applies distribution asynchronously
+if("undefined"===typeof this._memoizedIsRTL){this._memoizedIsRTL="rtl"==window.getComputedStyle(this).direction}return this._memoizedIsRTL},/** @override */attached:function(){this.positionTarget=this.positionTarget||this._defaultPositionTarget;if(this.autoFitOnAttach){if("none"===window.getComputedStyle(this).display){setTimeout(function(){this.fit()}.bind(this))}else{// NOTE: shadydom applies distribution asynchronously
 // for performance reasons webcomponents/shadydom#120
 // Flush to get correct layout info.
-window.ShadyDOM&&ShadyDOM.flush();this.fit()}}},detached:function(){if(this.__deferredFit){clearTimeout(this.__deferredFit);this.__deferredFit=null}},/**
+window.ShadyDOM&&ShadyDOM.flush();this.fit()}}},/** @override */detached:function(){if(this.__deferredFit){clearTimeout(this.__deferredFit);this.__deferredFit=null}},/**
    * Positions and fits the element into the `fitInto` element.
    */fit:function(){this.position();this.constrain();this.center()},/**
    * Memoize information needed to position and size the target element.
@@ -10291,19 +10788,19 @@ if(!this.isAttached){return}this._notifyingDescendant=!0;descendant.notifyResize
 ORPHANS.forEach(function(orphan){if(orphan!==this){orphan._findParent()}},this);window.addEventListener("resize",this._boundNotifyResize);this.notifyResize()}else{// If this resizable has a parent, tell other child resizables of
 // that parent to try finding their parent again, in case it's this
 // resizable.
-this._parentResizable._interestedResizables.forEach(function(resizable){if(resizable!==this){resizable._findParent()}},this)}}},_findParent:function(){this.assignParentResizable(null);this.fire("iron-request-resize-notifications",null,{node:this,bubbles:!0,cancelable:!0});if(!this._parentResizable){ORPHANS.add(this)}else{ORPHANS.delete(this)}}};var ironResizableBehavior={IronResizableBehavior:IronResizableBehavior},p$1=Element.prototype,matches$1=p$1.matches||p$1.matchesSelector||p$1.mozMatchesSelector||p$1.msMatchesSelector||p$1.oMatchesSelector||p$1.webkitMatchesSelector;const IronFocusablesHelper={/**
+this._parentResizable._interestedResizables.forEach(function(resizable){if(resizable!==this){resizable._findParent()}},this)}}},_findParent:function(){this.assignParentResizable(null);this.fire("iron-request-resize-notifications",null,{node:this,bubbles:!0,cancelable:!0});if(!this._parentResizable){ORPHANS.add(this)}else{ORPHANS.delete(this)}}};var ironResizableBehavior={IronResizableBehavior:IronResizableBehavior},p$1=Element.prototype,matches$1=p$1.matches||p$1.matchesSelector||p$1.mozMatchesSelector||p$1.msMatchesSelector||p$1.oMatchesSelector||p$1.webkitMatchesSelector;class IronFocusablesHelperClass{/**
    * Returns a sorted array of tabbable nodes, including the root node.
    * It searches the tabbable nodes in the light and shadow dom of the chidren,
    * sorting the result by tabindex.
    * @param {!Node} node
    * @return {!Array<!HTMLElement>}
-   */getTabbableNodes:function(node){var result=[],needsSortByTabIndex=this._collectTabbableNodes(node,result);// If there is at least one element with tabindex > 0, we need to sort
+   */getTabbableNodes(node){var result=[],needsSortByTabIndex=this._collectTabbableNodes(node,result);// If there is at least one element with tabindex > 0, we need to sort
 // the final array by tabindex.
-if(needsSortByTabIndex){return this._sortByTabIndex(result)}return result},/**
-   * Returns if a element is focusable.
-   * @param {!HTMLElement} element
-   * @return {boolean}
-   */isFocusable:function(element){// From http://stackoverflow.com/a/1600194/4228703:
+if(needsSortByTabIndex){return this._sortByTabIndex(result)}return result}/**
+     * Returns if a element is focusable.
+     * @param {!HTMLElement} element
+     * @return {boolean}
+     */isFocusable(element){// From http://stackoverflow.com/a/1600194/4228703:
 // There isn't a definite list, it's up to the browser. The only
 // standard we have is DOM Level 2 HTML
 // https://www.w3.org/TR/DOM-Level-2-HTML/html.html, according to which the
@@ -10314,29 +10811,29 @@ if(needsSortByTabIndex){return this._sortByTabIndex(result)}return result},/**
 // http://allyjs.io/data-tables/focusable.html
 // Elements that cannot be focused if they have [disabled] attribute.
 if(matches$1.call(element,"input, select, textarea, button, object")){return matches$1.call(element,":not([disabled])")}// Elements that can be focused even if they have [disabled] attribute.
-return matches$1.call(element,"a[href], area[href], iframe, [tabindex], [contentEditable]")},/**
-   * Returns if a element is tabbable. To be tabbable, a element must be
-   * focusable, visible, and with a tabindex !== -1.
-   * @param {!HTMLElement} element
-   * @return {boolean}
-   */isTabbable:function(element){return this.isFocusable(element)&&matches$1.call(element,":not([tabindex=\"-1\"])")&&this._isVisible(element)},/**
-   * Returns the normalized element tabindex. If not focusable, returns -1.
-   * It checks for the attribute "tabindex" instead of the element property
-   * `tabIndex` since browsers assign different values to it.
-   * e.g. in Firefox `<div contenteditable>` has `tabIndex = -1`
-   * @param {!HTMLElement} element
-   * @return {!number}
-   * @private
-   */_normalizedTabIndex:function(element){if(this.isFocusable(element)){var tabIndex=element.getAttribute("tabindex")||0;return+tabIndex}return-1},/**
-   * Searches for nodes that are tabbable and adds them to the `result` array.
-   * Returns if the `result` array needs to be sorted by tabindex.
-   * @param {!Node} node The starting point for the search; added to `result`
-   * if tabbable.
-   * @param {!Array<!HTMLElement>} result
-   * @return {boolean}
-   * @private
-   */_collectTabbableNodes:function(node,result){// If not an element or not visible, no need to explore children.
-if(node.nodeType!==Node.ELEMENT_NODE||!this._isVisible(node)){return!1}var element=/** @type {!HTMLElement} */node,tabIndex=this._normalizedTabIndex(element),needsSort=0<tabIndex;if(0<=tabIndex){result.push(element)}// In ShadowDOM v1, tab order is affected by the order of distrubution.
+return matches$1.call(element,"a[href], area[href], iframe, [tabindex], [contentEditable]")}/**
+     * Returns if a element is tabbable. To be tabbable, a element must be
+     * focusable, visible, and with a tabindex !== -1.
+     * @param {!HTMLElement} element
+     * @return {boolean}
+     */isTabbable(element){return this.isFocusable(element)&&matches$1.call(element,":not([tabindex=\"-1\"])")&&this._isVisible(element)}/**
+     * Returns the normalized element tabindex. If not focusable, returns -1.
+     * It checks for the attribute "tabindex" instead of the element property
+     * `tabIndex` since browsers assign different values to it.
+     * e.g. in Firefox `<div contenteditable>` has `tabIndex = -1`
+     * @param {!HTMLElement} element
+     * @return {!number}
+     * @private
+     */_normalizedTabIndex(element){if(this.isFocusable(element)){var tabIndex=element.getAttribute("tabindex")||0;return+tabIndex}return-1}/**
+     * Searches for nodes that are tabbable and adds them to the `result` array.
+     * Returns if the `result` array needs to be sorted by tabindex.
+     * @param {!Node} node The starting point for the search; added to `result`
+     * if tabbable.
+     * @param {!Array<!HTMLElement>} result
+     * @return {boolean}
+     * @private
+     */_collectTabbableNodes(node,result){// If not an element or not visible, no need to explore children.
+if(node.nodeType!==Node.ELEMENT_NODE){return!1}var element=/** @type {!HTMLElement} */node;if(!this._isVisible(element)){return!1}var tabIndex=this._normalizedTabIndex(element),needsSort=0<tabIndex;if(0<=tabIndex){result.push(element)}// In ShadowDOM v1, tab order is affected by the order of distrubution.
 // E.g. getTabbableNodes(#root) in ShadowDOM v1 should return [#A, #B];
 // in ShadowDOM v0 tab order is not affected by the distrubution order,
 // in fact getTabbableNodes(#root) returns [#B, #A].
@@ -10351,39 +10848,39 @@ if(node.nodeType!==Node.ELEMENT_NODE||!this._isVisible(node)){return!1}var eleme
 // TODO(valdrin) support ShadowDOM v1 when upgrading to Polymer v2.0.
 var children;if("content"===element.localName||"slot"===element.localName){children=dom(element).getDistributedNodes()}else{// Use shadow root if possible, will check for distributed nodes.
 children=dom(element.root||element).children}for(var i=0;i<children.length;i++){// Ensure method is always invoked to collect tabbable children.
-needsSort=this._collectTabbableNodes(children[i],result)||needsSort}return needsSort},/**
-   * Returns false if the element has `visibility: hidden` or `display: none`
-   * @param {!HTMLElement} element
-   * @return {boolean}
-   * @private
-   */_isVisible:function(element){// Check inline style first to save a re-flow. If looks good, check also
+needsSort=this._collectTabbableNodes(children[i],result)||needsSort}return needsSort}/**
+     * Returns false if the element has `visibility: hidden` or `display: none`
+     * @param {!HTMLElement} element
+     * @return {boolean}
+     * @private
+     */_isVisible(element){// Check inline style first to save a re-flow. If looks good, check also
 // computed style.
-var style=element.style;if("hidden"!==style.visibility&&"none"!==style.display){style=window.getComputedStyle(element);return"hidden"!==style.visibility&&"none"!==style.display}return!1},/**
-   * Sorts an array of tabbable elements by tabindex. Returns a new array.
-   * @param {!Array<!HTMLElement>} tabbables
-   * @return {!Array<!HTMLElement>}
-   * @private
-   */_sortByTabIndex:function(tabbables){// Implement a merge sort as Array.prototype.sort does a non-stable sort
+var style=element.style;if("hidden"!==style.visibility&&"none"!==style.display){style=window.getComputedStyle(element);return"hidden"!==style.visibility&&"none"!==style.display}return!1}/**
+     * Sorts an array of tabbable elements by tabindex. Returns a new array.
+     * @param {!Array<!HTMLElement>} tabbables
+     * @return {!Array<!HTMLElement>}
+     * @private
+     */_sortByTabIndex(tabbables){// Implement a merge sort as Array.prototype.sort does a non-stable sort
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-var len=tabbables.length;if(2>len){return tabbables}var pivot=Math.ceil(len/2),left=this._sortByTabIndex(tabbables.slice(0,pivot)),right=this._sortByTabIndex(tabbables.slice(pivot));return this._mergeSortByTabIndex(left,right)},/**
-   * Merge sort iterator, merges the two arrays into one, sorted by tab index.
-   * @param {!Array<!HTMLElement>} left
-   * @param {!Array<!HTMLElement>} right
-   * @return {!Array<!HTMLElement>}
-   * @private
-   */_mergeSortByTabIndex:function(left,right){var result=[];while(0<left.length&&0<right.length){if(this._hasLowerTabOrder(left[0],right[0])){result.push(right.shift())}else{result.push(left.shift())}}return result.concat(left,right)},/**
-   * Returns if element `a` has lower tab order compared to element `b`
-   * (both elements are assumed to be focusable and tabbable).
-   * Elements with tabindex = 0 have lower tab order compared to elements
-   * with tabindex > 0.
-   * If both have same tabindex, it returns false.
-   * @param {!HTMLElement} a
-   * @param {!HTMLElement} b
-   * @return {boolean}
-   * @private
-   */_hasLowerTabOrder:function(a,b){// Normalize tabIndexes
+var len=tabbables.length;if(2>len){return tabbables}var pivot=Math.ceil(len/2),left=this._sortByTabIndex(tabbables.slice(0,pivot)),right=this._sortByTabIndex(tabbables.slice(pivot));return this._mergeSortByTabIndex(left,right)}/**
+     * Merge sort iterator, merges the two arrays into one, sorted by tab index.
+     * @param {!Array<!HTMLElement>} left
+     * @param {!Array<!HTMLElement>} right
+     * @return {!Array<!HTMLElement>}
+     * @private
+     */_mergeSortByTabIndex(left,right){var result=[];while(0<left.length&&0<right.length){if(this._hasLowerTabOrder(left[0],right[0])){result.push(right.shift())}else{result.push(left.shift())}}return result.concat(left,right)}/**
+     * Returns if element `a` has lower tab order compared to element `b`
+     * (both elements are assumed to be focusable and tabbable).
+     * Elements with tabindex = 0 have lower tab order compared to elements
+     * with tabindex > 0.
+     * If both have same tabindex, it returns false.
+     * @param {!HTMLElement} a
+     * @param {!HTMLElement} b
+     * @return {boolean}
+     * @private
+     */_hasLowerTabOrder(a,b){// Normalize tabIndexes
 // e.g. in Firefox `<div contenteditable>` has `tabIndex = -1`
-var ati=Math.max(a.tabIndex,0),bti=Math.max(b.tabIndex,0);return 0===ati||0===bti?bti>ati:ati>bti}};var ironFocusablesHelper={IronFocusablesHelper:IronFocusablesHelper};Polymer({_template:html`
+var ati=Math.max(a.tabIndex,0),bti=Math.max(b.tabIndex,0);return 0===ati||0===bti?bti>ati:ati>bti}}const IronFocusablesHelper=new IronFocusablesHelperClass;var ironFocusablesHelper={IronFocusablesHelper:IronFocusablesHelper};Polymer({/** @override */_template:html`
     <style>
       :host {
         position: fixed;
@@ -10408,8 +10905,8 @@ var ati=Math.max(a.tabIndex,0),bti=Math.max(b.tabIndex,0);return 0===ati||0===bt
     <slot></slot>
 `,is:"iron-overlay-backdrop",properties:{/**
      * Returns true if the backdrop is opened.
-     */opened:{reflectToAttribute:!0,type:Boolean,value:!1,observer:"_openedChanged"}},listeners:{transitionend:"_onTransitionend"},created:function(){// Used to cancel previous requestAnimationFrame calls when opened changes.
-this.__openedRaf=null},attached:function(){this.opened&&this._openedChanged(this.opened)},/**
+     */opened:{reflectToAttribute:!0,type:Boolean,value:!1,observer:"_openedChanged"}},listeners:{transitionend:"_onTransitionend"},/** @override */created:function(){// Used to cancel previous requestAnimationFrame calls when opened changes.
+this.__openedRaf=null},/** @override */attached:function(){this.opened&&this._openedChanged(this.opened)},/**
    * Appends the backdrop to document body if needed.
    */prepare:function(){if(this.opened&&!this.parentNode){dom(document.body).appendChild(this)}},/**
    * Shows the backdrop.
@@ -10425,137 +10922,125 @@ this.prepare()}else{// Animation might be disabled via the mixin or opacity cust
 // If it is disabled in other ways, it's up to the user to call complete.
 var cs=window.getComputedStyle(this);if("0s"===cs.transitionDuration||0==cs.opacity){this.complete()}}if(!this.isAttached){return}// Always cancel previous requestAnimationFrame.
 if(this.__openedRaf){window.cancelAnimationFrame(this.__openedRaf);this.__openedRaf=null}// Force relayout to ensure proper transitions.
-this.scrollTop=this.scrollTop;this.__openedRaf=window.requestAnimationFrame(function(){this.__openedRaf=null;this.toggleClass("opened",this.opened)}.bind(this))}});const IronOverlayManagerClass=function(){/**
-   * Used to keep track of the opened overlays.
-   * @private {!Array<!Element>}
-   */this._overlays=[];/**
-                           * iframes have a default z-index of 100,
-                           * so this default should be at least that.
-                           * @private {number}
-                           */this._minimumZ=101;/**
-                         * Memoized backdrop element.
-                         * @private {Element|null}
-                         */this._backdropElement=null;// Enable document-wide tap recognizer.
+this.scrollTop=this.scrollTop;this.__openedRaf=window.requestAnimationFrame(function(){this.__openedRaf=null;this.toggleClass("opened",this.opened)}.bind(this))}});class IronOverlayManagerClass{constructor(){/**
+     * Used to keep track of the opened overlays.
+     * @private {!Array<!Element>}
+     */this._overlays=[];/**
+                             * iframes have a default z-index of 100,
+                             * so this default should be at least that.
+                             * @private {number}
+                             */this._minimumZ=101;/**
+                           * Memoized backdrop element.
+                           * @private {Element|null}
+                           */this._backdropElement=null;// Enable document-wide tap recognizer.
 // NOTE: Use useCapture=true to avoid accidentally prevention of the closing
 // of an overlay via event.stopPropagation(). The only way to prevent
 // closing of an overlay should be through its APIs.
 // NOTE: enable tap on <html> to workaround Polymer/polymer#4459
 // Pass no-op function because MSEdge 15 doesn't handle null as 2nd argument
 // https://github.com/Microsoft/ChakraCore/issues/3863
-add(document.documentElement,"tap",function(){});document.addEventListener("tap",this._onCaptureClick.bind(this),!0);document.addEventListener("focus",this._onCaptureFocus.bind(this),!0);document.addEventListener("keydown",this._onCaptureKeyDown.bind(this),!0)};IronOverlayManagerClass.prototype={constructor:IronOverlayManagerClass,/**
-   * The shared backdrop element.
-   * @return {!Element} backdropElement
-   */get backdropElement(){if(!this._backdropElement){this._backdropElement=document.createElement("iron-overlay-backdrop")}return this._backdropElement},/**
-   * The deepest active element.
-   * @return {!Element} activeElement the active element
-   */get deepActiveElement(){var active=document.activeElement;// document.activeElement can be null
+addListener(document.documentElement,"tap",function(){});document.addEventListener("tap",this._onCaptureClick.bind(this),!0);document.addEventListener("focus",this._onCaptureFocus.bind(this),!0);document.addEventListener("keydown",this._onCaptureKeyDown.bind(this),!0)}/**
+     * The shared backdrop element.
+     * @return {!Element} backdropElement
+     */get backdropElement(){if(!this._backdropElement){this._backdropElement=document.createElement("iron-overlay-backdrop")}return this._backdropElement}/**
+     * The deepest active element.
+     * @return {!Element} activeElement the active element
+     */get deepActiveElement(){var active=document.activeElement;// document.activeElement can be null
 // https://developer.mozilla.org/en-US/docs/Web/API/Document/activeElement
 // In IE 11, it can also be an object when operating in iframes.
 // In these cases, default it to document.body.
-if(!active||!1===active instanceof Element){active=document.body}while(active.root&&dom(active.root).activeElement){active=dom(active.root).activeElement}return active},/**
-   * Brings the overlay at the specified index to the front.
-   * @param {number} i
-   * @private
-   */_bringOverlayAtIndexToFront:function(i){var overlay=this._overlays[i];if(!overlay){return}var lastI=this._overlays.length-1,currentOverlay=this._overlays[lastI];// Ensure always-on-top overlay stays on top.
+if(!active||!1===active instanceof Element){active=document.body}while(active.root&&dom(active.root).activeElement){active=dom(active.root).activeElement}return active}/**
+     * Brings the overlay at the specified index to the front.
+     * @param {number} i
+     * @private
+     */_bringOverlayAtIndexToFront(i){var overlay=this._overlays[i];if(!overlay){return}var lastI=this._overlays.length-1,currentOverlay=this._overlays[lastI];// Ensure always-on-top overlay stays on top.
 if(currentOverlay&&this._shouldBeBehindOverlay(overlay,currentOverlay)){lastI--}// If already the top element, return.
 if(i>=lastI){return}// Update z-index to be on top.
 var minimumZ=Math.max(this.currentOverlayZ(),this._minimumZ);if(this._getZ(overlay)<=minimumZ){this._applyOverlayZ(overlay,minimumZ)}// Shift other overlays behind the new on top.
-while(i<lastI){this._overlays[i]=this._overlays[i+1];i++}this._overlays[lastI]=overlay},/**
-   * Adds the overlay and updates its z-index if it's opened, or removes it if
-   * it's closed. Also updates the backdrop z-index.
-   * @param {!Element} overlay
-   */addOrRemoveOverlay:function(overlay){if(overlay.opened){this.addOverlay(overlay)}else{this.removeOverlay(overlay)}},/**
-   * Tracks overlays for z-index and focus management.
-   * Ensures the last added overlay with always-on-top remains on top.
-   * @param {!Element} overlay
-   */addOverlay:function(overlay){var i=this._overlays.indexOf(overlay);if(0<=i){this._bringOverlayAtIndexToFront(i);this.trackBackdrop();return}var insertionIndex=this._overlays.length,currentOverlay=this._overlays[insertionIndex-1],minimumZ=Math.max(this._getZ(currentOverlay),this._minimumZ),newZ=this._getZ(overlay);// Ensure always-on-top overlay stays on top.
+while(i<lastI){this._overlays[i]=this._overlays[i+1];i++}this._overlays[lastI]=overlay}/**
+     * Adds the overlay and updates its z-index if it's opened, or removes it if
+     * it's closed. Also updates the backdrop z-index.
+     * @param {!Element} overlay
+     */addOrRemoveOverlay(overlay){if(overlay.opened){this.addOverlay(overlay)}else{this.removeOverlay(overlay)}}/**
+     * Tracks overlays for z-index and focus management.
+     * Ensures the last added overlay with always-on-top remains on top.
+     * @param {!Element} overlay
+     */addOverlay(overlay){var i=this._overlays.indexOf(overlay);if(0<=i){this._bringOverlayAtIndexToFront(i);this.trackBackdrop();return}var insertionIndex=this._overlays.length,currentOverlay=this._overlays[insertionIndex-1],minimumZ=Math.max(this._getZ(currentOverlay),this._minimumZ),newZ=this._getZ(overlay);// Ensure always-on-top overlay stays on top.
 if(currentOverlay&&this._shouldBeBehindOverlay(overlay,currentOverlay)){// This bumps the z-index of +2.
 this._applyOverlayZ(currentOverlay,minimumZ);insertionIndex--;// Update minimumZ to match previous overlay's z-index.
 var previousOverlay=this._overlays[insertionIndex-1];minimumZ=Math.max(this._getZ(previousOverlay),this._minimumZ)}// Update z-index and insert overlay.
-if(newZ<=minimumZ){this._applyOverlayZ(overlay,minimumZ)}this._overlays.splice(insertionIndex,0,overlay);this.trackBackdrop()},/**
-   * @param {!Element} overlay
-   */removeOverlay:function(overlay){var i=this._overlays.indexOf(overlay);if(-1===i){return}this._overlays.splice(i,1);this.trackBackdrop()},/**
-   * Returns the current overlay.
-   * @return {!Element|undefined}
-   */currentOverlay:function(){var i=this._overlays.length-1;return this._overlays[i]},/**
-   * Returns the current overlay z-index.
-   * @return {number}
-   */currentOverlayZ:function(){return this._getZ(this.currentOverlay())},/**
-   * Ensures that the minimum z-index of new overlays is at least `minimumZ`.
-   * This does not effect the z-index of any existing overlays.
-   * @param {number} minimumZ
-   */ensureMinimumZ:function(minimumZ){this._minimumZ=Math.max(this._minimumZ,minimumZ)},focusOverlay:function(){var current=/** @type {?} */this.currentOverlay();if(current){current._applyFocus()}},/**
-   * Updates the backdrop z-index.
-   */trackBackdrop:function(){var overlay=this._overlayWithBackdrop();// Avoid creating the backdrop if there is no overlay with backdrop.
+if(newZ<=minimumZ){this._applyOverlayZ(overlay,minimumZ)}this._overlays.splice(insertionIndex,0,overlay);this.trackBackdrop()}/**
+     * @param {!Element} overlay
+     */removeOverlay(overlay){var i=this._overlays.indexOf(overlay);if(-1===i){return}this._overlays.splice(i,1);this.trackBackdrop()}/**
+     * Returns the current overlay.
+     * @return {!Element|undefined}
+     */currentOverlay(){var i=this._overlays.length-1;return this._overlays[i]}/**
+     * Returns the current overlay z-index.
+     * @return {number}
+     */currentOverlayZ(){return this._getZ(this.currentOverlay())}/**
+     * Ensures that the minimum z-index of new overlays is at least `minimumZ`.
+     * This does not effect the z-index of any existing overlays.
+     * @param {number} minimumZ
+     */ensureMinimumZ(minimumZ){this._minimumZ=Math.max(this._minimumZ,minimumZ)}focusOverlay(){var current=/** @type {?} */this.currentOverlay();if(current){current._applyFocus()}}/**
+     * Updates the backdrop z-index.
+     */trackBackdrop(){var overlay=this._overlayWithBackdrop();// Avoid creating the backdrop if there is no overlay with backdrop.
 if(!overlay&&!this._backdropElement){return}this.backdropElement.style.zIndex=this._getZ(overlay)-1;this.backdropElement.opened=!!overlay;// Property observers are not fired until element is attached
 // in Polymer 2.x, so we ensure element is attached if needed.
 // https://github.com/Polymer/polymer/issues/4526
-this.backdropElement.prepare()},/**
-   * @return {!Array<!Element>}
-   */getBackdrops:function(){for(var backdrops=[],i=0;i<this._overlays.length;i++){if(this._overlays[i].withBackdrop){backdrops.push(this._overlays[i])}}return backdrops},/**
-   * Returns the z-index for the backdrop.
-   * @return {number}
-   */backdropZ:function(){return this._getZ(this._overlayWithBackdrop())-1},/**
-   * Returns the top opened overlay that has a backdrop.
-   * @return {!Element|undefined}
-   * @private
-   */_overlayWithBackdrop:function(){for(var i=this._overlays.length-1;0<=i;i--){if(this._overlays[i].withBackdrop){return this._overlays[i]}}},/**
-   * Calculates the minimum z-index for the overlay.
-   * @param {Element=} overlay
-   * @private
-   */_getZ:function(overlay){var z=this._minimumZ;if(overlay){var z1=+(overlay.style.zIndex||window.getComputedStyle(overlay).zIndex);// Check if is a number
+this.backdropElement.prepare()}/**
+     * @return {!Array<!Element>}
+     */getBackdrops(){for(var backdrops=[],i=0;i<this._overlays.length;i++){if(this._overlays[i].withBackdrop){backdrops.push(this._overlays[i])}}return backdrops}/**
+     * Returns the z-index for the backdrop.
+     * @return {number}
+     */backdropZ(){return this._getZ(this._overlayWithBackdrop())-1}/**
+     * Returns the top opened overlay that has a backdrop.
+     * @return {!Element|undefined}
+     * @private
+     */_overlayWithBackdrop(){for(var i=this._overlays.length-1;0<=i;i--){if(this._overlays[i].withBackdrop){return this._overlays[i]}}}/**
+     * Calculates the minimum z-index for the overlay.
+     * @param {Element=} overlay
+     * @private
+     */_getZ(overlay){var z=this._minimumZ;if(overlay){var z1=+(overlay.style.zIndex||window.getComputedStyle(overlay).zIndex);// Check if is a number
 // Number.isNaN not supported in IE 10+
-if(z1===z1){z=z1}}return z},/**
-   * @param {!Element} element
-   * @param {number|string} z
-   * @private
-   */_setZ:function(element,z){element.style.zIndex=z},/**
-   * @param {!Element} overlay
-   * @param {number} aboveZ
-   * @private
-   */_applyOverlayZ:function(overlay,aboveZ){this._setZ(overlay,aboveZ+2)},/**
-   * Returns the deepest overlay in the path.
-   * @param {!Array<!Element>=} path
-   * @return {!Element|undefined}
-   * @suppress {missingProperties}
-   * @private
-   */_overlayInPath:function(path){path=path||[];for(var i=0;i<path.length;i++){if(path[i]._manager===this){return path[i]}}},/**
-   * Ensures the click event is delegated to the right overlay.
-   * @param {!Event} event
-   * @private
-   */_onCaptureClick:function(event){var i=this._overlays.length-1;if(-1===i)return;var path=/** @type {!Array<!EventTarget>} */dom(event).path,overlay;// Check if clicked outside of overlay.
-while((overlay=/** @type {?} */this._overlays[i])&&this._overlayInPath(path)!==overlay){overlay._onCaptureClick(event);if(overlay.allowClickThrough){i--}else{break}}},/**
-   * Ensures the focus event is delegated to the right overlay.
-   * @param {!Event} event
-   * @private
-   */_onCaptureFocus:function(event){var overlay=/** @type {?} */this.currentOverlay();if(overlay){overlay._onCaptureFocus(event)}},/**
-   * Ensures TAB and ESC keyboard events are delegated to the right overlay.
-   * @param {!Event} event
-   * @private
-   */_onCaptureKeyDown:function(event){var overlay=/** @type {?} */this.currentOverlay();if(overlay){if(IronA11yKeysBehavior.keyboardEventMatchesKeys(event,"esc")){overlay._onCaptureEsc(event)}else if(IronA11yKeysBehavior.keyboardEventMatchesKeys(event,"tab")){overlay._onCaptureTab(event)}}},/**
-   * Returns if the overlay1 should be behind overlay2.
-   * @param {!Element} overlay1
-   * @param {!Element} overlay2
-   * @return {boolean}
-   * @suppress {missingProperties}
-   * @private
-   */_shouldBeBehindOverlay:function(overlay1,overlay2){return!overlay1.alwaysOnTop&&overlay2.alwaysOnTop}};const IronOverlayManager=new IronOverlayManagerClass;var ironOverlayManager={IronOverlayManagerClass:IronOverlayManagerClass,IronOverlayManager:IronOverlayManager},lastTouchPosition={pageX:0,pageY:0},lastRootTarget=null,lastScrollableNodes=[],scrollEvents=[// Modern `wheel` event for mouse wheel scrolling:
+if(z1===z1){z=z1}}return z}/**
+     * @param {!Element} element
+     * @param {number|string} z
+     * @private
+     */_setZ(element,z){element.style.zIndex=z}/**
+     * @param {!Element} overlay
+     * @param {number} aboveZ
+     * @private
+     */_applyOverlayZ(overlay,aboveZ){this._setZ(overlay,aboveZ+2)}/**
+     * Returns the deepest overlay in the path.
+     * @param {!Array<!Element>=} path
+     * @return {!Element|undefined}
+     * @suppress {missingProperties}
+     * @private
+     */_overlayInPath(path){path=path||[];for(var i=0;i<path.length;i++){if(path[i]._manager===this){return path[i]}}}/**
+     * Ensures the click event is delegated to the right overlay.
+     * @param {!Event} event
+     * @private
+     */_onCaptureClick(event){var i=this._overlays.length-1;if(-1===i)return;var path=/** @type {!Array<!EventTarget>} */dom(event).path,overlay;// Check if clicked outside of overlay.
+while((overlay=/** @type {?} */this._overlays[i])&&this._overlayInPath(path)!==overlay){overlay._onCaptureClick(event);if(overlay.allowClickThrough){i--}else{break}}}/**
+     * Ensures the focus event is delegated to the right overlay.
+     * @param {!Event} event
+     * @private
+     */_onCaptureFocus(event){var overlay=/** @type {?} */this.currentOverlay();if(overlay){overlay._onCaptureFocus(event)}}/**
+     * Ensures TAB and ESC keyboard events are delegated to the right overlay.
+     * @param {!Event} event
+     * @private
+     */_onCaptureKeyDown(event){var overlay=/** @type {?} */this.currentOverlay();if(overlay){if(IronA11yKeysBehavior.keyboardEventMatchesKeys(event,"esc")){overlay._onCaptureEsc(event)}else if(IronA11yKeysBehavior.keyboardEventMatchesKeys(event,"tab")){overlay._onCaptureTab(event)}}}/**
+     * Returns if the overlay1 should be behind overlay2.
+     * @param {!Element} overlay1
+     * @param {!Element} overlay2
+     * @return {boolean}
+     * @suppress {missingProperties}
+     * @private
+     */_shouldBeBehindOverlay(overlay1,overlay2){return!overlay1.alwaysOnTop&&overlay2.alwaysOnTop}};const IronOverlayManager=new IronOverlayManagerClass;var ironOverlayManager={IronOverlayManagerClass:IronOverlayManagerClass,IronOverlayManager:IronOverlayManager},lastTouchPosition={pageX:0,pageY:0},lastRootTarget=null,lastScrollableNodes=[],scrollEvents=[// Modern `wheel` event for mouse wheel scrolling:
 "wheel",// Older, non-standard `mousewheel` event for some FF:
 "mousewheel",// IE:
 "DOMMouseScroll",// Touch enabled devices
-"touchstart","touchmove"],_boundScrollHandler,currentLockingElement;/**
-                            * The IronScrollManager is intended to provide a central source
-                            * of authority and control over which elements in a document are currently
-                            * allowed to scroll.
-                            *
-                            */`TODO(modulizer): A namespace named Polymer.IronScrollManager was
-declared here. The surrounding comments should be reviewed,
-and this string can then be deleted`;/**
-                                       * The current element that defines the DOM boundaries of the
-                                       * scroll lock. This is always the most recently locking element.
-                                       *
-                                       * @return {!Node|undefined}
-                                       */function elementIsScrollLocked(element){var lockingElement=currentLockingElement;if(lockingElement===void 0){return!1}var scrollLocked;if(_hasCachedLockedElement(element)){return!0}if(_hasCachedUnlockedElement(element)){return!1}scrollLocked=!!lockingElement&&lockingElement!==element&&!_composedTreeContains(lockingElement,element);if(scrollLocked){_lockedElementCache.push(element)}else{_unlockedElementCache.push(element)}return scrollLocked}/**
+"touchstart","touchmove"],_boundScrollHandler,currentLockingElement;function elementIsScrollLocked(element){var lockingElement=currentLockingElement;if(lockingElement===void 0){return!1}var scrollLocked;if(_hasCachedLockedElement(element)){return!0}if(_hasCachedUnlockedElement(element)){return!1}scrollLocked=!!lockingElement&&lockingElement!==element&&!_composedTreeContains(lockingElement,element);if(scrollLocked){_lockedElementCache.push(element)}else{_unlockedElementCache.push(element)}return scrollLocked}/**
    * Push an element onto the current scroll lock stack. The most recently
    * pushed element and its children will be considered scrollable. All
    * other elements will not be scrollable.
@@ -10584,7 +11069,7 @@ if(distributedNodes[nodeIndex].nodeType!==Node.ELEMENT_NODE)continue;if(_compose
 // progress and cannot be interrupted.
 if(event.cancelable&&_shouldPreventScrolling(event)){event.preventDefault()}// If event has targetTouches (touch event), update last touch position.
 if(event.targetTouches){var touch=event.targetTouches[0];lastTouchPosition.pageX=touch.pageX;lastTouchPosition.pageY=touch.pageY}}/**
-   * @private
+   * @package
    */function _lockScrollInteractions(){_boundScrollHandler=_boundScrollHandler||_scrollInteractionHandler.bind(void 0);for(var i=0,l=scrollEvents.length;i<l;i++){// NOTE: browsers that don't support objects as third arg will
 // interpret it as boolean, hence useCapture = true in this case.
 document.addEventListener(scrollEvents[i],_boundScrollHandler,{capture:!0,passive:!1})}}function _unlockScrollInteractions(){for(var i=0,l=scrollEvents.length;i<l;i++){// NOTE: browsers that don't support objects as third arg will
@@ -10595,7 +11080,7 @@ document.removeEventListener(scrollEvents[i],_boundScrollHandler,{capture:!0,pas
    * outside the locking element when it is already at its scroll boundaries.
    * @param {!Event} event
    * @return {boolean}
-   * @private
+   * @package
    */function _shouldPreventScrolling(event){// Update if root target changed. For touch events, ensure we don't
 // update during touchmove.
 var target=dom(event).rootTarget;if("touchmove"!==event.type&&lastRootTarget!==target){lastRootTarget=target;lastScrollableNodes=_getScrollableNodes(dom(event).path)}// Prevent event if no scrollable nodes.
@@ -10608,9 +11093,9 @@ return!_getScrollingNode(lastScrollableNodes,info.deltaX,info.deltaY)}/**
    * which is included too if scrollable.
    * @param {!Array<!Node>} nodes
    * @return {!Array<!Node>} scrollables
-   * @private
+   * @package
    */function _getScrollableNodes(nodes){// Loop from root target to locking element (included).
-for(var scrollables=[],lockingIndex=nodes.indexOf(currentLockingElement),i=0;i<=lockingIndex;i++){// Skip non-Element nodes.
+for(var scrollables=[],lockingIndex=nodes.indexOf(/** @type {!Node} */currentLockingElement),i=0;i<=lockingIndex;i++){// Skip non-Element nodes.
 if(nodes[i].nodeType!==Node.ELEMENT_NODE){continue}var node=/** @type {!Element} */nodes[i],style=node.style;// Check inline style before checking computed style.
 if("scroll"!==style.overflow&&"auto"!==style.overflow){style=window.getComputedStyle(node)}if("scroll"===style.overflow||"auto"===style.overflow){scrollables.push(node)}}return scrollables}/**
    * Returns the node that is scrolling. If there is no scrolling,
@@ -10619,7 +11104,7 @@ if("scroll"!==style.overflow&&"auto"!==style.overflow){style=window.getComputedS
    * @param {number} deltaX Scroll delta on the x-axis
    * @param {number} deltaY Scroll delta on the y-axis
    * @return {!Node|undefined}
-   * @private
+   * @package
    */function _getScrollingNode(nodes,deltaX,deltaY){// No scroll.
 if(!deltaX&&!deltaY){return}// Check only one axis according to where there is more scroll.
 // Prefer vertical to horizontal.
@@ -10632,7 +11117,7 @@ canScroll=0>deltaX?0<node.scrollLeft:node.scrollLeft<node.scrollWidth-node.clien
    * x-axis scroll delta (positive: scroll right, negative: scroll left,
    * 0: no scroll), and the y-axis scroll delta (positive: scroll down,
    * negative: scroll up, 0: no scroll).
-   * @private
+   * @package
    */function _getScrollInfo(event){var info={deltaX:event.deltaX,deltaY:event.deltaY};// Already available.
 if("deltaX"in event){}// do nothing, values are already good.
 // Safari has scroll info in `wheelDeltaX/Y`.
@@ -10710,8 +11195,17 @@ this.__firstFocusableNode=this.__lastFocusableNode=null;// Used by to keep track
 this.__rafs={};// Focused node before overlay gets opened. Can be restored on close.
 this.__restoreFocusNode=null;// Scroll info to be restored.
 this.__scrollTop=this.__scrollLeft=null;this.__onCaptureScroll=this.__onCaptureScroll.bind(this);// Root nodes hosting the overlay, used to listen for scroll events on them.
-this.__rootNodes=null;this._ensureSetup()},attached:function(){// Call _openedChanged here so that position can be computed correctly.
-if(this.opened){this._openedChanged(this.opened)}this._observer=dom(this).observeNodes(this._onNodesChange)},detached:function(){dom(this).unobserveNodes(this._observer);this._observer=null;for(var cb in this.__rafs){if(null!==this.__rafs[cb]){cancelAnimationFrame(this.__rafs[cb])}}this.__rafs={};this._manager.removeOverlay(this);// We got detached while animating, ensure we show/hide the overlay
+this.__rootNodes=null;this._ensureSetup()},/** @override */attached:function(){// Call _openedChanged here so that position can be computed correctly.
+if(this.opened){this._openedChanged(this.opened)}this._observer=dom(this).observeNodes(this._onNodesChange)},/** @override */detached:function(){// TODO(bicknellr): Per spec, checking `this._observer` should never be
+// necessary because `connectedCallback` and `disconnectedCallback` should
+// always be called in alternating order. However, the custom elements
+// polyfill doesn't implement the reactions stack, so this can sometimes
+// happen, particularly if ShadyDOM is in noPatch mode where the custom
+// elements polyfill is installed before ShadyDOM. We should investigate
+// whether or not we can either implement the reactions stack without major
+// performance implications or patch ShadyDOM's functions to restore the
+// typical ShadyDOM-then-custom-elements order and remove this workaround.
+if(this._observer){dom(this).unobserveNodes(this._observer)}this._observer=null;for(var cb in this.__rafs){if(null!==this.__rafs[cb]){cancelAnimationFrame(this.__rafs[cb])}}this.__rafs={};this._manager.removeOverlay(this);// We got detached while animating, ensure we show/hide the overlay
 // and fire iron-overlay-opened/closed event!
 if(this.__isAnimating){if(this.opened){this._finishRenderOpened()}else{// Restore the focus if necessary.
 this._applyFocus();this._finishRenderClosed()}}},/**
@@ -10775,7 +11269,7 @@ if(this.restoreFocusOnClose&&this.__restoreFocusNode){// If the activeElement is
 // cases focus might have been moved elsewhere by another
 // component or by an user interaction (e.g. click on a
 // button outside the overlay).
-var activeElement=this._manager.deepActiveElement;if(activeElement===document.body||dom(this).deepContains(activeElement)){this.__restoreFocusNode.focus()}}this.__restoreFocusNode=null;this._focusNode.blur();this._focusedChild=null}},/**
+var activeElement=this._manager.deepActiveElement;if(activeElement===document.body||composedContains(this,activeElement)){this.__restoreFocusNode.focus()}}this.__restoreFocusNode=null;this._focusNode.blur();this._focusedChild=null}},/**
    * Cancels (closes) the overlay. Call when click happens outside the overlay.
    * @param {!Event} event
    * @protected
@@ -10784,7 +11278,7 @@ var activeElement=this._manager.deepActiveElement;if(activeElement===document.bo
    * overlay.
    * @param {!Event} event
    * @protected
-   */_onCaptureFocus:function(event){if(!this.withBackdrop){return}var path=dom(event).path;if(-1===path.indexOf(this)){event.stopPropagation();this._applyFocus()}else{this._focusedChild=path[0]}},/**
+   */_onCaptureFocus:function(event){if(!this.withBackdrop){return}var path=dom(event).path;if(-1===path.indexOf(this)){event.stopPropagation();this._applyFocus()}else{this._focusedChild=/** @type {Node} */path[0]}},/**
    * Handles the ESC key event and cancels (closes) the overlay.
    * @param {!Event} event
    * @protected
@@ -10866,56 +11360,7 @@ this.__scrollTop=Math.max(document.documentElement.scrollTop,document.body.scrol
    * Resets the scroll position of the outside scrolling element.
    * @private
    */__restoreScrollPosition:function(){if(document.scrollingElement){document.scrollingElement.scrollTop=this.__scrollTop;document.scrollingElement.scrollLeft=this.__scrollLeft}else{// Since we don't know if is the body or html, set both.
-document.documentElement.scrollTop=document.body.scrollTop=this.__scrollTop;document.documentElement.scrollLeft=document.body.scrollLeft=this.__scrollLeft}}},IronOverlayBehavior=[IronFitBehavior,IronResizableBehavior,IronOverlayBehaviorImpl];/**
-     Use `Polymer.IronOverlayBehavior` to implement an element that can be hidden
-     or shown, and displays on top of other content. It includes an optional
-     backdrop, and can be used to implement a variety of UI controls including
-     dialogs and drop downs. Multiple overlays may be displayed at once.
-   
-     See the [demo source
-     code](https://github.com/PolymerElements/iron-overlay-behavior/blob/master/demo/simple-overlay.html)
-     for an example.
-   
-     ### Closing and canceling
-   
-     An overlay may be hidden by closing or canceling. The difference between close
-     and cancel is user intent. Closing generally implies that the user
-     acknowledged the content on the overlay. By default, it will cancel whenever
-     the user taps outside it or presses the escape key. This behavior is
-     configurable with the `no-cancel-on-esc-key` and the
-     `no-cancel-on-outside-click` properties. `close()` should be called explicitly
-     by the implementer when the user interacts with a control in the overlay
-     element. When the dialog is canceled, the overlay fires an
-     'iron-overlay-canceled' event. Call `preventDefault` on this event to prevent
-     the overlay from closing.
-   
-     ### Positioning
-   
-     By default the element is sized and positioned to fit and centered inside the
-     window. You can position and size it manually using CSS. See
-     `Polymer.IronFitBehavior`.
-   
-     ### Backdrop
-   
-     Set the `with-backdrop` attribute to display a backdrop behind the overlay.
-     The backdrop is appended to `<body>` and is of type `<iron-overlay-backdrop>`.
-     See its doc page for styling options.
-   
-     In addition, `with-backdrop` will wrap the focus within the content in the
-     light DOM. Override the [`_focusableNodes`
-     getter](#Polymer.IronOverlayBehavior:property-_focusableNodes) to achieve a
-     different behavior.
-   
-     ### Limitations
-   
-     The element is styled to appear on top of other content by setting its
-     `z-index` property. You must ensure no element has a stacking context with a
-     higher `z-index` than its parent stacking context. You should place this
-     element as a child of `<body>` whenever possible.
-   
-     @demo demo/index.html
-     @polymerBehavior
-    */ /**
+document.documentElement.scrollTop=document.body.scrollTop=this.__scrollTop;document.documentElement.scrollLeft=document.body.scrollLeft=this.__scrollLeft}}},composedParent=node=>node.assignedSlot||node.parentNode||node.host,composedContains=(ancestor,descendant)=>{for(let element=descendant;element;element=composedParent(element)){if(element===ancestor){return!0}}return!1},IronOverlayBehavior=[IronFitBehavior,IronResizableBehavior,IronOverlayBehaviorImpl];/**
                                                                                                        * Fired after the overlay opens.
                                                                                                        * @event iron-overlay-opened
                                                                                                        */ /**
@@ -11286,6 +11731,18 @@ this._dropdownContent=this.contentElement;this.fire("paper-dropdown-open")}else 
         @apply --paper-dropdown-menu;
       }
 
+      /* paper-dropdown-menu and paper-dropdown-menu-light both delegate focus
+       * to other internal elements which manage focus styling. */
+      :host(:focus) {
+        outline: none;
+      }
+
+      :host(:dir(rtl)) {
+        text-align: right;
+
+        @apply(--paper-dropdown-menu);
+      }
+
       :host([disabled]) {
         @apply --paper-dropdown-menu-disabled;
       }
@@ -11325,17 +11782,72 @@ this._dropdownContent=this.contentElement;this.fire("paper-dropdown-open")}else 
       }
     </style>
   </template>
-</dom-module>`;document.head.appendChild($_documentContainer$2.content);Polymer({_template:html`
+</dom-module>`;document.head.appendChild($_documentContainer$2.content);// with the `Polymer` function, so this is only a cache lookup.
+// https://github.com/Polymer/polymer/blob/640bc80ac7177b761d46b2fa9c455c318f2b85c6/lib/legacy/class.js#L533-L534
+const LegacyPolymerElementBase=LegacyElementMixin(HTMLElement);/**
+                                                                  Material design: [Dropdown
+                                                                  menus](https://www.google.com/design/spec/components/buttons.html#buttons-dropdown-buttons)
+                                                                  
+                                                                  `paper-dropdown-menu` is similar to a native browser select element.
+                                                                  `paper-dropdown-menu` works with selectable content. The currently selected
+                                                                  item is displayed in the control. If no item is selected, the `label` is
+                                                                  displayed instead.
+                                                                  
+                                                                  Example:
+                                                                  
+                                                                      <paper-dropdown-menu label="Your favourite pastry">
+                                                                        <paper-listbox slot="dropdown-content">
+                                                                          <paper-item>Croissant</paper-item>
+                                                                          <paper-item>Donut</paper-item>
+                                                                          <paper-item>Financier</paper-item>
+                                                                          <paper-item>Madeleine</paper-item>
+                                                                        </paper-listbox>
+                                                                      </paper-dropdown-menu>
+                                                                  
+                                                                  This example renders a dropdown menu with 4 options.
+                                                                  
+                                                                  The child element with the slot `dropdown-content` is used as the dropdown
+                                                                  menu. This can be a [`paper-listbox`](paper-listbox), or any other or
+                                                                  element that acts like an [`iron-selector`](iron-selector).
+                                                                  
+                                                                  Specifically, the menu child must fire an
+                                                                  [`iron-select`](iron-selector#event-iron-select) event when one of its
+                                                                  children is selected, and an
+                                                                  [`iron-deselect`](iron-selector#event-iron-deselect) event when a child is
+                                                                  deselected. The selected or deselected item must be passed as the event's
+                                                                  `detail.item` property.
+                                                                  
+                                                                  Applications can listen for the `iron-select` and `iron-deselect` events
+                                                                  to react when options are selected and deselected.
+                                                                  
+                                                                  ### Styling
+                                                                  
+                                                                  The following custom properties and mixins are also available for styling:
+                                                                  
+                                                                  Custom property | Description | Default
+                                                                  ----------------|-------------|----------
+                                                                  `--paper-dropdown-menu` | A mixin that is applied to the element host | `{}`
+                                                                  `--paper-dropdown-menu-disabled` | A mixin that is applied to the element host when disabled | `{}`
+                                                                  `--paper-dropdown-menu-ripple` | A mixin that is applied to the internal ripple | `{}`
+                                                                  `--paper-dropdown-menu-button` | A mixin that is applied to the internal menu button | `{}`
+                                                                  `--paper-dropdown-menu-input` | A mixin that is applied to the internal paper input | `{}`
+                                                                  `--paper-dropdown-menu-icon` | A mixin that is applied to the internal icon | `{}`
+                                                                  
+                                                                  You can also use any of the `paper-input-container` and `paper-menu-button`
+                                                                  style mixins and custom properties to style the internal input and menu button
+                                                                  respectively.
+                                                                  
+                                                                  @element paper-dropdown-menu
+                                                                  @demo demo/index.html
+                                                                  */Polymer({/** @override */_template:html`
     <style include="paper-dropdown-menu-shared-styles"></style>
 
-    <!-- this div fulfills an a11y requirement for combobox, do not remove -->
-    <span role="button"></span>
     <paper-menu-button id="menuButton" vertical-align="[[verticalAlign]]" horizontal-align="[[horizontalAlign]]" dynamic-align="[[dynamicAlign]]" vertical-offset="[[_computeMenuVerticalOffset(noLabelFloat, verticalOffset)]]" disabled="[[disabled]]" no-animations="[[noAnimations]]" on-iron-select="_onIronSelect" on-iron-deselect="_onIronDeselect" opened="{{opened}}" close-on-activate allow-outside-scroll="[[allowOutsideScroll]]" restore-focus-on-close="[[restoreFocusOnClose]]">
       <!-- support hybrid mode: user might be using paper-menu-button 1.x which distributes via <content> -->
       <div class="dropdown-trigger" slot="dropdown-trigger">
         <paper-ripple></paper-ripple>
         <!-- paper-input has type="text" for a11y, do not remove -->
-        <paper-input type="text" invalid="[[invalid]]" readonly disabled="[[disabled]]" value="[[value]]" placeholder="[[placeholder]]" error-message="[[errorMessage]]" always-float-label="[[alwaysFloatLabel]]" no-label-float="[[noLabelFloat]]" label="[[label]]">
+        <paper-input id="input" type="text" invalid="[[invalid]]" readonly disabled="[[disabled]]" value="[[value]]" placeholder="[[placeholder]]" error-message="[[errorMessage]]" always-float-label="[[alwaysFloatLabel]]" no-label-float="[[noLabelFloat]]" label="[[label]]" input-role="button" input-aria-haspopup="listbox" autocomplete="off">
           <!-- support hybrid mode: user might be using paper-input 1.x which distributes via <content> -->
           <iron-icon icon="paper-dropdown-menu:arrow-drop-down" suffix slot="suffix"></iron-icon>
         </paper-input>
@@ -11396,7 +11908,19 @@ this._dropdownContent=this.contentElement;this.fire("paper-dropdown-open")}else 
      * Whether focus should be restored to the dropdown when the menu closes.
      */restoreFocusOnClose:{type:Boolean,value:!0}},listeners:{tap:"_onTap"},/**
    * @type {!Object}
-   */keyBindings:{"up down":"open",esc:"close"},hostAttributes:{role:"combobox","aria-autocomplete":"none","aria-haspopup":"true"},observers:["_selectedItemChanged(selectedItem)"],attached:function(){// NOTE(cdata): Due to timing, a preselected value in a `IronSelectable`
+   */keyBindings:{"up down":"open",esc:"close"},observers:["_selectedItemChanged(selectedItem)"],/**
+   * Override `_attachDom` so that we can pass `delegatesFocus`. The overridden
+   * implementation of `_attachDom` specifically skips the steps performed here
+   * if the node already hosts a shadow root:
+   * https://github.com/Polymer/polymer/blob/640bc80ac7177b761d46b2fa9c455c318f2b85c6/lib/mixins/element-mixin.js#L691-L694
+   * @override
+   */_attachDom(dom){const wrappedThis=wrap(this);wrappedThis.attachShadow({mode:"open",delegatesFocus:!0,shadyUpgradeFragment:dom});wrappedThis.shadowRoot.appendChild(dom);return LegacyPolymerElementBase.prototype._attachDom.call(this,dom)},/** @override */focus(){// When using Shady DOM and in browsers that don't support
+// `delegatesFocus`, attempting to focus this element with the browser's
+// native `HTMLElement#focus` will cause focus to be lost because this
+// element isn't focusable in those situations. To work around this, the
+// element in the shadow root that this element intends to delegate focus
+// to is manually focused instead.
+this.$.input._focusableElement.focus()},/** @override */attached:function(){// NOTE(cdata): Due to timing, a preselected value in a `IronSelectable`
 // child will cause an `iron-select` event to fire while the element is
 // still in a `DocumentFragment`. This has the effect of causing
 // handlers not to fire. So, we double check this value on attached:
@@ -11491,7 +12015,64 @@ return noLabelFloat?-4:8},/**
                          </paper-dropdown-menu>
                     </aside>
                </section>
-          </nav> `}static get is(){return"cms-input-sellector"}static get properties(){return{label:{type:String,computed:"LabelThis(options)",notify:!0},notActive:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},change:{type:Array,notify:!0},value:{type:String,value:"---",notify:!0},options:{value:[],notify:!0}}}LabelThis(options){let label=options[0].label;options.reverse().pop();this.options=options.reverse();return label}setInputing(){}changeToOne(data){this.value=data.model.__data.option.name;this.setInputing()}}customElements.define(cmsInputSellector.is,cmsInputSellector);function reuest(urlo,call,method,formData){let url=urlo,json=[],str="",xhr=new XMLHttpRequest,meth=method||"GET";xhr.addEventListener("load",onLoad);xhr.addEventListener("error",onError);xhr.open(meth,url);xhr.setRequestHeader("Access-Control-Allow-Origin","http://localhost/");xhr.setRequestHeader("Access-Control-Allow-Methods","GET, POST");xhr.setRequestHeader("Accept","application/json");if(formData){xhr.setRequestHeader("Content-Type","multipart/form-data");xhr.send(formData);console.log("formData")}else{xhr.send()}function onLoad(e){call(e.target.responseText)}function onError(e){console.log(e)}return xhr}var httpHandler={reuest:reuest};class cmsLogin extends PolymerElement{static get template(){return html`
+          </nav> `}static get is(){return"cms-input-sellector"}static get properties(){return{label:{type:String,computed:"LabelThis(options)",notify:!0},notActive:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},change:{type:Array,notify:!0},value:{type:String,value:"---",notify:!0},options:{value:[],notify:!0}}}LabelThis(options){let label=options[0].label;options.reverse().pop();this.options=options.reverse();return label}setInputing(){}changeToOne(data){this.value=data.model.__data.option.name;this.setInputing()}}customElements.define(cmsInputSellector.is,cmsInputSellector);function request(url,method,formData){var req={method:method,headers:{"Content-Type":"application/json","Access-Control-Allow-Methods":"GET, POST"// 'Access-Control-Allow-Origin': 'https://localhost/',
+}};if(!!formData){req.body=JSON.stringify({query:`{
+                    ${formData}                      
+                }`})}return fetch(url,req)}var httpHandler={request:request};class worker{constructor(){this.db=firebase.firestore();this.auth=firebase.auth}/**queries */queryDocList(table){var pagesRef=this.db.collection(table.name).where(table.query,table.condition,table.value);return pagesRef.get()}queryDocListDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).where(table.query,table.condition,table.value);return pagesRef.get()}mixQueryDocList(table){var pagesRef=this.db.collection(table.name).where(table.query[0],table.query[1],table.query[2]).where(table.query2[0],table.query2[1],table.query2[2]);return pagesRef.get()}mixQueryDocListDev(table){var pagesRef=this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}`).where(table.query[0],table.query[1],table.query[2]).where(table.query2[0],table.query2[1],table.query2[2]);return pagesRef.get()}queryItemCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).where(table.query,table.condition,table.value);doc(table.docName).collection(table.coll);return pagesRef.get();/**/}queryItemCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).where(table.query,table.condition,table.value);return pagesRef.get();/**/}mixQueryItemCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0],table.query[1],table.query[2]).where(table.query2[0],table.query2[1],table.query2[2]);return pagesRef.get();/**/}mixQueryItemCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0],table.query[1],"true"===table.query[2]).where(table.query2[0],table.query2[1],"true"===table.query2[2]);return pagesRef.get();/**/}queryCCDoc(table){var pagesRef=this.db.collection(table.name).where(table.query).doc(table.docName).collection(table.coll).where(table.query,table.condition,table.value);return pagesRef.get();/**/}queryCCDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).where(table.query,table.condition,table.value);return pagesRef.get();/**/}mixQueryCCDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0],table.query[1],table.query[2]).where(table.query2[0],table.query2[1],table.query2[2]);return pagesRef.get();/**/}mixQueryCCDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).where(table.query[0],table.query[1],"true"===table.query[2]).where(table.query2[0],table.query2[1],"true"===table.query2[2]);return pagesRef.get();/**/}/** */getDoc(table){var categoriesRef=this.db.collection(table.name).doc(table.doc);return categoriesRef.get()}getDocDev(table){var categoriesRef=this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.doc}`);return categoriesRef.get()}getDocList(table){var pagesRef=this.db.collection(table.name);return pagesRef.get()}getDocListDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name);return pagesRef.get()}createDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName);return pagesRef.set(table.doc)}createDocDev(table){var pagesRef=this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.docName}`);console.log(table);return pagesRef.set(table.doc)}updateContent(table){var imagesRef=this.db.collection(table.name).doc(table.doc);return imagesRef.update(table.data)}updateContentDev(table){var imagesRef=this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.doc}`);return imagesRef.update(table.data)}deleteDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName);return pagesRef.delete()}deleteDocDev(table){var pagesRef=this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.docName}`);return pagesRef.delete()}//collection 
+createItemCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc);return pagesRef.set(table.data)}createItemCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc);return pagesRef.set(table.data)}getItemCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll);return pagesRef.get()}getItemCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll);return pagesRef.get()}updateCollectionDocItem(table){//  console.log(table)
+var imagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc);;return imagesRef.update(table.data);/**/}updateCollectionDocItemDev(table){// console.log(table)
+var imagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc);return imagesRef.update(table.data);/**/}deleteDocItemCollection(table){var imagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc);;return imagesRef.update(table.data)}/* deleteCollectionDoc(table) {
+         var imagesRef = this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc)
+         return imagesRef.delete();
+     }
+     deleteCollectionDocDev(table) {
+         var imagesRef = this.db.collection('dev').
+             doc('VoSSMkzGYmPTvUhh9mgL').
+             collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc)
+         return imagesRef.delete();
+     }*/ //collection collection
+updateCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc);return pagesRef.update(table.data)}updateCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.doctable).doc(table.doc);return pagesRef.update(table.data)}deleteCollectionDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc).delete();return pagesRef}deleteCollectionDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc).delete();return pagesRef}//
+deleteCollectionDocData(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc).delete();return pagesRef}deleteCollectionDocDataDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.doc).delete();return pagesRef}//
+createDocItemCollectionCollection(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc);return pagesRef.set(table.data)}createDocItemCollectionCollectionDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc);return pagesRef.set(table.data)}getDocItemCollectionCollection(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName);return pagesRef.get()}getDocItemCollectionCollectionDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName);return pagesRef.get()}createDocItemCollectionCollection(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc);return pagesRef.set(table.data)}createDocItemCollectionCollectionDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).doc(table.doc);return pagesRef.set(table.data)}queryDocItemCollectionCollection(table){var pagesRef=this.db.collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).where(table.query,table.condition,table.value);return pagesRef.get()}queryDocItemCollectionCollectionDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName).collection(table.coll).doc(table.collDocName).collection(table.collDocCollName).where(table.query,table.condition,table.value);return pagesRef.get()}///
+mailLink(){if(this.auth().isSignInWithEmailLink(window.location.href)){var email=window.localStorage.getItem("emailForSignIn");if(!email){email=window.prompt("Please provide your email for confirmation")}this.auth().signInWithEmailLink(email,window.location.href).then(function(result){window.localStorage.removeItem("emailForSignIn")}).catch(function(error){})}}authState(done){this.auth().onAuthStateChanged(user=>{if(user){let obj={name:"users",doc:user.uid};this.getDoc(obj).then(querySnapshot=>{let user=querySnapshot.data();done(user)}).catch(function(error){console.error("Error reteaving article: ",error);done("error",error)})}else{done(0,"No user is signed in.")}})}login(user){let AUTH=this.auth().signInWithEmailAndPassword(user.email,user.pwd);return AUTH}logout(){let signOut=this.auth().signOut();return signOut}handleTransaction(table){var sfDocRef=this.db.collection(table.name).doc(table.doc);sfDocRef.set(table.query);return this.db.runTransaction(function(transaction){return transaction.get(sfDocRef).then(function(sfDoc){if(!sfDoc.exists){throw"Document does not exist!"}var newPopulation=sfDoc.data()})}).then(function(){console.log("Transaction successfully committed!")}).catch(function(error){console.log("Transaction failed: ",error)})}}var firebaseWorker={worker:worker};const Worker=new worker;class Settings{get Projects(){return Worker._getProjects()}changeProject(config,projectID){var newProject=firebase.initializeApp(config,projectID);return newProject.name}}class CategoriesDB{//Categories
+getCategoriesEqualTo(done,query,value,dev){let obj={name:"categories",query:query,value:value,condition:"=="};queryDocList.call(this,obj,done,dev)}getCategories(done,dev){let obj={name:"categories"};getDocList.call(this,obj,done,dev)}setCategories(done,table,dev){let obj={name:"categories",docName:table.name,doc:table.create};createDoc.call(this,obj,done,dev)}deleteCategory(done,gallery,dev){let obj={name:"categories",docName:gallery};deleteDoc.call(this,obj,done,dev)}changeCategory(done,table,dev){let obj={name:"categories",doc:table.name,data:table.update};updateContent.call(this,obj,done,dev)}}class MediaDB{//media
+writeGalleryContent(done,table,dev){let obj={name:"galleries",doc:table.gallerie,data:{content:table.content}};updateContent.call(obj,done,dev)}getGalleriesEqualTo(done,query,value,dev){let obj={name:"galleries",query:query,value:value,condition:"=="};queryDocList.call(this,obj,done,dev)}getPlaylistsEqualTo(done,query,value,dev){let obj={name:"playlists",query:query,value:value,condition:"=="};queryDocList.call(this,obj,done,dev)}getGalleries(done,dev){let obj={name:"galleries"};getDocList.call(this,obj,done,dev)}getPlaylists(done,dev){let obj={name:"playlists"};getDocList.call(this,obj,done,dev)}setGalleries(done,table,dev){let obj={name:"galleries",docName:table.name,doc:table.create};createDoc.call(this,obj,done,dev)}deleteGallery(done,gallery,dev){let obj={name:"galleries",docName:gallery};deleteDoc.call(this,obj,done,dev)}getGalleryData(done,table,dev){let obj={name:"galleries",docName:table.name,coll:"data",query:table.query,condition:table.condition,value:table.value};queryItemCollectionDoc.call(this,obj,done,dev)}getGalleryGroups(done,table,dev){let obj={name:"galleries",collDocName:table.gallery,collDocCollName:"groups"};queryItemCollectionDoc.call(this,obj,done,dev)}setGalleryData(done,table,dev){let obj={name:"galleries",docName:table.name,coll:"data",doc:table.doc,data:table.data};createItemCollectionDoc.call(this,obj,done,dev)}}class dataBaseworker{constructor(){this.categories=[]}updateBrands(done,table,dev){let obj={name:"brands&manufactures",doc:table.name,data:{content:table.content}};updateContent.call(this,obj,done,dev)}setBrands(done,table,dev){let obj=table.name!==void 0?{name:"brands&manufactures",docName:table.name,doc:table.langs}:!1;createDoc.call(this,obj,done,dev)}deleteBrandsZone(done,lang,dev){let obj={name:"brands&manufactures",docName:lang};deleteDoc.call(this,obj,done,dev)}getBrands(done,table,dev){let obj={name:"brands&manufactures",doc:table.name};getDoc.call(this,obj,done,dev)}getAllBrands(done,dev){let obj={name:"brands&manufactures"};getDocListDev.call(this,obj,done,dev)}//langs
+getLangs(done,dev){let obj={name:"langs",doc:"data"};getDoc.call(this,obj,done,dev)}updateLangs(done,table,dev){let obj={name:"langs",doc:table.name,data:{content:table.content}};updateContent.call(this,obj,done,dev)}setLangs(done,table,dev){let obj=table.name!==void 0?{name:"langs",docName:table.name,doc:table.langs}:!1;createDoc.call(this,obj,done,dev)}deleteLangZone(done,lang,dev){let obj={name:"langs",docName:lang};deleteDoc.call(this,obj,done,dev)}getAllLangs(done,dev){let obj={name:"langs"};getDocList.call(this,obj,done,dev)}/****************************************************************************************************************************/ /***************************************************queries******************************************************************/ /****************************************************************************************************************************/getPagesEqualTo(done,query,value,dev){let obj={name:"pages",query:query,value:value,condition:"=="};queryDocList.call(this,obj,done,dev)}getArticlesEqualTo(done,query,value,dev){let obj={name:"articles",query:query,value:value,condition:"=="};queryDocList.call(this,obj,done,dev)}queryPage(done,table,dev){let query,condition,value;[query,condition,value]=table.query.split(",");value="true"===value||"false"===value?"true"===value:value;let obj={name:"pages",docName:table.name,query:query,condition:condition,value:value};queryItemCollectionDoc.call(this,obj,done,dev)}mixQueryPage(done,table,dev){let query,query2;query=table.query.split(",");query2=table.query2.split(",");let obj={name:"pages",docName:table.name,query:query,query2:query2};mixQueryDocList.call(this,done,obj,done,dev)}queryPageData(done,table,dev){let query,condition,value;[query,condition,value]=table.query.split(",");value="true"===value||"false"===value?"true"===value:value;let obj={name:"pages",docName:table.name,coll:table.dataType,query:query,condition:condition,value:value};queryItemCollectionDoc.call(this,obj,done,dev)}mixQueryPageData(done,table,dev){let query,query2;query=table.query.split(",");query2=table.query2.split(",");let obj={name:"pages",docName:table.name,coll:table.dataType,query:query,query2:query2};mixQueryItemCollectionDoc.call(this,obj,done,dev)}querySubcatsData(done,table,dev){let query,condition,value;[query,condition,value]=table.query.split(",");let obj={name:"pages",docName:table.name,coll:"subCategories",collDocName:table.doc,collDocCollName:"data",query:query,condition:condition,value:value};queryCollDoCollItem.call(this,obj,done,dev)}//aticles
+getAllArticles(done,dev){let obj={name:"articles"};getDocList.call(this,obj,done,dev)}getArticle(done,table,dev){let obj={name:"articles",doc:table.name};getDoc.call(this,obj,done,dev)}getArticleData(done,table,dev){let obj={name:"articles",docName:table.name,coll:table.dataType};getItemCollectionDoc.call(this,obj,done,dev)}setArticles(done,table,dev){let obj={name:"articles",docName:table.name,doc:table.create};console.log(obj);createDoc.call(this,obj,done,dev)}setArticleData(done,table,dev){let obj={name:"articles",docName:table.name,coll:table.dataType,doc:table.doc,data:table.data};createItemCollectionDoc.call(this,obj,done,dev)}updateArticles(done,table,dev){let obj={name:"articles",doc:table.name,data:table.update};updateContent.call(this,obj,done,dev)}changeArticleData(done,table,dev){let obj={name:"articles",docName:table.name,coll:table.dataType,doc:table.doc,data:table.data// console.log(table, obj)
+};updateDocItemCollection.call(this,obj,done,dev)}deleteArticles(done,page,dev){let obj={name:"articles",docName:page};deleteDoc.call(this,obj,done,dev)}/****************************************************************************************************************************/ /*********************************************************pages**************************************************************/ /****************************************************************************************************************************/getAllPages(done,dev){let obj={name:"pages"};getDocList.call(this,obj,done,dev)}changePages(done,table,dev){let obj={name:"pages",doc:table.name,data:table.update};updateContent.call(this,obj,done,dev)}changePageData(done,table,dev){let obj={name:"pages",docName:table.name,coll:table.dataType,doc:table.doc,data:table.data// console.log(table, obj)
+};updateDocItemCollection.call(this,obj,done,dev)}setPages(done,table,dev){let obj={name:"pages",docName:table.name,doc:table.create};createDoc.call(this,obj,done,dev)}deletePage(done,page,dev){// console.log(done, page, dev)
+let obj={name:"pages",docName:page// console.log(obj, done, dev)
+};deleteDoc.call(this,obj,done,dev)}getPageData(done,table,dev){let obj={name:"pages",docName:table.name,coll:table.dataType};getItemCollectionDoc.call(this,obj,done,dev)}getPageDataSnapshot(done,table,dev){let obj={name:"pages",docName:table.name,coll:table.dataType};getItemCollectionDocSnapshot.call(this,obj,done,dev)}setPageData(done,table,dev){let obj={name:"pages",docName:table.name,coll:table.dataType,doc:table.doc,data:table.data};createItemCollectionDoc.call(this,obj,done,dev)}deletePageData(done,table,dev){let obj={name:"pages",docName:table.name,coll:table.dataType,doc:table.doc};deleteCollectionDocData.call(this,obj,done,dev)}getSubcatsData(done,table,dev){let obj={name:"pages",docName:table.name,coll:"subCategories",collDocName:table.doc,collDocCollName:"data"};getDocItemCollectionCollection.call(this,obj,done,dev)}setubcatsData(done,table,dev){let obj={name:"pages",docName:table.page,coll:"subCategories",collDocName:table.name,collDocCollName:"data",doc:table.doc,data:table.data};createDocItemCollectionCollection.call(this,obj,done,dev)}changeSubcatsData(done,table,dev){let obj={name:"pages",docName:table.name,coll:"subCategories",collDocName:table.docName,doctable:"data",doc:table.doc,data:table.data};updateCollectionDoc.call(this,obj,done,dev)}deleteSubcatData(done,table,dev){let obj={name:"pages",docName:table.page,coll:"subCategories",collDocName:table.name,collDocCollName:"data",doc:table.doc};deleteCollectionDoc.call(this,obj,done,dev)}//other
+loginFire(user){return Worker.login(user)}logoutFire(){return Worker.logout()}authStateChanged(done){Worker.authState(done)}checkMailLink(){Worker.mailLink()}getElementAssets(element,dev){let obj={name:"stylesandlangs",doc:element};if(!1===dev){return Worker.getDoc(obj)}else{return Worker.getDocDev(obj)}}setElementAssets(table,dev){let obj={name:"stylesandlangs",docName:String,doc:Object,docName:table.element,doc:table.content};createDoc.call(obj,done,dev)}}//private methods
+function getDocList(obj,done,dev){if(!1===dev){Worker.getDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){done("error",error)})}else{Worker.getDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){done("error",error)})}}function updateContent(obj,done,dev){if(!1===dev){Worker.updateContent(obj).then(function(){done("successfully updated!",table.lang)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(obj).then(function(){done("successfully updated!",obj.lang)}).catch(function(error){done("Error",error)})}}function createDoc(obj,done,dev){if(!1===obj){done(!1,!1);return}if(!1===dev){Worker.createDoc(obj).then(function(){done()}).catch(error=>{done("error",error)})}else{Worker.createDocDev(obj).then(function(){done()}).catch(error=>{done("error",error)})}}function deleteDoc(obj,done,dev){if(!1===dev){Worker.deleteDoc(obj).then(function(){done("successfully deleted!")}).catch(function(error){done("error",error)})}else{Worker.deleteDocDev(obj).then(function(){done("successfully deleted!")}).catch(function(error){done("error",error)})}}function getDoc(obj,done,dev){if(!1===dev){Worker.getDoc(obj).then(querySnapshot=>{let content=querySnapshot.data();done(content)}).catch(function(error){console.error(error);done("error",error)})}else{Worker.getDocDev(obj).then(querySnapshot=>{let content=querySnapshot.data();done(content)}).catch(function(error){console.error(error);done("error",error)})}}function queryDocList(obj,done,dev){this.categories=[];if(!1===dev){Worker.queryDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){done("error",error)})}else{Worker.queryDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){done("error",error)})}}function getItemCollectionDocSnapshot(obj,done,dev){if(!1===dev){Worker.getItemCollectionDoc(obj).then(querySnapshot=>{done(querySnapshot)}).catch(function(error){console.error(error);done("error",error)})}else{Worker.getItemCollectionDocDev(obj).then(querySnapshot=>{done(querySnapshot)}).catch(function(error){console.error(error);done("error",error)})}}function getItemCollectionDoc(obj,done,dev){if(!1===dev){Worker.getItemCollectionDoc(obj).then(querySnapshot=>{this.categories={};querySnapshot.forEach(item=>{this.categories[item.id]=item.data()});done(this.categories)}).catch(function(error){console.error(error);done("error",error)})}else{Worker.getItemCollectionDocDev(obj).then(querySnapshot=>{this.categories={};querySnapshot.forEach(item=>{this.categories[item.id]=item.data()});done(this.categories)}).catch(function(error){console.error(error);done("error",error)})}}function queryItemCollectionDoc(obj,done,dev){if(!1===dev){Worker.queryItemCollectionDoc(obj).then(querySnapshot=>{this.categories=[];console.log(querySnapshot);querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}else{Worker.queryItemCollectionDocDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}}function mixQueryDocList(obj,done,dev){if(!1===dev){Worker.mixQueryDocList(obj).then(querySnapshot=>{this.categories=[];console.log(querySnapshot);querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}else{Worker.mixQueryDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}}function mixQueryItemCollectionDoc(obj,done,dev){if(!1===dev){Worker.mixQueryItemCollectionDoc(obj).then(querySnapshot=>{this.categories=[];console.log(querySnapshot);querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}else{Worker.mixQueryItemCollectionDocDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){done("error",error)})}}function createItemCollectionDoc(obj,done,dev){if(!1===dev){Worker.createItemCollectionDoc(obj).then(function(){done("successfully created")}).catch(error=>{done("error",error)})}else{Worker.createItemCollectionDocDev(obj).then(function(){done("successfully created")}).catch(error=>{done("error",error)})}}function updateDocItemCollection(obj,done,dev){if(!1===dev){Worker.updateCollectionDocItem(obj).then(function(){done("successfully created")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)});/**/}else{Worker.updateCollectionDocItemDev(obj).then(function(){done("successfully updated")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)});/* */}}function deleteCollectionDocData(obj,done,dev){if(!1===dev){Worker.deleteCollectionDocData(obj).then(function(){done("successfully deleted!",obj.doc)}).catch(function(error){done("error",error)})}else{Worker.deleteCollectionDocDataDev(obj).then(function(){done("successfully deleted!",obj.doc)}).catch(function(error){done("error",error)})}}function deleteCollectionDoc(obj,done,dev){if(!1===dev){Worker.deleteCollectionDoc(obj).then(function(data){done(data)}).catch(function(error){done("error",error)})}else{Worker.deleteCollectionDocDev(obj).then(function(data){done(data)}).catch(function(error){done("error",error)})}}function getDocItemCollectionCollection(obj,done,dev){if(!1===dev){Worker.getDocItemCollectionCollection(obj).then(querySnapshot=>{this.categories={};querySnapshot.forEach(doc=>{this.categories[doc.id]=doc.data()});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}else{Worker.getDocItemCollectionCollectionDev(obj).then(querySnapshot=>{obj={};this.categories={};querySnapshot.forEach(doc=>{this.categories[doc.id]=doc.data()});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}}function createDocItemCollectionCollection(obj,done,dev){if(!1===dev){Worker.createDocItemCollectionCollection(obj).then(()=>{done()}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}else{Worker.createDocItemCollectionCollectionDev(obj).then(()=>{done()}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}}function updateCollectionDoc(obj,done,dev){if(!1===dev){Worker.updateCollectionDoc(obj).then(msg=>{done(msg)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}else{Worker.updateCollectionDocDev(obj).then(msg=>{done(msg)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}}function queryCollDoCollItem(obj,done,dev){if(!1===dev){Worker.queryDocItemCollectionCollection(obj).then(querySnapshot=>{this.categories={};querySnapshot.forEach(doc=>{this.categories[doc.id]=doc.data()});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}else{Worker.queryDocItemCollectionCollectionDev(obj).then(querySnapshot=>{obj={};this.categories={};querySnapshot.forEach(doc=>{this.categories[doc.id]=doc.data()});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}}function createDocItemCollection(obj,dene,dev){if(!1===dev){Worker.createDocItemCollection(obj).then(function(){done("page successfully created")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)})}else{Worker.createDocItemCollectionDev(obj).then(function(){done("page info created")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)})}}var dataBaseWorker={Settings:Settings,CategoriesDB:CategoriesDB,MediaDB:MediaDB,dataBaseworker:dataBaseworker};const DBW=new dataBaseworker,__DEV=!0;class Setter{constructor(){this.template=document.createElement("template")}getAssets(elem){return DBW.getElementAssets(elem,__DEV)}authStateChanged(){return new Promise((resolve,reject)=>{DBW.authStateChanged((user,err)=>{if(0!==user){resolve(user)}})})}loginFire(obj){return DBW.loginFire(obj)}logoutFire(obj){return DBW.logoutFire(obj)}changeLang(){if(this.langs[this.lang]){let obj=this.langs[this.lang];for(let par in obj){this.set(par,obj[par])}}}changeItemTitleLang(item,title){if(this.langs[this.lang]){let obj=this.langs[this.lang];this.set(title,obj[item])}}setLangObject(langs){for(let par in langs){if("styles"!==par&&0<langs[par].length){this.langs[par]=langs[par].pop()}}this.__changeLang()}}var cmsElementSet={Setter:Setter};class expresso extends Setter{constructor(){super();this.set={};this.bindSet={}}/* data bind methods. example bellow */setBinder(BID,callback){this.bindSet[BID]={call:callback}}bindWith(BID,bindPar,value){this.bindSet[BID].call(bindPar,value)}bindData(bindPar,value){for(let par in this.bindSet){this.bindSet[par].call(bindPar,value)}}/* translation methods */target(Evt,method,callback,TitleLang){this.Evt=Evt;if(!!TitleLang&&!1===("boolean"===typeof TitleLang)){console.info("Booleans only please",TitleLang+" not Boolean",Evt,method);return}if(!1===this.Evt in this.set&&this.Evt!==void 0){this.set[this.Evt]={arr:{},set:!1};this.set[this.Evt].arr[method]={methods:[],TitleLang:TitleLang};this.set[this.Evt].assets=this.getAssets(this.Evt);this.set[this.Evt].arr[method].count=0}if(!1===method in this.set[this.Evt].arr){this.set[this.Evt].arr[method]={methods:[],TitleLang:TitleLang};this.set[this.Evt].arr[method].count=0}this.set[this.Evt].arr[method].methods.push(callback);this.set[this.Evt].arr[method].count++}shoot(evt,method,lang){this.method=method;this.lang=lang===void 0||""===lang?this.lang:lang;if(evt===void 0){for(let par in this.set){this.Evt=par;this.trigger(this.Evt)}}else{this.Evt=evt;this.trigger(this.Evt)}}trigger(){let method=this.method;this.Evt=arguments[0]||this.Evt;if("setLangObject"===method){this.set[this.Evt].arr[method].methods.forEach(func=>{this.set[this.Evt].assets.then(querySnapshot=>{func(this[method],querySnapshot)}).catch(function(error){console.error("Error reteaving assets: ",error)})})}if("changeLang"===method){this.set[this.Evt].arr[method].methods.forEach(func=>{if(!1===this.set[this.Evt].arr[method].TitleLang){func(this[method],this.lang)}else{func(this.changeItemTitleLang,this.lang)}})}return 0}}/* data binder Example:
+  
+      var binder = new expresso()
+  
+      //in pop-input\\
+      ready(){
+          binder.setBinder('cmPopInputPageContent', (bindCallback).bind(this))
+              ||
+          //this.BID may be set by parent element
+            ex: this.children[index].BID = 'childname' + index\\
+          binder.setBinder(this.BID, (bindCallback).bind(this))
+      }
+  
+      //standart for all. needs to be 'bind'ed \\
+      bindCallback(par, value) {
+          this[par] = value
+      }
+  
+      //in cms-page-content\\
+      sendWarningToPop(warning){
+          bindWith('cmPopInputPageContent', 'warningMsg', warning)
+      }
+  
+      //in cms-controler\\
+      routeAll(){
+          bindData('route', this.route)
+      }
+  */var expresso$1={expresso:expresso};window.cms=Symbol("app");Object.defineProperty(window,"cms",{enumerable:!1,writable:!0});window.MyAppGlobals[window.cms]=new expresso;//window.MyAppGlobals.translator
+class cmsLogin extends PolymerElement{static get template(){return html`
      <custom-style>
           <style is="custom-style">
                main {
@@ -11584,7 +12165,7 @@ return noLabelFloat?-4:8},/**
      </app-location>
      <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}">
      </app-route> 
-     <main closed$="[[!closed]]">   
+     <!--main closed$="[[!closed]]"-->   
           <dom-if if="[[notLogedIn]]">
                <template>    
                     <nav>
@@ -11594,11 +12175,14 @@ return noLabelFloat?-4:8},/**
                          </div>
                     </nav>
                     <nav class="login">
-                    <paper-input always-float-label label="email" value="{{email}}"></paper-input>
-                    <paper-input always-float-label label="password" type="password" value="{{pwd}}"></paper-input>
-                    <paper-button class="diferent" on-click="setValues">
-                         login
-                    </paper-button>
+                        <paper-input always-float-label label="email" value="{{email}}">
+                        </paper-input>
+                        <paper-input always-float-label label="password" type="password" value="{{pwd}}">
+                        </paper-input>
+                        <paper-button class="diferent" on-click="setValues">
+                            login
+                        </paper-button>
+                        <h4>[[errorMessage]]</h4>
                     </nav>
                     <nav>
                          <span class="spanthree"> Developed by </span>     
@@ -11606,12 +12190,11 @@ return noLabelFloat?-4:8},/**
                     </nav>
                </template>
           </dom-if>
-     </main>
+     <!--/main-->
      <slot name="controler" class="slot" closed$="[[closed]]"></slot>
-     `}static get is(){return"cms-login"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},closed:{type:Boolean,notify:!0,value:!0,reflectToAttribute:!0},notLogedIn:{type:Boolean,value:!1},user:{type:Object,notify:!0},email:{type:String},pwd:{type:String},type:{type:String},types:{type:Array,value:[{label:"Login types"},{id:"google",name:"google"},{id:"facebook",name:"facebook",notAtive:!1},{id:"github",name:"github",notAtive:!1},{id:"wave-shaper",name:"Video",notAtive:!1}]}}}ready(){super.ready();this.translator._DBW.authStateChanged((user,err)=>{if(0!==user){this.closed=!this.closed;this._userAccepted(user)}else{this.set("notLogedIn",!0);console.log(err)}});window.addEventListener("update-user",event=>{let string=`http://localhost:3000/update?obj=${JSON.stringify(event.detail)}&uid=${this._getUid()}`;console.log(event.detail,string);reuest(string,items=>{console.log("update sucssessfull",JSON.parse(items));let content=JSON.parse(items);if("admin"===content.accepted){window.dispatchEvent(new CustomEvent("user-updated",{detail:this.removeSensitiveData(JSON.parse(items))}))}else{window.dispatchEvent(new CustomEvent("app-error",{detail:content.error}))}},"POST","")});window.addEventListener("ask-for-users",(event=>{let string=`http://localhost:3000/admin?uid=${this._getUid()}`;if(null!==this._getProperty("user")){console.log()}reuest(string,items=>{console.log(items);let content=JSON.parse(items);//  if (content.accepted === 'admin') {
-window.dispatchEvent(new CustomEvent("user-list",{detail:content}))},"POST","")}).bind(this))}_getUid(){let user=this._getProperty("user");return user.uid}setValues(){let obj={email:this.email,pwd:this.pwd};this.translator._DBW.loginFire(obj);this.email="";this.pwd=""}_userAccepted(user){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{if(-1<["admin","dev","manager","advUser"].indexOf(user.role)){import("./cms-controler.js").then(bundle=>bundle&&bundle.$cmsControler||{}).then(()=>{this.set("user",user);this.children[0].set("user",user)})}})}removeSensitiveData(categories){let finalString=[],obj={};for(let par in categories){if(-1===["passwordHash","passwordSalt","metadata","providerData","tokensValidAfterTime"].indexOf(par.toString())){obj[par.toString()]=categories[par]}finalString.push(obj)}return finalString}}customElements.define(cmsLogin.is,cmsLogin);class worker{constructor(){this.db=firebase.firestore();this.auth=firebase.auth}getDoc(table){var categoriesRef=this.db.collection(table.name).doc(table.doc);return categoriesRef.get()}getDocList(table){var pagesRef=this.db.collection(table.name);return pagesRef.get()}queryDocList(table){var pagesRef=this.db.collection(table.name).where(table.query,table.condition,table.value);return pagesRef.get()}createDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName);return pagesRef.set(table.doc)}deleteDoc(table){var pagesRef=this.db.collection(table.name).doc(table.docName);return pagesRef.delete()}getDocListDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name);return pagesRef.get()}getDocDev(table){var categoriesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.doc);return categoriesRef.get()}queryDocListDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).where(table.query,table.condition,table.value);return pagesRef.get()}createDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName);console.log(pagesRef);return pagesRef.set(table.doc)}deleteDocDev(table){var pagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.docName);return pagesRef.delete()}updateContent(done,table){var imagesRef=this.db.collection(table.name).doc(table.doc);return imagesRef.update(table.data)}updateContentDev(done,table){var imagesRef=this.db.collection("dev").doc("VoSSMkzGYmPTvUhh9mgL").collection(table.name).doc(table.doc);return imagesRef.update(table.data)}mailLink(){if(this.auth().isSignInWithEmailLink(window.location.href)){var email=window.localStorage.getItem("emailForSignIn");if(!email){email=window.prompt("Please provide your email for confirmation")}this.auth().signInWithEmailLink(email,window.location.href).then(function(result){window.localStorage.removeItem("emailForSignIn")}).catch(function(error){})}}authState(done){this.auth().onAuthStateChanged(user=>{if(user){let obj={name:"users",doc:user.uid};this.getDoc(obj).then(querySnapshot=>{let user=querySnapshot.data();done(user)}).catch(function(error){console.error("Error reteaving article: ",error);done("error",error)})}else{done(0,"No user is signed in.")}})}login(user){this.auth().signInWithEmailAndPassword(user.email,user.pwd).then(item=>{}).catch(function(error){var errorCode=error.code,errorMessage=error.message;console.log(errorMessage,errorCode)})}andleTransaction(table){var sfDocRef=this.db.collection(table.name).doc(table.doc);sfDocRef.set(table.query);return this.db.runTransaction(function(transaction){return transaction.get(sfDocRef).then(function(sfDoc){if(!sfDoc.exists){throw"Document does not exist!"}var newPopulation=sfDoc.data()})}).then(function(){console.log("Transaction successfully committed!")}).catch(function(error){console.log("Transaction failed: ",error)})}}var firebaseWorker={worker:worker};const Worker=new worker;class dataBaseworker{constructor(){this.categories=[]}updateBrands(done,table,dev){let teble={name:"brands&manufactures",doc:table.name,data:{content:table.content}};if(!1===dev){Worker.updateContent(done,teble).then(function(){console.log("brands&manufactures successfully updated!");done("brands&manufactures successfully updated!",table.lang)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(done,teble).then(function(){console.log("brands&manufactures successfully updated!");done("brands&manufactures successfully updated!",table.lang)}).catch(function(error){done("Error",error)})}}setBrands(done,table,dev){let obj=table.name!==void 0?{name:"brands&manufactures",docName:table.name,doc:table.langs}:!1;if(!1===obj){done(!1,!1);return}if(!1===dev){Worker.createDoc(obj).then(function(){done("newlangs")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}else{Worker.createDocDev(obj).then(function(){done("newlang")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}}deleteBrandsZone(done,lang,dev){if(!1===dev){Worker.deleteDoc({name:"brands&manufactures",docName:lang}).then(function(){done("brands&manufactures successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}else{Worker.deleteDocDev({name:"brands&manufactures",docName:lang}).then(function(){done("brands&manufactures successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}}getBrands(done,table,dev){let obj={name:"brands&manufactures",doc:table.name};if(!1===dev){Worker.getDoc(obj).then(querySnapshot=>{let content=querySnapshot.data();done("brands&manufactures",content)}).catch(function(error){console.error("Error reteaving brands&manufactures: ",error);done("error",error)})}else{Worker.getDocDev(obj).then(querySnapshot=>{let content=querySnapshot.data();done("brands&manufactures",content)}).catch(function(error){console.error("Error reteaving brands&manufactures: ",error);done("error",error)})}}getAllBrands(done,dev){let obj={name:"brands&manufactures"};if(!1===dev){Worker.getDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){console.error("Error getting All brands&manufactures: ",error);done("error",error)})}else{Worker.getDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){console.error("Error getting All brands&manufactures: ",error);done("error",error)})}}//langs
-updateLangs(done,table,dev){let teble={name:"langs",doc:table.name,data:{content:table.content}};if(!1===dev){Worker.updateContent(done,teble).then(function(){console.log("langs successfully updated!");done("langs successfully updated!",table.lang)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(done,teble).then(function(){console.log("langs successfully updated!");done("langs successfully updated!",table.lang)}).catch(function(error){done("Error",error)})}}setLangs(done,table,dev){let obj=table.name!==void 0?{name:"langs",docName:table.name,doc:table.langs}:!1;if(!1===obj){done(!1,!1);return}if(!1===dev){Worker.createDoc(obj).then(function(){done("newlangs")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}else{Worker.createDocDev(obj).then(function(){done("newlang")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}}deleteLangZone(done,lang,dev){if(!1===dev){Worker.deleteDoc({name:"langs",docName:lang}).then(function(){done("lang successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}else{Worker.deleteDocDev({name:"langs",docName:lang}).then(function(){done("lang successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}}getLangs(done,table,dev){let obj={name:"langs",doc:table.name};if(!1===dev){Worker.getDoc(obj).then(querySnapshot=>{let content=querySnapshot.data();done("langs",content)}).catch(function(error){console.error("Error reteaving langs: ",error);done("error",error)})}else{Worker.getDocDev(obj).then(querySnapshot=>{let content=querySnapshot.data();done("langs",content)}).catch(function(error){console.error("Error reteaving langs: ",error);done("error",error)})}}getAllLangs(done,dev){let obj={name:"langs"};if(!1===dev){Worker.getDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){console.error("Error getting All langs: ",error);done("error",error)})}else{Worker.getDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc)});done(this.categories)}).catch(function(error){console.error("Error getting All langs: ",error);done("error",error)})}}//aticles
-updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{content:table.content}};if(!1===dev){Worker.updateContent(done,teble).then(function(){console.log("gallerie successfully updated!");done("gallerie successfully updated!",table.gallerie)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(done,teble).then(function(){console.log("gallerie successfully updated!");done("gallerie successfully updated!",table.gallerie)}).catch(function(error){done("Error",error)})}}setArticles(done,table,dev){let obj=table.parent!==void 0?{name:"articles",docName:table.parent,doc:table}:!1;if(!1===obj){done(!1,!1);return}if(!1===dev){Worker.createDoc(obj).then(function(){done("newPage")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}else{Worker.createDocDev(obj).then(function(){done("newPage")}).catch(error=>{done("error",error);console.error("Error writing document: ",error)})}}deleteArticles(done,page,dev){if(!1===dev){Worker.deleteDoc({name:"articles",docName:page}).then(function(){done("Page successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}else{Worker.deleteDocDev({name:"articles",docName:page}).then(function(){done("Page successfully deleted!")}).catch(function(error){console.error("Error removing article: ",error);done("error",error)})}}getArticle(done,categoryObj,dev){let obj={name:"articles",doc:categoryObj.name};if(!1===dev){Worker.getDoc(obj).then(querySnapshot=>{let content=querySnapshot.data().content;done("article",content)}).catch(function(error){console.error("Error reteaving article: ",error);done("error",error)})}else{Worker.getDocDev(obj).then(querySnapshot=>{let content=querySnapshot.data().content;done("article",content)}).catch(function(error){console.error("Error reteaving article: ",error);done("error",error)})}}getAllArticles(done,dev){let obj={name:"articles"};if(!1===dev){Worker.getDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){console.error("Error getting All Articles: ",error);done("error",error)})}else{Worker.getDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){console.error("Error getting All Articles: ",error);done("error",error)})}}changePages(done,table,dev){console.log(table.id);let teble={name:"pages",doc:table.id,data:table};if(!1===dev){Worker.updateContent(done,teble).then(function(){console.log("page successfully updated!");done("page successfully updated!",table.name)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(done,teble).then(function(){console.log("page successfully updated!");done("page successfully updated!",table.name)}).catch(function(error){done("Error",error)})}}setPages(done,table,dev){let obj={name:"pages",docName:table.id,doc:table};if(!1===dev){Worker.createDoc(obj).then(function(){done("page successfully created")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)})}else{Worker.createDocDev(obj).then(function(){done("page successfully created")}).catch(error=>{done("error",error);console.error("Error writing page: ",error)})}}deletePage(done,page,dev){if(!1===dev){Worker.deleteDoc({name:"pages",docName:page}).then(function(){done("Page successfully deleted!",page)}).catch(function(error){console.error("Error removing page: ",error);done("error",error)})}else{Worker.deleteDocDev({name:"pages",docName:page}).then(function(){done("Page successfully deleted!",page)}).catch(function(error){console.error("Error removing page: ",error);done("error",error)})}}getAllPages(done,dev){let obj={name:"pages"};if(!1===dev){Worker.getDocList(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}else{Worker.getDocListDev(obj).then(querySnapshot=>{this.categories=[];querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done(this.categories)}).catch(function(error){console.error("Error getting all pages: ",error);done("error",error)})}}getPagesEqualTo(done,query,value,dev){let obj={name:"pages",query:query,value:value,condition:"=="};this.categories=[];if(!1===dev){Worker.queryDocList(obj).then(querySnapshot=>{querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done({categories:this.categories})}).catch(function(error){console.error("Error getting Pages Equal To: "+value,error);done("error",error)})}else{Worker.queryDocListDev(obj).then(querySnapshot=>{querySnapshot.forEach(doc=>{this.categories.push(doc.data())});done({categories:this.categories})}).catch(function(error){console.error("Error getting Pages Equal To: "+value,error);done("error",error)})}}writeMediaContent(done,table,dev){let teble={name:"media",doc:table.gallerie,data:{content:table.content}};if(!1===dev){Worker.updateContent(done,teble).then(function(){console.log("gallerie successfully updated!");done("gallerie successfully updated!",table.gallerie)}).catch(function(error){done("Error",error)})}else{Worker.updateContentDev(done,teble).then(function(){console.log("gallerie successfully updated!");done("gallerie successfully updated!",table.gallerie)}).catch(function(error){done("Error",error)})}}getMediaContent(done,categoryObj,dev){let obj={name:"media",doc:categoryObj.name};if(!1===dev){Worker.getDoc(obj).then(querySnapshot=>{this.categories=[];done(querySnapshot.data())}).catch(function(error){console.error("Error getting Media Galleries ",error);done("error",error)})}else{Worker.getDocDev(obj).then(querySnapshot=>{this.categories=[];done(querySnapshot.data())}).catch(function(error){console.error("Error getting Media Galleries ",error);done("error",error)})}}setMediaGalleries(done,table,dev){let obj={name:String,docName:String,doc:Object,name:"media",docName:table.gallery,doc:table};if(!1===dev){Worker.createDoc(obj).then(()=>{done("gallerie created",obj.docName)}).catch(error=>{console.error("Error creating gallerie"+error);done("error",error)})}else{Worker.createDocDev(obj).then(()=>{done("gallerie created",obj.docName)}).catch(error=>{console.error("Error creating gallerie"+error);done("error",error)})}}deleteMediaGallery(done,gallerie,dev){if(!1===dev){Worker.deleteDoc({name:"media",docName:gallery}).then(function(){done("Gallerie successfully deleted!",gallery)}).catch(function(error){console.error("Error deleting gallerie"+error);done("error",error)})}else{Worker.deleteDocDev({name:"media",docName:gallerie}).then(function(){done("Gallerie successfully deleted!",gallerie)}).catch(function(error){console.error("Error deleting gallerie"+error);done("error",error)})}}loginFire(user){Worker.login(user)}authStateChanged(done){Worker.authState(done)}checkMailLink(){Worker.mailLink()}getElementAssets(element,dev){let obj={name:"stylesandlangs",doc:element};if(!1===dev){return Worker.getDoc(obj)}else{return Worker.getDocDev(obj)}}setElementAssets(table,dev){let obj={name:"stylesandlangs",docName:String,doc:Object,docName:table.element,doc:table.content};if(!1===dev){return Worker.createDoc(obj)}else{return Worker.createDocDev(obj)}}}var dataBaseWorker={dataBaseworker:dataBaseworker};class Setter{constructor(){this.__DEV=!0;this._DBW=new dataBaseworker;this.template=document.createElement("template")}getAssets(elem){return this._DBW.getElementAssets(elem,this.__DEV)}clone(parent){var clone=document.importNode(this.template.content,!0);parent.appendChild(clone)}changeLang(){if(this.langs[this.lang]){let obj=this.langs[this.lang];for(let par in obj){this.set(par,obj[par])}}}changeItemTitleLang(item,title){if(this.langs[this.lang]){let obj=this.langs[this.lang];this.set(title,obj[item])}}setChildrenLang(data){if(0<this.childElementCount){for(let i=0;i<this.childElementCount;i++){this.children[i].children[0].lang=data}}}setLangObject(langs){for(let par in langs){if("styles"!==par){this.langs[par]=langs[par].pop()}}this.__changeLang()}}var cmsElementSet={Setter:Setter};const template$a=html`<iron-iconset-svg name="editor" size="24">
+     `}static get is(){return"cms-login"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},closed:{type:Boolean,notify:!0,value:!0,reflectToAttribute:!0},notLogedIn:{type:Boolean},user:{type:Object,notify:!0},email:{type:String},pwd:{type:String},type:{type:String},types:{type:Array,value:[{label:"Login types"},{id:"google",name:"google"},{id:"facebook",name:"facebook",notAtive:!1},{id:"github",name:"github",notAtive:!1},{id:"wave-shaper",name:"Video",notAtive:!1}]}}}_log(data){console.log(data)}ready(){super.ready();this.set("notLogedIn",!0);const USER=this.translator.authStateChanged();USER.then(data=>{this._userAccepted(data)}).catch(err=>{console.log(err)})}setValues(){let obj={email:this.email,pwd:this.pwd};this.set("errorMessage",``);this.translator.loginFire(obj).then(item=>{this.set("notLogedIn",!1);this.email="";this.pwd="";this.set("errorMessage",`W  E L C O M E`)}).catch(error=>{this.set("notLogedIn",!0);var errorCode=error.code,errorMessage=error.message;this.set("errorMessage",`${errorMessage} ${errorCode}`)})}_userAccepted(user){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{if(-1<["admin","dev","manager","advUser"].indexOf(user.role)){import("./cms-controler.js").then(bundle=>bundle&&bundle.$cmsControler||{}).then(()=>{this.set("user",user);this.children[0].set("user",user)});this.closed=!this.closed;this.set("notLogedIn",!1);//  this._log('heere2')
+}})}}customElements.define(cmsLogin.is,cmsLogin);const template$9=html`<iron-iconset-svg name="editor" size="24">
 <svg><defs>
 <g id="attach-file"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"></path></g>
 <g id="attach-money"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"></path></g>
@@ -11682,16 +12265,2326 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
 <g id="vertical-align-top"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"></path></g>
 <g id="wrap-text"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$a.content);/**
-                                               @license
-                                               Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-                                               This code may only be used under the BSD style license found at
-                                               http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
-                                               http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
-                                               found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
-                                               part of the polymer project is also subject to an additional IP rights grant
-                                               found at http://polymer.github.io/PATENTS.txt
-                                               */const $_documentContainer$3=document.createElement("template");$_documentContainer$3.setAttribute("style","display: none;");$_documentContainer$3.innerHTML=`<dom-module id="paper-spinner-styles">
+</iron-iconset-svg>`;document.head.appendChild(template$9.content);const IronCheckedElementBehaviorImpl={properties:{/**
+     * Fired when the checked state changes.
+     *
+     * @event iron-change
+     */ /**
+         * Gets or sets the state, `true` is checked and `false` is unchecked.
+         */checked:{type:Boolean,value:!1,reflectToAttribute:!0,notify:!0,observer:"_checkedChanged"},/**
+     * If true, the button toggles the active state with each tap or press
+     * of the spacebar.
+     */toggles:{type:Boolean,value:!0,reflectToAttribute:!0},/* Overriden from IronFormElementBehavior */value:{type:String,value:"on",observer:"_valueChanged"}},observers:["_requiredChanged(required)"],created:function(){// Used by `iron-form` to handle the case that an element with this behavior
+// doesn't have a role of 'checkbox' or 'radio', but should still only be
+// included when the form is serialized if `this.checked === true`.
+this._hasIronCheckedElementBehavior=!0},/**
+   * Returns false if the element is required and not checked, and true
+   * otherwise.
+   * @param {*=} _value Ignored.
+   * @return {boolean} true if `required` is false or if `checked` is true.
+   */_getValidity:function(_value){return this.disabled||!this.required||this.checked},/**
+   * Update the aria-required label when `required` is changed.
+   */_requiredChanged:function(){if(this.required){this.setAttribute("aria-required","true")}else{this.removeAttribute("aria-required")}},/**
+   * Fire `iron-changed` when the checked state changes.
+   */_checkedChanged:function(){this.active=this.checked;this.fire("iron-change")},/**
+   * Reset value to 'on' if it is set to `undefined`.
+   */_valueChanged:function(){if(this.value===void 0||null===this.value){this.value="on"}}},IronCheckedElementBehavior=[IronFormElementBehavior,IronValidatableBehavior,IronCheckedElementBehaviorImpl];/** @polymerBehavior */var ironCheckedElementBehavior={IronCheckedElementBehaviorImpl:IronCheckedElementBehaviorImpl,IronCheckedElementBehavior:IronCheckedElementBehavior};const template$a=html`
+<custom-style id="cms-common-styles_v2">
+  <style is="cms-common-styles_v2">
+  html {
+  --app-backgound-color: #fff;
+  --app-item-backgound-color: #eaeaea;
+  --app-front-button: 31px;
+  --app-primary-color: #3f4756;
+  --app-secondary-color: var(--paper-cyan-50);
+  --app-third-color: #5a5f69;
+  --app-tabs-color: var(--app-secondary-color);
+  --app-topnav-icon-color: var(--light-theme-disabled-color);
+  --app-published-color: var(--paper-blue-a700);
+  --app-not-published-color: var(--paper-red-900);
+  --app-dropDwonMenu-icon-color: var(--google-red-500);
+  --app-primary-text-color: var(--light-theme-secondary-color);
+  --app-secondary-text-color: var(--google-grey-100);
+  --app-listIcon-color: var(--app-listicon-color);
+  --app-scrollbar-color: var(--app-content-paper-button-background-color);
+  --app-scrollbar-width: 7.5px;
+  --app-none: none;
+  --app-block: block;
+  --app-listitem: list-item;
+  --app-flex: flex;
+  --app-flexwrap: wrap;
+  --app-flexrow: row;
+  --app-flexcolumn: column;
+  --app-flexgrowshrink: 1;
+  --app-default-position: relative;
+  --app-custom-position: absolute;
+  --app-unset-position: unset;
+  --app-default-width: 100%;
+  --app-default-max-width: 1200px;
+  --app-default-height: 900px;
+  --app-default-text-word-break: break-word;
+  --app-custom-text-word-break: break-all;
+  --app-default-text-align: center;
+  --app-default-font-weight: bold;
+  --app-default-word-break: break-all;
+  --app-default-cursor: pointer;
+  --app-default-box-sizing: border-box;
+  --app-default-padding: 8px;
+  --app-default-min-padding: 0px;
+  --app-header-layout-leftposition: -44px;
+  --app-header-rightposition: var(--app-default-min-padding);
+  --app-header-leftposition: var(--app-default-min-padding);
+  --app-tollbar-height: 41px;
+  --app-tollbar-default-font-size: 12px;
+  --app-dropDwonMenu-icon-width: 82px;
+  --app-tollbar-sellector-list-margin: 0 20px;
+  --app-tollbar-sellector-list-padding: 0 16px;
+  --app-tollbar-sellector-list-line-height: 40px;
+  --app-tollbar-content-wrapper-top: -18px;
+  --app-tollbar-content-wrapper-max-width: 670px;
+  --app-tollbar-content-wrapper-padding-left: 15px;
+  --app-tollbar-cart-btn-top: -67px;
+  --app-tollbar-cart-btn-width: 267px;
+  --app-tollbar-cart-btn-float: right;
+  --app-tollbar-cart-btn-height: 59px;
+  --app-tollbar-user-badge-margin-top: 7px;
+  --app-content-top: 61px;
+  --app-content-margin-left: 5%;
+  --app-content-letter-spacing: 2px;
+  --app-content-font-size: larger;
+  --app-content-margin-top: 4px;
+  --app-content-margin-bottom: 1px;
+  --app-content-article-margin-bottom: 10px;
+  --app-content-article-marginleft: auto;
+  --app-content-article-height: 25px;
+  --app-content-article-lsitItem-flex-basis: 25%;
+  --app-content-nav-padding-left: 21px;
+  --app-content-nav-topleft: -22px;
+  --app-content-navtop-top: -27.19px;
+  --app-content-nav-top-height: 26px;
+  --app-content-nav-top-max-width: 520px;
+  --app-content-divtop-top: -3px;
+  --app-content-divtop-height: 130px;
+  --app-content-divtop-padding-top: 30px;
+  --app-content-divtop-border-bottom: 1px solid var(--app-primary-text-color);
+  --app-content-section-span-color: #6597c0;
+  --app-content-section-padding: 4px;
+  --app-content-section-height: 50px;
+  --app-content-section-margin-left: 20px;
+  --app-content-sectiontitle-fbasis: 34px;
+  --app-content-section-title-font-size: 25px;
+  --app-content-section-title-height: 72px;
+  --app-content-section-title-width: 257px;
+  --app-content-button-light-marginleft: var(--app-content-article-margin-bottom);
+  --app-content-button-border: 1px solid;
+  --app-content-paper-button-minwidth: 105px;
+  --app-content-paper-button-maxwidth: 151px;
+  --app-content-paper-button-height: 31px;
+  --app-content-paper-button-background-color: #d0e6f1;
+  --app-content-paper-button-margin-right: -7px;
+  --app-content-hidden-minwidth: 98px;
+  --app-content-paper-tabs-font-size: 17px;
+  --app-content-paper-tabs-padding-top: 7px;
+  --app-content-navcenter-letter-spacing: 0.02em;
+  --app-content-button-height: 25px;
+  --app-content-page-viewertop: 10px;
+  --app-content-page-viewerleft: -3px;
+  --app-pages-padding-right: 18px;
+  --app-pages-minwidth: 730px;
+  --app-images-max-height: 900px;
+  --app-images-padding: 24px;
+  --app-images-div-flex-basis: 1%;
+  --app-images-div-padding: 11px;
+  --app-images-div-white-space: nowrap;
+  --app-images-div-overflow: hidden;
+  --app-images-div-text-overflow: ellipsis;
+  --app-images-divnav-padding-left: 0;
+  --app-images-divnav-height: 250px;
+  --app-images-divnav-overflow-y: var(--app-content-article-marginleft);
+  --app-images-article-margin-bottom: 14px;
+  --app-images-article-font-size: 1em;
+  --app-images-article-flexbasis: 38px;
+  --app-images-nav-flex-basis: 88%;
+  --app-images-nav-top: -7px;
+  --app-images-button-top: -9px;
+  --app-listtype-nav-flex-basis: 25%;
+  --app-listtype-nav-padding-right: 4px;
+  --app-listtype-nav-height: 45px;
+  --app-listtype-divtop-flex-basis: 72%;
+  --app-listtype-navtop-top: -38px;
+  --app-listtype-navtop-height: 19px;
+  --app-listtype-navtop-maxwidth: 483px;
+  --app-listtype-div-height: 300px;
+  }
+  </style>
+</custom-style>`;template$a.setAttribute("style","display: none;");document.head.appendChild(template$a.content);const $_documentContainer$3=document.createElement("template");$_documentContainer$3.innerHTML=`
+<dom-module id="cms-comon-style_v3">
+    <template>
+        <style>
+    
+            html {
+                --content-color-default: #8098ad;
+                --content-color-button: color: #7a8c94;
+                --content-color-section: color: #616161;
+            }
+            
+            @font-face {
+                font-family: DeliciousRoman;
+                src: url(http://www.font-face.com/fonts/delicious/Delicious-Roman.otf);
+                font-weight:400;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            nav[top] {
+                box-sizing: border-box;
+                color: var(--paper-blue-grey-400);
+                text-align: center;
+                text-transform: capitalize;
+                padding-left: 32px;
+            }
+
+            .flexright,
+            .navsidecontent div {
+                word-break: break-word;
+            }
+
+            .flex {
+                @apply --layout-horizontal;
+                height: 1525px;
+            }
+
+            div[container] {
+                @apply --layout-vertical;
+            }
+
+            div[arow],
+            div[bottom] {
+                box-sizing: border-box;
+                @apply --layout-horizontal;
+            }
+
+            div[arow] {
+                height: 49px;
+                padding-top: 10px;
+                border-bottom: 1px solid var(--divider-color)
+            }
+
+            h4 {
+                margin-block-start: 0.33em;
+            }
+
+            .center-menu,
+            .center-menu-especial {
+                -webkit-flex: unset;
+                flex: unset;
+                webkit-flex-basis: var(--layout-flex_-_-webkit-flex-basis, 0);
+                flex-basis: unset;
+                font-size: initial;
+            }
+
+            .scroll {
+                overflow-y: auto;
+            }
+
+            div[table] {
+                flex-direction: var(--app-flexcolumn);
+                margin-top: 8px;
+                padding: 8px;
+                height: 600px;
+                overflow: auto;
+            }
+
+            div[table]::-webkit-scrollbar-track {
+                background-color: transparent
+            }
+
+            div[table]::-webkit-scrollbar {
+                width: 5px
+            }
+
+            div[table]::-webkit-scrollbar-thumb {
+                background-color: transparent
+            }
+
+            div[content] {
+                display: var(--app-none)
+            }
+            
+            .flexchildbotomFull {
+                font-weight: 700;
+                margin-right: 1px;
+                padding: 0;
+                @apply --layout-vertical;
+                @apply --layout-flex-2;
+            }
+
+            .flexchildbotom{
+                flex-basis: auto;
+                flex: 1;
+            }
+
+            .flexchildbotomShort {
+                flex-basis: 30%;
+                margin-bottom: 5px;
+                max-width: 75%;
+                height: 100px;
+            }
+
+            .childbotom {
+                flex-basis: 100%;
+                max-width: 75%
+            }
+
+            .flexchildbotomFull {
+                flex-basis: 80px;
+                width: 155px;
+            }
+
+            .flexchildbotomFullExtra {
+                flex-basis: 130px;
+                font-weight: 700;
+            }
+
+            .navbottom,
+            .navsidecontent {
+                box-sizing: border-box;
+                /*height: 604px;*/
+            }
+
+            .flexchildbotom3 {
+                @apply --layout-self-stretch;
+                @apply --layout-flex-3;
+                height: 328px;
+                border-radius: 4px;
+                color: var(--app-content-section-span-color);
+            }
+
+            .flexleft,
+            .flexright {
+                cursor: pointer;
+                max-height: 42px;
+            }
+
+            .flexright {
+                color: var(--paper-grey-700);
+                max-height: 50px;
+                max-width: 20%;
+            }
+
+            .navbottom {
+                flex: 1;
+            }
+
+            .navsidecontent {
+                @apply --layout-horizontal;
+                border-bottom: 1px solid var(--paper-blue-grey-200);
+                height: 54px;
+                margin-inline-start: 70px;
+                margin-inline-end: 70px;
+            }
+
+            .navsidecontent div {
+                cursor: pointer;
+            }
+
+          /*  .center-menu,
+            .collumn-left-menu,
+            div[rightSide],
+            .center-menu-especial,
+            .row-menu-especial {
+                padding: 8px
+            }
+
+            .center-menu,
+            .center-menu-especial {
+                color: var(--app-published-color);
+                font-weight: 700;
+                height: 20px;
+            }
+
+            .center-menu-especial {
+                height: 20px;
+                width: 104px;
+            }*/
+            paper-button[id="label"]{
+                text-decoration: var(--app-none);
+                color: inherit;
+                -webkit-justify-content: left;
+                justify-content: left;
+                float: left;
+            }
+
+            .alt{
+                display: flex;                
+                flex-direction: column;
+                min-width: 200px;
+            }
+
+            .button-container{
+                flex-basis: 30px;
+            }
+
+            .flexleft {
+                color: var(--paper-blue-a200);
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            .row-menu,
+            .row-menu-especial {
+                color: var(--paper-blue-600);
+                font-weight: 700;
+                flex-grow: 0;
+                flex-basis: 35px
+            }
+
+            .row-menu aside,
+            .row-menu-especial aside {
+                padding-top: 16px;
+                text-align: center;
+            }
+
+            .row-menu-especial {
+                width: 104px;
+            }
+
+            /* .title{
+                background-color: #e0f7fa; 
+            }*/
+            .collumn-left-menu {
+                width: 146px;
+                color: var(--paper-blue-600);
+                font-weight: 700;
+                height: 18px;
+            }
+
+            .info {
+                color: var(--light-theme-disabled-color);
+                letter-spacing: 3px;
+            }
+
+            .asideBackgrc {
+                text-overflow: ellipsis;
+                font-size: 12px;
+                letter-spacing: 1px;
+                box-sizing: border-box;
+                /*background-color: var(--app-item-backgound-color);
+                border-bottom: 1px solid var(--dark-theme-secondary-color);
+                margin-right: 3px;*/
+                height: 20px;
+                margin-right: 3px;
+                border-radius: 3px;
+                color: var(--app-content-section-span-color);
+            }
+
+            div[published],
+            .center-menu aside,
+            .center-menu-especial aside,
+            .collumn-left-menu aside {
+                text-align: center;
+            }
+
+            div[rightSide] {
+                flex-flow: column;
+                flex-basis: 25%;
+                max-height: 161px;
+                overflow-y: auto
+            }
+
+            div[rightSide] section {
+                @apply --layout-horizontal;
+                text-align: center;
+            }
+
+            div[rightCenter] aside {
+                flex-basis: 34%
+            }
+
+            div[rightSide]::-webkit-scrollbar-track {
+                background: #ddd
+            }
+
+            div[rightSide]::-webkit-scrollbar {
+                width: 7.5px
+            }
+
+            div[rightSide]::-webkit-scrollbar-thumb {
+                background-color: var(--content-color-default, #8098ad)
+            }
+
+            div[published=NP] {
+                color: var(--app-not-published-color)
+            }
+
+            div[published=P] {
+                color: var(--app-published-color)
+            }
+
+            div[toarticle=B] {
+                color: var(--app-not-published-color)
+            }
+
+            div[toarticle=A] {
+                color: var(--app-published-color)
+            }
+
+            .spanpadding {
+                padding: 4px;
+                font-size: 15px;
+                font-weight: bold;
+            }
+
+            section div[rightImages] {
+                height: 334px;
+                color: var(--content-color-section);
+                opacity: 1;
+                width: 98%;
+                overflow: hidden
+            }
+
+            section[bottom] {
+                display: flex;
+                flex-flow: column;
+                font-weight: bold;
+                margin-bottom: 46px;
+                flex-basis: 24%;
+                /* background-color: #d8e6ed;;
+                box-shadow: 1px 1px 1px grey;*/
+                margin-right: 1px;
+                padding: 0;
+            }
+
+            section[bottom2] {
+                max-height: 359px;
+                flex-basis: 100%;
+            }
+
+            section[bottom3] {
+                display: block;
+                max-width: 92%;
+            }
+
+
+            section[bottom3] {
+                display: block;
+                flex-basis: 92%;
+            }
+            
+            paper-spinner {
+                left: 47%;
+                ;
+            }
+
+            div[hidde] {
+                display: none;
+            }
+
+            /*
+            paper-button {
+                max-height: 50px;
+                min-width: 98px;
+            }*/
+
+            cms-image-viewer {
+                display: none;
+            }
+
+            .diferent {
+                display: none !important
+            }
+
+            .saveButton {
+                color: var(--google-blue-300);
+                font-weight: bold;
+                font-size: 11px;
+                font-style: italic;
+                max-width: 126px;
+                width: 110px;
+                letter-spacing: 2px;
+                height: 60px;
+                text-transform: lowercase;
+            }
+
+            .contenth4 {
+                margin-block-start: -0.67em;
+            }
+
+            .padding {
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .padding,
+            article,
+            article[centerListItem],
+            div[centerImageItem] {
+                box-sizing: var(--app-default-box-sizing)
+            }
+
+            article[centerListItem],
+            div[centerImageItem] {
+                @apply --layout-horizontal;
+                border-bottom: 1px solid var(--app-item-backgound-color);
+            }
+
+            div[centerImageItem] {
+                display: var(--app-flex)
+            }
+
+            article[centerListItem],
+            section[title2],
+            div[centerImageItem] {
+                text-align: var(--app-default-text-align)
+            }
+
+            div[centerImageItem] {
+                margin-bottom: 4px
+            }
+
+            article[centerListItem] div,
+            div[centerImageItem] article {
+                @apply --layout-flex;
+                font-size: 10px;
+            }
+
+            article[centerListItem] div {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis
+            }
+
+            article[centerListItem] span,
+            div[centerImageItem] span {
+                word-break: break-word
+            }
+
+            article[centerListItem] paper-button {
+                text-overflow: ellipsis;
+                white-space: pre-line;
+                overflow: hidden;
+                height: auto;
+                max-height: 47px;
+            }
+
+            article[centerListItem] {
+                word-break: keep-all;
+                border-radius: 4px;
+                font-size: 0.9em;
+                border-bottom: 1px solid var(--light-theme-divider-color);
+            }
+
+            article[centerListItem] paper-icon-button {
+                height: 3.6em;
+                top: 5px;
+            }
+
+            .centerImage {
+                display: block;
+                margin-top: auto;
+                margin-bottom: auto;
+                box-shadow: unset;
+            }
+
+            paper-button[langbtn] {
+                padding: 0px;
+                padding-top: 1px;
+                height: 18px;
+                border-top-left-radius: 11px;
+                border-top-right-radius: 11px;
+                min-width: 29px;
+                text-transform: capitalize;
+            }
+
+            paper-button.exex {
+                position: relative;
+                background-color: var(--divider-color);
+                top: -11px;
+                right: 8px;
+                border-radius: 31%;
+                min-width: 15px;
+                max-height: 14px;
+                color: var(--secondary-text-color);
+                cursor: pointer;
+                font-size: 9px;
+                padding-top: 7px;
+            }
+
+            paper-button.exexsmall {
+                top: -5px;
+                right: -1px;
+                background-color: transparent;            }
+
+            paper-button.strech {
+                width: 177px;
+                text-align: left;
+            }
+
+            .nopad {
+                padding: 0
+            }
+
+            /*  .paddingSmall {
+                word-break: break-word;
+                font-size: 0.95em;
+            }*/
+
+            .paddingSmall h3 {
+                margin-block-start: 7px;
+            }
+
+            .plussubcat {
+                box-sizing: content-box;
+                max-width: 30px;
+                height: auto;
+                border-right: 1px dashed;
+            }
+
+            .plus {
+                display: flex;
+                width: 100%;
+            }
+
+            .subcat {
+                flex-grow: 1;
+            }
+
+            shop-image {
+                height: 30px;
+            }
+
+            div[published] {
+                font-size: small;
+                width: 45%
+            }
+
+            div[published="NP"] {
+                color: var(--app-not-published-color)
+            }
+
+            div[published="P"] {
+                color: var(--app-published-color)
+            }
+
+            .added {
+                color: #00ff7f
+            }
+
+            paper-icon-button {
+                height: 31px;
+            }
+
+            /*
+                -                   - 
+                    media queries
+                -                   -
+            */
+            /*  @media (min-width: 800px){
+                .navbottom{
+                    width: 1040px;
+                }
+            }
+        @media (min-width: 1400px){
+                .navbottom{
+                    width: 1040px; 
+                }
+            }
+
+            media queries for later
+            @media (max-width: 480px){
+                .navbottom{
+                    background-color: yellow;
+                    width: 1040px;
+                }
+            }
+            @media (min-width: 400px){
+                .navbottom{
+                    background-color: brown;
+                    width: 1040px;
+                }
+            }
+            @media (max-width: 800px){
+                .navbottom{
+                    background-color: grey;
+                    width: 1040px;
+                }
+            }*/
+    </style>
+    </template>
+</dom-module>`;document.head.appendChild($_documentContainer$3.content);class cmsItemTemplate extends PolymerElement{static get template(){return html`  
+        <style include="cms-comon-style_v3">    
+        :host {
+            position: relative;
+            display: block;            
+        } 
+        ${this._getStyles}  
+        /* styles reside in cms-content*/
+        </style>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>
+        <slot name="table"></slot>
+         ${this._getElement}
+          
+        `}static get _getStyles(){return html` 
+        article[centerlistitem] paper-button{
+            height: auto;
+            max-height: 35px;
+            }
+               `}static get _getElement(){return html`
+        `}static get is(){return"cms-item-template"}static get properties(){return{page:{type:Object,notify:!0,observer:"_putRow"}}}ready(){super.ready()}log(data){console.log("log from cms-article-viewer",data)}_getParameter(item){return item}_putRow(data){let template=document.createElement("template"),str=`
+        <div centerListItem slot="table">            
+            <article>
+                <paper-button>
+                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
+                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
+                </paper-button> 
+            </article> 
+        </div>`;/*  template.innerHTML = str
+                   let clone = document.importNode(template.content, true);
+                   this.appendChild(clone)
+                      this.children[0].children[1].
+                       children[0].addEventListener('click', (this.showPage).
+                           bind(this));*/}}customElements.define(cmsItemTemplate.is,cmsItemTemplate);var cmsItemTemplate$1={cmsItemTemplate:cmsItemTemplate};const _DBW=new dataBaseworker,_MEDIADBW=new MediaDB,_CATEGORIESDBW=new CategoriesDB,_SETTINGSBW=new Settings,__DEV$1=!0;var storageRef=firebase.storage().ref();const cmsSettingsLib=function(superClass){return class extends superClass{ready(){super.ready()}getProjects(){return _SETTINGSBW.Projects}}},cmsPagesLib=function(superClass){return class extends superClass{static get is(){return"cms-pages-lib"}ready(){super.ready()}_setLangArr(cont){return _setLangArr(cont)}_askPages(query){getPages(query).then(done=>{this._setAll(done)}).catch(standartErr)}getPageData(id){var ID=id;getPageData(ID).then(data=>{let cont=[data],arr=this._setLangArr(cont[0]),str=`content/pages/edit-category-pages?content=${ID}&add=false&lang=${arr[0]}`;localStorage.setItem(`page-${ID}`,JSON.stringify(cont));window.history.pushState({},null,str);window.dispatchEvent(new CustomEvent("location-changed"))}).catch(standartErr)}_removeLang(){let t={content:this.query.content,type:"data",langArr:this.removeArr};window.history.pushState({},null,`${this.rootPath}content/pages?reset=true`);deletePageData(t).then(()=>{window.onbeforeunload=function(){};this.editing=0;localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500);console.log("removed lang: %s")}).catch(standartErr)}savePages(){if(!0===this.add){if(!!this.inform[0].id){window.history.pushState({},null,`${this.rootPath}content/pages?reset=true`);saveAdded(this.inform[0].id,this.inform[0]).then(data=>{if("error"!==data){saveAddedData("data",this.inform[0].id,this.content[0]).then(data=>{window.onbeforeunload=function(){};this.editing=0;localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500)})}}).catch(standartErr)}}else if(!1===this.add){if(!!this.inform[0].id){window.history.pushState({},null,`${this.rootPath}content/pages?reset=true`);saveChanged(this.inform[0].id,this.inform[0]).then(()=>{saveChangedData("data",this.inform[0].id,this.content[0]).then(()=>{window.onbeforeunload=function(){};this.editing=0;localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500)});/* */}).catch(standartErr)}}}removePage(){let str=`${this.rootPath}content/pages?reset=true`;window.onbeforeunload=function(){};saveChanged(this.objInfo[0].id,this.objInfo[0]).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},250)}).catch(standartErr);if("A"===this.objInfo[0].toArticle){}}}},cmsSubcatsLib=function(superClass){return class extends superClass{static get is(){return"cms-subcats-lib"}ready(){super.ready()}_setLangArr(cont){return _setLangArr(cont)}getTopSubcats(parent,render,spinnerOutTemplate){getTopSubcats(parent).then(done=>{if(!!done&&0<done.length){render(spinnerOutTemplate(),this);this.subSubCats=done}else{this.subSubCats=""}}).catch(standartErr)}getSubcat(parent,id){getSubcat(parent,id).then(done=>{this._setContent(done)}).catch(standartErr)}getChildrenSubcats(parent,subCatChildren){let dataObj=[];getChildrenSubcats(parent,subCatChildren).then(done=>{dataObj.push(done.pop());this.dataObj=dataObj}).catch(standartErr)}getSubcatsData(parent,id){getSubcatsData(parent,id).then(done=>{this._setContent(done)}).catch(standartErr)}__checkEqual(){getSubcatsData(this.parent,this.subcat.id).then(done=>{this._setContent(done)}).catch(standartErr)}__checkBigger(data,temp,index2){if(data[index2-1]===temp[index2-1]){getSubcatsData(this.parent,this.subcat.id).then(done=>{this._setContent(done);this._toggleChildren()}).catch(standartErr)}else{getSubcatsData(this.parent,this.subcat.id).then(done=>{this._setContent(done)}).catch(standartErr)}}_publishToArticle(){let str=`${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=true`;saveAddedSubcat(this.query.content,this.subcat.id,this.subcat).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500)}).catch(standartErr)}saveSubcats(){let str=`${this.rootPath}content/pages/subcategory-pages?content=${this.query.content}&update=${this.query.name}&reset=true`;this.ctnOpened=!1;if(!0===this.add){saveAddedSubcat(this.query.content,this.inform[0].id,this.inform[0]).then(()=>{saveAddedSubcatData(this.inform[0].parent,this.inform[0].id,this.content[0]).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500)}).catch(standartErr)}).catch(standartErr)}if(!1===this.add){saveChangedSubcat(this.inform[0].parent,this.inform[0].id,this.inform[0]).then(()=>{saveChangedSubcatData(this.inform[0].parent,this.inform[0].id,this.content[0]).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};localStorage.clear();this.__reset();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500)}).catch(standartErr)}).catch(standartErr)}}removeSubcatsLang(){let str=`${this.rootPath}content/pages/subcategory-pages?content=${this.inform[0].parent}&reset=true&update=${this.inform[0].id}`;deleteSubcatData(this.inform[0].parent,this.inform[0].id,this.removeArr).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};this.__reset();localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},250)}).catch(standartErr)}updateSubcatParentInfo(cont,parent,id){updateSubcatParentInfo(cont,parent,id)}removeSubcats(cont,parent,id){let str;if(!!cont){str=`${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true&update=${id}`;cont[0].children=cont[0].children.filter(item=>{if(item!==this.subcat.id)return item});cont[0].childrenCount=cont[0].childrenCount--;cont[0].removedChildren.push(this.subcat.id);updateSubcatParentInfo(cont[0],parent,id);window.history.pushState({},null,str);window.onbeforeunload=function(){};saveChangedSubcat(parent,this.subcat.id,this.subcat).then(()=>{window.onbeforeunload=function(){};localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},250)}).catch(standartErr)}else{str=`${this.rootPath}content/pages/subcategory-pages?content=${parent}&reset=true`;saveChangedSubcat(parent,id,this.subcat).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},250)}).catch(standartErr)}}}},cmsMediaLib=function cmsMediaLib(superClass){return class extends superClass{static get is(){return"cms-media-lib"}ready(){super.ready()}_setGallery(){setGalleries(this.gall,this.newGall).then(data=>{window.onbeforeunload=function(){};this.galleries=[];this.warningMsg="saved";this.raised=!1;setTimeout(()=>{this.tgglelang=!this.tgglelang;this._getGalleries({q:"removed",v:!1});this.warningMsg="";console.log("di it")},250)}).catch(standartErr)}_getGalleries(query){getNRGalleries(query).then(data=>{this.set("galleries",data)}).catch(standartErr)}_getAllGalleries(){getRnNRGallerries().then(data=>{this.set("galleries",data)}).catch(standartErr)}getGalleryImages(gallery,query){getGalleryImages(gallery,query).then(data=>{this.set("IMAGES",data)}).catch(standartErr)}getFilesFromStorage(){getFilesFromStorage(this.Path).then(files=>{let arr=[];files.map(file=>{if("number"===typeof this.time)clearTimeout(this.time);file.getDownloadURL().then(url=>{arr.push({localSource:url,uploaded:"inBD"});this.time=setTimeout(()=>{this.IMAGES=arr;window.dispatchEvent(new CustomEvent("flat",{bubbles:!0,composed:!0}));setTimeout(()=>{this._openStoragePath()},250)},250)})})}).catch(standartErr)}setGalleryImages(){let str=!!this.query.type?`media/view-images${location.search}&update=${this.query.gallery}`:`media/view-images?gallery=${this.query.gallery}&update=${this.query.gallery}`;setGalleryData(this.IMAGES).then(()=>{window.history.pushState({},null,str);window.onbeforeunload=function(){};setTimeout(()=>{this._reset();window.dispatchEvent(new CustomEvent("location-changed"))},250)}).catch(standartErr)}removeGallerie(data){removeGalleries(data).then(()=>{this.setter=!0}).catch(error=>{console.log(error)})}/* upload  methods */_checkValidity(evt){this.toUpload.push(evt.model.__data);this.fromCheckBox=!0}_upload(){let promisseArray;if(!0===this.itemsIn){if(this.IMAGES.length===this.uploadedItems.length){alert("all heve been uploaded \n !!?SAVE?!!");return}this.pop=!0;this.popMsg="uploading...";if(!this.fromCheckBox&&0===this.uploadedItems.length){promisseArray=this._getTakeAway()}else if(!this.fromCheckBox&&0<this.uploadedItems.length){promisseArray=this._getCheckedFalse()}else if(!!this.fromCheckBox){promisseArray=this._getCheckedTrue()}Promise.race(promisseArray).then(this._promisseCallback.bind(this)).catch(error=>{this.fromCheckBox=!1;this.toUpload=[];alert("something whent wrong \n upload not possible..!!");let time=setTimeout(()=>{this.pop=!1;this.popMsg="loading...";clearTimeout(time)},1e3);throw error})}else{alert("no items inserted \n !!!?DROP ITEMS?!!!! || !!!?SAVE?!!!!")}}_promisseCallback(){this.fromCheckBox=!1}sendToStorage(tempobj,obj,idx){return new Promise((resolve,reject)=>{let meta={contentType:obj.file.type};storageRef.child(`${this.query.gallery}/${obj.title}`).getDownloadURL().then(url=>{this.num=this.num+1;tempobj[idx].uploaded="inBD";console.info("gallery/file name - already in storage - was not uploaded - %s/%s",tempobj[idx].gallery,tempobj[idx].title);console.info(tempobj[idx].uploaded);this._checkPop(tempobj)}).catch(()=>{storageRef.child(`${this.query.gallery}/${obj.title}`).put(obj.file,meta).then(snapshot=>{this.num=this.num+1;console.info("error 404 expected if file not in storage");console.info("file added to storage",tempobj[idx].gallery,tempobj[idx].title);snapshot.ref.getDownloadURL().then(url=>{tempobj[idx].uploaded="uploaded";tempobj[idx].url=url;this.uploadedItems.push(idx);resolve();this._checkPop(tempobj)}).catch(error=>{console.log(error);reject(error)})}).catch(error=>{reject(error)})})})}_checkPop(tempobj){if(this.num===this.toUpload.length){this.IMAGES=[];this.time=setTimeout(()=>{clearTimeout(this.time);this.IMAGES=tempobj;this.toUpload=[];this.pop=!1;this.num=0;this.itemsIn=!1;this.popMsg="loading..."},250);return}else{this.pop=!0}}_getTakeAway(){let promisseArray=[];this.toUpload=this.IMAGES;this.set("totalCount",`${this.toUpload.length}`);for(let i=0;i<this.toUpload.length;i++){if(!this.toUpload[i]){continue}promisseArray.push(this.sendToStorage(this.IMAGES,this.toUpload[i],i))}return promisseArray}_getCheckedFalse(){let promisseArray=[];this.toUpload=this.IMAGES.filter((item,idx)=>{if(-1===this.uploadedItems.indexOf(idx)){item.idx=idx;return item}});this.set("totalCount",`${this.toUpload.length}`);for(let i=0;i<this.toUpload.length;i++){if(!this.toUpload[i]){continue}promisseArray.push(this.sendToStorage(this.IMAGES,this.toUpload[i],this.toUpload[i].idx))}return promisseArray}_getCheckedTrue(){let promisseArray=[];this.set("totalCount",`${this.toUpload.length}`);for(let i=0;i<this.toUpload.length;i++){if(!this.toUpload[i]){continue}let image=this.toUpload[i].image,idx=this.toUpload[i].index;promisseArray.push(this.sendToStorage(this.IMAGES,image,idx))}return promisseArray}}};//standart error callback function
+function standartErr(err){throw err}/* ************************************************************************************************ */ /* **********************************************langs********************************************* */ /* ************************************************************************************************ */ /* ************************************************************************************************ */const cmslangsLib=function(superClass){return class extends superClass{static get is(){return"cms-media-lib"}ready(){super.ready()}getLangs(){return getLangs()}setLangs(data){setLangs(data).then(()=>{console.log("art saved")}).catch(standartErr)}removeLangs(id,inform){removeLangs(id,inform).then(()=>{console.log("art removed")}).catch(standartErr)}}};/* ************************************************************************************************ */ /* **********************************************langs********************************************* */ /* ************************************************************************************************ */ /* ************************************************************************************************ */function getLangs(){return new Promise((resolve,reject)=>{_DBW.getLangs(done=>{if("error"!==done){resolve(done)}else{reject(error)}},__DEV$1)})}function setLangs(id,inform){return new Promise((resolve,reject)=>{_DBW.setCategories((msg,err)=>{if("error"!==msg){resolve(msg)}else{reject(err)}},{name:id,create:inform},__DEV$1);/* */})}/* ************************************************************************************************ */ /* *******************************************categories******************************************* */ /* ************************************************************************************************ */ /* ************************************************************************************************ */const cmscategoriesLib=function(superClass){return class extends superClass{static get is(){return"cms-media-lib"}ready(){super.ready()}getCategories(query){return getCategories(query)}setCategories(id,category){setCategory(id,category).then(()=>{console.log("art saved")}).catch(standartErr)}removeCategory(id,inform){removeCategory(id,inform).then(()=>{console.log("art removed")}).catch(standartErr)}}};/* ************************************************************************************************ */ /* *******************************************categories******************************************* */ /* ************************************************************************************************ */ /* ************************************************************************************************ */function getCategories(query){if(!query)return new Promise((resolve,reject)=>{_CATEGORIESDBW.getCategories(done=>{if("error"!==done){resolve(done)}else{reject(error)}},__DEV$1)});if(query)return new Promise((resolve,reject)=>{_CATEGORIESDBW.getCategoriesEqualTo((done,error)=>{if("error"!==done){resolve(done)}else{reject(error)}},query.q,query.v,__DEV$1)})}function setCategory(id,inform){return new Promise((resolve,reject)=>{_CATEGORIESDBW.setCategories((msg,err)=>{if("error"!==msg){resolve(msg)}else{reject(err)}},{name:id,create:inform},__DEV$1);/* */})}function removeCategory(id,inform){return new Promise((resolve,reject)=>{_CATEGORIESDBW.changeCategory((done,err)=>{if("error"!==done){resolve()}else{reject();console.error(err)}},{name:id,update:inform},__DEV$1)})}/* ************************************************************************************************ */ /* *******************************************articles********************************************** */ /* ************************************************************************************************ */ /* ************************************************************************************************ */const cmsArticlesLib=function(superClass){return class extends superClass{static get is(){return"cms-media-lib"}ready(){super.ready()}getArticles(query){getArticles(query).then(data=>{data.forEach(item=>{this.getArticleData(item.id,"data").then(art=>{this._setContent(item.data(),art)}).catch(standartErr);/**/})}).catch(standartErr)}getArticleData(id,type){return getArticleData(id,type)}removeArticle(item){let id=[this.objInfo.id],Cont=item.data;this.set("INFO",this._lastModifiedRemoved(Cont));window.history.pushState({},null,`${this.rootPath}content/articles?reset=true`);saveChangedArticle(id[0],this.objInfo).then(res=>{window.onbeforeunload=function(){};localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"))},500);saveChangedArticleInfo("info",id[0],this.INFO).then(()=>{}).catch(standartErr)}).catch(standartErr)}saveArticles(){if(!1===this.add){if(!!this.inform.id){window.history.pushState({},null,`${this.rootPath}content/articles?reset=true`);let id=[this.inform.id];saveChangedArticle(id[0],this.inform).then(res=>{saveChangedArticleData("data",id[0],this.content[0]).then(d=>{window.onbeforeunload=function(){};localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"));this._reset()},500);saveChangedArticleInfo("info",id[0],this.INFO).then(()=>{}).catch(standartErr)}).catch(standartErr)}).catch(standartErr)}}if(!0===this.add){if(!!this.inform.id){window.history.pushState({},null,`${this.rootPath}content/articles?reset=true`);let id=[this.inform.id];setArticles(id[0],this.inform).then(()=>{saveAddedArticleData("data",id[0],this.content[0]).then(()=>{window.onbeforeunload=function(){};localStorage.clear();setTimeout(()=>{window.dispatchEvent(new CustomEvent("location-changed"));this._reset()},500);saveAddedArticleInfo("info",id[0],this.INFO).then(()=>{}).catch(standartErr)}).catch(standartErr)}).catch(standartErr)}}}_setLangArr(cont){return _setLangArr(cont)}_lastModifiedRemoved(ifo){let INFO=ifo,data=new Date;INFO.removedBy=this.user.name;INFO.removeedDate=data;INFO.lastModifeid.push({author:this.user.name,date:data.toLocaleString().replace(",",""),uid:this.user.uid});return INFO}}};/* ************************************************************************************************ */ /* *******************************************articles********************************************** */ /* ************************************************************************************************ */ /* ************************************************************************************************ */function getArticles(query){if(!query)return new Promise((resolve,reject)=>{_DBW.getAllArticles(done=>{resolve(done)},__DEV$1)});if(query)return new Promise((resolve,reject)=>{_DBW.getArticlesEqualTo((done,error)=>{if("error"!==done){resolve(done)}else{reject(error)}},query.q,query.v,__DEV$1)})}function getArticleData(id,type){return new Promise((resolve,reject)=>{_DBW.getArticleData(done2=>{resolve(done2)},{name:id,dataType:type},__DEV$1);/* */})}function setArticles(id,inform){return new Promise((resolve,reject)=>{_DBW.setArticles((msg,err)=>{if("error"!==msg){resolve(msg)}else{reject(err)}},{name:id,create:inform},__DEV$1);/* */})}function saveAddedArticleInfo(type,id,INFO){if("undefined"!==id){return new Promise((resolve,reject)=>{_DBW.setArticleData(done=>{if("error"!==done){resolve(done)}else{reject(done)}},{name:id,dataType:type,doc:"data",data:INFO},__DEV$1)})}}function saveAddedArticleData(type,id,content){let toPromisse=[];for(let par in content){toPromisse.push(new Promise((resolve,reject)=>{_DBW.setArticleData((done,err)=>{if("error"!==done){resolve(done)}else{reject(done)}},{name:id,dataType:type,doc:par.toString(),data:content[par]},__DEV$1);/* */}))}return Promise.race(toPromisse)}function saveChangedArticle(id,inform){return new Promise((resolve,reject)=>{_DBW.updateArticles((msg,err)=>{if("error"!==msg){resolve(msg)}else{console.log(err);reject(err)}},{name:id,update:inform},__DEV$1);/* */})}function saveChangedArticleInfo(type,id,INFO){if(!!id){return new Promise((resolve,reject)=>{_DBW.changeArticleData(done=>{if("error"!==done){resolve(!0)}else{reject(done)}},{name:id,dataType:type,doc:"data",data:INFO},__DEV$1)})}}function saveChangedArticleData(type,id,content){let toPromisse=[];if(!!id){for(let par in content){toPromisse.push(new Promise((resolve,reject)=>{_DBW.changeArticleData((done,err)=>{if("error"!==done){resolve(!0)}},{name:id,dataType:type,doc:par.toString(),data:content[par]},__DEV$1)}))}/**/}return Promise.race(toPromisse)}function deleteArticleData(t){let toPromisse=[];for(let i=0;i<t.langArr.length;i++){toPromisse.push(new Promise((resolve,reject)=>{_DBW.deleteArticles((done,err)=>{console.log(done);if("error"!==done){resolve(done)}else{reject(err)}},{name:t.content,dataType:t.type,doc:t.langArr[i]},__DEV$1)}))}return Promise.race(toPromisse)}/* ************************************************************************************************ */ /* *******************************************galleries******************************************** */ /* ************************************************************************************************ */ /* ************************************************************************************************ */function getFilesFromStorage(path){return new Promise((resolve,reject)=>{storageRef.child(path).listAll().then(res=>{let arr,arr2=[];arr=res.items.map(itemRef=>{return itemRef});resolve(arr)}).catch(function(error){reject(error)})})}function setGalleries(gall,content){return new Promise((resolve,reject)=>{_MEDIADBW.setGalleries((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},{name:gall,create:content},__DEV$1)})}function setGalleryData(imageArr){let promisseArray=[];for(let i=0;i<imageArr.length;i++){promisseArray.push(new Promise((resolve,reject)=>{_MEDIADBW.setGalleryData((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},{name:imageArr[i].gallery,doc:imageArr[i].id,data:imageArr[i]},__DEV$1)}))}return Promise.race(promisseArray)}function getRnNRGallerries(){return new Promise((resolve,reject)=>{_MEDIADBW.getGalleries((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},__DEV$1)})}function getNRGalleries(query){return new Promise((resolve,reject)=>{_MEDIADBW.getGalleriesEqualTo((done,err)=>{if("error"!==done){let arr=[];done.forEach(item=>{arr.push(item.data());localStorage.setItem(`galleries-${item.data().id}`,JSON.stringify(item.data()))});resolve(arr)}else{reject(err)}},query.q,query.v,__DEV$1)})}function getGalleryImages(gallery,q){return new Promise((resolve,reject)=>{let query,condition,value;[query,condition,value]=q.split(",");value="true"===value||!("false"===value);_MEDIADBW.getGalleryData(done=>{if("error"!==done){resolve(done)}else{reject();console.error(err)}},{name:gallery,dataType:"data",query:query,condition:condition,value:value},__DEV$1)})}function removeGalleries(data){return new Promise((resolve,reject)=>{_MEDIADBW.deleteGallery((done,err)=>{if("error"!==done){resolve()}else{reject();console.error(err)}},data,__DEV$1)})}/**in use */function _setLangArr(cont){let arr=[];for(let par in cont){if("images"!==par){arr.push(par)}}return arr}function getPages(query){if(!query)return new Promise((resolve,reject)=>{_DBW.getAllPages(done=>{resolve(done)},__DEV$1)});if(query)return new Promise((resolve,reject)=>{_DBW.getPagesEqualTo((done,error)=>{if("error"!==done){resolve(done)}else{reject(error)}},query.q,query.v,__DEV$1)})}function getPageData(id){return new Promise((resolve,reject)=>{_DBW.getPageData(done2=>{resolve(done2)},{name:id,dataType:"data"},__DEV$1);/* */})}function saveAdded(id,inform){return new Promise((resolve,reject)=>{_DBW.setPages((msg,err)=>{if("error"!==msg){resolve(msg)}else{reject(err)}},{name:id,create:inform},__DEV$1);/* */})}function saveAddedData(type,id,content){let toPromisse=[];for(let par in content){toPromisse.push(new Promise((resolve,reject)=>{_DBW.setPageData((done,err)=>{if("error"!==done){resolve(done)}},{name:id,dataType:type,doc:par.toString(),data:content[par]},__DEV$1);/* */}))}return Promise.race(toPromisse)}function saveChanged(id,inform){return new Promise((resolve,reject)=>{_DBW.changePages((msg,err)=>{if("error"!==msg){resolve(msg)}else{console.log(err);reject(err)}},{name:id,update:inform},__DEV$1);/* */})}function saveChangedData(type,id,content){let toPromisse=[];if("undefined"!==id){for(let par in content){toPromisse.push(new Promise((resolve,reject)=>{_DBW.changePageData((done,err)=>{if("error"!==done){resolve(!0)}},{name:id,dataType:type,doc:par.toString(),data:content[par]},__DEV$1)}))}/**/}return Promise.race(toPromisse)}function deletePageData(t){let toPromisse=[];for(let i=0;i<t.langArr.length;i++){toPromisse.push(new Promise((resolve,reject)=>{_DBW.deletePageData((done,err)=>{console.log(done);if("error"!==done){resolve(done)}else{reject(err)}},{name:t.content,dataType:t.type,doc:t.langArr[i]},__DEV$1)}))}return Promise.race(toPromisse)}/* ************************************************************************************************ */ /* *******************************************subcats********************************************** */ /* ************************************************************************************************ */ /* ************************************************************************************************ */function saveAddedSubcat(parent,doc,inform){return new Promise((resolve,reject)=>{_DBW.setPageData((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},{name:parent,dataType:"subCategories",doc:doc,data:inform},__DEV$1)})}function saveAddedSubcatData(parent,name,content){let toPromisse=[];for(let par in content){if(!!par)toPromisse.push(new Promise((resolve,reject)=>{_DBW.setubcatsData((done,err)=>{if("error"!==done){resolve(done)}},{page:parent,name:name,doc:par.toString(),data:content[par]},__DEV$1)}))}return Promise.race(toPromisse)}function deleteSubcatData(parent,name,arr){let toPromisse=[];for(let i=0;i<arr.length;i++){toPromisse.push(new Promise((resolve,reject)=>{_DBW.deleteSubcatData(done=>{if("error"!==done){resolve()}},{page:parent,name:name,doc:arr[i]},__DEV$1)}));/* */}return Promise.race(toPromisse)}function saveChangedSubcatData(parent,docName,content){let toPromisse=[];for(let par in content){toPromisse.push(new Promise((resolve,reject)=>{_DBW.changeSubcatsData((done,err)=>{if("error"!==done){resolve(done)}},{name:parent,docName:docName,doc:par.toString(),data:content[par]},__DEV$1)}))}return Promise.race(toPromisse)}function saveChangedSubcat(parent,doc,data){return new Promise((resolve,reject)=>{_DBW.changePageData((done,err)=>{if("error"!==done){resolve(done)}else{reject(err)}},{name:parent,dataType:"subCategories",doc:doc,data:data},__DEV$1)});/* */}function updateSubcatParentInfo(cont,parent,topparent){_DBW.changePageData((done,err)=>{if("error"!==done){}else{console.error(err)}},{name:parent,dataType:"subCategories",doc:topparent,data:cont},__DEV$1)}function getTopSubcats(parent){return new Promise((resolve,reject)=>{_DBW.mixQueryPageData((done,err)=>{if(!err){resolve(done)}else{reject(err)}},{name:parent,dataType:"subCategories",query:"top,==,true",query2:`removed,==,false`},__DEV$1)})}function getChildrenSubcats(parent,subCatChildren){let arr=subCatChildren,toPromisseArray=[];for(let i=0;i<arr.length;i++){toPromisseArray.push(new Promise((resolve,reject)=>{_DBW.queryPageData(done=>{resolve(done)},{name:parent,dataType:"subCategories",query:`id,==,${arr[i]}`},__DEV$1)}))}return Promise.race(toPromisseArray)}function getSubcatsData(parent,id){return new Promise((resolve,reject)=>{_DBW.getSubcatsData(done=>{resolve(done)},{name:parent,doc:id},__DEV$1)})}function getSubcat(parent,id){return new Promise((resolve,reject)=>{_DBW.getSubcatsData(done=>{resolve(done)},{name:parent,doc:id},__DEV$1)})}///
+function queryGalleries(data){return new Promise((resolve,reject)=>{})}function getImages(){return new Promise((resolve,reject)=>{_DBW.getMediaGalleriesData((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},{gallery:""},__DEV$1)})}function removeSubcatInfo(parent,id,inform){return new Promise((resolve,reject)=>{_DBW.setPageData((done,err)=>{if("error"!==done){resolve(done)}else{console.log(err);reject(err)}},{name:parent,dataType:"subCategories",doc:id,data:inform},__DEV$1);/* */})}function removeSubcatData(parent,id,content){let toPromisse=[];for(let par in this.content[0]){toPromisse.push(new Promise((resolve,reject)=>{_DBW.setubcatsData((done,err)=>{if("error"!==done){resolve(done)}else{reject(err)}},{page:parent,name:id,doc:par.toString(),data:content[par]},__DEV$1);/* */}))}return Promise.race(toPromisse)}function deleteAdded(){return new Promise((resolve,reject)=>{_DBW.deletePage(msg=>{if("error"!==done){resolve(!0)}else{console.log(err);reject(err)}this.__reset()},data,__DEV$1)})}function deleteAddedData(parent){return new Promise((resolve,reject)=>{_DBW.getPageDataSnapshot(done2=>{if("error"!==done){resolve(!0)}else{console.log(err);reject(err)}if(0<done2.docs.length)done2.forEach(item=>{item.ref.delete()})},{name:parent,dataType:"data"},__DEV$1)})}function deleteAddedDataItem(parent,itemArray){return new Promise((resolve,reject)=>{_DBW.getPageDataSnapshot((done2,err)=>{if("error"!==done2&&0<done2.docs.length){let arr=itemArray.entries();done2.forEach(item=>{if(arr.next().value[1]===item.id){item.ref.delete()}});resolve(!0)}else{console.log(err);reject(err)}},{name:parent,dataType:"data"},__DEV$1)})}var cmsSaveLib={cmsMediaLib:cmsMediaLib,cmsPagesLib:cmsPagesLib,cmsSubcatsLib:cmsSubcatsLib,cmsArticlesLib:cmsArticlesLib,cmscategoriesLib:cmscategoriesLib,cmslangsLib:cmslangsLib,cmsSettingsLib:cmsSettingsLib};class cmsImageItem extends mixinBehaviors(IronCheckedElementBehavior,cmsMediaLib(cmsItemTemplate)){static get _getStyles(){return html`         
+            .thirty{
+                height: 30px;
+                text-transform: lowercase; 
+            }
+               `}static get _getElement(){return html`
+            <dom-repeat repeat items="[[content]]" as="item">
+                <template>                
+                    <div centerImageItem>
+                        <article class="padding">
+                            <shop-image
+                                class="bigger"
+                                aria-label="image"
+                                title="[[item.title]]" 
+                                src="[[item.url]]" 
+                                alt="[[item.title]]">
+                            </shop-image> 
+                        </article>
+                        <article class="padding" title="[[item.title]]">
+                            <paper-button  class="thirty" title="[[this.title]]">
+                                [[item.title]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.dateCreated]]">
+                            <paper-button  class="thirty" title="[[this.dateCreated]]">
+                                [[item.dateCreated]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.type]]">
+                            <paper-button class="thirty" title="[[this.type]]">
+                                [[item.type]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.gallery]]"> 
+                            <paper-button class="thirty" title="[[this.add]]" >
+                                    [[item.gallery]]
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.addedTo]]">
+                            <paper-button class="thirty" title="[[this.add]]">
+                                [[item.addedTo]] 
+                            </paper-button>
+                        </article>
+                        <article class="padding" title="[[item.url]]">
+                            <paper-button class="thirty" title="[[this.add]]">
+                                [[item.url]] 
+                            </paper-button>
+                        </article>
+                        <article class="padding">
+                            [[this.add]]
+                            <dom-if if="[[add]]">
+                                <template>
+                                    <paper-button title="[[this.add]]" on-click="_checkUncheckAdd">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="add" checked="{{checked::checked}}">
+                                    </paper-button>
+                                </template>
+                            </dom-if>                            
+                            <dom-if if="[[!add]]">
+                                <template>
+                                    <paper-button title="[[this.add]]" on-click="_checkDelete">
+                                        <input title="[[image.uploaded]]" type="checkbox" aria-label="remove" checked="{{checked::checked}}">
+                                    </paper-button>
+                                </template>
+                            </dom-if>
+                        </article>  
+                    </div> 
+                </template>                            
+            </dom-repeat>`}static get is(){return"cms-image-item"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},toAdd:{type:Array,notify:!0,value:[]},image:{type:Object,notify:!0},checked:{type:Boolean},content:{type:Array,notify:!0,computed:"_putRow(image)"},idx:Number,delete:Object,resetButton:Object,toContent:Object,saveButton:Object}}ready(){super.ready()}_putRow(item){if(!!this.query){this.set("add",!!this.query.type?!0:!1)}if(!!item){return[item]}}_checkUncheckAdd(){if(!0===this.checked){this.toAdd=this.toAdd.filter((item,idx)=>{if(this.idx!==idx){return item}})}else{this.toAdd.splice(this.idx,0,this.image)}this.checked=!this.checked}_checkDelete(event){console.log(event)}_removeImage(image){}_getTitle(add){if(!0===add){return`add`}if(!1===add){return`delete`}}}customElements.define(cmsImageItem.is,cmsImageItem);var cmsImageItem$1={cmsImageItem:cmsImageItem};class cmsContentImage extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
+        :host {
+            position: relative;
+        }
+        cms-image.top {
+            top: 0px;
+        }
+
+        .flexchildbotom3 {
+            height: unset;
+            max-height: 328px;
+        }
+
+        div[backanover] {
+            max-height: 272px;
+            overflow: auto;            
+            padding: 8PX
+        }
+
+        div[backanover]::-webkit-scrollbar-track {
+            background: var(--app-secondary-text-color)
+        }
+
+        div[backanover]::-webkit-scrollbar {
+            width: 7.5px
+        }
+
+        div[backanover]::-webkit-scrollbar-thumb {
+            background-color: var(--content-color-default, #8098ad)
+        }
+        </style>        
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route> 
+        <section class="flexchildbotom3">
+            <div>
+                <paper-button>
+                    [[imageLabel]]
+                </paper-button>
+                <paper-icon-button  name="[[itemLabel]]" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
+                </paper-icon-button>           
+            </div>
+            <div backanover>  
+                <dom-repeat repeat items="[[images]]" as="item">
+                    <template>
+                        <cms-image-item  
+                            route="[[route]]"
+                            add="[[addTo]]" 
+                            image="[[item]]" 
+                            save-button="[[saveButton]]"
+                            reset-button="[[resetButton]]"
+                            delete="[[_deleteImg()]]"
+                            idx="[[index]]">
+                        </cms-image-item>
+                    </template>                            
+                </dom-repeat>       
+            </div>
+        </section>
+        `}static get is(){return"cms-content-image"}static get properties(){return{images:{type:Array,notify:!0,value:[]},deleteImg:{type:Object,notify:!0},lang:{type:String,notify:!0},langs:{type:Object,value:{}},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}},itemLabel:{type:String,value:"",notify:!0}}}ready(){super.ready();this.translator.target("cms-content-image","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content-image","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-content-image","setLangObject");window.addEventListener("reset",this._reset.bind(this))}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_log(data){console.log("images",data)}_reset(){this.images=[]}}customElements.define(cmsContentImage.is,cmsContentImage);var cmsContentImage$1={cmsContentImage:cmsContentImage};class cmsContentInput extends mixinBehaviors([IronFormElementBehavior,PaperInputBehavior],PolymerElement){static get template(){return html` <style>
+      :host {
+        display: block;
+      }
+
+      :host([focused]) {
+        outline: none;
+      }
+
+      :host([hidden]) {
+        display: none !important;
+      }
+
+      input {
+        /* Firefox sets a min-width on the input, which can cause layout issues */
+        min-width: 0;
+      }
+
+      /* In 1.x, the <input> is distributed to paper-input-container, which styles it.
+      In 2.x the <iron-input> is distributed to paper-input-container, which styles
+      it, but in order for this to work correctly, we need to reset some
+      of the native input's properties to inherit (from the iron-input) */
+      iron-input > input {
+        @apply --paper-input-container-shared-input-style;
+        font-family: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        word-spacing: inherit;
+        line-height: inherit;
+        text-shadow: inherit;
+        color: inherit;
+        cursor: inherit;
+      }
+
+      input:disabled {
+        @apply --paper-input-container-input-disabled;
+      }
+
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        @apply --paper-input-container-input-webkit-spinner;
+      }
+
+      input::-webkit-clear-button {
+        @apply --paper-input-container-input-webkit-clear;
+      }
+
+      input::-webkit-calendar-picker-indicator {
+        @apply --paper-input-container-input-webkit-calendar-picker-indicator;
+      }
+
+      input::-webkit-input-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+
+      input:-moz-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+
+      input::-moz-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+
+      input::-ms-clear {
+        @apply --paper-input-container-ms-clear;
+      }
+
+      input::-ms-reveal {
+        @apply --paper-input-container-ms-reveal;
+      }
+
+      input:-ms-input-placeholder {
+        color: var(--paper-input-container-color, var(--secondary-text-color));
+      }
+
+      label {
+        pointer-events: none;
+      }
+      paper-input-container{
+          padding: 8px;
+      }
+    </style>
+
+    <paper-input-container id="container" 
+        no-label-float="[[noLabelFloat]]" 
+        always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" 
+        auto-validate$="[[autoValidate]]" 
+        disabled$="[[disabled]]" 
+        invalid="[[invalid]]">
+
+      <slot name="prefix" slot="prefix"></slot>
+
+      <label hidden$="[[!label]]" aria-hidden="true" for$="[[_inputId]]" slot="label">[[label]]</label>
+
+      <!-- Need to bind maxlength so that the paper-input-char-counter works correctly -->
+      <iron-input 
+            bind-value="{{text}}"
+            slot="input" 
+            class="input-element" 
+            id$="[[_inputId]]" 
+            maxlength$="[[maxlength]]" 
+            allowed-pattern="[[allowedPattern]]" 
+            invalid="{{invalid}}" 
+            validator="[[validator]]">
+        <input 
+            aria-labelledby$="[[_ariaLabelledBy]]"
+            aria-describedby$="[[_ariaDescribedBy]]" 
+            disabled$="[[disabled]]" 
+            title$="[[title]]"
+            type$="[[type]]" 
+            pattern$="[[pattern]]" 
+            required$="[[required]]" 
+            autocomplete$="[[autocomplete]]"
+            autofocus$="[[autofocus]]"
+            inputmode$="[[inputmode]]"
+            minlength$="[[minlength]]"
+            maxlength$="[[maxlength]]"
+            min$="[[min]]" 
+            max$="[[max]]"
+            step$="[[step]]" 
+            name$="[[nameText]]"
+            placeholder$="[[placeholder]]"
+            readonly$="[[readonly]]"
+            list$="[[list]]"
+            size$="[[size]]"
+            autocapitalize$="[[autocapitalize]]"
+            autocorrect$="[[autocorrect]]"
+            on-change="_onChange"
+            tabindex$="[[tabIndex]]"
+            autosave$="[[autosave]]" 
+            results$="[[results]]"
+            accept$="[[accept]]" 
+            multiple$="[[multiple]]"
+            role$="[[inputRole]]" 
+            aria-haspopup$="[[inputAriaHaspopup]]">
+      </iron-input>
+
+      <slot name="suffix" slot="suffix"></slot>
+
+      <template is="dom-if" if="[[errorMessage]]">
+        <paper-input-error aria-live="assertive" slot="add-on">[[errorMessage]]</paper-input-error>
+      </template>
+
+      <template is="dom-if" if="[[charCounter]]">
+        <paper-input-char-counter slot="add-on"></paper-input-char-counter>
+      </template>
+
+    </paper-input-container>`}static get is(){return"cms-content-input"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Object,value:{}},text:{type:String,notify:!0},value:{type:String,notify:!0,reflectToAttribute:!0,computed:"setValue(text)"},nameText:{type:String,notify:!0},name:{type:String,notify:!0,reflectToAttribute:!0,computed:"setValue(nameText)"},inputRole:{type:String,value:void 0},inputAriaHaspopup:{type:String,value:void 0},item:{type:Object,value:"",notify:!0,observer:"_setValues"},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}}}}ready(){super.ready();//   this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
+//  this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
+//  this.translator.shoot('cms-content-item', 'setLangObject')
+// window.addEventListener('flat', (this._getFlat).bind(this), false)
+}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this,this.name,"title");res.call(this,"cancel","cancel")}__changeLang(){this.lang=this.translator.lang;this.translator.changeItemTitleLang.call(this,this.name,"title");this.translator.changeItemTitleLang.call(this,"cancel","cancel")}/**
+    * Returns a reference to the focusable element. Overridden from
+    * PaperInputBehavior to correctly focus the native input.
+    *
+    * @return {!HTMLElement}
+    * get _focusableElement() {
+          return this.inputElement._inputElement;
+      }
+    */_setValues(data){this.temp=this.item;for(let par in data){this.set("text",data[par])}this._setLabels(data)}_setLabels(data){for(let par in data){this.set("nameText",par);this.set("label",par);console.log(this.nameText)}}setValue(data){return data}}customElements.define(cmsContentInput.is,cmsContentInput);var cmsContentInput$1={cmsContentInput:cmsContentInput};Polymer({_template:html`
+    <style>
+      :host {
+        display: inline-block;
+        position: relative;
+        width: 400px;
+        border: 1px solid;
+        padding: 2px;
+        -moz-appearance: textarea;
+        -webkit-appearance: textarea;
+        overflow: hidden;
+      }
+
+      .mirror-text {
+        visibility: hidden;
+        word-wrap: break-word;
+        @apply --iron-autogrow-textarea;
+      }
+
+      .fit {
+        @apply --layout-fit;
+      }
+
+      textarea {
+        position: relative;
+        outline: none;
+        border: none;
+        resize: none;
+        background: inherit;
+        color: inherit;
+        /* see comments in template */
+        width: 100%;
+        height: 100%;
+        font-size: inherit;
+        font-family: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        @apply --iron-autogrow-textarea;
+      }
+
+      textarea::-webkit-input-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea:-moz-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea::-moz-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea:-ms-input-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+    </style>
+
+    <!-- the mirror sizes the input/textarea so it grows with typing -->
+    <!-- use &#160; instead &nbsp; of to allow this element to be used in XHTML -->
+    <div id="mirror" class="mirror-text" aria-hidden="true">&nbsp;</div>
+
+    <!-- size the input/textarea with a div, because the textarea has intrinsic size in ff -->
+    <div class="textarea-container fit">
+      <textarea id="textarea" name\$="[[name]]" aria-label\$="[[label]]" autocomplete\$="[[autocomplete]]" autofocus\$="[[autofocus]]" inputmode\$="[[inputmode]]" placeholder\$="[[placeholder]]" readonly\$="[[readonly]]" required\$="[[required]]" disabled\$="[[disabled]]" rows\$="[[rows]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]"></textarea>
+    </div>
+`,is:"iron-autogrow-textarea",behaviors:[IronValidatableBehavior,IronControlState],properties:{/**
+     * Use this property instead of `bind-value` for two-way data binding.
+     * @type {string|number}
+     */value:{observer:"_valueChanged",type:String,notify:!0},/**
+     * This property is deprecated, and just mirrors `value`. Use `value`
+     * instead.
+     * @type {string|number}
+     */bindValue:{observer:"_bindValueChanged",type:String,notify:!0},/**
+     * The initial number of rows.
+     *
+     * @attribute rows
+     * @type number
+     * @default 1
+     */rows:{type:Number,value:1,observer:"_updateCached"},/**
+     * The maximum number of rows this element can grow to until it
+     * scrolls. 0 means no maximum.
+     *
+     * @attribute maxRows
+     * @type number
+     * @default 0
+     */maxRows:{type:Number,value:0,observer:"_updateCached"},/**
+     * Bound to the textarea's `autocomplete` attribute.
+     */autocomplete:{type:String,value:"off"},/**
+     * Bound to the textarea's `autofocus` attribute.
+     */autofocus:{type:Boolean,value:!1},/**
+     * Bound to the textarea's `inputmode` attribute.
+     */inputmode:{type:String},/**
+     * Bound to the textarea's `placeholder` attribute.
+     */placeholder:{type:String},/**
+     * Bound to the textarea's `readonly` attribute.
+     */readonly:{type:String},/**
+     * Set to true to mark the textarea as required.
+     */required:{type:Boolean},/**
+     * The minimum length of the input value.
+     */minlength:{type:Number},/**
+     * The maximum length of the input value.
+     */maxlength:{type:Number},/**
+     * Bound to the textarea's `aria-label` attribute.
+     */label:{type:String}},listeners:{input:"_onInput"},/**
+   * Returns the underlying textarea.
+   * @return {!HTMLTextAreaElement}
+   */get textarea(){return this.$.textarea},/**
+   * Returns textarea's selection start.
+   * @return {number}
+   */get selectionStart(){return this.$.textarea.selectionStart},/**
+   * Returns textarea's selection end.
+   * @return {number}
+   */get selectionEnd(){return this.$.textarea.selectionEnd},/**
+   * Sets the textarea's selection start.
+   */set selectionStart(value){this.$.textarea.selectionStart=value},/**
+   * Sets the textarea's selection end.
+   */set selectionEnd(value){this.$.textarea.selectionEnd=value},attached:function(){/* iOS has an arbitrary left margin of 3px that isn't present
+     * in any other browser, and means that the paper-textarea's cursor
+     * overlaps the label.
+     * See https://github.com/PolymerElements/paper-input/issues/468.
+     */var IS_IOS=navigator.userAgent.match(/iP(?:[oa]d|hone)/);if(IS_IOS){this.$.textarea.style.marginLeft="-3px"}},/**
+   * Returns true if `value` is valid. The validator provided in `validator`
+   * will be used first, if it exists; otherwise, the `textarea`'s validity
+   * is used.
+   * @return {boolean} True if the value is valid.
+   */validate:function(){// Use the nested input's native validity.
+var valid=this.$.textarea.validity.valid;// Only do extra checking if the browser thought this was valid.
+if(valid){// Empty, required input is invalid
+if(this.required&&""===this.value){valid=!1}else if(this.hasValidator()){valid=IronValidatableBehavior.validate.call(this,this.value)}}this.invalid=!valid;this.fire("iron-input-validate");return valid},_bindValueChanged:function(bindValue){this.value=bindValue},_valueChanged:function(value){var textarea=this.textarea;if(!textarea){return}// If the bindValue changed manually, then we need to also update
+// the underlying textarea's value. Otherwise this change was probably
+// generated from the _onInput handler, and the two values are already
+// the same.
+if(textarea.value!==value){textarea.value=!(value||0===value)?"":value}this.bindValue=value;this.$.mirror.innerHTML=this._valueForMirror();// Manually notify because we don't want to notify until after setting
+// value.
+this.fire("bind-value-changed",{value:this.bindValue})},_onInput:function(event){var eventPath=dom(event).path;this.value=eventPath?eventPath[0].value:event.target.value},_constrain:function(tokens){var _tokens;tokens=tokens||[""];// Enforce the min and max heights for a multiline input to avoid
+// measurement
+if(0<this.maxRows&&tokens.length>this.maxRows){_tokens=tokens.slice(0,this.maxRows)}else{_tokens=tokens.slice(0)}while(0<this.rows&&_tokens.length<this.rows){_tokens.push("")}// Use &#160; instead &nbsp; of to allow this element to be used in XHTML.
+return _tokens.join("<br/>")+"&#160;"},_valueForMirror:function(){var input=this.textarea;if(!input){return}this.tokens=input&&input.value?input.value.replace(/&/gm,"&amp;").replace(/"/gm,"&quot;").replace(/'/gm,"&#39;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;").split("\n"):[""];return this._constrain(this.tokens)},_updateCached:function(){this.$.mirror.innerHTML=this._constrain(this.tokens)}});class cmsContentText extends mixinBehaviors([IronFormElementBehavior,PaperInputBehavior],PolymerElement){static get template(){return html` 
+        <style>
+      :host {
+        display: inline-block;
+        overflow: hidden;
+        outline-style: none;
+        resize: none;
+        position: relative;
+        border: none;
+        top: -8px;
+        left: -3px;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background-color: #ffffff00;
+        -webkit-rtl-ordering: unset;
+        cursor: text;
+        padding: 2px;
+        width:100%;
+      }
+
+      .mirror-text {
+        visibility: hidden;
+        word-wrap: break-word;
+        @apply --iron-autogrow-textarea;
+      }
+
+    .fit {
+        @apply --layout-fit;
+      } 
+
+      textarea {
+        position: relative;
+        outline: none;
+        border: none;
+        resize: none;
+        background: inherit;
+        color: inherit;
+        /* see comments in template */
+        width: 100%;
+        height: 100%;
+        font-size: inherit;
+        font-family: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        @apply --iron-autogrow-textarea;
+      }
+
+      textarea::-webkit-input-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea:-moz-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea::-moz-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+
+      textarea:-ms-input-placeholder {
+        @apply --iron-autogrow-textarea-placeholder;
+      }
+        :host([focused]) {
+            outline: none;
+        }
+
+        :host([hidden]) {
+            display: none !important;
+        }
+
+        input {
+            /* Firefox sets a min-width on the input, which can cause layout issues */
+            min-width: 0;
+        }
+
+        /* In 1.x, the <input> is distributed to paper-input-container, which styles it.
+        In 2.x the <iron-input> is distributed to paper-input-container, which styles
+        it, but in order for this to work correctly, we need to reset some
+        of the native input's properties to inherit (from the iron-input) */
+        iron-input > textarea {
+            @apply --paper-input-container-shared-input-style;
+            font-family: inherit;
+            font-weight: inherit;
+            font-size: inherit;
+            letter-spacing: inherit;
+            word-spacing: inherit;
+            line-height: inherit;
+            text-shadow: inherit;
+            color: inherit;
+            cursor: inherit;
+        }
+
+        textarea:disabled {
+            @apply --paper-input-container-input-disabled;
+        }
+
+        textarea::-webkit-outer-spin-button,
+        textarea::-webkit-inner-spin-button {
+            @apply --paper-input-container-input-webkit-spinner;
+        }
+
+        textarea::-webkit-clear-button {
+            @apply --paper-input-container-input-webkit-clear;
+        }
+
+        textarea::-webkit-calendar-picker-indicator {
+            @apply --paper-input-container-input-webkit-calendar-picker-indicator;
+        }
+
+        textarea::-ms-clear {
+            @apply --paper-input-container-ms-clear;
+        }
+
+        textarea::-ms-reveal {
+            @apply --paper-input-container-ms-reveal;
+        }
+
+
+        label {
+            pointer-events: none;
+        }
+        paper-input-container{
+            padding: 8px;
+        }
+        </style>
+        <div id="mirror" class="mirror-text" aria-hidden="true">&nbsp;</div>
+        <paper-input-container id="container" class="textarea-container fit"
+            no-label-float="[[noLabelFloat]]" 
+            always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" 
+            auto-validate$="[[autoValidate]]" 
+            disabled$="[[disabled]]" 
+            invalid="[[invalid]]">
+
+            <slot name="prefix" slot="prefix"></slot>
+
+            <label hidden$="[[!label]]" aria-hidden="true" for$="[[_inputId]]" slot="label">[[label]]</label>
+
+            <!-- Need to bind maxlength so that the paper-input-char-counter works correctly -->
+            <iron-input 
+                bind-value="{{text}}"
+                slot="input" 
+                class="input-element" 
+                id$="[[_inputId]]" 
+                maxlength$="[[maxlength]]" 
+                allowed-pattern="[[allowedPattern]]" 
+                invalid="{{invalid}}" 
+                validator="[[validator]]">
+                <textarea 
+                    name$="[[nameText]]" 
+                    aria-label$="[[label]]"  
+                    rows$="[[rows]]" 
+                    aria-labelledby$="[[_ariaLabelledBy]]"
+                    aria-describedby$="[[_ariaDescribedBy]]" 
+                    disabled$="[[disabled]]" 
+                    title$="[[title]]"
+                    type$="[[type]]" 
+                    pattern$="[[pattern]]" 
+                    required$="[[required]]" 
+                    autocomplete$="[[autocomplete]]"
+                    autofocus$="[[autofocus]]"
+                    inputmode$="[[inputmode]]"
+                    minlength$="[[minlength]]"
+                    maxlength$="[[maxlength]]"
+                    min$="[[min]]" 
+                    max$="[[max]]"
+                    step$="[[step]]" 
+                    name$="[[nameText]]"
+                    placeholder$="[[placeholder]]"
+                    readonly$="[[readonly]]"
+                    list$="[[list]]"
+                    size$="[[size]]"
+                    autocapitalize$="[[autocapitalize]]"
+                    autocorrect$="[[autocorrect]]"
+                    on-change="_onChange"
+                    tabindex$="[[tabIndex]]"
+                    autosave$="[[autosave]]" 
+                    results$="[[results]]"
+                    accept$="[[accept]]" 
+                    multiple$="[[multiple]]"
+                    role$="[[inputRole]]" 
+                    aria-haspopup$="[[inputAriaHaspopup]]">
+            </iron-input>
+
+            <slot name="suffix" slot="suffix"></slot>
+
+            <template is="dom-if" if="[[errorMessage]]">
+                <paper-input-error aria-live="assertive" slot="add-on">[[errorMessage]]</paper-input-error>
+            </template>
+
+            <template is="dom-if" if="[[charCounter]]">
+                <paper-input-char-counter slot="add-on"></paper-input-char-counter>
+            </template>
+
+        </paper-input-container>`}static get is(){return"cms-content-textarea"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Object,value:{}},rows:{type:Number,value:1,observer:"_updateCached"},maxRows:{type:Number,value:0,observer:"_updateCached"},autocomplete:{type:String,value:"off"},autofocus:{type:Boolean,value:!1},inputmode:{type:String},placeholder:{type:String},readonly:{type:String},required:{type:Boolean},minlength:{type:Number},maxlength:{type:Number},label:{type:String},text:{type:String,notify:!0,observer:"validate"},value:{type:String,notify:!0,reflectToAttribute:!0,computed:"setValue(text)"},nameText:{type:String,notify:!0},name:{type:String,notify:!0,reflectToAttribute:!0,computed:"setValue(nameText)"},inputRole:{type:String,value:void 0},inputAriaHaspopup:{type:String,value:void 0},item:{type:Object,value:"",notify:!0,observer:"_setValues"},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
+}}}}get textarea(){return this.$.textarea}_log(data){console.log(data)}ready(){super.ready();/*  this.translator.target('cms-content-item', 'setLangObject', (this._setLObj).bind(this))
+                     this.translator.target('cms-content-item', 'changeLang', (this._setLang).bind(this), true)
+                     this.translator.shoot('cms-content-item', 'setLangObject')*/}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this,this.itemLabel,"title");res.call(this,"cancel","cancel")}__changeLang(){this.lang=this.translator.lang;this.translator.changeItemTitleLang.call(this,this.itemLabel,"title");this.translator.changeItemTitleLang.call(this,"cancel","cancel")}_setValues(data){this.temp=this.item;for(let par in data){this.set("text",data[par])}this._setLabels(data)}_setLabels(data){for(let par in data){this.set("nameText",par);this.set("label",par)}}setValue(data){//replace with html entities        
+if(!!data)return data.match(/[a-zA-Z0-9@&!?:.,<>"']/g).join("").replace(/@/gm,"&#64;").replace(/;/gm,"&#59;").replace(/!/gm,"&#33;").replace(/&/gm,"&amp;").replace(/&/gm,"&amp;").replace(/"/gm,"&quot;").replace(/'/gm,"&#39;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;")||"";//data
+}_valueForMirror(){var input=this.textarea;if(!input){return}this.tokens=input&&input.value?input.value.split("\n"):[""];return this._constrain(this.tokens)}_constrain(tokens){var _tokens;tokens=tokens||[""];// Enforce the min and max heights for a multiline input to avoid
+// measurement
+if(0<this.maxRows&&tokens.length>this.maxRows){_tokens=tokens.slice(0,this.maxRows)}else{_tokens=tokens.slice(0)}while(0<this.rows&&_tokens.length<this.rows){_tokens.push("")}// Use &#160; instead &nbsp; of to allow this element to be used in XHTML.
+return _tokens.join("<br/>")+"&#160;"}_updateCached(){this.$.mirror.innerHTML=this._constrain(this.tokens)}}customElements.define(cmsContentText.is,cmsContentText);var cmsContentTextarea={cmsContentText:cmsContentText};class cmsLangTabItem extends PolymerElement{static get template(){return html`
+        <style include="cms-comon-style_v3">
+        .langdivsectionnpaddingtop {
+            display: flex;
+            flex-direction: row-reverse;
+            position: relative;
+            top: 0px;
+            height: 30px;
+            padding-top: 6px;
+            flex-basis: 7%;
+            box-shadow: 0px -1px 2px var(--dark-theme-secondary-color);
+            border-bottom: unset;
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
+            color: var(--disabled-text-color);
+            font-weight: 600;
+            background-color: var(--app-backgound-color);
+            transition: height 0.5s ease-out, top 0.5s ease-out, background-color 0.5s ease-out;
+        }    
+  
+        section[sharp]{
+            position: relative;
+            height: 20px;
+            top: 10px;
+            background-color: var(--paper-grey-200);
+            transition: height 0.5s ease-in, top 0.5s ease-in, background-color 0.5s ease-in;
+        }
+
+        section[class="langdivsectionnpaddingtop"] a{
+            height: 16px;
+            width: 54px;  
+        }
+        </style>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+        </app-route>
+        <main>
+            <section class="langdivsectionnpaddingtop" sharp$="[[sharp]]">
+                <slot name="button">                   
+                </slot>
+                <a href="[[rootPath]][[str]][[pagelang]]" >
+                    <paper-button langbtn aria-label="langbutton">
+                        [[pagelang]]
+                    </paper-button>
+                </a>
+            </section>
+        </main>
+            `}static get is(){return"cms-lang-tab-item"}static get properties(){return{sharp:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},pagelang:{type:String,value:"",notify:!0},str:{type:String,value:"",notify:!0}}}static get observers(){return["_routePageChanged(query)"]}ready(){super.ready()}_routePageChanged(query){if("number"===typeof this.time)clearTimeout(this.time);this.sharp=!1;this.time=setTimeout(()=>{if(query.lang===this.pagelang){this.sharp=!0}else{this.sharp=!1}},250)}}customElements.define(cmsLangTabItem.is,cmsLangTabItem);var cmsLangTabItem$1={cmsLangTabItem:cmsLangTabItem};class cmsPopInput extends mixinBehaviors([NeonAnimationBehavior,NeonAnimationRunnerBehavior],PolymerElement){static get template(){return html`
+        <style  include="iron-flex-layout">       
+            :host{
+                position: absolute;
+            }     
+            
+            .flex-vertical {
+                @apply --layout-vertical;
+            }
+            .flexchild {
+                @apply --layout-flex;
+            }
+            .flex2child {
+                @apply --layout-flex-2;
+            }
+            .flex3child {
+                @apply --layout-flex-3;
+            }
+
+        </style>
+        <nav class="flex-vertical">
+            <div class="flexchild">
+                <slot name="button"></slot>
+            </div>
+            <div class="flex2child">
+                <slot name="input"></slot>
+            </div>
+            <div class="flexchild">
+                <slot name="anchor"></slot>
+            </div>
+        </nav>    
+        `}static get is(){return"cms-pop-input"}static get properties(){return{opened:{type:Boolean,observer:"_resetInput"},animationConfig:{type:Object,computed:"_setConfig(opened)"}}}ready(){super.ready()}_resetInput(data){if(!0===data){this.children[1].itemText=""}}_setConfig(){return{entry:[{name:"scale-up-animation",node:this.$.toolbar},{name:"scale-up-animation",node:this.$.forms},{name:"slide-from-top-animation",node:this.$.inputarea},{name:"slide-from-left-animation",node:this.$.formside},{name:"slide-from-bottom-animation",node:this.$.form1}],exit:[{name:"scale-down-animation",node:this.$.toolbar},{name:"scale-down-animation",node:this.$.forms},{name:"fade-out-animation",node:this}]}}}customElements.define(cmsPopInput.is,cmsPopInput);var cmsPopInput$1={cmsPopInput:cmsPopInput};const $_documentContainer$4=document.createElement("template");$_documentContainer$4.innerHTML=`
+<dom-module id="cms-common-top-styles">
+  <template>
+    <style>
+    .divtop {
+        position: var(--app-default-position);
+        height: 25px;
+        margin-block-end: 4px;
+        border-bottom: 1px solid var(--google-grey-300);
+        padding-top: 2px;
+    }
+
+    .divtop,
+    main {
+        left: var(--app-default-min-padding)
+    }
+
+    .divtop,
+    .padding,
+    article,
+    article[centerListItem], article[centerImageItem] {
+        box-sizing: var(--app-default-box-sizing)
+    }
+
+    article[centerListItem], article[centerImageItem]{
+        @apply --layout-horizontal;
+    }
+
+    article[centerListItem],
+    section , 
+    article[centerImageItem]{
+        display: var(--app-flex)
+    }
+
+    article[centerListItem],
+    section[title2],
+     article[centerImageItem] {
+        text-align: var(--app-default-text-align)
+    }
+
+    nav[center],
+    paper-tabs,
+    section {
+        font-weight: var(--app-default-font-weight)
+    }
+    main {
+        height: var(--app-default-height)
+    }
+
+    article {
+        margin-bottom: var(--app-content-article-margin-bottom);
+
+       /* padding: var(--app-tollbar-default-font-size);
+        max-width: var(--app-default-max-width);
+        margin-left: 5%*/
+    }
+
+    article[centerListItem] {
+        word-break: keep-all;
+        border-radius: 4px;
+        font-size: 0.9em;
+        border-bottom: 1px solid var(--light-theme-divider-color);
+    }
+
+    article[centerImageItem]  {
+        letter-spacing: var(--app-content-letter-spacing, 1px);
+        font-size: var(--app-content-font-size, x-small);
+    }
+    article[centerListItem] paper-icon-button{
+        height: 2.6em;
+        top: -5px;
+    }
+    article[centerListItem] div, article[centerImageItem] div {
+        @apply --layout-flex;
+       /* background-color: var(--app-item-backgound-color);
+       /* overflow-y: hidden;
+        box-shadow: 1px 1px 4px;*/
+    }
+    article[centerListItem] span, article[centerImageItem]span  {
+        word-break: var(--app-default-text-word-break)
+    }
+
+    .padding {
+        padding: var(--app-default-padding);
+        word-break: break-all;
+    }
+
+    .nopad{
+        padding: 0 
+    }
+
+    .paddingSmall {
+        padding: var(--app-default-padding);
+        word-break: break-all;
+    }
+    .paddingSmall h3 {
+        margin-block-start: 7px;
+    }
+    shop-image {
+        height: var(--app-content-nav-padding-left);
+    }
+  
+    .button-normal {
+        color: var(--app-content-section-span-color);
+    }
+    .button-del {
+        color: var(--app-not-published-color);
+    }
+    .NP, .B {
+        color: var(--app-not-published-color)!important;
+    }
+
+    .P, .A{
+        color: var(--app-published-color)!important
+    }
+
+    paper-button,
+    section a {
+        text-decoration: var(--app-none);
+    }
+    .navtop {
+        display: flex;
+        flex-direction: var(--app-flexrow);
+        flex-wrap: wrap;
+        height: 800px;
+        max-width: 100%;
+        padding: 10%;
+        background-color: var(--app-secondary-text-color);
+    }    
+    .topLabel{
+        padding-left: 31px;
+    }
+    .topLabel a{
+        text-decoration: none;
+        font-weight: 500;
+        color: var(--app-content-section-span-color);
+    }
+    .navtop section {
+        padding: unset;
+        height: 0px;
+        flex-basis: 30%;
+    }
+    .navtop iron-icon {
+        color: var(--google-blue-300);
+        margin-left: 10px;
+    }
+
+    section {
+        flex-flow: var(--app-flexrow);
+        padding: var(--app-content-section-padding);
+        height: var(--app-content-section-height);
+       /* margin-left: var(--app-content-section-margin-left)*/
+    }
+
+    .diferent,
+    .hidden {
+        display: var(--app-none)
+    }
+
+    .title2 {
+        flex-basis: var(--app-content-section-title-flex-basis);
+        cursor: var(--app-default-cursor);
+        color: var(--app-content-title-text-color);
+        font-size: var(--app-content-section-title-font-size);
+        height: var(--app-content-section-title-height);
+        width: var(--app-content-section-title-width)
+    }
+
+    paper-icon-button-light {
+        color: var(--paper-blue-800);
+        margin-left: var(--app-content-button-light-marginleft)
+    }
+
+    paper-button{
+        height: var(--paper-font-title_-_font-size);
+        text-transform: capitalize;
+    }
+
+    article[centerListItem] paper-button{
+        height: auto;
+        max-height: 35px;
+    }
+
+    paper-button[front] {
+        background-color: #ffffff;
+        color: var(--google-blue-700);
+    }
+
+    .button {
+        color: var(--app-content-section-span-color);
+        width: 279px;
+        font-size: 35px;
+        background-color: var(--app-backgound-color);
+        height: 137px;
+        border: 1px solid var(--dark-theme-secondary-color);
+        border-radius: 15px;
+    }  
+    paper-tabs {
+        font-size: var(--app-content-paper-tabs-font-size);
+      /*  padding-top: var(--app-content-paper-tabs-padding-top)*/
+    }
+
+    nav[center] {
+        flex-flow: var(--app-flexcolumn);
+        letter-spacing: var(--app-content-navcenter-letter-spacing)
+    }
+
+   /*cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
+        top: var(--app-content-page-viewertop);
+    }*/
+    shop-image.bigger{
+        height: var(--app-content-article-height)
+    }
+    .strech{
+        width: 75%
+    }
+    /* wide screen */
+      @media (min-width: 1280px) {        
+        .navtop {
+            padding-left: 15%;
+        }
+      }
+    </style>
+  </template>
+</dom-module>`;document.head.appendChild($_documentContainer$4.content);Polymer({is:"cascaded-animation",behaviors:[NeonAnimationBehavior],/**
+   * @param {{
+   *   animation: string,
+   *   nodes: !Array<!Element>,
+   *   nodeDelay: (number|undefined),
+   *   timing: (Object|undefined)
+   *  }} config
+   */configure:function(config){this._animations=[];var nodes=config.nodes,effects=[],nodeDelay=config.nodeDelay||50;config.timing=config.timing||{};config.timing.delay=config.timing.delay||0;for(var oldDelay=config.timing.delay,abortedConfigure,node,index=0;node=nodes[index];index++){config.timing.delay+=nodeDelay;config.node=node;var animation=document.createElement(config.animation);if(animation.isNeonAnimation){var effect=animation.configure(config);this._animations.push(animation);effects.push(effect)}else{console.warn(this.is+":",config.animation,"not found!");abortedConfigure=!0;break}}config.timing.delay=oldDelay;config.node=null;// if a bad animation was configured, abort config.
+if(abortedConfigure){return}this._effect=new GroupEffect(effects);return this._effect},complete:function(){for(var animation,index=0;animation=this._animations[index];index++){animation.complete(animation.config)}}});const NeonSharedElementAnimationBehaviorImpl={properties:{/**
+     * Cached copy of shared elements.
+     */sharedElements:{type:Object}},/**
+   * Finds shared elements based on `config`.
+   */findSharedElements:function(config){var fromPage=config.fromPage,toPage=config.toPage;if(!fromPage||!toPage){console.warn(this.is+":",!fromPage?"fromPage":"toPage","is undefined!");return null};if(!fromPage.sharedElements||!toPage.sharedElements){console.warn(this.is+":","sharedElements are undefined for",!fromPage.sharedElements?fromPage:toPage);return null};var from=fromPage.sharedElements[config.id],to=toPage.sharedElements[config.id];if(!from||!to){console.warn(this.is+":","sharedElement with id",config.id,"not found in",!from?fromPage:toPage);return null}this.sharedElements={from:from,to:to};return this.sharedElements}},NeonSharedElementAnimationBehavior=[NeonAnimationBehavior,NeonSharedElementAnimationBehaviorImpl];/** @polymerBehavior */var neonSharedElementAnimationBehavior={NeonSharedElementAnimationBehaviorImpl:NeonSharedElementAnimationBehaviorImpl,NeonSharedElementAnimationBehavior:NeonSharedElementAnimationBehavior};Polymer({is:"hero-animation",behaviors:[NeonSharedElementAnimationBehavior],configure:function(config){var shared=this.findSharedElements(config);if(!shared){return}var fromRect=shared.from.getBoundingClientRect(),toRect=shared.to.getBoundingClientRect(),deltaLeft=fromRect.left-toRect.left,deltaTop=fromRect.top-toRect.top,deltaWidth=fromRect.width/toRect.width,deltaHeight=fromRect.height/toRect.height;this._effect=new KeyframeEffect(shared.to,[{transform:"translate("+deltaLeft+"px,"+deltaTop+"px) scale("+deltaWidth+","+deltaHeight+")"},{transform:"none"}],this.timingFromConfig(config));this.setPrefixedProperty(shared.to,"transformOrigin","0 0");shared.to.style.zIndex=1e4;shared.from.style.visibility="hidden";return this._effect},complete:function(config){var shared=this.findSharedElements(config);if(!shared){return null}shared.to.style.zIndex="";shared.from.style.visibility=""}});Polymer({is:"opaque-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{opacity:"1"},{opacity:"1"}],this.timingFromConfig(config));node.style.opacity="0";return this._effect},complete:function(config){config.node.style.opacity=""}});Polymer({is:"ripple-animation",behaviors:[NeonSharedElementAnimationBehavior],configure:function(config){var shared=this.findSharedElements(config);if(!shared){return null}var translateX,translateY,toRect=shared.to.getBoundingClientRect();if(config.gesture){translateX=config.gesture.x-(toRect.left+toRect.width/2);translateY=config.gesture.y-(toRect.top+toRect.height/2)}else{var fromRect=shared.from.getBoundingClientRect();translateX=fromRect.left+fromRect.width/2-(toRect.left+toRect.width/2);translateY=fromRect.top+fromRect.height/2-(toRect.top+toRect.height/2)}var translate="translate("+translateX+"px,"+translateY+"px)",size=Math.max(toRect.width+2*Math.abs(translateX),toRect.height+2*Math.abs(translateY)),diameter=Math.sqrt(2*size*size),scaleX=diameter/toRect.width,scaleY=diameter/toRect.height,scale="scale("+scaleX+","+scaleY+")";this._effect=new KeyframeEffect(shared.to,[{transform:translate+" scale(0)"},{transform:translate+" "+scale}],this.timingFromConfig(config));this.setPrefixedProperty(shared.to,"transformOrigin","50% 50%");shared.to.style.borderRadius="50%";return this._effect},complete:function(){if(this.sharedElements){this.setPrefixedProperty(this.sharedElements.to,"transformOrigin","");this.sharedElements.to.style.borderRadius=""}}});Polymer({is:"reverse-ripple-animation",behaviors:[NeonSharedElementAnimationBehavior],configure:function(config){var shared=this.findSharedElements(config);if(!shared){return null}var translateX,translateY,fromRect=shared.from.getBoundingClientRect();if(config.gesture){translateX=config.gesture.x-(fromRect.left+fromRect.width/2);translateY=config.gesture.y-(fromRect.top+fromRect.height/2)}else{var toRect=shared.to.getBoundingClientRect();translateX=toRect.left+toRect.width/2-(fromRect.left+fromRect.width/2);translateY=toRect.top+toRect.height/2-(fromRect.top+fromRect.height/2)}var translate="translate("+translateX+"px,"+translateY+"px)",size=Math.max(fromRect.width+2*Math.abs(translateX),fromRect.height+2*Math.abs(translateY)),diameter=Math.sqrt(2*size*size),scaleX=diameter/fromRect.width,scaleY=diameter/fromRect.height,scale="scale("+scaleX+","+scaleY+")";this._effect=new KeyframeEffect(shared.from,[{transform:translate+" "+scale},{transform:translate+" scale(0)"}],this.timingFromConfig(config));this.setPrefixedProperty(shared.from,"transformOrigin","50% 50%");shared.from.style.borderRadius="50%";return this._effect},complete:function(){if(this.sharedElements){this.setPrefixedProperty(this.sharedElements.from,"transformOrigin","");this.sharedElements.from.style.borderRadius=""}}});Polymer({is:"scale-down-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node,scaleProperty="scale(0, 0)";if("x"===config.axis){scaleProperty="scale(0, 1)"}else if("y"===config.axis){scaleProperty="scale(1, 0)"}this._effect=new KeyframeEffect(node,[{transform:"scale(1,1)"},{transform:scaleProperty}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}return this._effect}});Polymer({is:"scale-up-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node,scaleProperty="scale(0)";if("x"===config.axis){scaleProperty="scale(0, 1)"}else if("y"===config.axis){scaleProperty="scale(1, 0)"}this._effect=new KeyframeEffect(node,[{transform:scaleProperty},{transform:"scale(1, 1)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}return this._effect}});Polymer({is:"slide-from-left-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translateX(-100%)"},{transform:"none"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","0 50%")}return this._effect}});Polymer({is:"slide-from-right-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translateX(100%)"},{transform:"none"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","0 50%")}return this._effect}});Polymer({is:"slide-from-top-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translateY(-100%)"},{transform:"translateY(0%)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","50% 0")}return this._effect}});Polymer({is:"slide-from-bottom-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translateY(100%)"},{transform:"translateY(0)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","50% 0")}return this._effect}});Polymer({is:"slide-left-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"none"},{transform:"translateX(-100%)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","0 50%")}return this._effect}});Polymer({is:"slide-right-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"none"},{transform:"translateX(100%)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","0 50%")}return this._effect}});Polymer({is:"slide-up-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translate(0)"},{transform:"translateY(-100%)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","50% 0")}return this._effect}});Polymer({is:"slide-down-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node;this._effect=new KeyframeEffect(node,[{transform:"translateY(0%)"},{transform:"translateY(100%)"}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}else{this.setPrefixedProperty(node,"transformOrigin","50% 0")}return this._effect}});Polymer({is:"transform-animation",behaviors:[NeonAnimationBehavior],/**
+   * @param {{
+   *   node: !Element,
+   *   transformOrigin: (string|undefined),
+   *   transformFrom: (string|undefined),
+   *   transformTo: (string|undefined),
+   *   timing: (Object|undefined)
+   * }} config
+   */configure:function(config){var node=config.node,transformFrom=config.transformFrom||"none",transformTo=config.transformTo||"none";this._effect=new KeyframeEffect(node,[{transform:transformFrom},{transform:transformTo}],this.timingFromConfig(config));if(config.transformOrigin){this.setPrefixedProperty(node,"transformOrigin",config.transformOrigin)}return this._effect}});function getObjArr$1(content,withDescription){let obj,arr=[];if("boolean"!==typeof withDescription)return"second argument expected to be a boolean";for(let par in content){if("image"!==par){if(!!withDescription){if("description"!==par){obj={};obj[par]=content[par];arr.push(obj)}}else{if("description"===par){obj={};obj[par]=content[par];arr.push(obj)}}}}return arr}var objectArray={getObjArr:getObjArr$1};class cmsContentTemplate extends mixinBehaviors([NeonAnimationBehavior,NeonAnimationRunnerBehavior],PolymerElement){static get template(){return html`
+    <style include="iron-flex-layout">
+        :host {
+           /* display: block;*/
+            position: fixed;
+            top: 0px;
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0e0e0e57;
+        }  
+      
+        .container {
+            background-color: var(--app-backgound-color);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 5px;
+            height: 85vh;
+            width: 72.5vw;
+            box-sizing: border-box;
+            padding: 3%;
+            border-radius: 2px;
+            box-shadow: var(--shadow-elevation-2dp_-_box-shadow);
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+            @apply --shadow-elevation-3dp;
+        }
+        app-toolbar {
+            background-color: var(--app-item-backgound-color);
+            color:var(--app-content-section-span-color);
+            margin-top: 20px;
+            @apply --shadow-elevation-3dp;
+            border-top-right-radius: 4px;
+        }
+        app-toolbar {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70vw;
+        }
+        .xbuton{
+            background-color: var(--paper-cyan-200);
+            border-radius: 50%;
+            position: absolute;
+            top: -15px;
+            left: -15px; 
+            @apply --shadow-elevation-2dp;
+        }
+         app-toolbar a:hover{
+            background-color: var(--paper-cyan-300);
+            @apply --shadow-elevation-3dp;
+         }         
+        .flex-horizontal {
+            @apply --layout-horizontal;
+        }
+        .flex-vertical {
+            @apply --layout-vertical;
+        }
+        .flexchild {
+            @apply --layout-flex;
+        }
+        .flex2child {
+            @apply --layout-flex-2;
+        }
+        .flex3child {
+            @apply --layout-flex-3;
+        }
+        .input-area,
+        iron-form {
+            box-sizing: border-box;
+            padding: 20px; 
+        }
+        input, paper-input, paper-checkbox {
+          margin-bottom: 8px;
+        }
+        paper-button {
+          display: inline-block;
+          box-sizing: border-box;
+          width: 45%;
+          height: 40px;
+          text-align: center;
+        } 
+
+        #form1 paper-button {
+            width: 100%;
+        }
+        paper-dropdown-menu{
+            padding: 8px;
+            height: 68px;
+        }
+       paper-button:not([disabled]),
+        paper-dropdown-menu,
+        cms-content-textarea,
+        cms-content-input{
+            background: var(--paper-grey-200);
+        }
+
+        paper-dropdown-menu.pdd-sm {
+            height: 64px;
+            padding: 0;
+        }
+
+        paper-button.pbtn-sm {
+            background: var(--divider-color)!important;
+            color: var(--app-content-section-span-color)!important;
+            padding: 4px;
+            max-width: 8%!important;
+            min-width: 8%;
+        }
+
+        cms-content-textarea {
+            margin-top: 20px;
+        }
+        paper-button:not([disabled]) {
+                max-width: 150px;
+                color: var(--app-item-backgound-color);
+                background: var(--app-content-section-span-color);
+        }
+        paper-spinner {
+          width: 14px;
+          height: 14px;
+          margin-right: 20px;
+        }
+        paper-spinner[hidden] {
+          display: none;
+        }
+        .output {
+            margin-top: 20px;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
+        .form-placing{
+            box-sizing: border-box;
+        }
+        form[id=formal1]{
+            @apply --layout-scroll;
+            max-height: 60vh; 
+            min-height: 20vh; 
+            overflow-x: hidden;
+            padding-inline-end: 2%;
+            box-sizing: border-box;
+        }
+        .input-area{
+            height: 100px;
+            box-sizing: border-box;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            padding-right: 60px;
+        }
+
+        paper-icon-button {
+            --paper-icon-button-ink-color: white;
+        }
+
+        paper-icon-button + [main-title] {
+            margin-left: 24px;
+        }
+
+        paper-icon-button[icon=close]{
+            color: var(--app-backgound-color)
+        }
+        .shorter {
+            max-width: 25vw;
+        }
+    ${this._getStyles}
+  </style>  
+
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
+    </app-route>
+        <app-toolbar id="toolbar">
+            <a id="closeanchor" class="xbuton" href="[[rootPath]][[closestr]]" title="close">
+                <paper-icon-button icon="close"></paper-icon-button>
+            </a>
+            <paper-icon-button icon="av:library-books"></paper-icon-button>
+            <div main-title> [[navLabel]]</div>
+            <iron-form id="formlang" allow-redirect="[[redirect]]">   
+                <form id="formallang">
+                    <paper-dropdown-menu class="pdd-sm" label="langs" name="langs" required >
+                        <paper-listbox class="dropdown-content" slot="dropdown-content" selected="[[_sellectedLangIndex]]">
+                            <dom-repeat repeat items="[[pageLangs]]" as="item">
+                                <template>
+                                    <paper-item value="[[item]]">[[item]]</paper-item>
+                                </template>
+                            </dom-repeat>   
+                        </paper-listbox>
+                    </paper-dropdown-menu>  
+                </form>                    
+            </iron-form>
+            <paper-button class="pbtn-sm" on-click="_newLang" raised>
+                <iron-icon icon="add">
+                </iron-icon>
+            </paper-button>  
+        </app-toolbar>  
+        <div  id="forms" class="flex-vertical container">
+            <div class="flex2child flex-horizontal form-placing" aria-label="form-submition-area">  
+                <nav class="flex2child flex-vertical form-placing" >
+                   
+                    ${this._getContentItems}
+
+                </nav>  
+                <div id="formside" class="flexchild shorter">          
+                    <iron-form id="form3" allow-redirect="[[redirect]]">   
+                        <form id="formal4" class="flex-vertical">     
+                            <input hidden name="formtype" value="content"></input>
+                            <cms-content-image class="flexchild" id="image" item-label="[[imageLabel]]" images="[[imageArr]]">
+                            </cms-content-image>        
+                        </form>
+                    </iron-form>             
+                    <iron-form id="form2" allow-redirect="[[redirect]]">   
+                        <form id="formal3" class="flex-vertical">
+                            <input hidden name="formtype" value="inform"></input>                                                            
+
+                             <cms-pop-input class="abs" tgglelang="{{tgglelang}}" warning="[[warning]]" warning-msg="[[warningMsg]]">
+                                ${this._getXbutton}                                
+                                <cms-content-input
+                                    slot="input" 
+                                    item="[[itemlang]]"
+                                    raised="[[raised]]">
+                                </cms-content-input>                                       
+                                <paper-button slot="anchor" raised on-click="submit">
+                                    Submit
+                                <paper-button>                                       
+                            </cms-pop-input>
+                            
+                        </form>
+                    </iron-form>    
+                </div>  
+            </div>
+            <div id="inputarea" class="flex-horizontal flexchild input-area">
+                <paper-button class="flexchild" raised on-click="submit">Submit</paper-button>
+                <paper-button class="flexchild" raised on-click="reset">Reset</paper-button>
+            </div>
+        </div>
+        `}static get _getStyles(){return html``}static get _getLangButton(){return html` 
+                <a class="anchorish" id="adlang"  on-click="_newLang">                                            
+                    <paper-button class="saveButton" aria-label="lang"> 
+                        <span>Add lang</span>
+                    </paper-button>
+                </a> `}static get _getXbutton(){return html` 
+        <a id="closeanchor" slot="button" class="xbuton" title="close" on-click="_newLang">
+            <paper-icon-button icon="close"></paper-icon-button>
+        </a>
+         `}static get _getLangAnchor(){return html`            
+        <dom-repeat id="model" repeat items="[[pageLangs]]" as="pagelang">
+            <template>
+                <cms-lang-tab-item route="[[route]]" str="[[str]]" pagelang="[[pagelang]]">
+                    <paper-button slot="button" class="exex exexsmall" on-click="_openConfirm">
+                            x
+                    </paper-button>
+                </cms-lang-tab-item>
+            </template>
+        </dom-repeat> `}static get _getPath(){return html`   
+         <div  class="path">          
+        </div>`}static get _getContentItems(){return html` 
+        <iron-form id="form1" class="flex2child" allow-redirect="[[redirect]]">   
+            <form id="formal1">
+                <input hidden name="formtype" value="contentlang"></input>
+                <dom-repeat repeat items="[[inputVal]]" as="item">
+                    <template>
+                        <cms-content-input class="" item="[[item]]" 
+                            required 
+                            pattern="[a-zA-Z]*" 
+                            error-message="letters only!">                                
+                        </cms-content-input>
+                    </template>
+                </dom-repeat>      
+                <dom-repeat repeat items="[[textareaVal]]" as="item">
+                    <template>                                
+                        <cms-content-textarea class="" item="[[item]]"
+                            required rows="6" 
+                            pattern="[a-zA-Z]*" 
+                            error-message="letters only!">
+                        </cms-content-textarea>
+                    </template>
+                </dom-repeat>   
+            </form>                    
+        </iron-form>   
+        <iron-form id="form12" class="flex2child" allow-redirect="[[redirect]]">   
+            <form id="formal2">
+                <input hidden name="formtype" value="inform"></input>
+                <paper-dropdown-menu  class="" label="type" name="type" required>
+                    <paper-listbox class="dropdown-content" slot="dropdown-content" selected="[[_typeSellectedIndex]]">  
+                        <dom-repeat repeat items="[[typesArray]]" as="item">
+                            <template>   
+                                <paper-item value="[[item]]">[[item]]</paper-item>
+                            </template>
+                        </dom-repeat> 
+                    </paper-listbox>
+                </paper-dropdown-menu>   
+            </form>                    
+        </iron-form>`}static get _getSideInfo(){return html``}static get is(){return"cms-content-template"}static get properties(){return{user:{type:Object,notify:!0},removeArr:{type:Array,value:[]},redirect:{type:Boolean,value:!1},infoState:{type:String,value:"No info available..",notify:!0},warningMsg:{type:String,notify:!0,value:""},warning:{type:Boolean,notify:!0,value:!0},sharedElements:{type:Object},animationConfig:{type:Object,computed:"_setConfig(opened)"},itemlang:{type:Object,notify:!0,value:function(){return{addlang:""}}},tgglelang:{type:Boolean,value:!0,notify:!0}}}ready(){super.ready();this.addEventListener("neon-animation-finish",this._onAnimationFinish)}_setConfig(){return{entry:[{name:"scale-up-animation",node:this.$.toolbar},{name:"scale-up-animation",node:this.$.forms},{name:"slide-from-top-animation",node:this.$.inputarea},{name:"slide-from-left-animation",node:this.$.formside},{name:"slide-from-bottom-animation",node:this.$.form1}],exit:[{name:"scale-down-animation",node:this.$.toolbar},{name:"scale-down-animation",node:this.$.forms},{name:"fade-out-animation",node:this}]}}submit(){var forms=this.shadowRoot.querySelectorAll("iron-form");forms=Array.from(forms);let valid=[];valid=forms.map(form=>form.validate());console.log(forms);if(-1!==valid.indexOf(!1))return alert("required field not set.");forms.forEach(form=>form.submit())}reset(){var forms=this.shadowRoot.querySelectorAll("iron-form");forms.forEach(form=>form.reset())}//'slide-left-animation'
+_onAnimationFinish(){if(!this.opened){this.style.display="none";this.reset()}}showThis(){this.opened=!0;this.style.display="block";this.playAnimation("entry")}hideThis(){this.opened=!1;this.playAnimation("exit")}_log(data){// console.log(data)
+}_setContent(lang,content){this.content=content;let cont=this.content[0][lang];this.set("inputVal",this._getObjArr(cont,!0));this.set("textareaVal",this._getObjArr(cont,!1))}closeanchor(event){if(event.srcElement.hasAttribute("placertop"))this.$.closeanchor.click()}_newLang(){//   if (!!this.contetnLang) {
+this.set("tgglelang",!this.tgglelang);if(!0===this.tgglelang){this.set("newlangstate",!0)}else{this.warning=!1;this.warningMsg=""}// }
+}__setLAng(lang,cont){this.set("contetnLang",lang);this._setContent(lang,cont)}_getObjArr(content,withDescription){return getObjArr$1(content,withDescription)}_getPageInfo(str){this.infoState="getting info data..";if(!!localStorage[`${str}info`]){this.set("inform",JSON.parse(localStorage[`${str}info`]));this.infoState=""}else{this.infoState="!!info not available..!!";this.set("inform",[])}}_setItemsValue(data){if(!!this.content[0]){for(let par in data){if("undefined"!==par.toString()){let lang=this.query.lang||"lang";this.content[0][lang][par]=data[par]}}}}_setInfomr(data){if(!!this.content[0]){for(let par in data){if("undefined"!==par.toString()){this.inform[par]=data[par]}}}}_setInfomrCat(data){//  console.log(data);
+for(let par in data){if("undefined"!==par.toString()){//   console.log(par);
+this.tempCategory=data[par]}}}_setInfomrKw(data){if(!!this.content[0]){for(let par in data){if("undefined"!==par.toString()){this.inform[par]=data[par].split(",")}}}}_setContentTextValue(data){if(!!this.content[0]){for(let par in data){if("undefined"!==par.toString()){let lang=this.query.lang||"lang";this.content[0][lang][par]=data[par]}}}}_setAddLangValue(data){if("number"===typeof this.time)clearTimeout(this.time);if("number"===typeof this.time2)clearTimeout(this.time2);if(!!this.content[0]&&!!data&&!1==="undefined"in data){let arr=Object.keys(data);if(data[arr[0]]!==void 0){let datalength=data[arr[0]].split(""),cont;datalength=datalength.length;this.time=setTimeout(()=>{if(2===datalength){this.newLang=data.addlang;this.content[0][this.newLang]={};for(let par in this.content[0][this.contetnLang]){if("undefined"!==par.toString())this.content[0][this.newLang][par]=this.content[0][this.contetnLang][par]}this.set("pageLangs",[]);this.content[0][this.newLang].lang=this.newLang;this.__setStorage();cont=this.content[0];arr=this._setLangArr(cont);setTimeout(()=>{this.set("pageLangs",arr);this.warning=!1;this.warningMsg=""},250)}else{this.time2=setTimeout(()=>{this.warning=!0;this.warningMsg="lang must have two charecters ex: pt, en, fr"},250)}},500)}}}__setStorage(){localStorage[`page-${query.content}`]=JSON(this.content)}__removelang(event){let obj={};for(let par in this.content[0]){if(par.toString()!==event.model.__data.pagelang){obj[par]=this.content[0][par]}}this.content=[];this.content=[obj];this.removeArr.push(event.model.__data.pagelang);let arr=this._setLangArr(this.content[0]);this.pageLangs=[];this.set("pageLangs",arr);let evalu=!!this.newlangstate;this.removelang=!0===evalu?!1:!0}_openConfirm(event){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:event.model.__data.pagelang,method:this.__removelang.bind(this),argument:event,headderMsgKind:"delete",type:"sub-category-lang"}}))})}__reset(){this._debounceEvent=Debouncer.debounce(this._debounceEvent,microTask,()=>{window.dispatchEvent(new CustomEvent("reset-list-type",{}))})}}customElements.define(cmsContentTemplate.is,cmsContentTemplate);var cmsContentTemplate$1={cmsContentTemplate:cmsContentTemplate};Polymer({is:"expand-animation",behaviors:[NeonAnimationBehavior],configure:function(config){var node=config.node,height=node.getBoundingClientRect().height;this._effect=new KeyframeEffect(node,[{height:height/2+"px"},{height:height+"px"}],this.timingFromConfig(config));return this._effect}});class cmsDropdownMenuTemplate extends PolymerElement{static get template(){return html`
+        <style>
+        :host {
+            position: relative;
+        }    
+        div[inputs] {
+            /*background-color: #dadfe2;*/
+            height: 0px;
+        }
+        
+        div[inputs] {
+            box-sizing: border-box;
+            height: 30px;
+            background-color: var(--app-item-backgound-color);
+            padding-block-end: 7px;
+        }
+
+        input{
+            position: relative;
+            top: -8px;
+            left: -6px;
+            width: 145px;
+            height: 23px;
+            -webkit-appearance: none;
+            background-color: #ffffff00;
+            -webkit-rtl-ordering: unset;
+            cursor: text;
+            padding: 1px;
+            border-width: 0px;
+            border-style: none;
+            border-color: initial;
+            border-image: none;
+            border-radius: 3px;   
+        }
+
+        input:focus{
+          outline-offset: 0px;
+          outline-style: none;
+        }
+
+        .flexleft, .flexright {
+            max-height: unset;
+        }
+
+        .flexright {
+            min-height: 134px;
+            max-width: unset;
+        }
+        .alt{
+            padding-inline-start: 60px;
+        }
+        .span{
+            color: var(--paper-red-600);
+            font-weight: 400;
+        } 
+        iron-dropdown.formal{
+            margin-top: 1px;
+            margin-left: 0.2%;
+        }
+        paper-item.form-al{
+            font-size: 14px;
+            --paper-item-min-height: 30px;
+            cursor: pointer;
+        }
+        paper-listbox.dropdown-content{
+            background-color: var(--app-item-backgound-color);
+            box-shadow: 0px 2px 3px grey;
+        }
+            ${this._getStyles} 
+        </style>
+        <div class="alt">  
+            <div class="flexleft">
+                ${this._getButtons}   
+            </div>
+            <div class="flexright">               
+                <iron-dropdown id="dropdown"
+                    class="formal" 
+                    slot="input"
+                    vertical-align="[[verticalAlign]]"
+                    horizontal-align="[[horizontalAlign]]"
+                    disabled="[[disabled]]"
+                    scroll-action="[[scrollAction]]"
+                    open-animation-config="[[openAnimationConfig]]"
+                    close-animation-config="[[closeAnimationConfig]]"
+                    opened="{{dmopened}}">  
+                    ${this._getListItem} 
+                </iron-dropdown>
+            </div>
+        </div>
+       `}static get _getStyles(){return html``}static get _getButtons(){return html`
+            <div class="flexleft">
+                <paper-button name="[[itemLabel]]" aria-label="mode-title" on-click="open">
+                    [[itemLabel]]
+                </paper-button>
+            </div>
+            <div class="flexleft">
+                <div inputs name="[[itemLabel]]">
+                    <paper-button aria-label="mode-category" on-click="open">
+                        [[itemText]]
+                    </paper-button>
+                </div>
+            </div>`}static get _getListItem(){return html`
+            <paper-listbox class="dropdown-content" slot="dropdown-content">
+                <dom-repeat repeat items="[[list]]" as="item">
+                    <template>
+                        <paper-item class="form-al" on-click="_setResValue">[[item]]</paper-item>
+                    </template>
+                </dom-repeat>
+            </paper-listbox>`}static get is(){return"cms-dropdown-menu-template"}static get properties(){return{verticalAlign:String,horizontalAlign:String,disabled:Boolean,scrollAction:String,openAnimationConfig:{type:Array,value:function(){return[{name:"fade-in-animation",timing:{delay:150,duration:50}},{name:"expand-animation",timing:{delay:150,duration:200}}]}},closeAnimationConfig:{type:Array,value:function(){return[{name:"fade-out-animation",timing:{duration:200}}]}},dmopened:{type:Boolean,value:!1},opened:{type:Boolean,value:!1},texarea:{type:Boolean,value:!1},res:{type:Object,notify:!0,value:{}},list:{type:Array,notify:!0},info:{type:String,notify:!0}}}_log(data){console.log(data)}ready(){super.ready()}_getObjArr(content,withDescription){return getObjArr(content,withDescription)}_setResValue(evt){let value=evt.model.__data.item,obj={};obj[this.itemLabel]=value;this.set("itemText",value);this.set("res",obj);this.$.dropdown.close();this.opened=!1;window.onbeforeunload=function(){return"are you sure ?"}}__setValues(data){if(0<data.length){let obj=data.shift();this._setValues(obj);this.list=data[0].items;this.__changeLang()}}_setValues(data){this.temp=this.item;for(let par in data){this.set("itemText",data[par])}this._setLabels(data)}_setLabels(data){for(let par in data){this.set("itemLabel",par)}}open(){afterNextRender(this,()=>{if(!this.opened){this.$.dropdown.open();this.opened=!0}else{this.opened=this.$.dropdown.opened}})}}customElements.define(cmsDropdownMenuTemplate.is,cmsDropdownMenuTemplate);/*
+                                                                            --paper - item                                       /*| Mixin applied to the item | { } *
+                                                                            --paper - item - selected - weight                   /*| The font weight of a selected item | bold*
+                                                                            --paper - item - selected                            /*| Mixin applied to selected paper-items | { } *
+                                                                            --paper - item - disabled - color                    /*| The color for disabled paper-items | --disabled - text - color*
+                                                                            --paper - item - disabled                            /*| Mixin applied to disabled paper-items | { } *
+                                                                            --paper - item - focused                             /*| Mixin applied to focused paper-items | { } *
+                                                                            --paper - item - focused - before                    /*| Mixin applied to :before focused paper-items | { }*/var cmsDropdownMenuTemplate$1={cmsDropdownMenuTemplate:cmsDropdownMenuTemplate};Polymer({is:"iron-selector",behaviors:[IronMultiSelectableBehavior]});class cmsMiddlePageTemplate extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
+            :host {
+                position: var(--app-default-position);
+                display: var(--app-block)
+            }
+            .navbottom{
+                flex-basis: 600px;
+                padding: 10px;
+                margin-left: auto;
+                margin-right: auto;
+                width: 80%;
+                border-radius: 10px;
+                box-shadow: 0px 1.5px 4px var(--secondary-text-color);
+            }            
+            .flex2{
+                display: flex;
+                flex-direction: column;
+            }
+            div[top] {                
+                /*padding-left: 10px;*/
+                height: 32px;
+                }
+            div[silent]{
+                color: var(--paper-blue-grey-300);
+                display: block;
+                box-sizing: border-box;
+                height: 39px;
+                border-right: 1px solid var(--divider-color);;
+            }
+            .navside{
+                flex-basis: 80px;
+                padding-top: 8px;
+            }
+            .schooch{
+                margin-left: auto; 
+            }
+            .smaller{
+                height: 29px;
+                min-width: 35px;
+                padding: 0 0;
+            }
+            .back-a-litle{
+                margin-inline-start: -18px;
+            }
+            .higherh3{
+                margin-block-end: -1px;
+                margin-block-start: 2px;
+            }
+            .higherh5{
+                margin-block-start: -2px;
+                margin-block-end: 0px;
+                color: var(--light-primary-color);
+                flex-basis: auto;
+                letter-spacing: 0.2px;
+            } 
+          
+            .add-btn-group{
+                display: flex;
+                flex-direction: row;
+                flex-flow: wrap;
+                box-sizing: border-box;
+                width: 75px;
+                padding: 19px;
+                padding-top: 3px; 
+            }
+            .add-btn-group-item{
+                color: var(--app-item-backgound-color);
+                flex-basis: 15px;
+                height: 15px;;
+            }
+            .group-item-top-left{
+                border-right: 2px solid;
+                border-bottom: 2px solid; 
+            }
+            .group-item-top-right{
+                border-left: 2px solid;
+                border-bottom: 2px solid; 
+            }
+            .group-item-bottom-left{
+                border-top: 2px solid;
+                border-right: 2px solid;  
+            }
+            .group-item-bottom-right{
+                border-top: 2px solid;
+                border-left: 2px solid; 
+            }
+            .count{
+                position: relative;
+                top: -15px;
+            }
+            .putitcool{
+                margin-inline-end: 25px;
+                margin-inline-start: 30px;
+            }
+            ${this._getStyles}
+        </style>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
+            active="{{active}}">
+        </app-route>
+            <div spinnercenter>
+                <slot name="spinner"></slot>  
+            </div>
+        <main class="flex2">        
+            <nav class="navside">
+
+                <div class="navsidecontent">   
+                    <div silent>
+                        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">                   
+                            ${this._getSilentAnchor}
+                        </iron-selector>
+                    </div>              
+                    <nav top> 
+                        ${this._topLabel}
+                    </nav>
+                </div>
+
+            </nav>
+            <div class="navbottom">
+                <div arow>
+                    ${this._getBottom}
+                </div>
+            
+                    ${this._getTable}
+            </div>
+        </main> 
+        `}static get is(){return"cms-middle-page-template"}static get _getStyles(){return html``}static get _topLabel(){return html`       
+            <h2>[[categorypages]]</h2>               
+        `}static get _getSilentAnchor(){return html`
+            <a id="reset" href="[[rootPath]]content/">
+            </a>
+        `}static get _getTable(){return html`
+            <div table class="scroll"> 
+                <dom-repeat items="[[pages]]" as="page">
+                    <template strip-whitespace>
+                        <slot name="item[[index]]"></slot>
+                    </template>
+                </dom-repeat>
+            </div>
+        `}static get _getBottom(){return html`       
+        <div class="count">
+            <span> [[pages.length]] </span>
+        </div>
+        <section class="flexchildbotom noFlex">
+            <div class="center">             
+                <h4> [[viewedit]] </h4>
+            </div>
+        </section>                       
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[type]] </h4>
+            </div>
+        </section>                        
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[published]] </h4>
+            </div>
+        </section>   
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[viewedit]] sub-cat </h4>
+            </div>
+        </section>                          
+        <section class="flexchildbotom noFlex">
+            <div class="center">
+                <h4> [[delete]] </h4>
+            </div>
+        </section>
+        `}static get properties(){return{pages:{type:Array,notify:!0},ARTICLES:{type:Array,value:[],notify:!0},closed:{type:Boolean,notify:!0},confirm:{type:Boolean,notify:!0,value:!1}}}ready(){super.ready()}_getPublished(data){return"NPP"===data||"NPA"===data?"NP":"p"}}customElements.define(cmsMiddlePageTemplate.is,cmsMiddlePageTemplate);var cmsMiddlePageTemplate$1={cmsMiddlePageTemplate:cmsMiddlePageTemplate};/**
+   @license
+   Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+   This code may only be used under the BSD style license found at
+   http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
+   http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
+   found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
+   part of the polymer project is also subject to an additional IP rights grant
+   found at http://polymer.github.io/PATENTS.txt
+   */const $_documentContainer$5=document.createElement("template");$_documentContainer$5.setAttribute("style","display: none;");$_documentContainer$5.innerHTML=`<dom-module id="paper-spinner-styles">
   <template>
     <style>
       /*
@@ -11923,14 +14816,14 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
        * spinner is rotating (appears on Chrome 50, Safari 9.1.1, and Edge).
        */
       .spinner-layer::after {
+        content: '';
         left: 45%;
         width: 10%;
         border-top-style: solid;
       }
 
       .spinner-layer::after,
-      .circle-clipper::after {
-        content: '';
+      .circle-clipper .circle {
         box-sizing: border-box;
         position: absolute;
         top: 0;
@@ -11938,21 +14831,21 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
         border-radius: 50%;
       }
 
-      .circle-clipper::after {
+      .circle-clipper .circle {
         bottom: 0;
         width: 200%;
         border-style: solid;
         border-bottom-color: transparent !important;
       }
 
-      .circle-clipper.left::after {
+      .circle-clipper.left .circle {
         left: 0;
         border-right-color: transparent !important;
         -webkit-transform: rotate(129deg);
         transform: rotate(129deg);
       }
 
-      .circle-clipper.right::after {
+      .circle-clipper.right .circle {
         left: -100%;
         border-left-color: transparent !important;
         -webkit-transform: rotate(-129deg);
@@ -11960,7 +14853,7 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
       }
 
       .active .gap-patch::after,
-      .active .circle-clipper::after {
+      .active .circle-clipper .circle {
         -webkit-animation-duration: var(--paper-spinner-expand-contract-duration);
         -webkit-animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
         -webkit-animation-iteration-count: infinite;
@@ -11969,12 +14862,12 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
         animation-iteration-count: infinite;
       }
 
-      .active .circle-clipper.left::after {
+      .active .circle-clipper.left .circle {
         -webkit-animation-name: left-spin;
         animation-name: left-spin;
       }
 
-      .active .circle-clipper.right::after {
+      .active .circle-clipper.right .circle {
         -webkit-animation-name: right-spin;
         animation-name: right-spin;
       }
@@ -12019,7 +14912,7 @@ updateArticles(done,table,dev){let teble={name:"articles",doc:table.name,data:{c
       }
     </style>
   </template>
-</dom-module>`;document.head.appendChild($_documentContainer$3.content);const PaperSpinnerBehavior={properties:{/**
+</dom-module>`;document.head.appendChild($_documentContainer$5.content);const PaperSpinnerBehavior={properties:{/**
      * Displays the spinner.
      */active:{type:Boolean,value:!1,reflectToAttribute:!0,observer:"__activeChanged"},/**
      * Alternative text content for accessibility support.
@@ -12031,1869 +14924,16 @@ if("loading"===alt){this.alt=this.getAttribute("aria-label")||alt}else{this.__se
   <style include="paper-spinner-styles"></style>
 
   <div id="spinnerContainer" class-name="[[__computeContainerClasses(active, __coolingDown)]]" on-animationend="__reset" on-webkit-animation-end="__reset">
-    <div class="spinner-layer layer-1">
-      <div class="circle-clipper left"></div>
-      <div class="circle-clipper right"></div>
-    </div>
-
-    <div class="spinner-layer layer-2">
-      <div class="circle-clipper left"></div>
-      <div class="circle-clipper right"></div>
-    </div>
-
-    <div class="spinner-layer layer-3">
-      <div class="circle-clipper left"></div>
-      <div class="circle-clipper right"></div>
-    </div>
-
-    <div class="spinner-layer layer-4">
-      <div class="circle-clipper left"></div>
-      <div class="circle-clipper right"></div>
+    <div class="spinner-layer">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
     </div>
   </div>
 `;template$b.setAttribute("strip-whitespace","");/**
-                                                 Material design: [Progress &
-                                                 activity](https://www.google.com/design/spec/components/progress-activity.html)
-                                                                                               Element providing a multiple color material design circular spinner.
-                                                                                                   <paper-spinner active></paper-spinner>
-                                                                                               The default spinner cycles between four layers of colors; by default they are
-                                                 blue, red, yellow and green. It can be customized to cycle between four
-                                                 different colors. Use <paper-spinner-lite> for single color spinners.
-                                                                                               ### Accessibility
-                                                                                               Alt attribute should be set to provide adequate context for accessibility. If
-                                                 not provided, it defaults to 'loading'. Empty alt can be provided to mark the
-                                                 element as decorative if alternative content is provided in another form (e.g. a
-                                                 text block following the spinner).
-                                                                                                   <paper-spinner alt="Loading contacts list" active></paper-spinner>
-                                                                                               ### Styling
-                                                                                               The following custom properties and mixins are available for styling:
-                                                                                               Custom property | Description | Default
-                                                 ----------------|-------------|----------
-                                                 `--paper-spinner-layer-1-color` | Color of the first spinner rotation | `--google-blue-500`
-                                                 `--paper-spinner-layer-2-color` | Color of the second spinner rotation | `--google-red-500`
-                                                 `--paper-spinner-layer-3-color` | Color of the third spinner rotation | `--google-yellow-500`
-                                                 `--paper-spinner-layer-4-color` | Color of the fourth spinner rotation | `--google-green-500`
-                                                 `--paper-spinner-stroke-width` | The width of the spinner stroke | 3px
-                                                                                               @group Paper Elements
-                                                 @element paper-spinner
-                                                 @hero hero.svg
-                                                 @demo demo/index.html
-                                                 */Polymer({_template:template$b,is:"paper-spinner",behaviors:[PaperSpinnerBehavior]});const template$c=html`
-<custom-style id="cms-common-styles_v2">
-  <style is="cms-common-styles_v2">
-  html {
-  --app-backgound-color: #fff;
-  --app-primary-color: #3f4756;
-  --app-secondary-color: var(--paper-cyan-50);
-  --app-tabs-color: var(--app-secondary-color);
-  --app-topnav-icon-color: var(--light-theme-disabled-color);
-  --app-published-color: var(--paper-blue-a700);
-  --app-not-published-color: var(--paper-red-900);
-  --app-dropDwonMenu-icon-color: var(--google-red-500);
-  --app-primary-text-color: var(--light-theme-secondary-color);
-  --app-secondary-text-color: var(--google-grey-100);
-  --app-listIcon-color: var(--app-listicon-color);
-  --app-scrollbar-color: var(--app-content-paper-button-background-color);
-  --app-scrollbar-width: 7.5px;
-  --app-none: none;
-  --app-block: block;
-  --app-listitem: list-item;
-  --app-flex: flex;
-  --app-flexwrap: wrap;
-  --app-flexrow: row;
-  --app-flexcolumn: column;
-  --app-flexgrowshrink: 1;
-  --app-default-position: relative;
-  --app-custom-position: absolute;
-  --app-unset-position: unset;
-  --app-default-width: 100%;
-  --app-default-max-width: 1200px;
-  --app-default-height: 900px;
-  --app-default-text-word-break: break-word;
-  --app-custom-text-word-break: break-all;
-  --app-default-text-align: center;
-  --app-default-font-weight: bold;
-  --app-default-word-break: break-all;
-  --app-default-cursor: pointer;
-  --app-default-box-sizing: border-box;
-  --app-default-padding: 8px;
-  --app-default-min-padding: 0px;
-  --app-header-layout-leftposition: -44px;
-  --app-header-rightposition: var(--app-default-min-padding);
-  --app-header-leftposition: var(--app-default-min-padding);
-  --app-tollbar-height: 41px;
-  --app-tollbar-default-font-size: 12px;
-  --app-dropDwonMenu-icon-width: 82px;
-  --app-tollbar-sellector-list-margin: 0 20px;
-  --app-tollbar-sellector-list-padding: 0 16px;
-  --app-tollbar-sellector-list-line-height: 40px;
-  --app-tollbar-content-wrapper-top: -18px;
-  --app-tollbar-content-wrapper-max-width: 670px;
-  --app-tollbar-content-wrapper-padding-left: 15px;
-  --app-tollbar-cart-btn-top: -67px;
-  --app-tollbar-cart-btn-width: 267px;
-  --app-tollbar-cart-btn-float: right;
-  --app-tollbar-cart-btn-height: 59px;
-  --app-tollbar-user-badge-margin-top: 7px;
-  --app-content-top: 61px;
-  --app-content-margin-left: 5%;
-  --app-content-letter-spacing: 2px;
-  --app-content-font-size: larger;
-  --app-content-margin-top: 4px;
-  --app-content-margin-bottom: 1px;
-  --app-content-article-margin-bottom: 10px;
-  --app-content-article-marginleft: auto;
-  --app-content-article-height: 43px;
-  --app-content-article-lsitItem-flex-basis: 25%;
-  --app-content-nav-padding-left: 21px;
-  --app-content-nav-topleft: -22px;
-  --app-content-navtop-top: -27.19px;
-  --app-content-nav-top-height: 26px;
-  --app-content-nav-top-max-width: 520px;
-  --app-content-divtop-top: -3px;
-  --app-content-divtop-height: 130px;
-  --app-content-divtop-padding-top: 30px;
-  --app-content-divtop-border-bottom: 1px solid var(--app-primary-text-color);
-  --app-content-section-padding: 4px;
-  --app-content-section-height: 50px;
-  --app-content-section-margin-left: 20px;
-  --app-content-sectiontitle-fbasis: 34px;
-  --app-content-section-title-font-size: 25px;
-  --app-content-section-title-height: 72px;
-  --app-content-section-title-width: 257px;
-  --app-content-button-light-marginleft: var(--app-content-article-margin-bottom);
-  --app-content-button-border: 1px solid;
-  --app-content-paper-button-minwidth: 98px;
-  --app-content-paper-button-height: 31px;
-  --app-content-paper-button-background-color: #d0e6f1;
-  --app-content-paper-button-margin-right: -7px;
-  --app-content-hidden-minwidth: 98px;
-  --app-content-paper-tabs-font-size: 17px;
-  --app-content-paper-tabs-padding-top: 7px;
-  --app-content-navcenter-letter-spacing: 0.02em;
-  --app-content-button-height: 31px;
-  --app-content-page-viewertop: 70px;
-  --app-content-page-viewerleft: -3px;
-  --app-pages-padding-right: 18px;
-  --app-pages-minwidth: 730px;
-  --app-images-max-height: 900px;
-  --app-images-padding: 24px;
-  --app-images-div-flex-basis: 1%;
-  --app-images-div-padding: 11px;
-  --app-images-div-white-space: nowrap;
-  --app-images-div-overflow: hidden;
-  --app-images-div-text-overflow: ellipsis;
-  --app-images-divnav-padding-left: 0;
-  --app-images-divnav-height: 250px;
-  --app-images-divnav-overflow-y: var(--app-content-article-marginleft);
-  --app-images-article-margin-bottom: 14px;
-  --app-images-article-font-size: 1em;
-  --app-images-article-flexbasis: 38px;
-  --app-images-nav-flex-basis: 88%;
-  --app-images-nav-top: -7px;
-  --app-images-button-top: -9px;
-  --app-listtype-nav-flex-basis: 25%;
-  --app-listtype-nav-padding-right: 4px;
-  --app-listtype-nav-height: 45px;
-  --app-listtype-divtop-flex-basis: 72%;
-  --app-listtype-navtop-top: -38px;
-  --app-listtype-navtop-height: 19px;
-  --app-listtype-navtop-maxwidth: 483px;
-  --app-listtype-div-height: 300px;
-  }
-  </style>
-</custom-style>`;template$c.setAttribute("style","display: none;");document.head.appendChild(template$c.content);const $_documentContainer$4=document.createElement("template");$_documentContainer$4.innerHTML=`
-<dom-module id="cms-comon-style_v3">
-    <template>
-        <style>
-            /*:host {
-        display: var(--app-block);
-      }*/
-
-            html {
-                --content-color-default: #8098ad;
-                --content-color-button: color: #7a8c94;
-                --content-color-section: color: #616161;
-            }
-
-            a {
-                color: inherit;
-                text-decoration: none;
-            }
-
-            nav[top]{
-                color: var(--paper-blue-800);
-                background-color: var(--app-backgound-color);
-            }
-
-            .flexright,
-            .navside div {
-                word-break: break-word;
-            }
-
-            .flex {
-                @apply --layout-horizontal;
-            }
-
-            .flexH,  div[container] {
-                @apply --layout-vertical;
-            }
-
-            div[arow], div[bottom] {
-                box-sizing: border-box;
-                @apply --layout-horizontal;
-                @apply --layout-wrap;
-                border-radius: 4px;
-            }
-            div[arow]{
-                border: 1px outset;
-                background-color: var(--app-secondary-color);
-                height: 30px;
-            }
-
-            
-             h4{
-                margin-block-start: 0.33em;
-            }
-            div[arow][hidebottom]{
-                border: none;
-                height: 0px;
-                background-color: unset;
-            }  
-            div[bottom][hidebottom]{
-                border: none;
-                height: 0px;
-                background-color: unset;
-            }             
-            div[bottom][noborder]{
-                border: none;
-                height: auto;
-                margin-bottom: 30px;
-            }
-            .flexsidecenter {
-                -webkit-flex: unset;
-                flex: unset;
-                webkit-flex-basis: var(--layout-flex_-_-webkit-flex-basis, 0);
-                flex-basis: unset;
-            }
-
-            .scroll{
-                overflow-y: auto;
-            }
-
-            div[table] {
-                min-height: 100px;
-                flex-direction: var(--app-flexcolumn);
-                margin-top: 8px;
-                padding: 8px;
-            }
-
-            div[table]::-webkit-scrollbar-track {
-                background-color: var(--app-scrollbar-color)
-            }
-
-            div[table]::-webkit-scrollbar {
-                width: 5px
-            }
-
-            div[table]::-webkit-scrollbar-thumb {
-                background-color: var(--app-primary-text-color)
-            }
-
-            div[content] {
-                display: var(--app-none)
-            }
-
-            .flexchildbotomShort,
-            .flexchildbotom,
-            .flexchildbotomFull{
-                font-weight: 700;
-                margin-right: 1px;
-                padding: 0;
-                @apply --layout-vertical;
-                @apply --layout-flex-2;
-            }
-            .flexchildbotom{
-                flex-basis: 30%;
-                max-width: 75%;
-            }
-
-            .flexchildbotomFull, 
-            .flexchildbotom {
-                margin-bottom: 5px;
-                height: 310px;
-            }
-
-            .flexchildbotomShort{
-                flex-basis: 30%;
-                margin-bottom: 5px;
-                max-width: 75%;
-                height: 100px;
-            }
-            .childbotom{
-                flex-basis: 100%;
-                max-width: 75%
-            }
-            .flexchildbotomFull{
-                flex-basis: 100%;
-            }
-            .noFlex{
-                flex-basis: 1px 
-            }
-            .navbottom,
-            .navside {
-                box-sizing: border-box;
-                background-color: #d8e7ef;
-                border-radius: 4px;
-            }
-            .flexchildbotom3 {
-                @apply --layout-self-stretch;
-                @apply --layout-flex-3;
-            }
-            .flexleft,
-            .flexright {
-                cursor: pointer;
-                max-height: 42px;
-                @apply --layout-flex;
-            }
-            .flexright {
-                color: var(--paper-grey-700);
-                max-height: 50px;
-                @apply --layout-flex;
-            }
-            .navbottom {
-                max-width: 82%;
-                @apply --layout-flex;
-                height: auto;
-                padding: 8px;
-                transition-property: height, opacity;
-                transition-duration: .5s, 1s;
-                height: 1179px;
-            }
-            .navside {
-                @apply --layout-vertical;
-                @apply --layout-self-stretch;
-                @apply --layout-flex;
-                flex-direction: column;
-                height: auto;
-                max-width: 342px;
-                border-left: 10px solid  var(--app-backgound-color);
-                padding: 8px;
-            }
-            .navside div {
-                @apply --layout-horizontal;
-                cursor: pointer;
-                margin-bottom: 6px
-            }
-            .navside aside {
-                @apply --layout-flex;
-            }
-
-            .navside div[left] aside {
-                box-shadow: 1px 1px 1px
-            }
-           .asideBackgrc {
-                box-sizing: border-box;
-                background-color: #dedede;
-                border: 1px solid #fff;
-                height: 20px;
-            }
-            .navsideright, 
-            div[rightSide] {
-                background-color: var(--app-backgound-color);
-            }
-
-            .flexsidecenter, 
-            .navsideright, 
-            div[rightSide] {
-                padding: 8px
-            }
-            .flexsidecenter {
-                color: #7087b4;
-                font-weight: 700;
-                height: 20px;
-            }
-            .flexleft {
-                color: var(--google-blue-700);
-            }
-            .center {
-                max-height: 42px;
-                @apply --layout-flex;
-                color: var(--google-blue-700);
-                text-align: center;
-            }            
-            .navsideleft {
-                color: var(--paper-blue-600);
-                font-weight: 700;
-                flex-grow: 0;
-                flex-basis: 35px
-            }       
-            .navsideleft aside{
-                padding-top: 16px;
-            }
-            .title{
-                background-color: #e0f7fa; 
-            }
-            .navsideright{
-                width: 30%;   
-                height: 18px
-            }
-           
-            .flexsidecenter aside,
-             .navsideright aside{                
-                text-align: center;
-            }
-            .navsideright,
-            div[rightSide] {
-                color: var(--content-color-section)
-            }
-
-            div[rightSide] {
-                flex-flow: column;
-                flex-basis: 25%;
-                max-height: 161px;
-                overflow-y: auto
-            }
-
-            div[rightSide] section {
-                @apply --layout-horizontal;
-                text-align: center;
-            }
-
-            div[rightCenter] aside {
-                flex-basis: 34%
-            }
-
-            div[rightSide]::-webkit-scrollbar-track {
-                background: #ddd
-            }
-
-            div[rightSide]::-webkit-scrollbar {
-                width: 7.5px
-            }
-
-            div[rightSide]::-webkit-scrollbar-thumb {
-                background-color: var(--content-color-default, #8098ad)
-            }
-
-            aside[published=NP] {
-                color: var(--app-not-published-color)
-            }
-
-            aside[published="P"] {
-                color: var(--app-published-color)
-            }
-
-            .spanpadding {
-                padding: 4px;
-                font-size: 15px;
-                font-weight: bold;
-            }
-
-            section div[rightImages] {
-                height: 334px;
-                color: var(--content-color-section);
-                opacity: 1;
-                width: 98%;
-                overflow: hidden
-            }
-
-            section[bottom] {
-                display: flex;
-                flex-flow: column;
-                font-weight: bold;
-                margin-bottom: 46px;
-                flex-basis: 24%;
-                /* background-color: #d8e6ed;;
-                box-shadow: 1px 1px 1px grey;*/
-                margin-right: 1px;
-                padding: 0;
-            }
-
-            section[bottom2] {
-                max-height: 359px;
-                flex-basis: 100%;
-            }
-
-            section[bottom3] {
-                display: block;
-                max-width: 92%;
-            }
-
-
-            section[bottom3] {
-                display: block;
-                flex-basis: 92%;
-            }
-
-            section[title] {
-                width: 25%;
-                flex-basis: 34px;
-                cursor: pointer;
-                text-align: center;
-                height: 52px;
-                border-radius: 10px;
-                margin-left: auto;
-                margin-right: auto;
-                color: #787676;
-                font-size: 55px;
-                text-align: center;
-                /*  text-shadow: 3px 3px 2px #ababab;*/
-            }
-
-            paper-spinner {
-                left: 47%;
-                ;
-            }
-
-            div[hidde] {
-                display: none;
-            }
-            /*
-            paper-button {
-                max-height: 50px;
-                min-width: 98px;
-            }*/
-
-            cms-image-viewer {
-                display: none;
-            }
-
-            .diferent {
-                display: none !important
-            }
-           
-            #saveButton,
-            #cancelButton {
-                background-color: var(--paper-light-green-a100);                
-                color: var(--app-published-color);
-                font-weight: bold;
-                max-width: 90px;
-                letter-spacing: 2px;
-            }
-
-            .contenth4{
-                margin-block-start: -0.67em;
-            }
-
-            .padding {
-                padding: 4px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-            }
-
-            .padding,
-            article,
-            article[centerListItem], article[centerImageItem] {
-                box-sizing: var(--app-default-box-sizing)
-
-            }
-        
-            article[centerListItem], article[centerImageItem]{
-                @apply --layout-horizontal;
-            }
-            article[centerListItem], 
-            article[centerImageItem]{
-                background-color: var(--app-backgound-color)
-            }
-            
-            article[centerImageItem], article[centerImageItem]{
-                display: var(--app-flex)
-            }        
-                
-            article[centerListItem],
-            section[title2],
-            article[centerImageItem] {
-                text-align: var(--app-default-text-align)
-            }
-
-            article[centerImageItem]  {
-                height: 37px;
-                margin-bottom: 4px
-            }
-
-            article[centerListItem] div, article[centerImageItem] div {
-                @apply --layout-flex;
-               /* box-shadow: 1px 1px 3px var(--paper-blue-300);*/
-                height: auto;
-                max-height: 50px;
-                overflow-y: hidden;
-                box-shadow: 2px 2px 2px;
-                font-size: 10px;
-            }
-
-            article[centerListItem] span, article[centerImageItem] span {
-                word-break: break-word
-            }
-            .centerImage{
-                display: block;
-                margin-top: auto;
-                margin-bottom: auto;
-                box-shadow: unset;
-            }
-            paper-button{
-                height: var(--app-content-button-height);
-                text-decoration: var(--app-none);
-                color: inherit;
-            }
-
-            paper-button.strech {
-                top: -12px;
-                height: 23px;
-                width: 177px;
-                text-align: left;             
-            }
-
-            .nopad{
-                padding: 0 
-            }
-
-          /*  .paddingSmall {
-                word-break: break-word;
-                font-size: 0.95em;
-            }*/
-
-            .paddingSmall h3 {
-                margin-block-start: 7px;
-            }
-            .plussubcat{
-                box-sizing: content-box;
-                max-width: 30px;
-                height: auto;
-                border-right: 1px dashed;
-            }
-            .plus{
-                display: flex;             
-            }
-            .center{
-                margin-left: auto;
-                margin-right: auto; 
-               /* box-shadow: 1px 1px 2px var(--paper-blue-200)
-                border-bottom: 1px dashed var(--paper-light-blue-a100);*/
-            }
-            .subcat{
-                flex-grow: 1;
-                width: 640px;
-            }
-            shop-image {
-                height: 30px;0
-            }
-            div[published] {
-                font-size: small;
-            }
-            div[published="NP"] {
-                color: var(--app-not-published-color)
-            }
-
-            div[published="P"] {
-                color: var(--app-published-color)
-            }
-
-            .added {
-                color: #00ff7f
-            }
-
-        </style>
-    </template>
-</dom-module>`;document.head.appendChild($_documentContainer$4.content);class ShopImage extends PolymerElement{static get template(){return html`
-    <style>
-
-      :host {
-        display: block;
-        position: relative;
-        overflow: hidden;
-        background-size: cover;
-        background-position: center;
-      }
-
-      img {
-        @apply --layout-fit;
-        max-width: 100%;
-        max-height: 100%;
-        margin: 0 auto;
-        opacity: 0;
-        transition: 0.5s opacity;
-        @apply --shop-image-img;
-      }
-
-    </style>
-
-    <img id="img" alt\$="[[alt]]" on-load="_onImgLoad" on-error="_onImgError">
-`}static get is(){return"shop-image"}static get properties(){return{alt:String,src:{type:String,observer:"_srcChanged"},placeholderImg:{type:String,observer:"_placeholderImgChanged"}}}_srcChanged(src){this.$.img.removeAttribute("src");this.$.img.style.transition="";this.$.img.style.opacity=0;if(src){this.$.img.src=src}}_onImgLoad(){this.$.img.style.transition="0.5s opacity";this.$.img.style.opacity=1}_onImgError(){if(!this.placeholderImg){this.$.img.src="data:image/svg+xml,"+encodeURIComponent("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path fill=\"#CCC\" d=\"M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z\"/></svg>")}}_placeholderImgChanged(placeholder){this.style.backgroundImage="url('"+placeholder+"')"}}customElements.define(ShopImage.is,ShopImage);class cmsItemImageTemplate extends PolymerElement{static get _getStyles(){return html`
-        article[centerListItem]{
-        letter-spacing: var(--app-content-letter-spacing);
-        font-size: var(--app-content-font-size);
-        font-weight: var(--app-default-font-weight);
-        word-break: keep-all;
-        }
-
-        div[table] , div[arow]{
-            max-width: 100%;
-        } 
-
-        div[arow]{
-            height: 35px;
-            font-size: var(--app-images-article-font-size);
-            /*box-shadow: 1px 1px 4px var(--disabled-text-color);*/
-        }
-        main[small]{
-            width: 342px; 
-        }
-        div[arow] div[small]{
-            height: 23px;
-            font-size: 9px; 
-        }
-        div[arow] h4{
-            margin-block-start: 8px;
-        }
-        div[table] {
-            font-size: 9px;
-            font-weight: bold; box-sizing: var(--app-default-box-sizing);
-            padding: 0px;
-            overflow: var(--app-images-div-overflow);
-            text-overflow: var(--app-images-div-text-overflow);
-            overflow-y: var(--app-images-divnav-overflow-y);
-        }
-        #reset{
-            display: none
-        }
-        div[arow][size],
-        div[table][size]{
-            max-width: 75%; 
-        }`}static get template(){return html`  
-        <style include="cms-comon-style_v3">
-                :host {
-                    position: var(--app-default-position);
-                }            
-                ${this._getStyles}
-        </style>           
-        <main class="flexH" small$="[[small]]">
-            <div arow size$="[[size]]" small$="[[small]]">    
-                ${this._getMenu}  
-            </div>
-            <div table size$="[[size]]" class="scroll">
-                ${this._getItem}   
-            </div> 
-        </main> `}static get _getMenu(){return html`                           
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">   
-                    <h4>  data   </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="flexleft">  
-                    <h4> 
-                    method      </h4>     
-                </div>  
-            </section>`}static get _getItem(){return html` 
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>
-                <slot name="item[[index]]"></slot>  
-                [[_slottItem(item, index)]]
-            </template>                            
-        </dom-repeat>`}_slottItem(item,index){// let template = document.createElement('template')
-let str=`
-        <article centerImageItem>
-            <div class="paddingSmall">
-                <span title="">                 
-                </span>  
-            </div>
-            <div class="paddingSmall">
-                <paper-button title="delete">
-                    <paper-icon-button icon="av:not-interested" aria-label="delete">
-                    </paper-icon-button> 
-                </paper-button>
-            </div>
-        </article> `;/* template.innerHTML = str
-                       template.content.children[0].setAttribute('slot', 'item' + index)
-                       var clone = document.importNode(template.content, true);
-                       this.appendChild(clone)
-                       this.children[index].children[5].setAttribute('value', index)
-                       this.children[index].children[5].children[0].addEventListener('click', (this._openConfirm).bind(this))*/}_getParameter(item){return item}static get is(){return"cms-item-image-template"}static get properties(){return{images:{type:Object,notify:!0},size:{type:Boolean,value:!1,reflectToAttribute:!0},hidden:{type:Boolean,value:!1,reflectToAttribute:!0},small:{type:Boolean,value:!1,reflectToAttribute:!0}}}}customElements.define(cmsItemImageTemplate.is,cmsItemImageTemplate);var cmsItemImageTemplate$1={cmsItemImageTemplate:cmsItemImageTemplate};class cmsImage extends cmsItemImageTemplate{static get _getItem(){return html` 
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>
-                <cms-image-item  
-                    to-content="[[toContent]]"
-                    add="[[addTo]]" 
-                    image="[[item]]" 
-                    save-button="[[saveButton]]"
-                    reset-button="[[resetButton]]"
-                    delete="[[_deleteImg()]]"
-                    idx="[[index]]">
-                </cms-image-item>
-            </template>                            
-        </dom-repeat>`}static get _getMenu(){return html`                         
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4>  [[Imag]]   </h4>     
-                </div>  
-            </section>
-
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4> 
-                    [[title]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">   
-                    <h4> 
-                    [[dateCreated]]    </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[Gallery]]     </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[url]]      </h4>     
-                </div>  
-            </section>
-            <section class="flexchildbotom noFlex">
-                <div class="center">  
-                    <h4> 
-                    [[delete]]   [[add]]     </h4>     
-                </div>  
-            </section>`}static get is(){return"cms-image"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},lang:{type:String,notify:!0},langs:{type:Object,value:{}},addTo:{type:Boolean,value:!1,notify:!0},add:{type:String,notify:!0,computed:"_setLabelAdd(addTo)"},delete:{type:String,notify:!0,computed:"_setLabelDelete(addTo)"},images:{type:Array,notify:!0},toggleSize:{type:Boolean,notify:!0,value:!1,observer:"toggle"},returnPath:{type:String,notify:!0},resetButton:Object,saveButton:{type:Object,observer:"_placeEventMethod"},content:{type:Array,notify:!0,computed:"getImage(images)"}}}_log(data){console.log(data)}ready(){super.ready();this.translator.target("cms-image","setLangObject",this._setLObj.bind(this));this.translator.target("cms-image","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-image","setLangObject")}toggle(data){this.size=data}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_setLabelAdd(data){if(!1===data){return""}else{return"add"}}_setLabelDelete(data){if(!0===data){return""}else{return"delete"}}_placeEventMethod(data){data.addEventListener("click",this.showPage.bind(this))}showPage(){let string=window.btoa(JSON.stringify(this.toContent));this.resetButton.click();window.history.pushState({},null,`${this.rootPath}${this.returnPath}?content=${string}&added=true`);window.dispatchEvent(new CustomEvent("location-changed"));this.saveButton.classList.add("diferent");this.resetButton.classList.remove("diferent");this.toContent={};this.image=[]}_fromAray(data){let arr=[],obj2;if(!0===data instanceof Array&&1<=data.length){let t=new Date;for(let i=0;i<data.length;i++){obj2=data[i];arr.push(obj2)}}return arr}getImage(data){let arr;if(data!==void 0){if(data.image){arr=this._fromAray(data.image)}else if(data instanceof Array){arr=this._fromAray(data)}else{arr=this._fromAray([data])}return arr}}deleteImage(data){let arr=[];for(let i=0;i<this.content.length;i++){if(i!==parseInt(data)){arr.push(this.content[i])}}this.set("images",arr)}_openConfirm(event){let index=event.srcElement.parentElement.getAttribute("value").split("-").pop();this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{this.dispatchEvent(new CustomEvent("confirm",{bubbles:!0,composed:!0,detail:{name:this.content[index].title,method:this.deleteImage.bind(this),argument:index,headderMsgKind:"delete",type:"image"}}))})}_deleteImg(){return this._openConfirm.bind(this)}}customElements.define(cmsImage.is,cmsImage);class cmsContentImage extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
-        :host {
-            position: relative;
-        }
-        cms-image.top {
-            top: 0px;
-        }
-        </style>        
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route> 
-        <section class="flexchildbotom3">
-            <div left name="image">
-                <paper-button>
-                    [[imageLabel]]
-                </paper-button>
-                <paper-icon-button  name="[[itemLabel]]" icon="image:loupe" on-click="addImage" aria-label="mode-edit">
-                </paper-icon-button>           
-            </div>
-                <cms-image class="small top" images="[[images]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
-                </cms-image>
-        </section>
-        `}static get is(){return"cms-content-image"}static get properties(){return{images:{type:Array,notify:!0},deleteImg:{type:Object,notify:!0},lang:{type:String,notify:!0// observer: '__changeLang'
-},langs:{type:Object,value:{}},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}},itemLabel:{type:String,value:"",notify:!0}}}ready(){super.ready();this.translator.target("cms-content-image","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content-image","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-content-image","setLangObject");window.addEventListener("reset",this._reset.bind(this))}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_log(data){console.log("images",data)}_reset(){this.images=[]}}customElements.define(cmsContentImage.is,cmsContentImage);var cmsContentImage$1={cmsContentImage:cmsContentImage};class cmsInput extends mixinBehaviors([PaperButtonBehavior,PaperButtonBehaviorImpl],PolymerElement){static get template(){return html`
-        <style include="paper-material-styles">
-            :host {
-                @apply --layout-inline;
-                position: relative;
-                box-sizing: border-box;
-                min-width: 5.14em;
-                margin: 0 0.29em;
-                background: #00000014;
-                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-                -webkit-tap-highlight-color: transparent;
-                font: inherit;
-                outline-width: 0;
-                border-radius: 3px;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                -webkit-user-select: none;
-                user-select: none;
-                cursor: pointer;
-                z-index: 0;
-                padding: 0.7em 0.57em;
-                width: 150px;
-                height: 27px;
-                @apply --cms-font-common-base;
-                @apply --cms-input;
-            }
-        
-            :host([elevation="1"]) {
-                @apply --paper-material-elevation-1;
-            }
-        
-            :host([elevation="2"]) {
-                @apply --paper-material-elevation-2;
-            }
-        
-            :host([elevation="3"]) {
-                @apply --paper-material-elevation-3;
-            }
-        
-            :host([elevation="4"]) {
-             @apply --paper-material-elevation-4;
-            }
-        
-            :host([elevation="5"]) {
-                @apply --paper-material-elevation-5;
-            }
-        
-        /*  :host([hidden]) {
-            display: none !important;
-            }*/
-        
-            :host([raised].keyboard-focus) {
-                font-weight: bold;
-                @apply --paper-button-raised-keyboard-focus;
-            }
-        
-            :host(:not([raised]).keyboard-focus) {
-                font-weight: bold;
-                @apply --paper-button-flat-keyboard-focus;
-            }
-        
-            :host([disabled]) {
-                background: none;
-                color: #a8a8a8;
-                cursor: auto;
-                pointer-events: none;
-            
-                @apply --paper-button-disabled;
-            }
-        
-            :host([disabled][raised]) {
-                background: #eaeaea;
-            }
-        
-        
-            :host([animated]) {
-            @apply --shadow-transition;
-            }
-        
-            paper-ripple {
-                color: var(--paper-button-ink-color);
-            }
-
-            div[hidden]{
-                display: none
-            }
-            input{
-                position: relative;
-                top: -8px;
-                left: -6px;
-                width: 145px;
-                height: 23px;
-                -webkit-appearance: none;
-                background-color: #ffffff00;
-                -webkit-rtl-ordering: unset;
-                cursor: text;
-                padding: 1px;
-                border-width: 0px;
-                border-style: none;
-                border-color: initial;
-                border-image: none;
-                border-radius: 3px;   
-            }
-            input:focus{
-              outline-offset: 0px;
-              outline-style: none;
-            }
-            .textfield{
-                position: relative;
-                top: -5px;
-                left: -5px;
-            }
-            div[overf][textarea]{
-                position: relative;
-                top: 3px;
-                left: -4px;
-                color: initial;
-                letter-spacing: normal;
-                font: 400 13.3333px Arial;
-            }
-            div[overf][textarea]::-webkit-scrollbar-track {
-                background-color: var(--app-scrollbar-color)
-            }
-
-            div[overf][textarea]::-webkit-scrollbar {
-                width: 5px
-            }
-
-            div[overf][textarea]::-webkit-scrollbar-thumb {
-                background-color: var(--app-primary-text-color)
-            }
-        </style>
-        
-        <div class="textfield" hidden$="[[!hidden]]">
-            <slot></slot>
-        </div>  
-        <div overf textarea$="[[textarea]]" hidden$="[[hidden]]"> 
-            <slot name="input"></slot> 
-        </div>  
-        `}static get is(){return"cms-input"}static get properties(){return{raised:{type:Boolean,reflectToAttribute:!0,notify:!0,value:!1,observer:"_calculateElevation"},value:{type:String,notify:!0,value:""},hidden:{type:Boolean,reflectToAttribute:!0,notify:!0,value:!0,observer:"_checkHidden"},settextarea:{type:Boolean,notify:!0,value:!1,observer:"_setTextArea"},textarea:{type:Boolean,reflectToAttribute:!0,notify:!0,value:!1}}}ready(){super.ready();this.onkeydown=evt=>{this.noink=!0;setTimeout(()=>{this.noink=!1},60)}}_setTextArea(data){this.textarea=data}_checkHidden(data){if(!1===data){//this.children[0]
-}}_calculateElevation(){if(!this.raised){this._setElevation(0)}else{this._setElevation(2)}}}customElements.define(cmsInput.is,cmsInput);var cmsInput$1={cmsInput:cmsInput};class cmsContentItemTemplate extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
-        :host {
-            position: relative;
-        }
-        ${this._getStyles}
-        </style>      
-            <div class="flexleft" name="itemLabel">
-                <paper-button id="label" on-click="edit" name="[[itemLabel]]" aria-label="mode-title">
-                    [[title]]
-                </paper-button>
-                <paper-button id="cancel" name="[[itemLabel]]" value="[[itemLabel]]" class="diferent" on-click="Cancel" aria-label="mode-cancel">
-                    [[cancel]]
-                </paper-button>
-            </div>
-            ${this._getElement}
-        `}static get _getStyles(){return html`
-        textarea:focus, input:focus{
-          outline-offset: 0px;
-          outline-style: none;
-        }`}static get _getElement(){return html`        
-            <div class="flexright">
-                <div inputs name="[[itemLabel]]">  
-                    <cms-input class="larger" id="inpt1" on-click="edit" 
-                        name="[[itemLabel]]"
-                        raised="[[raised]]">
-                            [[itemText]]                        
-                        <iron-input slot="input" bind-value="{{itemText}}">
-                            <input id="input" value="{{value::input}}">
-                            </input>       
-                        </iron-input>   
-                    </cms-input>  
-                </div>
-            </div>`}static get is(){return"cms-content-item-template"}static get properties(){return{itemText:{type:String,notify:!0,value:"",observer:"inputing"},item:{type:Object,value:"",notify:!0,observer:"_setValues"},itemInput:{type:Boolean,notify:!0},raised:{type:Boolean,notify:!0,value:!1},lang:{type:String,notify:!0},langs:{type:Object,value:{}},tempArray:{type:Array,value:[]},cancelElemenObject:{type:Object,value:{}},inputObject:{type:Object,value:{}},cancelButton:{type:Object},saveButton:{type:Object,value:{}},res:{type:Object,notify:!0,value:{}},temp:{type:Object,value:{},notify:!0// observer: '_log'
-},inedit:{type:Boolean,notify:!0,value:!1},oninputing:{type:Boolean,notify:!0,value:!1},editing:{type:Number,notify:!0,value:0},texarea:{type:Boolean,notify:!0,value:!1},slashed:{type:Boolean,value:!1}}}_log(data){console.log(data)}ready(){super.ready()}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setValues(data){this.$.cancel.classList.add("diferent");if(data.reset===void 0){this.temp=this.item;for(let par in data){this.set("itemText",data[par])}this._setLabels(data)}else{this._reset()}}_setLabels(data){for(let par in data){this.set("itemLabel",par)}}edit(event){if("PAPER-BUTTON"===event.srcElement.nodeName||"CMS-INPUT"===event.srcElement.nodeName&&!0===event.srcElement.hidden){this._setObjects(event);this._setButtons()}}_setObjects(){this.set("par",this.itemLabel);let input=this.$.inpt1;this.cancelElement=this.$.cancel;this.inputObject=input}_setButtons(){if(!1===this.inedit){this.inedit=!0;this.inputObject.hidden=!1;this.raised=!0;this.oninputing=!0;if(!0!==this.texarea){this.$.input.focus()}else{this.$.input.$.textarea.focus()}window.onbeforeunload=function(){return"not without saving first :)"}}else{this.inputObject.hidden=!0;this.inedit=!1;this.raised=!1;if(0===this.editing){this.inputObject.onkeydown=function(){};window.onbeforeunload=function(){}}}}inputing(event){let value=event,obj={};obj[this.itemLabel]=value;this.set("res",obj);this._inputState()}_inputState(){if(!0===this.oninputing){this.$.cancel.classList.remove("diferent");this.saveButton.classList.remove("diferent");this.oninputing=!1;this.editing++;this.canceled=!1;window.onbeforeunload=function(){return"are you sure ?"}}}Cancel(){this.set("itemText",this.temp[this.itemLabel]);this.set("res",this.temp);this.cancelState();/*  if (this.temp.canceled === false) {
-                              this.cancelState();
-                          }
-                           let obj = {};
-                           obj[this.itemLabel] = this.temp.data
-                           this.set('itemText', this.temp.data);
-                           this.set('res', obj);
-                           if (this.temp.canceled === false) {
-                               this.cancelState();
-                           }*/}cancelState(){this.temp={};this.$.cancel.classList.add("diferent");this.inputObject.onkeydown=function(){};if(1>=this.editing){this.oninputing=!0;window.onbeforeunload=function(){};this.saveButton.classList.add("diferent")}else{this.set("par",{});this.editing--}}_reset(){this.editing=0;this.raised=!1;this.oninputing=!0;this.$.cancel.classList.add("diferent");window.onbeforeunload=function(){};this.saveButton.classList.add("diferent");//   this.anchor.classList.remove('diferent');
-}}customElements.define(cmsContentItemTemplate.is,cmsContentItemTemplate);var cmsContentItemTemplate$1={cmsContentItemTemplate:cmsContentItemTemplate};class cmsContentItem extends cmsContentItemTemplate{static get _getStyles(){return html`        
-        div[inputs] {
-            /*background-color: #dadfe2;*/
-            height: 22px;
-            width: 183px;
-        }
-        input{
-            position: relative;
-            top: -8px;
-            left: -6px;
-            width: 145px;
-            height: 23px;
-            -webkit-appearance: none;
-            background-color: #ffffff00;
-            -webkit-rtl-ordering: unset;
-            cursor: text;
-            padding: 1px;
-            border-width: 0px;
-            border-style: none;
-            border-color: initial;
-            border-image: none;
-            border-radius: 3px;   
-        }
-        input:focus{
-          outline-offset: 0px;
-          outline-style: none;
-        }
-        input[texarea]{
-            width: 407px;
-            height: 247px;
-        }
-        cms-input[texarea].larger{
-            --cms-input:{
-                width: 407px;
-                height: 247px; 
-            }
-        }
-        `}static get _getElement(){return html`        
-            <div class="flexright">
-                <div inputs name="[[itemLabel]]">  
-                    <cms-input class="larger keyboard-focus" texarea$="[[texarea]]" id="inpt1" on-click="edit" 
-                        name="[[itemLabel]]"
-                        raised="[[raised]]">
-                            [[itemText]]                        
-                        <iron-input slot="input" bind-value="{{itemText}}">
-                            <input id="input" value="{{value::input}}" texarea$="[[texarea]]">
-                            </input>       
-
-                        </iron-input>   
-                    </cms-input>  
-                </div>`}static get is(){return"cms-content-item"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Object,value:{}},texarea:{type:Boolean,notify:!0,value:!1,reflectToAttribute:!0},itemTextArea:{type:Boolean,notify:!0,value:!1,observer:"_setAsTextArea"},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}}}}/* _log(data) {
-         console.log(data)
-     }*/ready(){super.ready();this.translator.target("cms-content-item","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content-item","changeLang",this._setLang.bind(this),!0);this.translator.shoot("cms-content-item","setLangObject")}_setAsTextArea(data){//  console.log(data)
-this.texarea=data}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this,this.itemLabel,"title");res.call(this,"cancel","cancel")}__changeLang(){this.lang=this.translator.lang;this.translator.changeItemTitleLang.call(this,this.itemLabel,"title");this.translator.changeItemTitleLang.call(this,"cancel","cancel")}}customElements.define(cmsContentItem.is,cmsContentItem);var cmsContentItem$1={cmsContentItem:cmsContentItem};Polymer({_template:html`
-    <style>
-      :host {
-        display: inline-block;
-        position: relative;
-        width: 400px;
-        border: 1px solid;
-        padding: 2px;
-        -moz-appearance: textarea;
-        -webkit-appearance: textarea;
-        overflow: hidden;
-      }
-
-      .mirror-text {
-        visibility: hidden;
-        word-wrap: break-word;
-        @apply --iron-autogrow-textarea;
-      }
-
-      .fit {
-        @apply --layout-fit;
-      }
-
-      textarea {
-        position: relative;
-        outline: none;
-        border: none;
-        resize: none;
-        background: inherit;
-        color: inherit;
-        /* see comments in template */
-        width: 100%;
-        height: 100%;
-        font-size: inherit;
-        font-family: inherit;
-        line-height: inherit;
-        text-align: inherit;
-        @apply --iron-autogrow-textarea;
-      }
-
-      textarea::-webkit-input-placeholder {
-        @apply --iron-autogrow-textarea-placeholder;
-      }
-
-      textarea:-moz-placeholder {
-        @apply --iron-autogrow-textarea-placeholder;
-      }
-
-      textarea::-moz-placeholder {
-        @apply --iron-autogrow-textarea-placeholder;
-      }
-
-      textarea:-ms-input-placeholder {
-        @apply --iron-autogrow-textarea-placeholder;
-      }
-    </style>
-
-    <!-- the mirror sizes the input/textarea so it grows with typing -->
-    <!-- use &#160; instead &nbsp; of to allow this element to be used in XHTML -->
-    <div id="mirror" class="mirror-text" aria-hidden="true">&nbsp;</div>
-
-    <!-- size the input/textarea with a div, because the textarea has intrinsic size in ff -->
-    <div class="textarea-container fit">
-      <textarea id="textarea" name\$="[[name]]" aria-label\$="[[label]]" autocomplete\$="[[autocomplete]]" autofocus\$="[[autofocus]]" inputmode\$="[[inputmode]]" placeholder\$="[[placeholder]]" readonly\$="[[readonly]]" required\$="[[required]]" disabled\$="[[disabled]]" rows\$="[[rows]]" minlength\$="[[minlength]]" maxlength\$="[[maxlength]]"></textarea>
-    </div>
-`,is:"iron-autogrow-textarea",behaviors:[IronValidatableBehavior,IronControlState],properties:{/**
-     * Use this property instead of `bind-value` for two-way data binding.
-     * @type {string|number}
-     */value:{observer:"_valueChanged",type:String,notify:!0},/**
-     * This property is deprecated, and just mirrors `value`. Use `value`
-     * instead.
-     * @type {string|number}
-     */bindValue:{observer:"_bindValueChanged",type:String,notify:!0},/**
-     * The initial number of rows.
-     *
-     * @attribute rows
-     * @type number
-     * @default 1
-     */rows:{type:Number,value:1,observer:"_updateCached"},/**
-     * The maximum number of rows this element can grow to until it
-     * scrolls. 0 means no maximum.
-     *
-     * @attribute maxRows
-     * @type number
-     * @default 0
-     */maxRows:{type:Number,value:0,observer:"_updateCached"},/**
-     * Bound to the textarea's `autocomplete` attribute.
-     */autocomplete:{type:String,value:"off"},/**
-     * Bound to the textarea's `autofocus` attribute.
-     */autofocus:{type:Boolean,value:!1},/**
-     * Bound to the textarea's `inputmode` attribute.
-     */inputmode:{type:String},/**
-     * Bound to the textarea's `placeholder` attribute.
-     */placeholder:{type:String},/**
-     * Bound to the textarea's `readonly` attribute.
-     */readonly:{type:String},/**
-     * Set to true to mark the textarea as required.
-     */required:{type:Boolean},/**
-     * The minimum length of the input value.
-     */minlength:{type:Number},/**
-     * The maximum length of the input value.
-     */maxlength:{type:Number},/**
-     * Bound to the textarea's `aria-label` attribute.
-     */label:{type:String}},listeners:{input:"_onInput"},/**
-   * Returns the underlying textarea.
-   * @return {!HTMLTextAreaElement}
-   */get textarea(){return this.$.textarea},/**
-   * Returns textarea's selection start.
-   * @return {number}
-   */get selectionStart(){return this.$.textarea.selectionStart},/**
-   * Returns textarea's selection end.
-   * @return {number}
-   */get selectionEnd(){return this.$.textarea.selectionEnd},/**
-   * Sets the textarea's selection start.
-   */set selectionStart(value){this.$.textarea.selectionStart=value},/**
-   * Sets the textarea's selection end.
-   */set selectionEnd(value){this.$.textarea.selectionEnd=value},attached:function(){/* iOS has an arbitrary left margin of 3px that isn't present
-     * in any other browser, and means that the paper-textarea's cursor
-     * overlaps the label.
-     * See https://github.com/PolymerElements/paper-input/issues/468.
-     */var IS_IOS=navigator.userAgent.match(/iP(?:[oa]d|hone)/);if(IS_IOS){this.$.textarea.style.marginLeft="-3px"}},/**
-   * Returns true if `value` is valid. The validator provided in `validator`
-   * will be used first, if it exists; otherwise, the `textarea`'s validity
-   * is used.
-   * @return {boolean} True if the value is valid.
-   */validate:function(){// Use the nested input's native validity.
-var valid=this.$.textarea.validity.valid;// Only do extra checking if the browser thought this was valid.
-if(valid){// Empty, required input is invalid
-if(this.required&&""===this.value){valid=!1}else if(this.hasValidator()){valid=IronValidatableBehavior.validate.call(this,this.value)}}this.invalid=!valid;this.fire("iron-input-validate");return valid},_bindValueChanged:function(bindValue){this.value=bindValue},_valueChanged:function(value){var textarea=this.textarea;if(!textarea){return}// If the bindValue changed manually, then we need to also update
-// the underlying textarea's value. Otherwise this change was probably
-// generated from the _onInput handler, and the two values are already
-// the same.
-if(textarea.value!==value){textarea.value=!(value||0===value)?"":value}this.bindValue=value;this.$.mirror.innerHTML=this._valueForMirror();// Manually notify because we don't want to notify until after setting
-// value.
-this.fire("bind-value-changed",{value:this.bindValue})},_onInput:function(event){var eventPath=dom(event).path;this.value=eventPath?eventPath[0].value:event.target.value},_constrain:function(tokens){var _tokens;tokens=tokens||[""];// Enforce the min and max heights for a multiline input to avoid
-// measurement
-if(0<this.maxRows&&tokens.length>this.maxRows){_tokens=tokens.slice(0,this.maxRows)}else{_tokens=tokens.slice(0)}while(0<this.rows&&_tokens.length<this.rows){_tokens.push("")}// Use &#160; instead &nbsp; of to allow this element to be used in XHTML.
-return _tokens.join("<br/>")+"&#160;"},_valueForMirror:function(){var input=this.textarea;if(!input){return}this.tokens=input&&input.value?input.value.replace(/&/gm,"&amp;").replace(/"/gm,"&quot;").replace(/'/gm,"&#39;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;").split("\n"):[""];return this._constrain(this.tokens)},_updateCached:function(){this.$.mirror.innerHTML=this._constrain(this.tokens)}});class cmsContentText extends cmsContentItemTemplate{static get _getStyles(){return html`        
-        div[inputs] {
-            /*background-color: #dadfe2;*/
-            height: 22px;
-            width: 183px;
-        }
-
-        iron-autogrow-textarea.classy{
-                outline-style: none;
-                resize: none;
-                position: relative;
-                border: none;
-                top: -8px;
-                left: -3px;
-                -webkit-appearance: none;
-                background-color: #ffffff00;
-                -webkit-rtl-ordering: unset;
-                cursor: text;
-                padding: 1px;
-        }
-
-        cms-input.larger{
-            --cms-input:{
-                width: 420px;
-                height: 175px;
-            }
-        }`}static get _getElement(){return html`        
-            <div class="flexright">
-                <div inputs name="[[itemLabel]]"> 
-                    <cms-input settextarea="true" class="larger keyboard-focus" id="inpt1" on-click="edit" name="[[itemLabel]]" raised="[[raised]]"> 
-                            [[itemText]]  
-                            <iron-autogrow-textarea class="classy" id="input" autofocus="true" slot="input" value="{{itemText}}" id="a1"></iron-autogrow-textarea>
-                        </iron-input>    
-                    </cms-input>  
-                </div>
-            </div>`}static get is(){return"cms-content-text"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Object,value:{}},texarea:{type:Boolean,value:!0},translator:{type:Object,notify:!0,value:function(){return MyAppGlobals.translator}}}}_log(data){console.log(data)}ready(){super.ready();this.translator.target("cms-content-item","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content-item","changeLang",this._setLang.bind(this),!0);this.translator.shoot("cms-content-item","setLangObject")}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}_setLang(res,lang){this.lang=lang;res.call(this,this.itemLabel,"title");res.call(this,"cancel","cancel")}__changeLang(){this.lang=this.translator.lang;this.translator.changeItemTitleLang.call(this,this.itemLabel,"title");this.translator.changeItemTitleLang.call(this,"cancel","cancel")}}customElements.define(cmsContentText.is,cmsContentText);var cmsContentText$1={cmsContentText:cmsContentText};class cmsItemTemplate extends PolymerElement{static get template(){return html`   
-    ${this._getStyles}      
-       
-    ${this._getElement}
-        `}static get _getStyles(){return html`
-        <style include="cms-comon-style_v3">    
-        :host {
-            position: relative;
-            display: block;
-        } 
-                /* styles reside in cms-content*/
-        </style> `}static get _getElement(){return html`
-        <slot name="table"></slot>
-        `}static get is(){return"cms-item-template"}static get properties(){return{page:{type:Object,notify:!0,observer:"_putRow"}}}ready(){super.ready()}log(data){console.log("log from cms-article-viewer",data)}_getParameter(item){return item}_putRow(data){let template=document.createElement("template"),str=`
-        <article centerListItem slot="table">            
-            <div>
-                <paper-button>
-                    <paper-icon-button icon="image:remove-red-eye" aria-label="mode-show"></paper-icon-button>                   
-                    <paper-icon-button  icon="editor:mode-edit" aria-label="mode-edit"></paper-icon-button>
-                </paper-button> 
-            </div> 
-        </article>`;/*  template.innerHTML = str
-                       let clone = document.importNode(template.content, true);
-                       this.appendChild(clone)
-                          this.children[0].children[1].
-                           children[0].addEventListener('click', (this.showPage).
-                               bind(this));*/}}customElements.define(cmsItemTemplate.is,cmsItemTemplate);var cmsItemTemplate$1={cmsItemTemplate:cmsItemTemplate};class cmsImageItem extends cmsItemTemplate{static get _getElement(){return html`
-        <dom-repeat repeat items="[[content]]" as="item">
-            <template>                
-                <article centerImageItem>
-                    <div class="padding">
-                        <shop-image
-                            class="bigger"
-                            aria-label="image"
-                            title="[[item.title]]" 
-                            src="[[item.url]]" 
-                            alt="[[item.title]]">
-                        </shop-image> 
-                    </div>
-                    <div class="padding" title="[[item.title]]">
-                        [[item.title]]
-                    </div>
-                    <div class="padding" title="[[item.dateAdded]]">
-                        [[item.dateAdded]]
-                    </div>
-                    <div class="padding" title="[[item.gallery]]"> 
-                            [[item.gallery]]
-                    </div>
-                    <div class="padding" title="[[item.url]]">
-                        [[item.url]] 
-                    </div>
-                    <div class="padding">
-                        <paper-button title="[[this.add]]" on-click="_add" value$="item-[[idx]]">
-                            [[this.add]]
-                            <dom-if if="[[add]]">
-                                <template>
-                                    <paper-icon-button icon="av:library-add" aria-label="add">
-                                    </paper-icon-button>
-                                </template>
-                            </dom-if>                            
-                            <dom-if if="[[!add]]">
-                                <template>
-                                    <paper-icon-button icon="av:not-interested" aria-label="delete">
-                                    </paper-icon-button>
-                                </template>
-                            </dom-if>
-                        </paper-button>
-                    </div>
-                </article> 
-            </template>                            
-        </dom-repeat>`}static get is(){return"cms-image-item"}static get properties(){return{image:{type:Object,notify:!0},value:{type:String,reflectToAttribute:!0},res:{type:Object,notify:!0,value:{}},content:{type:Array,notify:!0,computed:"_putRow(image)"},idx:Number,delete:Object,resetButton:Object,toContent:Object,saveButton:Object,noItem:{type:Array,value:[{image:[]}]}}}ready(){super.ready()}_putRow(item){return[item]}_getIcon(add){if(!0===add){return`
-                <paper-icon-button icon="av:library-add" aria-label="add">
-                </paper-icon-button>`}if(!1===add){return`
-                <paper-icon-button icon="av:not-interested" aria-label="delete">
-                </paper-icon-button>`}}_addImage(image){if(this.toContent instanceof Array){this.toContent.image.push(image)}else{this.toContent.image.push(image)}if(!0===this.saveButton.classList.contains("diferent")){this.saveButton.classList.remove("diferent");this.resetButton.classList.add("diferent")}}__add(event){if(!1===event.srcElement.classList.contains("added")){event.srcElement.classList.add("added");this._addImage(this.image)}else{event.srcElement.classList.remove("added")}}_add(event){if(!1===this.add){this.delete(event)}if(!0===this.add){this.__add(event)}}_getTitle(add){if(!0===add){return`add`}if(!1===add){return`delete`}}}customElements.define(cmsImageItem.is,cmsImageItem);var cmsImageItem$1={cmsImageItem:cmsImageItem};const $_documentContainer$5=document.createElement("template");$_documentContainer$5.innerHTML=`
-<dom-module id="cms-common-top-styles">
-  <template>
-    <style>
-    .divtop /*,.navtop*/ {
-        position: var(--app-default-position)
-    }
-
-    .divtop,
-    main {
-        left: var(--app-default-min-padding)
-    }
-
-    .divtop,
-    .padding,
-    article,
-    article[centerListItem], article[centerImageItem] {
-        box-sizing: var(--app-default-box-sizing)
-    }
-
-    article[centerListItem], article[centerImageItem]{
-        @apply --layout-horizontal;
-    }
-
-    article[centerListItem],
-    nav,
-    section , 
-    article[centerImageItem]{
-        display: var(--app-flex)
-    }
-
-    article[centerListItem],
-    section[title2],
-     article[centerImageItem] {
-        text-align: var(--app-default-text-align)
-    }
-
-    nav[center],
-    paper-tabs,
-    section {
-        font-weight: var(--app-default-font-weight)
-    }
-    main {
-        height: var(--app-default-height)
-    }
-
-    article {
-        margin-bottom: var(--app-content-article-margin-bottom);
-
-       /* padding: var(--app-tollbar-default-font-size);
-        max-width: var(--app-default-max-width);
-        margin-left: 5%*/
-    }
-
-    article[centerListItem] {
-        word-break: keep-all;
-        background-color: var(--app-backgound-color);
-        border-radius: 4px;
-    }
-
-    article[centerImageItem]  {
-        letter-spacing: var(--app-content-letter-spacing, 1px);
-        font-size: var(--app-content-font-size, x-small);
-    }
-    
-    article[centerListItem] div, article[centerImageItem] div {
-        @apply --layout-flex;
-        height: var(--app-content-article-height);
-        overflow-y: hidden;
-        box-shadow: 1px 1px 4px;
-    }
-
-    article[centerListItem] span, article[centerImageItem]span  {
-        word-break: var(--app-default-text-word-break)
-    }
-
-    .padding {
-        padding: var(--app-default-padding);
-        word-break: break-all;
-    }
-
-    .nopad{
-        padding: 0 
-    }
-
-    .paddingSmall {
-        padding: var(--app-default-padding);
-        word-break: break-all;
-    }
-    .paddingSmall h3 {
-        margin-block-start: 7px;
-    }
-    shop-image {
-        height: var(--app-content-nav-padding-left);
-    }
-
-    .NP {
-        color: var(--app-not-published-color)
-    }
-
-    .P {
-        color: var(--app-published-color)
-    }
-
-    paper-button,
-    section a {
-        text-decoration: var(--app-none);
-        color: inherit
-    }
-
-    nav {
-        color: var(--app-primary-text-color);
-        flex-flow: var(--app-flexrow);
-        padding: var(--app-default-padding, 10px);
-        padding-left: var(--app-content-nav-padding-left)
-    }
-
-    .navtop {
-        flex-direction: var(--app-flexcolumn);
-       /* left: var(--app-content-nav-topleft);
-        top: var(--app-content-navtop-top);*/
-        height: var(--app-content-nav-top-height, 26px);
-    }
-
-    .navtop section {
-        font-size: var(--app-tollbar-default-font-size)
-    }
-
-    .navtop iron-icon {
-        height: var(--app-tollbar-default-font-size)
-    }
-
-    .divtop {
-      /*  top: var(--app-content-divtop-top);*/
-        background-color: var(--app-secondary-color);
-      /*  height: var(--app-content-divtop-height);
-        padding-top: var(--app-content-divtop-padding-top);*/
-        border-bottom: var(--app-content-divtop-border-bottom)
-    }
-
-    section {
-        flex-flow: var(--app-flexrow);
-        padding: var(--app-content-section-padding);
-        height: var(--app-content-section-height);
-        margin-left: var(--app-content-section-margin-left)
-    }
-
-    .diferent,
-    .hidden {
-        display: var(--app-none)
-    }
-
-    .title2 {
-        flex-basis: var(--app-content-section-title-flex-basis);
-        cursor: var(--app-default-cursor);
-        color: var(--app-content-title-text-color);
-        font-size: var(--app-content-section-title-font-size);
-        height: var(--app-content-section-title-height);
-        width: var(--app-content-section-title-width)
-    }
-
-    paper-icon-button-light {
-        color: var(--app-topnav-icon-color);
-        margin-left: var(--app-content-button-light-marginleft)
-    }
-
-    paper-button{
-        height: var(--app-content-button-height)
-    }
-
-    paper-button[front] {
-        height: var(--app-content-button-height, 40px);
-        border-bottom: unset;
-        top: unset;
-    }
-
-    paper-button[front] {
-        background-color: var(--app-backgound-color);
-    }
-
-    .button {
-        min-width: var(--app-content-paper-button-minwidth);
-        border-left: var(--app-content-button-border);
-        background-color: var(--app-content-paper-button-background-color);
-        border-top: var(--app-content-button-border);
-        border-right: var(--app-content-button-border);
-        margin-right: var(--app-content-paper-button-margin-right);
-        height: 30px;
-        border-radius: 0;
-        top: -1px;
-    }
-
-    paper-tabs {
-        font-size: var(--app-content-paper-tabs-font-size);
-        padding-top: var(--app-content-paper-tabs-padding-top)
-    }
-
-    nav[center] {
-        flex-flow: var(--app-flexcolumn);
-        letter-spacing: var(--app-content-navcenter-letter-spacing)
-    }
-
-    cms-page-viewer, cms-gallery-viewer, cms-articles-viewer {
-        top: var(--app-content-page-viewertop);
-       /* left: var(--app-content-page-viewerleft)*/
-    }
-    shop-image.bigger{
-        height: var(--app-content-article-height)
-    }
-    .navpages {
-        display: var(--app-listitem);
-       /* padding-left: var(--app-default-min-padding)*/
-    }
-    .strech{
-        width: 75%
-    }
-    </style>
-  </template>
-</dom-module>`;document.head.appendChild($_documentContainer$5.content);class cmsContentTemplate extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
-        :host {
-            position: relative;
-        }
-        .navsideleft aside {
-            text-align: center;
-        }
-       
-        </style>
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
-        </app-route>
-        <main id="main">
-            <div>
-                ${this._getAnchor}
-                <paper-button id="saveButton" class="diferent" on-click="save" aria-label="mode-save">
-                    [[Save]]
-                </paper-button>
-            </div>
-            <div class="flex">
-                <nav class="navbottom" id="bottom">
-                    ${this._getContentItems}
-                </nav>
-                <nav class="navside">
-                    ${this._getSideInfo}
-                </nav>
-            </div>
-        </main>
-        `}static get _getAnchor(){return html`
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a>
-                <paper-icon-button icon="arrow-back" aria-label="Go back">
-                </paper-icon-button>
-            </a>
-        </iron-selector>`}static get _getContentItems(){return html`
-        <div container>
-            <div bottom>
-            
-                <!--dom-repeat item="[[]]" as="">
-                    <template-->
-                        <cms-content-item itemLabel="[[item.inputLabel]]" itemText="{{item.itemText}}" inputElement="[[inputElement]]">
-                        </cms-content-item>
-                    <!--/template>
-                </dom-repeat-->    
-                    
-                <!--dom-repeat item="[[]]" as="">
-                    <template--->
-                        <cms-content-item itemLabel="[[item.textareaLabel]]" itemText="{{item.itemText}}" inputElement="[[inputElement]]">
-                        </cms-content-item>
-                    <!--/template>
-                </dom-repeat-->    
-                            
-                <cms-content-image itemLabel itemText images="[[]]" _deleteImg="[[deleteImg]]" lang="[[lang]]">
-                </cms-content-image>    
-
-            </div>
-        </div>`}static get _getSideInfo(){return html`
-        <dom-repeat repeat items="[[inform]]" as="cat">
-            <template>
-                <div class="flexsidecenter title">
-                    <aside>
-                        <span>
-                            [[info]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                            [[publishedby]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[publiShed]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datepublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="flexsidecenter">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[ _getPublishedBy(cat.publishedBy)]]
-                        </span>
-                    </aside>
-                    <aside  class="asideBackgrc" published$="[[cat.published]]">
-                        <span>
-                            [[cat.published]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.datePublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                            [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[datecreated]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="flexsidecenter">
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.author]]
-                        </span>
-                    </aside>
-                    <aside class="asideBackgrc">
-                        <span>
-                            [[cat.dateAdded]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="flexsidecenter">
-                    <aside>
-                        <span>
-                            [[lastmodified]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                            [[author]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                            [[date]]
-                        </span>
-                    </aside>
-                </div>
-                <div rightSide>
-                    <dom-repeat repeat items="[[cat.lastModified]]" as="createdAt">
-                        <template>
-                            <section>
-                                <aside class="asideBackgrc">
-                                    <span>
-                                        [[createdAt.author]]
-                                    </span>
-                                </aside>
-                                <aside class="asideBackgrc">
-                                    <span>
-                                        [[createdAt.date]]
-                                    </span>
-                                </aside>
-                            </section>
-                        </template>
-                    </dom-repeat>
-                </div>
-            </template>
-        </dom-repeat>`}static get is(){return"cms-content-template"}static get properties(){return{user:{type:Object,notify:!0},size:{type:Boolean,value:!0,notify:!0}}}ready(){super.ready()}_getObjArr(content){let obj,arr=[];for(let par in content[0]){obj={};obj[par]=content[0][par];arr.push(obj)}return arr}reset(){this._reset();this._resetHtml()}_resetHtml(){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{window.dispatchEvent(new CustomEvent("reset-html",{bubbles:!0,composed:!0}))})}}customElements.define(cmsContentTemplate.is,cmsContentTemplate);var cmsContentTemplate$1={cmsContentTemplate:cmsContentTemplate};Polymer({is:"iron-selector",behaviors:[IronMultiSelectableBehavior]});class cmsMiddlePageTemplate extends PolymerElement{static get template(){return html`<style include="cms-comon-style_v3">
-            :host {
-                position: var(--app-default-position);
-                display: var(--app-block)
-            }
-            .navbottom{
-                height: auto
-            }
-            flexchildbotom{
-                
-            }
-        </style>
-        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
-            active="{{active}}">
-        </app-route>
-            ${this._getSilentAnchor}
-           <slot name="spinner"></slot>
-        <nav top>
-            <app-toolbar>
-                <paper-tabs no-bar>
-                    <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    ${this._getShoutAnchor}
-                    </iron-selector>
-                </paper-tabs>
-            </app-toolbar>
-        </nav>
-        <main class="flex">
-            <div class="navbottom">
-                <div arow hidebottom$="[[hidebottom]]">
-                    ${this._getBottom}
-                </div>
-                    ${this._getTable}
-            </div>
-            <nav class="navside">
-             ${this._getNavside}
-            </nav>
-        </main> 
-        `}static get is(){return"cms-middle-page-template"}static get _getTable(){return html`
-            <div table class="scroll"> 
-                <dom-repeat items="[[pages]]" as="page">
-                    <template strip-whitespace>
-                        [[putElement(index, page)]]
-                        <slot name="item[[index]]"></slot>
-                    </template>
-                </dom-repeat>
-            </div>
-        `}static get _getShoutAnchor(){return html`
-        <a href="[[rootPath]]content/pages/add-category-pages?content=&add=true">
-            <paper-tab name="add-category-pages">
-                
-                <paper-icon-button-light>
-                    <iron-icon icon="av:library-add" aria-label="categories"></iron-icon>
-                </paper-icon-button-light>
-            </paper-tab>
-        </a>
-        `}static get _getSilentAnchor(){return html`
-        <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
-            <a id="reset" href="[[rootPath]]content/">
-            </a>
-        </iron-selector>
-        `}static get _getBottom(){return html`
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[title]] </h4>
-            </div>
-        </section>                        
-            
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[viewedit]] </h4>
-            </div>
-        </section>                        
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[type]] </h4>
-            </div>
-        </section>                        
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[published]] </h4>
-            </div>
-        </section>                        
-        <section class="flexchildbotom noFlex">
-            <div class="center">
-                <h4> [[delete]] </h4>
-            </div>
-        </section>
-        `}static get _getNavside(){return html`
-        <dom-repeat repeat items="[[inForm]]" as="detail">
-            <template>
-                <div class="flexsidecenter title">
-                    <aside>
-                        <span>
-                            [[Info]] 
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[categorycount]]
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideright">
-                    <aside>
-                        <span>
-                        <b> [[detail.categoryCount]] </b>
-                        </span>
-                    </aside>
-                </div>
-                <div class="navsideleft">
-                    <aside>
-                        <span>
-                        [[publishedpage]]
-                        </span>
-                    </aside>
-                    <aside>
-                        <span>
-                        [[datepublished]]
-                        </span>
-                    </aside>
-                </div>
-                <div rightSide>                            
-                    <dom-repeat repeat items="[[detail.published]]" as="published">
-                        <template>
-                            <section>
-                                <aside>
-                                    <div published$="[[_getPublished(published.page)]]">
-                                        [[published.page]]
-                                    </div>
-                                </aside>
-                                <aside>
-                                    <span>
-                                        [[published.datePublished]]
-                                    </span>
-                                </aside>
-                            </section>
-                        </template>
-                    </dom-repeat>
-                </div>
-            </template>
-        </dom-repeat>
-        `}static get properties(){return{pages:{type:Array,notify:!0},closed:{type:Boolean,notify:!0},hidebottom:{type:Boolean,value:!1,reflectToAttribute:!0},confirm:{type:Boolean,notify:!0,value:!1}}}ready(){super.ready()}_getPublished(data){return"NPP"===data||"NPA"===data?"NP":"p"}}customElements.define(cmsMiddlePageTemplate.is,cmsMiddlePageTemplate);var cmsMiddlePageTemplate$1={cmsMiddlePageTemplate:cmsMiddlePageTemplate};const template$d=html`
-  <style include="paper-spinner-styles"></style>
-
-  <div id="spinnerContainer" class-name="[[__computeContainerClasses(active, __coolingDown)]]" on-animationend="__reset" on-webkit-animation-end="__reset">
-    <div class="spinner-layer">
-      <div class="circle-clipper left"></div>
-      <div class="circle-clipper right"></div>
-    </div>
-  </div>
-`;template$d.setAttribute("strip-whitespace","");/**
                                                  Material design: [Progress &
                                                  activity](https://www.google.com/design/spec/components/progress-activity.html)
                                                                                                Element providing a single color material design circular spinner.
@@ -13915,7 +14955,7 @@ return _tokens.join("<br/>")+"&#160;"},_valueForMirror:function(){var input=this
                                                  @element paper-spinner-lite
                                                  @hero hero.svg
                                                  @demo demo/index.html
-                                                 */Polymer({_template:template$d,is:"paper-spinner-lite",behaviors:[PaperSpinnerBehavior]});Polymer({_template:html`
+                                                 */Polymer({_template:template$b,is:"paper-spinner-lite",behaviors:[PaperSpinnerBehavior]});Polymer({_template:html`
     <style>
       :host {
         display: block;
@@ -13933,96 +14973,47 @@ return _tokens.join("<br/>")+"&#160;"},_valueForMirror:function(){var input=this
 // handler immediately changes it back
 activateEvent:{type:String,value:null}},observers:["_selectedPageChanged(selected)"],_selectedPageChanged:function(selected,old){this.async(this.notifyResize)}});class cmsTopPageTemplate extends PolymerElement{static get template(){return html`
     <style include="cms-common-top-styles">
+    :host {
+      position: relative;      
+  }
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}" active="{{active}}">
     </app-route>
     <main> 
         <div class="divtop">
-          <section class="title2">
-            ${this.topTitle}
-          </section>
-        <nav class="navtop">
-            <app-toolbar>
-                <section>
-                  <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    ${this.topPages}  
-                  </iron-selector>
-                </section>
-            </app-toolbar> 
-        </nav> 
+          <div class="topLabel">     
+            <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation"> 
+                <a>  <  </a>            
+                <dom-repeat repeat items="[[breadcrumbs]]" as="page">
+                  <template>  
+                    ${this.topTitle}                        
+                  </template>
+                </dom-repeat> 
+            </iron-selector>         
+          </div>
         </div> 
         <nav class="navpages">
-            <iron-pages selected="[[page]]" attr-for-selected="name">
-                <div name="search">
-                    ${this.homePage} 
-                </div>
-                    ${this.viewPages}  
-            <iron-pages>            
+          <iron-pages selected="[[page]]" attr-for-selected="name"> 
+                  ${this.viewPages}  
+          <iron-pages>            
         </nav>
     </main>  
-
       `}static get topTitle(){return html`
-      <div> [[Content]] </div>
+      <a>  
+        <paper-button  aria-label="Go back page">     
+        </paper-button>               
+      </a>     
+  `}static get viewPages(){return html`
+      <cms-page-viewer name="pages" route="[[subroute]]">      
+          <cms-page-cats slot="categories"user="[[user]]" route="[[route]]">
+          </cms-page-cats>
+          <cms-page-subcats slot="sub-categories" user="[[user]]" route="{{subroute}}">
+          </cms-page-subcats>
+      </cms-page-viewer>     
 
-      <paper-icon-button-light>
-        <iron-icon icon="social:pages" aria-label="Content"></iron-icon>
-      </paper-icon-button-light>`}static get topPages(){return html`
-        <a  on-click="_resetEvent" href="[[rootPath]]content/search">
-          <paper-button class="button" front$="[[search]]" name="search" aria-label="pages">
-                  [[Search]]
-              <iron-icon icon="icons:search" aria-label="categories">
-              </iron-icon>
-          </paper-button>
-        </a> 
-        <a  on-click="_resetEvent" href="[[rootPath]]content/pages" id="pages">
-          <paper-button class="button" front$="[[pages]]" name="pages" aria-label="pages">
-                  [[Pages]]
-              <iron-icon icon="av:library-books" aria-label="categories">
-              </iron-icon>
-          </paper-button>
-        </a> 
-        <a on-click="_resetEvent" href="[[rootPath]]content/articles">
-          <paper-button  class="button" front$="[[articles]]" name="articles" aria-label="Articles">    
-                  [[Articles]]
-              <iron-icon icon="av:art-track" aria-label="sub categories">
-              </iron-icon> 
-          </paper-button>      
-        </a>`}static get homePage(){return html` 
-      <nav>
-          <div>
-            <h3> [[Search]] </h3>
-              <article>    
-                <iron-icon icon="icons:search" aria-label="search"> 
-                </iron-icon>          
-                <paper-input></paper-input>
-              <article>
-          </div>
-      </nav>`}static get viewPages(){return html`
-    <cms-page-viewer name="pages" route="[[subroute]]">      
-        <cms-page-list-type-content 
-          slot="add" id="content"           
-          route="[[subroute]]" 
-          user="[[user]]">
-        </cms-page-list-type-content>   
-        <cms-page-list-type 
-          slot="categories" 
-          route="[[subroute]]">
-        </cms-page-list-type>  
-        <cms-page-sub-cat-type slot="suCategories" route="[[subroute]]" >
-        </cms-page-sub-cat-type>  
-    </cms-page-viewer>
-    <cms-articles-viewer  name="articles" route="[[subroute]]" >
-        <cms-article-content slot="addart" id="addeditart" 
-          route="[[subroute]]" user="[[user]]">
-        </cms-article-content>  
-        <cms-article-list-type slot="categories"  
-          route="[[subroute]]">
-        </cms-article-list-type>       
-        <cms-article-view slot="view" id="view"   
-          route="[[subroute]]" user="[[user]]" rootPath="[[rootPath]]">
-        </cms-article-view>
-    </cms-articles-viewer>
-    `}static get is(){return"cms-top-page-template"}static get properties(){return{front:{type:Boolean,notify:!0,reflectToAttribute:!0}}}ready(){super.ready()}_resetEvent(){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{window.dispatchEvent(new CustomEvent("reset"))})}_checkMyName(event,name){if(event===name){return!0}else{return!1}}}customElements.define(cmsTopPageTemplate.is,cmsTopPageTemplate);var cmsTopPageTemplate$1={cmsTopPageTemplate:cmsTopPageTemplate};class cmsViewerTemplate extends PolymerElement{static get template(){return html`
+      <cms-article-view  name="articles" user="[[user]]" route="[[route]]">      
+      </cms-article-view>
+    `}static get is(){return"cms-top-page-template"}static get properties(){return{front:{type:Boolean,notify:!0,reflectToAttribute:!0},queryContent:String}}ready(){super.ready()}}customElements.define(cmsTopPageTemplate.is,cmsTopPageTemplate);var cmsTopPageTemplate$1={cmsTopPageTemplate:cmsTopPageTemplate};class cmsViewerTemplate extends PolymerElement{static get template(){return html`
     <style>
         :host {
           position: relative;
@@ -14032,31 +15023,619 @@ activateEvent:{type:String,value:null}},observers:["_selectedPageChanged(selecte
           max-width: 1890px;
           min-width: 730px;
           color: #5487b6;
-          padding-left: 21px;
-          padding-right: 18px;
         }
 
         #reset {
           display: none;
         }
+     /*   div[horizontal]{
+            @apply --layout-horizontal;
+            max-width: 1800px;
+            max-height: 600px;
+            height: auto;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+       div[horizontal]::-webkit-scrollbar-track {
+            background: #ddd;
+        }
+        div[horizontal]::-webkit-scrollbar-button{
+            height: 7.5px;
+            width: 7.5px;
+            background: var(--google-blue-300);
+
+        }
+        div[horizontal]::-webkit-scrollbar {
+            width: 7.5px;
+            height: 7.5px;
+        }
+
+        div[horizontal]::-webkit-scrollbar-thumb {
+            background-color: var(--content-color-default, #8098ad)
+        } */
+        iron-pages.flexy{
+            flex-basis: 100%;
+        }
+        ${this._getStyles} 
     </style>
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}" query-params="{{query}}"
     active="{{active}}">
+    ${this._getLayer2Route}    
     </app-route>
         ${this._getSilentAnchor}
-        <main id="main">
-        <iron-pages selected="[[page]]" attr-for-selected="name"> 
-            ${this._getPages}
-        </iron-pages>  
-    </main> `}static get _getSilentAnchor(){return html`  
+    <main id="main">
+        <div id="pageholder" horizontal>
+            <iron-pages class="flexy" selected="[[page]]" attr-for-selected="name"> 
+                ${this._getPages}
+            </iron-pages>  
+        </div>
+    </main> `}static get _getStyles(){return html``}static get _getSilentAnchor(){return html`  
     <iron-selector selected="[[page]]" attr-for-selected="id" class="drawer-list" role="navigation">
         <a id="reset" href="[[rootPath]]content/pages/">
         </a>
-    </iron-selector>`}static get _getPages(){return html`
-            <article name="add-category-pages">  
-                <slot name="add"></slot>  
-            </article>
-
+    </iron-selector>`}static get _getLayer2Route(){return html` `}static get _getPages(){return html`
             <article name="home">           
                 <slot name="categories"></slot>
-            </article>`}static get is(){return"cms-viewer-template"}static get properties(){return{lang:{type:String,notify:!0},page:{type:String,reflectToAttribute:!0,observer:"_pageChanged"},active:{type:String,value:""},pages:{type:Array,notify:!0}}}ready(){super.ready()}}customElements.define(cmsViewerTemplate.is,cmsViewerTemplate);var cmsViewerTemplate$1={cmsViewerTemplate:cmsViewerTemplate};export{appScrollEffectsBehavior as $appScrollEffectsBehavior,applyShim as $applyShim$1,ApplyShim as $applyShimDefault,applyShimUtils as $applyShimUtils,arraySelector as $arraySelector,arraySplice as $arraySplice,async as $async,caseMap$1 as $caseMap,_class as $class,cmsContentImage$1 as $cmsContentImage,cmsContentItem$1 as $cmsContentItem,cmsContentItemTemplate$1 as $cmsContentItemTemplate,cmsContentTemplate$1 as $cmsContentTemplate,cmsContentText$1 as $cmsContentText,cmsElementSet as $cmsElementSet,cmsImageItem$1 as $cmsImageItem,cmsInput$1 as $cmsInput,cmsItemImageTemplate$1 as $cmsItemImageTemplate,cmsItemTemplate$1 as $cmsItemTemplate,cmsMiddlePageTemplate$1 as $cmsMiddlePageTemplate,cmsTopPageTemplate$1 as $cmsTopPageTemplate,cmsViewerTemplate$1 as $cmsViewerTemplate,commonRegex as $commonRegex,commonUtils as $commonUtils,cssParse as $cssParse,customStyle as $customStyle,customStyleInterface as $customStyleInterface$1,CustomStyleInterface as $customStyleInterfaceDefault,dataBaseWorker as $dataBaseWorker,debounce as $debounce,dirMixin as $dirMixin,documentWait$1 as $documentWait,documentWait as $documentWaitDefault,domBind as $domBind,domIf as $domIf,domModule as $domModule,domRepeat as $domRepeat,elementMixin as $elementMixin,firebaseWorker as $firebaseWorker,flattenedNodesObserver as $flattenedNodesObserver,flush$2 as $flush,gestureEventListeners as $gestureEventListeners,gestures$1 as $gestures,helpers as $helpers,htmlTag as $htmlTag,httpHandler as $httpHandler,ironA11yAnnouncer as $ironA11yAnnouncer,ironA11yKeysBehavior as $ironA11yKeysBehavior,ironButtonState as $ironButtonState,ironControlState as $ironControlState,ironFitBehavior as $ironFitBehavior,ironFocusablesHelper as $ironFocusablesHelper,ironFormElementBehavior as $ironFormElementBehavior,ironMenuBehavior as $ironMenuBehavior,ironMeta as $ironMeta,ironMultiSelectable as $ironMultiSelectable,ironOverlayBehavior as $ironOverlayBehavior,ironOverlayManager as $ironOverlayManager,ironResizableBehavior as $ironResizableBehavior,ironScrollManager as $ironScrollManager,ironScrollTargetBehavior as $ironScrollTargetBehavior,ironSelectable as $ironSelectable,ironSelection as $ironSelection,ironValidatableBehavior as $ironValidatableBehavior,legacyElementMixin as $legacyElementMixin,mixin as $mixin,mutableData as $mutableData,mutableDataBehavior as $mutableDataBehavior,neonAnimatableBehavior as $neonAnimatableBehavior,neonAnimationBehavior as $neonAnimationBehavior,neonAnimationRunnerBehavior as $neonAnimationRunnerBehavior,paperButtonBehavior as $paperButtonBehavior,paperInkyFocusBehavior as $paperInkyFocusBehavior,paperInputAddonBehavior as $paperInputAddonBehavior,paperInputBehavior as $paperInputBehavior,paperItemBehavior as $paperItemBehavior,paperMenuButton as $paperMenuButton,paperRippleBehavior as $paperRippleBehavior,paperSpinnerBehavior as $paperSpinnerBehavior,path as $path,polymer_dom as $polymerDom,polymerElement as $polymerElement,polymerFn as $polymerFn,polymerLegacy as $polymerLegacy,propertiesChanged as $propertiesChanged,propertiesMixin as $propertiesMixin,propertyAccessors as $propertyAccessors,propertyEffects as $propertyEffects,renderStatus as $renderStatus,resolveUrl$1 as $resolveUrl,settings as $settings,styleGather as $styleGather,styleSettings as $styleSettings,styleUtil as $styleUtil,templateMap$1 as $templateMap,templateMap as $templateMapDefault,templateStamp as $templateStamp,templatize$1 as $templatize,templatizerBehavior as $templatizerBehavior,unscopedStyleHandler as $unscopedStyleHandler,ANIMATION_MATCH,AppScrollEffectsBehavior,ArraySelector,ArraySelectorMixin,BRACKETED,Base,Class,CustomStyle,CustomStyleInterfaceInterface,CustomStyleProvider,Debouncer,DirMixin,DomApi,DomBind,DomIf,DomModule,DomRepeat,ElementMixin,EventApi,FlattenedNodesObserver,GestureEventListeners,HOST_PREFIX,HOST_SUFFIX,IS_VAR,IronA11yAnnouncer,IronA11yKeysBehavior,IronButtonState,IronButtonStateImpl,IronControlState,IronFitBehavior,IronFocusablesHelper,IronFormElementBehavior,IronMenuBehavior,IronMenuBehaviorImpl,IronMeta,IronMultiSelectableBehavior,IronMultiSelectableBehaviorImpl,IronOverlayBehavior,IronOverlayBehaviorImpl,IronOverlayManager,IronOverlayManagerClass,IronResizableBehavior,IronScrollTargetBehavior,IronSelectableBehavior,IronSelection,IronValidatableBehavior,IronValidatableBehaviorMeta,LegacyElementMixin,MEDIA_MATCH,MIXIN_MATCH,MutableData,MutableDataBehavior,NeonAnimatableBehavior,NeonAnimationBehavior,NeonAnimationRunnerBehavior,NeonAnimationRunnerBehaviorImpl,OptionalMutableData,OptionalMutableDataBehavior,PaperButtonBehavior,PaperButtonBehaviorImpl,PaperInkyFocusBehavior,PaperInkyFocusBehaviorImpl,PaperInputAddonBehavior,PaperInputBehavior,PaperInputBehaviorImpl,PaperInputHelper,PaperItemBehavior,PaperItemBehaviorImpl,PaperMenuButton,PaperRippleBehavior,PaperSpinnerBehavior,Polymer,Polymer as Polymer$1,PolymerElement,PropertiesChanged,PropertiesMixin,PropertyAccessors,PropertyEffects,Setter,StyleNode,TemplateInstanceBase,TemplateStamp,Templatizer,VAR_ASSIGN,VAR_CONSUMED,_boundScrollHandler,_composedTreeContains,_getScrollInfo,_getScrollableNodes,_getScrollingNode,_hasCachedLockedElement,_hasCachedUnlockedElement,_lockScrollInteractions,_lockedElementCache,_lockingElements,_scrollEffects,_scrollInteractionHandler,_scrollTimer,_shouldPreventScrolling,_unlockScrollInteractions,_unlockedElementCache,add,enqueueDebouncer as addDebouncer,addListener,afterNextRender,allowTemplateFromDomModule,animationFrame,applyCss,applyStyle,applyStylePlaceHolder,beforeNextRender,calculateSplices,camelToDashCase,cmsContentImage,cmsContentItem,cmsContentItemTemplate,cmsContentTemplate,cmsContentText,cmsImageItem,cmsInput,cmsItemImageTemplate,cmsItemTemplate,cmsMiddlePageTemplate,cmsTopPageTemplate,cmsViewerTemplate,createScopeStyle,cssFromModule,cssFromModuleImports,cssFromModules,cssFromTemplate,currentLockingElement,dashToCamelCase,dataBaseworker,dedupingMixin,deepTargetFind,detectMixin,dom,dumpRegistrations,elementHasBuiltCss,elementIsScrollLocked,elementsAreInvalid,enqueueDebouncer,findMatchingParen,findOriginalTarget,flush$1 as flush,flush$1,flush as flush$2,forEachRule,gatherStyleText,gestures,get,getBuildComment,getComputedStyleValue,getCssBuild,getIsExtends,html,html as html$1,html as html$2,htmlLiteral,idlePeriod,instanceCount,invalidate,invalidateTemplate,isAncestor,isDeep,isDescendant,isKeyframesSelector,isPath,isTargetedBuild,isUnscopedStyle,isValid,isValidating,matches,matchesSelector,microTask,mixinBehaviors,modelForElement,nativeCssVariables,nativeShadow,normalize,parse,passiveTouchGestures,pathFromUrl,prevent,processUnscopedStyle,processVariableAndFallback,pushScrollLock,queryAllRoot,recognizers,register,register$1,registerEffect,registrations,remove,removeCustomPropAssignment,removeListener,removeScrollLock,resetMouseCanceller,resolveCss,resolveUrl,reuest,root,rootPath,rulesForStyle,sanitizeDOMValue,scopingAttribute,scroll,scrollTimingFunction,set,setAllowTemplateFromDomModule,setElementClassRaw,setPassiveTouchGestures,setRootPath,setSanitizeDOMValue,setStrictTemplatePolicy,setTouchAction,split,splitSelectorList,startValidating,startValidatingTemplate,strictTemplatePolicy,stringify,stylesFromModule,stylesFromModuleImports,stylesFromModules,stylesFromTemplate,templateIsValid,templateIsValidating,templatize,timeOut,toCssText,translate,types,updateNativeProperties,updateStyles,useNativeCSSProperties,useNativeCustomElements,useShadow,version,version as version$1,worker};
+            </article>
+
+            <article name="subcategory-pages">  
+                <slot name="sub-categories"></slot>  
+            </article> `}static get is(){return"cms-viewer-template"}static get properties(){return{lang:{type:String,notify:!0},page:{type:String,reflectToAttribute:!0,observer:"_pageChanged"},subcats:{type:String,reflectToAttribute:!0,observer:"_pageChanged"},active:{type:String,value:""},pages:{type:Array,notify:!0}}}ready(){super.ready()}}customElements.define(cmsViewerTemplate.is,cmsViewerTemplate);var cmsViewerTemplate$1={cmsViewerTemplate:cmsViewerTemplate};Polymer({is:"iron-location",properties:{/**
+     * The pathname component of the URL.
+     */path:{type:String,notify:!0,value:function(){return window.decodeURIComponent(window.location.pathname)}},/**
+     * The query string portion of the URL.
+     */query:{type:String,notify:!0,value:function(){return window.location.search.slice(1)}},/**
+     * The hash component of the URL.
+     */hash:{type:String,notify:!0,value:function(){return window.decodeURIComponent(window.location.hash.slice(1))}},/**
+     * If the user was on a URL for less than `dwellTime` milliseconds, it
+     * won't be added to the browser's history, but instead will be replaced
+     * by the next entry.
+     *
+     * This is to prevent large numbers of entries from clogging up the user's
+     * browser history. Disable by setting to a negative number.
+     */dwellTime:{type:Number,value:2e3},/**
+     * A regexp that defines the set of URLs that should be considered part
+     * of this web app.
+     *
+     * Clicking on a link that matches this regex won't result in a full page
+     * navigation, but will instead just update the URL state in place.
+     *
+     * This regexp is given everything after the origin in an absolute
+     * URL. So to match just URLs that start with /search/ do:
+     *     url-space-regex="^/search/"
+     *
+     * @type {string|RegExp}
+     */urlSpaceRegex:{type:String,value:""},/**
+     * A flag that specifies whether the spaces in query that would normally be
+     * encoded as %20 should be encoded as +.
+     *
+     * Given an example text "hello world", it is encoded in query as
+     * - "hello%20world" without the parameter
+     * - "hello+world" with the parameter
+     */encodeSpaceAsPlusInQuery:{type:Boolean,value:!1},/**
+     * urlSpaceRegex, but coerced into a regexp.
+     *
+     * @type {RegExp}
+     */_urlSpaceRegExp:{computed:"_makeRegExp(urlSpaceRegex)"},_lastChangedAt:{type:Number},_initialized:{type:Boolean,value:!1}},hostAttributes:{hidden:!0},observers:["_updateUrl(path, query, hash)"],created:function(){this.__location=window.location},attached:function(){this.listen(window,"hashchange","_hashChanged");this.listen(window,"location-changed","_urlChanged");this.listen(window,"popstate","_urlChanged");this.listen(/** @type {!HTMLBodyElement} */document.body,"click","_globalOnClick");// Give a 200ms grace period to make initial redirects without any
+// additions to the user's history.
+this._lastChangedAt=window.performance.now()-(this.dwellTime-200);this._initialized=!0;this._urlChanged()},detached:function(){this.unlisten(window,"hashchange","_hashChanged");this.unlisten(window,"location-changed","_urlChanged");this.unlisten(window,"popstate","_urlChanged");this.unlisten(/** @type {!HTMLBodyElement} */document.body,"click","_globalOnClick");this._initialized=!1},_hashChanged:function(){this.hash=window.decodeURIComponent(this.__location.hash.substring(1))},_urlChanged:function(){// We want to extract all info out of the updated URL before we
+// try to write anything back into it.
+//
+// i.e. without _dontUpdateUrl we'd overwrite the new path with the old
+// one when we set this.hash. Likewise for query.
+this._dontUpdateUrl=!0;this._hashChanged();this.path=window.decodeURIComponent(this.__location.pathname);this.query=this.__location.search.substring(1);this._dontUpdateUrl=!1;this._updateUrl()},_getUrl:function(){var partiallyEncodedPath=window.encodeURI(this.path).replace(/\#/g,"%23").replace(/\?/g,"%3F"),partiallyEncodedQuery="";if(this.query){partiallyEncodedQuery="?"+this.query.replace(/\#/g,"%23");if(this.encodeSpaceAsPlusInQuery){partiallyEncodedQuery=partiallyEncodedQuery.replace(/\+/g,"%2B").replace(/ /g,"+").replace(/%20/g,"+")}else{// required for edge
+partiallyEncodedQuery=partiallyEncodedQuery.replace(/\+/g,"%2B").replace(/ /g,"%20")}}var partiallyEncodedHash="";if(this.hash){partiallyEncodedHash="#"+window.encodeURI(this.hash)}return partiallyEncodedPath+partiallyEncodedQuery+partiallyEncodedHash},_updateUrl:function(){if(this._dontUpdateUrl||!this._initialized){return}if(this.path===window.decodeURIComponent(this.__location.pathname)&&this.query===this.__location.search.substring(1)&&this.hash===window.decodeURIComponent(this.__location.hash.substring(1))){// Nothing to do, the current URL is a representation of our properties.
+return}var newUrl=this._getUrl(),fullNewUrl=new URL(newUrl,this.__location.protocol+"//"+this.__location.host).href,now=window.performance.now(),shouldReplace=this._lastChangedAt+this.dwellTime>now;// Need to use a full URL in case the containing page has a base URI.
+this._lastChangedAt=now;if(shouldReplace){window.history.replaceState({},"",fullNewUrl)}else{window.history.pushState({},"",fullNewUrl)}this.fire("location-changed",{},{node:window})},/**
+   * A necessary evil so that links work as expected. Does its best to
+   * bail out early if possible.
+   *
+   * @param {MouseEvent} event .
+   */_globalOnClick:function(event){// If another event handler has stopped this event then there's nothing
+// for us to do. This can happen e.g. when there are multiple
+// iron-location elements in a page.
+if(event.defaultPrevented){return}var href=this._getSameOriginLinkHref(event);if(!href){return}event.preventDefault();// If the navigation is to the current page we shouldn't add a history
+// entry or fire a change event.
+if(href===this.__location.href){return}window.history.pushState({},"",href);this.fire("location-changed",{},{node:window})},/**
+   * Returns the absolute URL of the link (if any) that this click event
+   * is clicking on, if we can and should override the resulting full
+   * page navigation. Returns null otherwise.
+   *
+   * @param {MouseEvent} event .
+   * @return {string?} .
+   */_getSameOriginLinkHref:function(event){// We only care about left-clicks.
+if(0!==event.button){return null}// We don't want modified clicks, where the intent is to open the page
+// in a new tab.
+if(event.metaKey||event.ctrlKey){return null}for(var eventPath=dom(event).path,anchor=null,i=0,element;i<eventPath.length;i++){element=eventPath[i];if("A"===element.tagName&&element.href){anchor=element;break}}// If there's no link there's nothing to do.
+if(!anchor){return null}// Target blank is a new tab, don't intercept.
+if("_blank"===anchor.target){return null}// If the link is for an existing parent frame, don't intercept.
+if(("_top"===anchor.target||"_parent"===anchor.target)&&window.top!==window){return null}// If the link is a download, don't intercept.
+if(anchor.download){return null}var href=anchor.href,url;// It only makes sense for us to intercept same-origin navigations.
+// pushState/replaceState don't work with cross-origin links.
+if(null!=document.baseURI){url=new URL(href,/** @type {string} */document.baseURI)}else{url=new URL(href)}var origin;// IE Polyfill
+if(this.__location.origin){origin=this.__location.origin}else{origin=this.__location.protocol+"//"+this.__location.host}var urlOrigin;if(url.origin){urlOrigin=url.origin}else{// IE always adds port number on HTTP and HTTPS on <a>.host but not on
+// window.location.host
+var urlHost=url.host,urlPort=url.port,urlProtocol=url.protocol,isExtraneousHTTPS="https:"===urlProtocol&&"443"===urlPort,isExtraneousHTTP="http:"===urlProtocol&&"80"===urlPort;if(isExtraneousHTTPS||isExtraneousHTTP){urlHost=url.hostname}urlOrigin=urlProtocol+"//"+urlHost}if(urlOrigin!==origin){return null}var normalizedHref=url.pathname+url.search+url.hash;// pathname should start with '/', but may not if `new URL` is not supported
+if("/"!==normalizedHref[0]){normalizedHref="/"+normalizedHref}// If we've been configured not to handle this url... don't handle it!
+if(this._urlSpaceRegExp&&!this._urlSpaceRegExp.test(normalizedHref)){return null}// Need to use a full URL in case the containing page has a base URI.
+var fullNormalizedHref=new URL(normalizedHref,this.__location.href).href;return fullNormalizedHref},_makeRegExp:function(urlSpaceRegex){return RegExp(urlSpaceRegex)}});Polymer({is:"iron-query-params",properties:{/**
+     * @type{string|undefined}
+     */paramsString:{type:String,notify:!0,observer:"paramsStringChanged"},/**
+     * @type{Object|undefined}
+     */paramsObject:{type:Object,notify:!0},_dontReact:{type:Boolean,value:!1}},hostAttributes:{hidden:!0},observers:["paramsObjectChanged(paramsObject.*)"],paramsStringChanged:function(){this._dontReact=!0;this.paramsObject=this._decodeParams(this.paramsString);this._dontReact=!1},paramsObjectChanged:function(){if(this._dontReact){return}this.paramsString=this._encodeParams(this.paramsObject).replace(/%3F/g,"?").replace(/%2F/g,"/").replace(/'/g,"%27")},_encodeParams:function(params){var encodedParams=[];for(var key in params){var value=params[key];if(""===value){encodedParams.push(encodeURIComponent(key))}else if(value){encodedParams.push(encodeURIComponent(key)+"="+encodeURIComponent(value.toString()))}}return encodedParams.join("&")},_decodeParams:function(paramString){var params={};// Work around a bug in decodeURIComponent where + is not
+// converted to spaces:
+paramString=(paramString||"").replace(/\+/g,"%20");for(var paramList=paramString.split("&"),i=0,param;i<paramList.length;i++){param=paramList[i].split("=");if(param[0]){params[decodeURIComponent(param[0])]=decodeURIComponent(param[1]||"")}}return params}});const AppRouteConverterBehavior={properties:{/**
+     * A model representing the deserialized path through the route tree, as
+     * well as the current queryParams.
+     *
+     * A route object is the kernel of the routing system. It is intended to
+     * be fed into consuming elements such as `app-route`.
+     *
+     * @type {?Object|undefined}
+     */route:{type:Object,notify:!0},/**
+     * A set of key/value pairs that are universally accessible to branches of
+     * the route tree.
+     *
+     * @type {?Object}
+     */queryParams:{type:Object,notify:!0},/**
+     * The serialized path through the route tree. This corresponds to the
+     * `window.location.pathname` value, and will update to reflect changes
+     * to that value.
+     */path:{type:String,notify:!0}},observers:["_locationChanged(path, queryParams)","_routeChanged(route.prefix, route.path)","_routeQueryParamsChanged(route.__queryParams)"],created:function(){this.linkPaths("route.__queryParams","queryParams");this.linkPaths("queryParams","route.__queryParams")},/**
+   * Handler called when the path or queryParams change.
+   */_locationChanged:function(){if(this.route&&this.route.path===this.path&&this.queryParams===this.route.__queryParams){return}this.route={prefix:"",path:this.path,__queryParams:this.queryParams}},/**
+   * Handler called when the route prefix and route path change.
+   */_routeChanged:function(){if(!this.route){return}this.path=this.route.prefix+this.route.path},/**
+   * Handler called when the route queryParams change.
+   *
+   * @param  {Object} queryParams A set of key/value pairs that are
+   * universally accessible to branches of the route tree.
+   */_routeQueryParamsChanged:function(queryParams){if(!this.route){return}this.queryParams=queryParams}};var appRouteConverterBehavior={AppRouteConverterBehavior:AppRouteConverterBehavior};Polymer({_template:html`
+    <iron-query-params params-string="{{__query}}" params-object="{{queryParams}}">
+    </iron-query-params>
+    <iron-location path="{{__path}}" query="{{__query}}" hash="{{__hash}}" url-space-regex="[[urlSpaceRegex]]" dwell-time="[[dwellTime]]">
+    </iron-location>
+  `,is:"app-location",properties:{/**
+     * A model representing the deserialized path through the route tree, as
+     * well as the current queryParams.
+     */route:{type:Object,notify:!0},/**
+     * In many scenarios, it is convenient to treat the `hash` as a stand-in
+     * alternative to the `path`. For example, if deploying an app to a static
+     * web server (e.g., Github Pages) - where one does not have control over
+     * server-side routing - it is usually a better experience to use the hash
+     * to represent paths through one's app.
+     *
+     * When this property is set to true, the `hash` will be used in place of
+      * the `path` for generating a `route`.
+     */useHashAsPath:{type:Boolean,value:!1},/**
+     * A regexp that defines the set of URLs that should be considered part
+     * of this web app.
+     *
+     * Clicking on a link that matches this regex won't result in a full page
+     * navigation, but will instead just update the URL state in place.
+     *
+     * This regexp is given everything after the origin in an absolute
+     * URL. So to match just URLs that start with /search/ do:
+     *     url-space-regex="^/search/"
+     *
+     * @type {string|RegExp}
+     */urlSpaceRegex:{type:String,notify:!0},/**
+     * A set of key/value pairs that are universally accessible to branches
+     * of the route tree.
+     */__queryParams:{type:Object},/**
+     * The pathname component of the current URL.
+     */__path:{type:String},/**
+     * The query string portion of the current URL.
+     */__query:{type:String},/**
+     * The hash portion of the current URL.
+     */__hash:{type:String},/**
+     * The route path, which will be either the hash or the path, depending
+     * on useHashAsPath.
+     */path:{type:String,observer:"__onPathChanged"},/**
+     * Whether or not the ready function has been called.
+     */_isReady:{type:Boolean},/**
+     * If the user was on a URL for less than `dwellTime` milliseconds, it
+     * won't be added to the browser's history, but instead will be
+     * replaced by the next entry.
+     *
+     * This is to prevent large numbers of entries from clogging up the
+     * user's browser history. Disable by setting to a negative number.
+     *
+     * See `iron-location` for more information.
+     */dwellTime:{type:Number}},behaviors:[AppRouteConverterBehavior],observers:["__computeRoutePath(useHashAsPath, __hash, __path)"],ready:function(){this._isReady=!0},__computeRoutePath:function(){this.path=this.useHashAsPath?this.__hash:this.__path},__onPathChanged:function(){if(!this._isReady){return}if(this.useHashAsPath){this.__hash=this.path}else{this.__path=this.path}}});Polymer({is:"app-route",properties:{/**
+     * The URL component managed by this element.
+     */route:{type:Object,notify:!0},/**
+     * The pattern of slash-separated segments to match `route.path` against.
+     *
+     * For example the pattern "/foo" will match "/foo" or "/foo/bar"
+     * but not "/foobar".
+     *
+     * Path segments like `/:named` are mapped to properties on the `data`
+     * object.
+     */pattern:{type:String},/**
+     * The parameterized values that are extracted from the route as
+     * described by `pattern`.
+     */data:{type:Object,value:function(){return{}},notify:!0},/**
+     * Auto activate route if path empty
+     */autoActivate:{type:Boolean,value:!1},_queryParamsUpdating:{type:Boolean,value:!1},/**
+     * @type {?Object}
+     */queryParams:{type:Object,value:function(){return{}},notify:!0},/**
+     * The part of `route.path` NOT consumed by `pattern`.
+     */tail:{type:Object,value:function(){return{path:null,prefix:null,__queryParams:null}},notify:!0},/**
+     * Whether the current route is active. True if `route.path` matches the
+     * `pattern`, false otherwise.
+     */active:{type:Boolean,notify:!0,readOnly:!0},/**
+     * @type {?string}
+     */_matched:{type:String,value:""}},observers:["__tryToMatch(route.path, pattern)","__updatePathOnDataChange(data.*)","__tailPathChanged(tail.path)","__routeQueryParamsChanged(route.__queryParams)","__tailQueryParamsChanged(tail.__queryParams)","__queryParamsChanged(queryParams.*)"],created:function(){this.linkPaths("route.__queryParams","tail.__queryParams");this.linkPaths("tail.__queryParams","route.__queryParams")},/**
+   * Deal with the query params object being assigned to wholesale.
+   */__routeQueryParamsChanged:function(queryParams){if(queryParams&&this.tail){if(this.tail.__queryParams!==queryParams){this.set("tail.__queryParams",queryParams)}if(!this.active||this._queryParamsUpdating){return}// Copy queryParams and track whether there are any differences compared
+// to the existing query params.
+var copyOfQueryParams={},anythingChanged=!1;for(var key in queryParams){copyOfQueryParams[key]=queryParams[key];if(anythingChanged||!this.queryParams||queryParams[key]!==this.queryParams[key]){anythingChanged=!0}}// Need to check whether any keys were deleted
+for(var key in this.queryParams){if(anythingChanged||!(key in queryParams)){anythingChanged=!0;break}}if(!anythingChanged){return}this._queryParamsUpdating=!0;this.set("queryParams",copyOfQueryParams);this._queryParamsUpdating=!1}},__tailQueryParamsChanged:function(queryParams){if(queryParams&&this.route&&this.route.__queryParams!=queryParams){this.set("route.__queryParams",queryParams)}},__queryParamsChanged:function(changes){if(!this.active||this._queryParamsUpdating){return}this.set("route.__"+changes.path,changes.value)},__resetProperties:function(){this._setActive(!1);this._matched=null},__tryToMatch:function(){if(!this.route){return}var path=this.route.path,pattern=this.pattern;if(this.autoActivate&&""===path){path="/"}if(!pattern){return}if(!path){this.__resetProperties();return}for(var remainingPieces=path.split("/"),patternPieces=pattern.split("/"),matched=[],namedMatches={},i=0,patternPiece;i<patternPieces.length;i++){patternPiece=patternPieces[i];if(!patternPiece&&""!==patternPiece){break}var pathPiece=remainingPieces.shift();// We don't match this path.
+if(!pathPiece&&""!==pathPiece){this.__resetProperties();return}matched.push(pathPiece);if(":"==patternPiece.charAt(0)){namedMatches[patternPiece.slice(1)]=pathPiece}else if(patternPiece!==pathPiece){this.__resetProperties();return}}this._matched=matched.join("/");// Properties that must be updated atomically.
+var propertyUpdates={};// this.active
+if(!this.active){propertyUpdates.active=!0}// this.tail
+var tailPrefix=this.route.prefix+this._matched,tailPath=remainingPieces.join("/");if(0<remainingPieces.length){tailPath="/"+tailPath}if(!this.tail||this.tail.prefix!==tailPrefix||this.tail.path!==tailPath){propertyUpdates.tail={prefix:tailPrefix,path:tailPath,__queryParams:this.route.__queryParams}}// this.data
+propertyUpdates.data=namedMatches;this._dataInUrl={};for(var key in namedMatches){this._dataInUrl[key]=namedMatches[key]}if(this.setProperties){// atomic update
+this.setProperties(propertyUpdates,!0)}else{this.__setMulti(propertyUpdates)}},__tailPathChanged:function(path){if(!this.active){return}var tailPath=path,newPath=this._matched;if(tailPath){if("/"!==tailPath.charAt(0)){tailPath="/"+tailPath}newPath+=tailPath}this.set("route.path",newPath)},__updatePathOnDataChange:function(){if(!this.route||!this.active){return}var newPath=this.__getLink({}),oldPath=this.__getLink(this._dataInUrl);if(newPath===oldPath){return}this.set("route.path",newPath)},__getLink:function(overrideValues){var values={tail:null};for(var key in this.data){values[key]=this.data[key]}for(var key in overrideValues){values[key]=overrideValues[key]}var patternPieces=this.pattern.split("/"),interp=patternPieces.map(function(value){if(":"==value[0]){value=values[value.slice(1)]}return value},this);if(values.tail&&values.tail.path){if(0<interp.length&&"/"===values.tail.path.charAt(0)){interp.push(values.tail.path.slice(1))}else{interp.push(values.tail.path)}}return interp.join("/")},__setMulti:function(setObj){// HACK(rictic): skirting around 1.0's lack of a setMulti by poking at
+//     internal data structures. I would not advise that you copy this
+//     example.
+//
+//     In the future this will be a feature of Polymer itself.
+//     See: https://github.com/Polymer/polymer/issues/3640
+//
+//     Hacking around with private methods like this is juggling footguns,
+//     and is likely to have unexpected and unsupported rough edges.
+//
+//     Be ye so warned.
+for(var property in setObj){this._propertySetter(property,setObj[property])}// notify in a specific order
+if(setObj.data!==void 0){this._pathEffector("data",this.data);this._notifyChange("data")}if(setObj.active!==void 0){this._pathEffector("active",this.active);this._notifyChange("active")}if(setObj.tail!==void 0){this._pathEffector("tail",this.tail);this._notifyChange("tail")}}});/**
+     * @license
+     * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+     * This code may only be used under the BSD style license found at
+     * http://polymer.github.io/LICENSE.txt
+     * The complete set of authors may be found at
+     * http://polymer.github.io/AUTHORS.txt
+     * The complete set of contributors may be found at
+     * http://polymer.github.io/CONTRIBUTORS.txt
+     * Code distributed by Google as part of the polymer project is also
+     * subject to an additional IP rights grant found at
+     * http://polymer.github.io/PATENTS.txt
+     */const directives=new WeakMap,directive=f=>(...args)=>{const d=f(...args);directives.set(d,!0);return d},isDirective=o=>{return"function"===typeof o&&directives.has(o)};/**
+                                   * Brands a function as a directive factory function so that lit-html will call
+                                   * the function during template rendering, rather than passing as a value.
+                                   *
+                                   * A _directive_ is a function that takes a Part as an argument. It has the
+                                   * signature: `(part: Part) => void`.
+                                   *
+                                   * A directive _factory_ is a function that takes arguments for data and
+                                   * configuration and returns a directive. Users of directive usually refer to
+                                   * the directive factory as the directive. For example, "The repeat directive".
+                                   *
+                                   * Usually a template author will invoke a directive factory in their template
+                                   * with relevant arguments, which will then return a directive function.
+                                   *
+                                   * Here's an example of using the `repeat()` directive factory that takes an
+                                   * array and a function to render an item:
+                                   *
+                                   * ```js
+                                   * html`<ul><${repeat(items, (item) => html`<li>${item}</li>`)}</ul>`
+                                   * ```
+                                   *
+                                   * When `repeat` is invoked, it returns a directive function that closes over
+                                   * `items` and the template function. When the outer template is rendered, the
+                                   * return directive function is called with the Part for the expression.
+                                   * `repeat` then performs it's custom logic to render multiple items.
+                                   *
+                                   * @param f The directive factory function. Must be a function that returns a
+                                   * function of the signature `(part: Part) => void`. The returned function will
+                                   * be called with the part object.
+                                   *
+                                   * @example
+                                   *
+                                   * import {directive, html} from 'lit-html';
+                                   *
+                                   * const immutable = directive((v) => (part) => {
+                                   *   if (part.value !== v) {
+                                   *     part.setValue(v)
+                                   *   }
+                                   * });
+                                   */var directive$1={directive:directive,isDirective:isDirective};/**
+    * @license
+    * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+    * This code may only be used under the BSD style license found at
+    * http://polymer.github.io/LICENSE.txt
+    * The complete set of authors may be found at
+    * http://polymer.github.io/AUTHORS.txt
+    * The complete set of contributors may be found at
+    * http://polymer.github.io/CONTRIBUTORS.txt
+    * Code distributed by Google as part of the polymer project is also
+    * subject to an additional IP rights grant found at
+    * http://polymer.github.io/PATENTS.txt
+    */ /**
+        * True if the custom elements polyfill is in use.
+        */const isCEPolyfill=window.customElements!==void 0&&window.customElements.polyfillWrapFlushCallback!==void 0,reparentNodes=(container,start,end=null,before=null)=>{while(start!==end){const n=start.nextSibling;container.insertBefore(start,before);start=n}},removeNodes=(container,start,end=null)=>{while(start!==end){const n=start.nextSibling;container.removeChild(start);start=n}};/**
+                                                                                                                                   * Reparents nodes, starting from `start` (inclusive) to `end` (exclusive),
+                                                                                                                                   * into another container (could be the same container), before `before`. If
+                                                                                                                                   * `before` is null, it appends the nodes to the container.
+                                                                                                                                   */var dom$1={isCEPolyfill:isCEPolyfill,reparentNodes:reparentNodes,removeNodes:removeNodes};/**
+    * @license
+    * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+    * This code may only be used under the BSD style license found at
+    * http://polymer.github.io/LICENSE.txt
+    * The complete set of authors may be found at
+    * http://polymer.github.io/AUTHORS.txt
+    * The complete set of contributors may be found at
+    * http://polymer.github.io/CONTRIBUTORS.txt
+    * Code distributed by Google as part of the polymer project is also
+    * subject to an additional IP rights grant found at
+    * http://polymer.github.io/PATENTS.txt
+    */ /**
+        * A sentinel value that signals that a value was handled by a directive and
+        * should not be written to the DOM.
+        */const noChange={},nothing={};/**
+                             * A sentinel value that signals a NodePart to fully clear its content.
+                             */var part={noChange:noChange,nothing:nothing};/**
+    * @license
+    * Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
+    * This code may only be used under the BSD style license found at
+    * http://polymer.github.io/LICENSE.txt
+    * The complete set of authors may be found at
+    * http://polymer.github.io/AUTHORS.txt
+    * The complete set of contributors may be found at
+    * http://polymer.github.io/CONTRIBUTORS.txt
+    * Code distributed by Google as part of the polymer project is also
+    * subject to an additional IP rights grant found at
+    * http://polymer.github.io/PATENTS.txt
+    */ /**
+        * An expression marker with embedded unique key to avoid collision with
+        * possible text in templates.
+        */const marker=`{{lit-${(Math.random()+"").slice(2)}}}`,nodeMarker=`<!--${marker}-->`,markerRegex=new RegExp(`${marker}|${nodeMarker}`),boundAttributeSuffix="$lit$";/**
+                                                                    * An expression marker used text-positions, multi-binding attributes, and
+                                                                    * attributes with markup-like text values.
+                                                                    */ /**
+                                              * An updateable Template that tracks the location of dynamic parts.
+                                              */class Template{constructor(result,element){this.parts=[];this.element=element;const nodesToRemove=[],stack=[],walker=document.createTreeWalker(element.content,133/* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */,null,!1);// Keeps track of the last index associated with a part. We try to delete
+// unnecessary nodes, but we never want to associate two different parts
+// to the same index. They must have a constant node between.
+let lastPartIndex=0,index=-1,partIndex=0;const{strings,values:{length}}=result;while(partIndex<length){const node=walker.nextNode();if(null===node){// We've exhausted the content inside a nested template element.
+// Because we still have parts (the outer for-loop), we know:
+// - There is a template in the stack
+// - The walker will find a nextNode outside the template
+walker.currentNode=stack.pop();continue}index++;if(1===node.nodeType/* Node.ELEMENT_NODE */){if(node.hasAttributes()){const attributes=node.attributes,{length}=attributes;// Per
+// https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap,
+// attributes are not guaranteed to be returned in document order.
+// In particular, Edge/IE can return them out of order, so we cannot
+// assume a correspondence between part index and attribute index.
+let count=0;for(let i=0;i<length;i++){if(endsWith(attributes[i].name,boundAttributeSuffix)){count++}}while(0<count--){// Get the template literal section leading up to the first
+// expression in this attribute
+const stringForPart=strings[partIndex],name=lastAttributeNameRegex.exec(stringForPart)[2],attributeLookupName=name.toLowerCase()+boundAttributeSuffix,attributeValue=node.getAttribute(attributeLookupName);// Find the attribute name
+node.removeAttribute(attributeLookupName);const statics=attributeValue.split(markerRegex);this.parts.push({type:"attribute",index,name,strings:statics});partIndex+=statics.length-1}}if("TEMPLATE"===node.tagName){stack.push(node);walker.currentNode=node.content}}else if(3===node.nodeType/* Node.TEXT_NODE */){const data=node.data;if(0<=data.indexOf(marker)){const parent=node.parentNode,strings=data.split(markerRegex),lastIndex=strings.length-1;// Generate a new text node for each literal section
+// These nodes are also used as the markers for node parts
+for(let i=0;i<lastIndex;i++){let insert,s=strings[i];if(""===s){insert=createMarker()}else{const match=lastAttributeNameRegex.exec(s);if(null!==match&&endsWith(match[2],boundAttributeSuffix)){s=s.slice(0,match.index)+match[1]+match[2].slice(0,-boundAttributeSuffix.length)+match[3]}insert=document.createTextNode(s)}parent.insertBefore(insert,node);this.parts.push({type:"node",index:++index})}// If there's no text, we must insert a comment to mark our place.
+// Else, we can trust it will stick around after cloning.
+if(""===strings[lastIndex]){parent.insertBefore(createMarker(),node);nodesToRemove.push(node)}else{node.data=strings[lastIndex]}// We have a part for each match found
+partIndex+=lastIndex}}else if(8===node.nodeType/* Node.COMMENT_NODE */){if(node.data===marker){const parent=node.parentNode;// Add a new marker node to be the startNode of the Part if any of
+// the following are true:
+//  * We don't have a previousSibling
+//  * The previousSibling is already the start of a previous part
+if(null===node.previousSibling||index===lastPartIndex){index++;parent.insertBefore(createMarker(),node)}lastPartIndex=index;this.parts.push({type:"node",index});// If we don't have a nextSibling, keep this node so we have an end.
+// Else, we can remove it to save future costs.
+if(null===node.nextSibling){node.data=""}else{nodesToRemove.push(node);index--}partIndex++}else{let i=-1;while(-1!==(i=node.data.indexOf(marker,i+1))){// Comment node has a binding marker inside, make an inactive part
+// The binding won't work, but subsequent bindings will
+// TODO (justinfagnani): consider whether it's even worth it to
+// make bindings in comments work
+this.parts.push({type:"node",index:-1});partIndex++}}}}// Remove text binding nodes after the walk to not disturb the TreeWalker
+for(const n of nodesToRemove){n.parentNode.removeChild(n)}}}const endsWith=(str,suffix)=>{const index=str.length-suffix.length;return 0<=index&&str.slice(index)===suffix},isTemplatePartActive=part=>-1!==part.index,createMarker=()=>document.createComment(""),lastAttributeNameRegex=/([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;var template$c={marker:marker,nodeMarker:nodeMarker,markerRegex:markerRegex,boundAttributeSuffix:boundAttributeSuffix,Template:Template,isTemplatePartActive:isTemplatePartActive,createMarker:createMarker,lastAttributeNameRegex:lastAttributeNameRegex};class TemplateInstance{constructor(template,processor,options){this.__parts=[];this.template=template;this.processor=processor;this.options=options}update(values){let i=0;for(const part of this.__parts){if(part!==void 0){part.setValue(values[i])}i++}for(const part of this.__parts){if(part!==void 0){part.commit()}}}_clone(){// There are a number of steps in the lifecycle of a template instance's
+// DOM fragment:
+//  1. Clone - create the instance fragment
+//  2. Adopt - adopt into the main document
+//  3. Process - find part markers and create parts
+//  4. Upgrade - upgrade custom elements
+//  5. Update - set node, attribute, property, etc., values
+//  6. Connect - connect to the document. Optional and outside of this
+//     method.
+//
+// We have a few constraints on the ordering of these steps:
+//  * We need to upgrade before updating, so that property values will pass
+//    through any property setters.
+//  * We would like to process before upgrading so that we're sure that the
+//    cloned fragment is inert and not disturbed by self-modifying DOM.
+//  * We want custom elements to upgrade even in disconnected fragments.
+//
+// Given these constraints, with full custom elements support we would
+// prefer the order: Clone, Process, Adopt, Upgrade, Update, Connect
+//
+// But Safari dooes not implement CustomElementRegistry#upgrade, so we
+// can not implement that order and still have upgrade-before-update and
+// upgrade disconnected fragments. So we instead sacrifice the
+// process-before-upgrade constraint, since in Custom Elements v1 elements
+// must not modify their light DOM in the constructor. We still have issues
+// when co-existing with CEv0 elements like Polymer 1, and with polyfills
+// that don't strictly adhere to the no-modification rule because shadow
+// DOM, which may be created in the constructor, is emulated by being placed
+// in the light DOM.
+//
+// The resulting order is on native is: Clone, Adopt, Upgrade, Process,
+// Update, Connect. document.importNode() performs Clone, Adopt, and Upgrade
+// in one step.
+//
+// The Custom Elements v1 polyfill supports upgrade(), so the order when
+// polyfilled is the more ideal: Clone, Process, Adopt, Upgrade, Update,
+// Connect.
+const fragment=isCEPolyfill?this.template.element.content.cloneNode(!0):document.importNode(this.template.element.content,!0),stack=[],parts=this.template.parts,walker=document.createTreeWalker(fragment,133/* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */,null,!1);let partIndex=0,nodeIndex=0,part,node=walker.nextNode();// Loop through all the nodes and parts of a template
+while(partIndex<parts.length){part=parts[partIndex];if(!isTemplatePartActive(part)){this.__parts.push(void 0);partIndex++;continue}// Progress the tree walker until we find our next part's node.
+// Note that multiple parts may share the same node (attribute parts
+// on a single element), so this loop may not run at all.
+while(nodeIndex<part.index){nodeIndex++;if("TEMPLATE"===node.nodeName){stack.push(node);walker.currentNode=node.content}if(null===(node=walker.nextNode())){// We've exhausted the content inside a nested template element.
+// Because we still have parts (the outer for-loop), we know:
+// - There is a template in the stack
+// - The walker will find a nextNode outside the template
+walker.currentNode=stack.pop();node=walker.nextNode()}}// We've arrived at our part's node.
+if("node"===part.type){const part=this.processor.handleTextExpression(this.options);part.insertAfterNode(node.previousSibling);this.__parts.push(part)}else{this.__parts.push(...this.processor.handleAttributeExpressions(node,part.name,part.strings,this.options))}partIndex++}if(isCEPolyfill){document.adoptNode(fragment);customElements.upgrade(fragment)}return fragment}}var templateInstance={TemplateInstance:TemplateInstance};const commentMarker=` ${marker} `;/**
+                                      * The return type of `html`, which holds a Template and the values from
+                                      * interpolated expressions.
+                                      */class TemplateResult{constructor(strings,values,type,processor){this.strings=strings;this.values=values;this.type=type;this.processor=processor}/**
+     * Returns a string of HTML used to create a `<template>` element.
+     */getHTML(){const l=this.strings.length-1;let html="",isCommentBinding=!1;for(let i=0;i<l;i++){const s=this.strings[i],commentOpen=s.lastIndexOf("<!--");// For each binding we want to determine the kind of marker to insert
+// into the template source before it's parsed by the browser's HTML
+// parser. The marker type is based on whether the expression is in an
+// attribute, text, or comment poisition.
+//   * For node-position bindings we insert a comment with the marker
+//     sentinel as its text content, like <!--{{lit-guid}}-->.
+//   * For attribute bindings we insert just the marker sentinel for the
+//     first binding, so that we support unquoted attribute bindings.
+//     Subsequent bindings can use a comment marker because multi-binding
+//     attributes must be quoted.
+//   * For comment bindings we insert just the marker sentinel so we don't
+//     close the comment.
+//
+// The following code scans the template source, but is *not* an HTML
+// parser. We don't need to track the tree structure of the HTML, only
+// whether a binding is inside a comment, and if not, if it appears to be
+// the first binding in an attribute.
+// We're in comment position if we have a comment open with no following
+// comment close. Because <-- can appear in an attribute value there can
+// be false positives.
+isCommentBinding=(-1<commentOpen||isCommentBinding)&&-1===s.indexOf("-->",commentOpen+1);// Check to see if we have an attribute-like sequence preceeding the
+// expression. This can match "name=value" like structures in text,
+// comments, and attribute values, so there can be false-positives.
+const attributeMatch=lastAttributeNameRegex.exec(s);if(null===attributeMatch){// We're only in this branch if we don't have a attribute-like
+// preceeding sequence. For comments, this guards against unusual
+// attribute values like <div foo="<!--${'bar'}">. Cases like
+// <!-- foo=${'bar'}--> are handled correctly in the attribute branch
+// below.
+html+=s+(isCommentBinding?commentMarker:nodeMarker)}else{// For attributes we use just a marker sentinel, and also append a
+// $lit$ suffix to the name to opt-out of attribute-specific parsing
+// that IE and Edge do for style and certain SVG attributes.
+html+=s.substr(0,attributeMatch.index)+attributeMatch[1]+attributeMatch[2]+boundAttributeSuffix+attributeMatch[3]+marker}}html+=this.strings[l];return html}getTemplateElement(){const template=document.createElement("template");template.innerHTML=this.getHTML();return template}}/**
+   * A TemplateResult for SVG fragments.
+   *
+   * This class wraps HTML in an `<svg>` tag in order to parse its contents in the
+   * SVG namespace, then modifies the template to remove the `<svg>` tag so that
+   * clones only container the original fragment.
+   */class SVGTemplateResult extends TemplateResult{getHTML(){return`<svg>${super.getHTML()}</svg>`}getTemplateElement(){const template=super.getTemplateElement(),content=template.content,svgElement=content.firstChild;content.removeChild(svgElement);reparentNodes(content,svgElement.firstChild);return template}}var templateResult={TemplateResult:TemplateResult,SVGTemplateResult:SVGTemplateResult};const isPrimitive=value=>{return null===value||!("object"===typeof value||"function"===typeof value)},isIterable=value=>{return Array.isArray(value)||// tslint:disable-next-line:no-any
+!!(value&&value[Symbol.iterator])};/**
+    * Writes attribute values to the DOM for a group of AttributeParts bound to a
+    * single attibute. The value is only set once even if there are multiple parts
+    * for an attribute.
+    */class AttributeCommitter{constructor(element,name,strings){this.dirty=!0;this.element=element;this.name=name;this.strings=strings;this.parts=[];for(let i=0;i<strings.length-1;i++){this.parts[i]=this._createPart()}}/**
+     * Creates a single part. Override this to create a differnt type of part.
+     */_createPart(){return new AttributePart(this)}_getValue(){const strings=this.strings,l=strings.length-1;let text="";for(let i=0;i<l;i++){text+=strings[i];const part=this.parts[i];if(part!==void 0){const v=part.value;if(isPrimitive(v)||!isIterable(v)){text+="string"===typeof v?v:v+""}else{for(const t of v){text+="string"===typeof t?t:t+""}}}}text+=strings[l];return text}commit(){if(this.dirty){this.dirty=!1;this.element.setAttribute(this.name,this._getValue())}}}/**
+   * A Part that controls all or part of an attribute value.
+   */class AttributePart{constructor(committer){this.value=void 0;this.committer=committer}setValue(value){if(value!==noChange&&(!isPrimitive(value)||value!==this.value)){this.value=value;// If the value is a not a directive, dirty the committer so that it'll
+// call setAttribute. If the value is a directive, it'll dirty the
+// committer if it calls setValue().
+if(!isDirective(value)){this.committer.dirty=!0}}}commit(){while(isDirective(this.value)){const directive=this.value;this.value=noChange;directive(this)}if(this.value===noChange){return}this.committer.commit()}}/**
+   * A Part that controls a location within a Node tree. Like a Range, NodePart
+   * has start and end locations and can set and update the Nodes between those
+   * locations.
+   *
+   * NodeParts support several value types: primitives, Nodes, TemplateResults,
+   * as well as arrays and iterables of those types.
+   */class NodePart{constructor(options){this.value=void 0;this.__pendingValue=void 0;this.options=options}/**
+     * Appends this part into a container.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */appendInto(container){this.startNode=container.appendChild(createMarker());this.endNode=container.appendChild(createMarker())}/**
+     * Inserts this part after the `ref` node (between `ref` and `ref`'s next
+     * sibling). Both `ref` and its next sibling must be static, unchanging nodes
+     * such as those that appear in a literal section of a template.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */insertAfterNode(ref){this.startNode=ref;this.endNode=ref.nextSibling}/**
+     * Appends this part into a parent part.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */appendIntoPart(part){part.__insert(this.startNode=createMarker());part.__insert(this.endNode=createMarker())}/**
+     * Inserts this part after the `ref` part.
+     *
+     * This part must be empty, as its contents are not automatically moved.
+     */insertAfterPart(ref){ref.__insert(this.startNode=createMarker());this.endNode=ref.endNode;ref.endNode=this.startNode}setValue(value){this.__pendingValue=value}commit(){while(isDirective(this.__pendingValue)){const directive=this.__pendingValue;this.__pendingValue=noChange;directive(this)}const value=this.__pendingValue;if(value===noChange){return}if(isPrimitive(value)){if(value!==this.value){this.__commitText(value)}}else if(value instanceof TemplateResult){this.__commitTemplateResult(value)}else if(value instanceof Node){this.__commitNode(value)}else if(isIterable(value)){this.__commitIterable(value)}else if(value===nothing){this.value=nothing;this.clear()}else{// Fallback, will render the string representation
+this.__commitText(value)}}__insert(node){this.endNode.parentNode.insertBefore(node,this.endNode)}__commitNode(value){if(this.value===value){return}this.clear();this.__insert(value);this.value=value}__commitText(value){const node=this.startNode.nextSibling;value=null==value?"":value;// If `value` isn't already a string, we explicitly convert it here in case
+// it can't be implicitly converted - i.e. it's a symbol.
+const valueAsString="string"===typeof value?value:value+"";if(node===this.endNode.previousSibling&&3===node.nodeType/* Node.TEXT_NODE */){// If we only have a single text node between the markers, we can just
+// set its value, rather than replacing it.
+// TODO(justinfagnani): Can we just check if this.value is primitive?
+node.data=valueAsString}else{this.__commitNode(document.createTextNode(valueAsString))}this.value=value}__commitTemplateResult(value){const template=this.options.templateFactory(value);if(this.value instanceof TemplateInstance&&this.value.template===template){this.value.update(value.values)}else{// Make sure we propagate the template processor from the TemplateResult
+// so that we use its syntax extension, etc. The template factory comes
+// from the render function options so that it can control template
+// caching and preprocessing.
+const instance=new TemplateInstance(template,value.processor,this.options),fragment=instance._clone();instance.update(value.values);this.__commitNode(fragment);this.value=instance}}__commitIterable(value){// For an Iterable, we create a new InstancePart per item, then set its
+// value to the item. This is a little bit of overhead for every item in
+// an Iterable, but it lets us recurse easily and efficiently update Arrays
+// of TemplateResults that will be commonly returned from expressions like:
+// array.map((i) => html`${i}`), by reusing existing TemplateInstances.
+// If _value is an array, then the previous render was of an
+// iterable and _value will contain the NodeParts from the previous
+// render. If _value is not an array, clear this part and make a new
+// array for NodeParts.
+if(!Array.isArray(this.value)){this.value=[];this.clear()}// Lets us keep track of how many items we stamped so we can clear leftover
+// items from a previous render
+const itemParts=this.value;let partIndex=0,itemPart;for(const item of value){// Try to reuse an existing part
+itemPart=itemParts[partIndex];// If no existing part, create a new one
+if(itemPart===void 0){itemPart=new NodePart(this.options);itemParts.push(itemPart);if(0===partIndex){itemPart.appendIntoPart(this)}else{itemPart.insertAfterPart(itemParts[partIndex-1])}}itemPart.setValue(item);itemPart.commit();partIndex++}if(partIndex<itemParts.length){// Truncate the parts array so _value reflects the current state
+itemParts.length=partIndex;this.clear(itemPart&&itemPart.endNode)}}clear(startNode=this.startNode){removeNodes(this.startNode.parentNode,startNode.nextSibling,this.endNode)}}/**
+   * Implements a boolean attribute, roughly as defined in the HTML
+   * specification.
+   *
+   * If the value is truthy, then the attribute is present with a value of
+   * ''. If the value is falsey, the attribute is removed.
+   */class BooleanAttributePart{constructor(element,name,strings){this.value=void 0;this.__pendingValue=void 0;if(2!==strings.length||""!==strings[0]||""!==strings[1]){throw new Error("Boolean attributes can only contain a single expression")}this.element=element;this.name=name;this.strings=strings}setValue(value){this.__pendingValue=value}commit(){while(isDirective(this.__pendingValue)){const directive=this.__pendingValue;this.__pendingValue=noChange;directive(this)}if(this.__pendingValue===noChange){return}const value=!!this.__pendingValue;if(this.value!==value){if(value){this.element.setAttribute(this.name,"")}else{this.element.removeAttribute(this.name)}this.value=value}this.__pendingValue=noChange}}/**
+   * Sets attribute values for PropertyParts, so that the value is only set once
+   * even if there are multiple parts for a property.
+   *
+   * If an expression controls the whole property value, then the value is simply
+   * assigned to the property under control. If there are string literals or
+   * multiple expressions, then the strings are expressions are interpolated into
+   * a string first.
+   */class PropertyCommitter extends AttributeCommitter{constructor(element,name,strings){super(element,name,strings);this.single=2===strings.length&&""===strings[0]&&""===strings[1]}_createPart(){return new PropertyPart(this)}_getValue(){if(this.single){return this.parts[0].value}return super._getValue()}commit(){if(this.dirty){this.dirty=!1;// tslint:disable-next-line:no-any
+this.element[this.name]=this._getValue()}}}class PropertyPart extends AttributePart{}// Detect event listener options support. If the `capture` property is read
+// from the options object, then options are supported. If not, then the thrid
+// argument to add/removeEventListener is interpreted as the boolean capture
+// value so we should only pass the `capture` property.
+let eventOptionsSupported=!1;try{const options={get capture(){eventOptionsSupported=!0;return!1}};// tslint:disable-next-line:no-any
+window.addEventListener("test",options,options);// tslint:disable-next-line:no-any
+window.removeEventListener("test",options,options)}catch(_e){}class EventPart{constructor(element,eventName,eventContext){this.value=void 0;this.__pendingValue=void 0;this.element=element;this.eventName=eventName;this.eventContext=eventContext;this.__boundHandleEvent=e=>this.handleEvent(e)}setValue(value){this.__pendingValue=value}commit(){while(isDirective(this.__pendingValue)){const directive=this.__pendingValue;this.__pendingValue=noChange;directive(this)}if(this.__pendingValue===noChange){return}const newListener=this.__pendingValue,oldListener=this.value,shouldRemoveListener=null==newListener||null!=oldListener&&(newListener.capture!==oldListener.capture||newListener.once!==oldListener.once||newListener.passive!==oldListener.passive),shouldAddListener=null!=newListener&&(null==oldListener||shouldRemoveListener);if(shouldRemoveListener){this.element.removeEventListener(this.eventName,this.__boundHandleEvent,this.__options)}if(shouldAddListener){this.__options=getOptions(newListener);this.element.addEventListener(this.eventName,this.__boundHandleEvent,this.__options)}this.value=newListener;this.__pendingValue=noChange}handleEvent(event){if("function"===typeof this.value){this.value.call(this.eventContext||this.element,event)}else{this.value.handleEvent(event)}}}// We copy options because of the inconsistent behavior of browsers when reading
+// the third argument of add/removeEventListener. IE11 doesn't support options
+// at all. Chrome 41 only reads `capture` if the argument is an object.
+const getOptions=o=>o&&(eventOptionsSupported?{capture:o.capture,passive:o.passive,once:o.once}:o.capture);var parts={isPrimitive:isPrimitive,isIterable:isIterable,AttributeCommitter:AttributeCommitter,AttributePart:AttributePart,NodePart:NodePart,BooleanAttributePart:BooleanAttributePart,PropertyCommitter:PropertyCommitter,PropertyPart:PropertyPart,EventPart:EventPart};class DefaultTemplateProcessor{/**
+   * Create parts for an attribute-position binding, given the event, attribute
+   * name, and string literals.
+   *
+   * @param element The element containing the binding
+   * @param name  The attribute name
+   * @param strings The string literals. There are always at least two strings,
+   *   event for fully-controlled bindings with a single expression.
+   */handleAttributeExpressions(element,name,strings,options){const prefix=name[0];if("."===prefix){const committer=new PropertyCommitter(element,name.slice(1),strings);return committer.parts}if("@"===prefix){return[new EventPart(element,name.slice(1),options.eventContext)]}if("?"===prefix){return[new BooleanAttributePart(element,name.slice(1),strings)]}const committer=new AttributeCommitter(element,name,strings);return committer.parts}/**
+     * Create parts for a text-position binding.
+     * @param templateFactory
+     */handleTextExpression(options){return new NodePart(options)}}const defaultTemplateProcessor=new DefaultTemplateProcessor;var defaultTemplateProcessor$1={DefaultTemplateProcessor:DefaultTemplateProcessor,defaultTemplateProcessor:defaultTemplateProcessor};function templateFactory(result){let templateCache=templateCaches.get(result.type);if(templateCache===void 0){templateCache={stringsArray:new WeakMap,keyString:new Map};templateCaches.set(result.type,templateCache)}let template=templateCache.stringsArray.get(result.strings);if(template!==void 0){return template}// If the TemplateStringsArray is new, generate a key from the strings
+// This key is shared between all templates with identical content
+const key=result.strings.join(marker);// Check if we already have a Template for this key
+template=templateCache.keyString.get(key);if(template===void 0){// If we have not seen this key before, create a new Template
+template=new Template(result,result.getTemplateElement());// Cache the Template for this key
+templateCache.keyString.set(key,template)}// Cache all future queries for this TemplateStringsArray
+templateCache.stringsArray.set(result.strings,template);return template}const templateCaches=new Map;var templateFactory$1={templateFactory:templateFactory,templateCaches:templateCaches};const parts$1=new WeakMap,render=(result,container,options)=>{let part=parts$1.get(container);if(part===void 0){removeNodes(container,container.firstChild);parts$1.set(container,part=new NodePart(Object.assign({templateFactory},options)));part.appendInto(container)}part.setValue(result);part.commit()};/**
+                                     * Renders a template result or other value to a container.
+                                     *
+                                     * To update a container with new values, reevaluate the template literal and
+                                     * call `render` with the new result.
+                                     *
+                                     * @param result Any value renderable by NodePart - typically a TemplateResult
+                                     *     created by evaluating a template tag like `html` or `svg`.
+                                     * @param container A DOM parent to render to. The entire contents are either
+                                     *     replaced, or efficiently updated if the same result type was previous
+                                     *     rendered there.
+                                     * @param options RenderOptions for the entire render tree rendered to this
+                                     *     container. Render options must *not* change between renders to the same
+                                     *     container, as those changes will not effect previously rendered DOM.
+                                     */var render$1={parts:parts$1,render:render};// This line will be used in regexes to search for lit-html usage.
+// TODO(justinfagnani): inject version number at build time
+(window.litHtmlVersions||(window.litHtmlVersions=[])).push("1.1.2");/**
+                                                                                * Interprets a template literal as an HTML template that can efficiently
+                                                                                * render to and update a container.
+                                                                                */const html$1=(strings,...values)=>new TemplateResult(strings,values,"html",defaultTemplateProcessor),svg=(strings,...values)=>new SVGTemplateResult(strings,values,"svg",defaultTemplateProcessor);/**
+                                                                                                                    * Interprets a template literal as an SVG template that can efficiently
+                                                                                                                    * render to and update a container.
+                                                                                                                    */var litHtml={html:html$1,svg:svg,DefaultTemplateProcessor:DefaultTemplateProcessor,defaultTemplateProcessor:defaultTemplateProcessor,directive:directive,isDirective:isDirective,removeNodes:removeNodes,reparentNodes:reparentNodes,noChange:noChange,nothing:nothing,AttributeCommitter:AttributeCommitter,AttributePart:AttributePart,BooleanAttributePart:BooleanAttributePart,EventPart:EventPart,isIterable:isIterable,isPrimitive:isPrimitive,NodePart:NodePart,PropertyCommitter:PropertyCommitter,PropertyPart:PropertyPart,parts:parts$1,render:render,templateCaches:templateCaches,templateFactory:templateFactory,TemplateInstance:TemplateInstance,SVGTemplateResult:SVGTemplateResult,TemplateResult:TemplateResult,createMarker:createMarker,isTemplatePartActive:isTemplatePartActive,Template:Template};export{appRouteConverterBehavior as $appRouteConverterBehavior,appScrollEffectsBehavior as $appScrollEffectsBehavior,applyShim as $applyShim$1,ApplyShim as $applyShimDefault,applyShimUtils as $applyShimUtils,arraySelector as $arraySelector,arraySplice as $arraySplice,async as $async,caseMap$1 as $caseMap,_class as $class,cmsContentImage$1 as $cmsContentImage,cmsContentInput$1 as $cmsContentInput,cmsContentTemplate$1 as $cmsContentTemplate,cmsContentTextarea as $cmsContentTextarea,cmsDropdownMenuTemplate$1 as $cmsDropdownMenuTemplate,cmsElementSet as $cmsElementSet,cmsImageItem$1 as $cmsImageItem,cmsItemTemplate$1 as $cmsItemTemplate,cmsLangTabItem$1 as $cmsLangTabItem,cmsMiddlePageTemplate$1 as $cmsMiddlePageTemplate,cmsPopInput$1 as $cmsPopInput,cmsSaveLib as $cmsSaveLib,cmsTopPageTemplate$1 as $cmsTopPageTemplate,cmsViewerTemplate$1 as $cmsViewerTemplate,commonRegex as $commonRegex,commonUtils as $commonUtils,cssParse as $cssParse,customStyle as $customStyle,customStyleInterface as $customStyleInterface$1,CustomStyleInterface as $customStyleInterfaceDefault,dataBaseWorker as $dataBaseWorker,debounce as $debounce,defaultTemplateProcessor$1 as $defaultTemplateProcessor,dirMixin as $dirMixin,directive$1 as $directive,documentWait$1 as $documentWait,documentWait as $documentWaitDefault,dom$1 as $dom,domBind as $domBind,domIf as $domIf,domModule as $domModule,domRepeat as $domRepeat,elementMixin as $elementMixin,expresso$1 as $expresso,firebaseWorker as $firebaseWorker,flattenedNodesObserver as $flattenedNodesObserver,flush$2 as $flush,gestureEventListeners as $gestureEventListeners,gestures$1 as $gestures,helpers as $helpers,hideTemplateControls as $hideTemplateControls,htmlTag as $htmlTag,httpHandler as $httpHandler,ironA11yAnnouncer as $ironA11yAnnouncer,ironA11yKeysBehavior as $ironA11yKeysBehavior,ironButtonState as $ironButtonState,ironCheckedElementBehavior as $ironCheckedElementBehavior,ironControlState as $ironControlState,ironFitBehavior as $ironFitBehavior,ironFocusablesHelper as $ironFocusablesHelper,ironFormElementBehavior as $ironFormElementBehavior,ironMenuBehavior as $ironMenuBehavior,ironMeta as $ironMeta,ironMultiSelectable as $ironMultiSelectable,ironOverlayBehavior as $ironOverlayBehavior,ironOverlayManager as $ironOverlayManager,ironResizableBehavior as $ironResizableBehavior,ironScrollManager as $ironScrollManager,ironScrollTargetBehavior as $ironScrollTargetBehavior,ironSelectable as $ironSelectable,ironSelection as $ironSelection,ironValidatableBehavior as $ironValidatableBehavior,legacyElementMixin as $legacyElementMixin,litHtml as $litHtml,mixin as $mixin,mutableData as $mutableData,mutableDataBehavior as $mutableDataBehavior,neonAnimatableBehavior as $neonAnimatableBehavior,neonAnimationBehavior as $neonAnimationBehavior,neonAnimationRunnerBehavior as $neonAnimationRunnerBehavior,neonSharedElementAnimationBehavior as $neonSharedElementAnimationBehavior,objectArray as $objectArray,paperButtonBehavior as $paperButtonBehavior,paperInkyFocusBehavior as $paperInkyFocusBehavior,paperInputAddonBehavior as $paperInputAddonBehavior,paperInputBehavior as $paperInputBehavior,paperItemBehavior as $paperItemBehavior,paperMenuButton as $paperMenuButton,paperRippleBehavior as $paperRippleBehavior,paperSpinnerBehavior as $paperSpinnerBehavior,part as $part,parts as $parts,path as $path,polymer_dom as $polymerDom,polymerElement as $polymerElement,polymerFn as $polymerFn,polymerLegacy as $polymerLegacy,propertiesChanged as $propertiesChanged,propertiesMixin as $propertiesMixin,propertyAccessors as $propertyAccessors,propertyEffects as $propertyEffects,render$1 as $render,renderStatus as $renderStatus,resolveUrl$1 as $resolveUrl,scopeSubtree$1 as $scopeSubtree,settings as $settings,styleGather as $styleGather,styleSettings as $styleSettings,styleUtil as $styleUtil,telemetry as $telemetry,template$c as $template,templateFactory$1 as $templateFactory,templateInstance as $templateInstance,templateMap$1 as $templateMap,templateMap as $templateMapDefault,templateResult as $templateResult,templateStamp as $templateStamp,templatize$1 as $templatize,templatizerBehavior as $templatizerBehavior,unscopedStyleHandler as $unscopedStyleHandler,wrap$1 as $wrap,ANIMATION_MATCH,AppRouteConverterBehavior,AppScrollEffectsBehavior,ArraySelector,ArraySelectorMixin,AttributeCommitter,AttributeCommitter as AttributeCommitter$1,AttributePart,AttributePart as AttributePart$1,BRACKETED,Base,BooleanAttributePart,BooleanAttributePart as BooleanAttributePart$1,CategoriesDB,Class,CustomStyle,CustomStyleInterfaceInterface,CustomStyleProvider,Debouncer,DefaultTemplateProcessor,DefaultTemplateProcessor as DefaultTemplateProcessor$1,DirMixin,DomApi,DomBind,DomIf,DomModule,DomRepeat,ElementMixin,ElementWithBackground,EventApi,EventPart,EventPart as EventPart$1,FlattenedNodesObserver,GestureEventListeners,HOST_PREFIX,HOST_SUFFIX,IS_VAR,IronA11yAnnouncer,IronA11yKeysBehavior,IronButtonState,IronButtonStateImpl,IronCheckedElementBehavior,IronCheckedElementBehaviorImpl,IronControlState,IronFitBehavior,IronFocusablesHelper,IronFormElementBehavior,IronMenuBehavior,IronMenuBehaviorImpl,IronMeta,IronMultiSelectableBehavior,IronMultiSelectableBehaviorImpl,IronOverlayBehavior,IronOverlayBehaviorImpl,IronOverlayManager,IronOverlayManagerClass,IronResizableBehavior,IronScrollTargetBehavior,IronSelectableBehavior,IronSelection,IronValidatableBehavior,IronValidatableBehaviorMeta,LegacyElementMixin,MEDIA_MATCH,MIXIN_MATCH,MediaDB,MutableData,MutableDataBehavior,NeonAnimatableBehavior,NeonAnimationBehavior,NeonAnimationRunnerBehavior,NeonAnimationRunnerBehaviorImpl,NeonSharedElementAnimationBehavior,NeonSharedElementAnimationBehaviorImpl,NodePart,NodePart as NodePart$1,OptionalMutableData,OptionalMutableDataBehavior,PaperButtonBehavior,PaperButtonBehaviorImpl,PaperInkyFocusBehavior,PaperInkyFocusBehaviorImpl,PaperInputAddonBehavior,PaperInputBehavior,PaperInputBehaviorImpl,PaperInputHelper,PaperItemBehavior,PaperItemBehaviorImpl,PaperMenuButton,PaperRippleBehavior,PaperSpinnerBehavior,Polymer,Polymer as Polymer$1,PolymerElement,PropertiesChanged,PropertiesMixin,PropertyAccessors,PropertyCommitter,PropertyCommitter as PropertyCommitter$1,PropertyEffects,PropertyPart,PropertyPart as PropertyPart$1,SVGTemplateResult,SVGTemplateResult as SVGTemplateResult$1,Setter,Settings,StyleNode,Template,Template as Template$1,TemplateInstance,TemplateInstance as TemplateInstance$1,TemplateInstanceBase,TemplateResult,TemplateResult as TemplateResult$1,TemplateStamp,Templatizer,VAR_ASSIGN,VAR_CONSUMED,_boundScrollHandler,_composedTreeContains,_getScrollInfo,_getScrollableNodes,_getScrollingNode,_hasCachedLockedElement,_hasCachedUnlockedElement,_lockScrollInteractions,_lockedElementCache,_lockingElements,_scrollEffects,_scrollInteractionHandler,_scrollTimer,_shouldPreventScrolling,_unlockScrollInteractions,_unlockedElementCache,add,enqueueDebouncer as addDebouncer,addListener,afterNextRender,allowTemplateFromDomModule,animationFrame,applyCss,applyStyle,applyStylePlaceHolder,beforeNextRender,boundAttributeSuffix,calculateSplices,camelToDashCase,cancelSyntheticClickEvents,cmsArticlesLib,cmsContentImage,cmsContentInput,cmsContentTemplate,cmsContentText,cmsDropdownMenuTemplate,cmsImageItem,cmsItemTemplate,cmsLangTabItem,cmsMediaLib,cmsMiddlePageTemplate,cmsPagesLib,cmsPopInput,cmsSettingsLib,cmsSubcatsLib,cmsTopPageTemplate,cmsViewerTemplate,cmscategoriesLib,cmslangsLib,createMarker,createMarker as createMarker$1,createScopeStyle,cssBuild,cssFromModule,cssFromModuleImports,cssFromModules,cssFromTemplate,currentLockingElement,dashToCamelCase,dataBaseworker,dedupingMixin,deepTargetFind,defaultTemplateProcessor,defaultTemplateProcessor as defaultTemplateProcessor$1,detectMixin,directive,directive as directive$1,disableRuntime,dom,dumpRegistrations,elementHasBuiltCss,elementIsScrollLocked,elementsAreInvalid,enqueueDebouncer,enqueueDebouncer as enqueueDebouncer$1,expresso,findMatchingParen,findOriginalTarget,flush$1 as flush,flush$1,flush as flush$2,flushDebouncers,forEachRule,gatherStyleText,gestures,get,getBuildComment,getComputedStyleValue,getCssBuild,getIsExtends,getObjArr$1 as getObjArr,hideElementsGlobally,html,html as html$1,html$1 as html$2,html as html$3,htmlLiteral,idlePeriod,incrementInstanceCount,instanceCount,invalidate,invalidateTemplate,isAncestor,isCEPolyfill,isDeep,isDescendant,isDirective,isDirective as isDirective$1,isIterable,isIterable as isIterable$1,isKeyframesSelector,isOptimalCssBuild,isPath,isPrimitive,isPrimitive as isPrimitive$1,isTargetedBuild,isTemplatePartActive,isTemplatePartActive as isTemplatePartActive$1,isUnscopedStyle,isValid,isValidating,lastAttributeNameRegex,legacyOptimizations,marker,markerRegex,matches,matchesSelector,microTask,mixinBehaviors,modelForElement,nativeCssVariables,nativeShadow,noChange,noChange as noChange$1,nodeMarker,normalize,nothing,nothing as nothing$1,parse,parts$1 as parts,parts$1,passiveTouchGestures,pathFromUrl,prevent,processUnscopedStyle,processVariableAndFallback,pushScrollLock,queryAllRoot,recognizers,register$1 as register,register as register$1,registerEffect,registrations,remove,removeCustomPropAssignment,removeListener,removeNodes,removeNodes as removeNodes$1,removeScrollLock,render,render as render$1,reparentNodes,reparentNodes as reparentNodes$1,request,resetMouseCanceller,resolveCss,resolveUrl,root,rootPath,rulesForStyle,sanitizeDOMValue,scopeSubtree,scopingAttribute,scroll,scrollTimingFunction,set,setAllowTemplateFromDomModule,setCancelSyntheticClickEvents,setElementClassRaw,setLegacyOptimizations,setPassiveTouchGestures,setRootPath,setSanitizeDOMValue,setStrictTemplatePolicy,setSyncInitialRender,setTouchAction,split,splitSelectorList,startValidating,startValidatingTemplate,strictTemplatePolicy,stringify,stylesFromModule,stylesFromModuleImports,stylesFromModules,stylesFromTemplate,svg,syncInitialRender,templateCaches,templateCaches as templateCaches$1,templateFactory,templateFactory as templateFactory$1,templateIsValid,templateIsValidating,templatize,timeOut,toCssText,translate,types,updateNativeProperties,updateStyles,useNativeCSSProperties,useNativeCustomElements,useShadow,version,version as version$1,worker,wrap,wrap$2 as wrap$1};

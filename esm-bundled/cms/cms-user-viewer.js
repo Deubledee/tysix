@@ -1,9 +1,86 @@
-import{cmsTopPageTemplate,html,dataBaseworker,scroll}from"./cms-login.js";const __DEV=!0,_DBW=new dataBaseworker,_STYLES=_DBW.getElementAssets("cms-user-viewer",!0);class cmsUserViewer extends cmsTopPageTemplate{static get topTitle(){return html`
+import{cmsTopPageTemplate,html as html$1,dataBaseworker,scroll,Polymer,html$1 as html,PaperSpinnerBehavior}from"./cms-login.js";const template=html`
+  <style include="paper-spinner-styles"></style>
+
+  <div id="spinnerContainer" class-name="[[__computeContainerClasses(active, __coolingDown)]]" on-animationend="__reset" on-webkit-animation-end="__reset">
+    <div class="spinner-layer layer-1">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+
+    <div class="spinner-layer layer-2">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+
+    <div class="spinner-layer layer-3">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+
+    <div class="spinner-layer layer-4">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+`;template.setAttribute("strip-whitespace","");/**
+                                               Material design: [Progress &
+                                               activity](https://www.google.com/design/spec/components/progress-activity.html)
+                                               
+                                               Element providing a multiple color material design circular spinner.
+                                               
+                                                   <paper-spinner active></paper-spinner>
+                                               
+                                               The default spinner cycles between four layers of colors; by default they are
+                                               blue, red, yellow and green. It can be customized to cycle between four
+                                               different colors. Use <paper-spinner-lite> for single color spinners.
+                                               
+                                               ### Accessibility
+                                               
+                                               Alt attribute should be set to provide adequate context for accessibility. If
+                                               not provided, it defaults to 'loading'. Empty alt can be provided to mark the
+                                               element as decorative if alternative content is provided in another form (e.g. a
+                                               text block following the spinner).
+                                               
+                                                   <paper-spinner alt="Loading contacts list" active></paper-spinner>
+                                               
+                                               ### Styling
+                                               
+                                               The following custom properties and mixins are available for styling:
+                                               
+                                               Custom property | Description | Default
+                                               ----------------|-------------|----------
+                                               `--paper-spinner-layer-1-color` | Color of the first spinner rotation | `--google-blue-500`
+                                               `--paper-spinner-layer-2-color` | Color of the second spinner rotation | `--google-red-500`
+                                               `--paper-spinner-layer-3-color` | Color of the third spinner rotation | `--google-yellow-500`
+                                               `--paper-spinner-layer-4-color` | Color of the fourth spinner rotation | `--google-green-500`
+                                               `--paper-spinner-stroke-width` | The width of the spinner stroke | 3px
+                                               
+                                               @group Paper Elements
+                                               @element paper-spinner
+                                               @hero hero.svg
+                                               @demo demo/index.html
+                                               */Polymer({_template:template,is:"paper-spinner",behaviors:[PaperSpinnerBehavior]});const __DEV=!0/* ignoreName */ /* skipSlots */,_DBW=new dataBaseworker,_STYLES=_DBW.getElementAssets("cms-user-viewer",!0);class cmsUserViewer extends cmsTopPageTemplate{static get topTitle(){return html$1`
       <div> [[Content]] </div>
       <paper-icon-button-light>
         <iron-icon icon="social:person-outline" aria-label="Content">
         </iron-icon>
-      </paper-icon-button-light>`}static get topPages(){return html`
+      </paper-icon-button-light>`}static get topPages(){return html$1`
         <a href="[[rootPath]]users/search">
           <paper-button class="button" front$="[[search]]" name="search" aria-label="search">
                       [[Search]]
@@ -38,7 +115,7 @@ import{cmsTopPageTemplate,html,dataBaseworker,scroll}from"./cms-login.js";const 
                   <iron-icon icon="av:art-track" aria-label="client users">
                   </iron-icon> 
           </paper-button>      
-        </a>`}static get viewPages(){return html`
+        </a>`}static get viewPages(){return html$1`
       <article name="groups" route="[[subroute]]" lang="[[lang]]"> 
           groups
       </article>
