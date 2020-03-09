@@ -24,44 +24,23 @@ class Projects {
 
     get rootValue() {
         return {
-            mainProject: async (args, req, res) => {
-                let obj, projects
-                var error = { msg: 'api key not valid for main', config:{} }
-                try {
-                    projects = JSON.parse(fs.readFileSync(path.resolve('../data/projects.json')));
-                    if (!!projects.main) {
-                        error.config = {
-                            apiKey: req.hostname,
-                            authDomain: req.origin,
-                            databaseURL: JSON.stringify(req.headers),
-                            projectId: req.ip,
-                            storageBucket: error.msg,
-                            messagingSenderId: error.msg,
-                        }
-                        obj = error
-                        /* (args.apiKey === projects.main.client.apiKey &&
-                            args.projectId === projects.main.name) ?
-                            { config: projects.main.client } : error*/
-                    } else {
-                        error.config = {
-                            apiKey: error.msg,
-                            authDomain: error.msg,
-                            databaseURL: error.msg,
-                            projectId: error.msg,
-                            storageBucket: error.msg,
-                            messagingSenderId: error.msg,
-                        }
-                    }
-                } catch (err) {
+            mainProject: async (args, req) => {
+                let obj, error = { msg: 'api key not valid'}
                     error.config = {
-                        apiKey: err,
-                        authDomain: error.msg,
-                        databaseURL: error.msg,
-                        projectId: error.msg,
+                        apiKey: req.hostname,
+                        authDomain: req.origin,
+                        databaseURL: JSON.stringify(req.headers),
+                        projectId: req.ip,
                         storageBucket: error.msg,
                         messagingSenderId: error.msg,
                     }
-                    obj = error
+                try {
+                    let projects = JSON.parse(fs.readFileSync('data/projects.json'));
+                    obj = (args.apiKey === projects.main.client.apiKey &&
+                        args.projectId === projects.main.name) ?
+                        { config: error.config /* projects.main.client*/ } : { config: { apiKey: 'api key not valid for main' } }
+                } catch (err) {
+                    console.error(err)
                 }
                 return obj
             }
