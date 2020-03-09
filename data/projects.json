@@ -5,7 +5,8 @@
         "licence": "tySix-CMS_@Copyright",
         "origins": [
             "localhost",
-            "127.0.0.1"
+            "127.0.0.1",
+            "tysix.herokuapp.com"
         ],
         "server": {
             "type": "service_account",

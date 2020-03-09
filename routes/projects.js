@@ -8,7 +8,7 @@ const G = new Projects()
 const schema = G.schema,
     rootValue = G.rootValue
 //graphQL api route
-/*
+
 router.post('/', (req, res, next) => {
     // console.log(req.headers);
 
@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
     else {
         res.status('404').send('origin not allowed')
     }
-});*/
+});
 router.get('/', graphqlHTTP({
     schema,
     rootValue,
