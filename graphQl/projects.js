@@ -25,36 +25,43 @@ class Projects {
     get rootValue() {
         return {
             mainProject: async (args, req, res) => {
-                let obj, projects, error = {
-                    config: {
-                        apiKey: 'api key not valid for main',
-                        authDomain: 'api key not valid for main',
-                        databaseURL: 'api key not valid for main',
-                        projectId: 'api key not valid for main',
-                        storageBucket: 'api key not valid for main',
-                        messagingSenderId: 'api key not valid for main',
-                    }
-                }
+                let obj, projects
+                var error = { msg: 'api key not valid for main', config:{} }
                 try {
                     projects = JSON.parse(fs.readFileSync(path.resolve('../data/projects.json')));
                     if (!!projects.main) {
-                        error.config.apiKey = req.hostname
-                        error.config.apiKey = req.origin
-                        error.config.apiKey = JSON.stringify(req.headers)
-                        error.config.apiKey = req.ip
-                        obj = error  
+                        error.config = {
+                            apiKey: req.hostname,
+                            authDomain: req.origin,
+                            databaseURL: JSON.stringify(req.headers),
+                            projectId: req.ip,
+                            storageBucket: error.msg,
+                            messagingSenderId: error.msg,
+                        }
+                        obj = error
                         /* (args.apiKey === projects.main.client.apiKey &&
                             args.projectId === projects.main.name) ?
                             { config: projects.main.client } : error*/
                     } else {
-                        error.apiKey = '' + projects
-                        obj = error
-
+                        error.config = {
+                            apiKey: error.msg,
+                            authDomain: error.msg,
+                            databaseURL: error.msg,
+                            projectId: error.msg,
+                            storageBucket: error.msg,
+                            messagingSenderId: error.msg,
+                        }
                     }
                 } catch (err) {
-                    error.apiKey = 'fuck ' + projects
+                    error.config = {
+                        apiKey: err,
+                        authDomain: error.msg,
+                        databaseURL: error.msg,
+                        projectId: error.msg,
+                        storageBucket: error.msg,
+                        messagingSenderId: error.msg,
+                    }
                     obj = error
-                    console.error(err)
                 }
                 return obj
             }
