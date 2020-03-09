@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
+//const fs = require('fs');
 const graphqlHTTP = require('express-graphql');
 const { Projects } = require('../graphQl/projects');
 
@@ -8,6 +8,7 @@ const G = new Projects()
 const schema = G.schema,
     rootValue = G.rootValue
 //graphQL api route
+/*
 router.post('/', (req, res, next) => {
     // console.log(req.headers);
 
@@ -20,17 +21,17 @@ router.post('/', (req, res, next) => {
     else {
         res.status('404').send('origin not allowed')
     }
-});
+});*/
 router.get('/', graphqlHTTP({
     schema,
     rootValue,
-    graphiql: true,
+    graphiql: false,
 }));
 
 router.post('/', graphqlHTTP({
     schema,
     rootValue,
-    graphiql: true,
+    graphiql: false,
 }));
 
 module.exports = router;
