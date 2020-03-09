@@ -1,4 +1,4 @@
-define(["exports","../src/cms-login.js"],function(_exports,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0/* ignoreName */ /* skipSlots */});_exports.cmsUserViewer=_exports.$cmsUserViewer=void 0;const template=_cmsLogin.html$1`
+import{cmsTopPageTemplate,html as html$1,dataBaseworker,scroll,Polymer,html$1 as html,PaperSpinnerBehavior}from"../src/cms-login.js";const template=html`
   <style include="paper-spinner-styles"></style>
 
   <div id="spinnerContainer" class-name="[[__computeContainerClasses(active, __coolingDown)]]" on-animationend="__reset" on-webkit-animation-end="__reset">
@@ -75,12 +75,12 @@ define(["exports","../src/cms-login.js"],function(_exports,_cmsLogin){"use stric
                                                @element paper-spinner
                                                @hero hero.svg
                                                @demo demo/index.html
-                                               */(0,_cmsLogin.Polymer)({_template:template,is:"paper-spinner",behaviors:[_cmsLogin.PaperSpinnerBehavior]});const __DEV=!0,_DBW=new _cmsLogin.dataBaseworker,_STYLES=_DBW.getElementAssets("cms-user-viewer",!0);class cmsUserViewer extends _cmsLogin.cmsTopPageTemplate{static get topTitle(){return _cmsLogin.html`
+                                               */Polymer({_template:template,is:"paper-spinner",behaviors:[PaperSpinnerBehavior]});const __DEV=!0/* ignoreName */ /* skipSlots */,_DBW=new dataBaseworker,_STYLES=_DBW.getElementAssets("cms-user-viewer",!0);class cmsUserViewer extends cmsTopPageTemplate{static get topTitle(){return html$1`
       <div> [[Content]] </div>
       <paper-icon-button-light>
         <iron-icon icon="social:person-outline" aria-label="Content">
         </iron-icon>
-      </paper-icon-button-light>`}static get topPages(){return _cmsLogin.html`
+      </paper-icon-button-light>`}static get topPages(){return html$1`
         <a href="[[rootPath]]users/search">
           <paper-button class="button" front$="[[search]]" name="search" aria-label="search">
                       [[Search]]
@@ -115,7 +115,7 @@ define(["exports","../src/cms-login.js"],function(_exports,_cmsLogin){"use stric
                   <iron-icon icon="av:art-track" aria-label="client users">
                   </iron-icon> 
           </paper-button>      
-        </a>`}static get viewPages(){return _cmsLogin.html`
+        </a>`}static get viewPages(){return html$1`
       <article name="groups" route="[[subroute]]" lang="[[lang]]"> 
           groups
       </article>
@@ -129,7 +129,7 @@ define(["exports","../src/cms-login.js"],function(_exports,_cmsLogin){"use stric
         clientUsers
     </article>
     `}static get is(){return"cms-user-viewer"}static get properties(){return{user:{type:Object,notify:!0},page:{type:String,reflectToAttribute:!0,observer:"_pageChanged"},lang:{type:String,notify:!0,observer:"__changeLang"},langs:{type:Object,value:{}},search:{type:Boolean,computed:"_checkMyName(page, \"search\")"},groups:{type:Boolean,computed:"_checkMyName(page, \"groups\")"},users:{type:Boolean,computed:"_checkMyName(page, \"users\")"},storeUsers:{type:Boolean,computed:"_checkMyName(page, \"storeUsers\")"},clientUsers:{type:Boolean,computed:"_checkMyName(page, \"clientUsers\")"}}}static get observers(){return["_routePageChanged(routeData, query, active)"]}ready(){super.ready();_STYLES.then(querySnapshot=>{let style=querySnapshot.data();this._setLangObject(style);// console.log(style)
-}).catch(function(error){console.error("Error reteaving assets: ",error)});this._routePageChanged(this.routeData,0);(0,_cmsLogin.scroll)({top:0,behavior:"silent"})}__changeLang(){try{if(this.langs[this.lang]){let obj=this.langs[this.lang];for(let par in obj){if(!0===!!this[par]){this.set(par,obj[par])}else{this.set(par,"");this.set(par,obj[par])}}}}catch(err){console.error(err)}}_setLangObject(langs){try{for(let par in langs){if("styles"!==par){this.langs[par]=langs[par].pop()}}this.__changeLang()}catch(err){console.error(err)}}_routePageChanged(page,query){if("/users"===this.route.prefix){if(page!==void 0&&"page"in page){if(-1!==["users","groups","search","clientUsers","storeUsers"].indexOf(page.page)){this.page=page.page}else{console.log("view404",page,query)}}else{this.page="search"}}}_pageChanged(page){console.log("users",page);if(page!==void 0){/*  if (page === 'pages') {
+}).catch(function(error){console.error("Error reteaving assets: ",error)});this._routePageChanged(this.routeData,0);scroll({top:0,behavior:"silent"})}__changeLang(){try{if(this.langs[this.lang]){let obj=this.langs[this.lang];for(let par in obj){if(!0===!!this[par]){this.set(par,obj[par])}else{this.set(par,"");this.set(par,obj[par])}}}}catch(err){console.error(err)}}_setLangObject(langs){try{for(let par in langs){if("styles"!==par){this.langs[par]=langs[par].pop()}}this.__changeLang()}catch(err){console.error(err)}}_routePageChanged(page,query){if("/users"===this.route.prefix){if(page!==void 0&&"page"in page){if(-1!==["users","groups","search","clientUsers","storeUsers"].indexOf(page.page)){this.page=page.page}else{console.log("view404",page,query)}}else{this.page="search"}}}_pageChanged(page){console.log("users",page);if(page!==void 0){/*  if (page === 'pages') {
                                  import('./cms-page-viewer').then(module => {
                                    return;
                                  }).catch(error => {
@@ -144,4 +144,4 @@ define(["exports","../src/cms-login.js"],function(_exports,_cmsLogin){"use stric
                                if (page === 'view404') {
                                  import('../shop-404-warning');
                                  return;
-                               }*/}}}_exports.cmsUserViewer=cmsUserViewer;customElements.define(cmsUserViewer.is,cmsUserViewer);var cmsUserViewer$1={cmsUserViewer:cmsUserViewer};_exports.$cmsUserViewer=cmsUserViewer$1});
+                               }*/}}}customElements.define(cmsUserViewer.is,cmsUserViewer);var cmsUserViewer$1={cmsUserViewer:cmsUserViewer};export{cmsUserViewer$1 as $cmsUserViewer,cmsUserViewer};

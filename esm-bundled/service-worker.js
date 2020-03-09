@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["cms/cms-login.js","8b28a81b58f264ea3e6c568f9352fa2d"],["images/ladies_outerwear.jpg","790e95e6d417ab5447a37d5127b15919"],["images/ladies_tshirts.jpg","4fee73df809e6363d29c53c4616c89cd"],["images/mens_outerwear.jpg","034f3d48b53419e0ee8897e1f1fa5770"],["images/mens_tshirts.jpg","364adbf5dc1b6247ba58c5e3887bb63c"],["images/shop-icon-128.png","7c233b5552b74a53b45f7bb8590f1b54"],["images/shop-icon-192.png","d2e93b8e0722070229467585fd1221f0"],["images/shop-icon-32.png","db2a62dbf6f348a8d557cf047956872c"],["images/shop-icon-384.png","935500ef0c40dd54894c3b9ba7b8f330"],["images/shop-icon-512.png","087f56834ba686ccfedc93ea85d08eab"],["index.html","df9d5414de50f85a38870abe1f49ae0b"],["manifest.json","a3a54516c5089da070306500640ab964"]];
+var precacheConfig = [["index.html","172dc311e5419ffe5362c39cfeb735de"],["manifest.json","7f058c83cffb56e774ad9909ccf3a415"],["src/cms-login.js","5919d8f619b4b08ecac3e9a131b0d315"]];
 var cacheName = 'sw-precache-v3--' + (self.registration ? self.registration.scope : '');
 
 

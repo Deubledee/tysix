@@ -112,7 +112,7 @@ class worker {
     }
     createDocDev(table) {
         var pagesRef = this.db.doc(`/dev/VoSSMkzGYmPTvUhh9mgL/${table.name}/${table.docName}`)
-        console.log(table)
+        // console.log(table)
         return pagesRef.set(table.doc);
     }
 

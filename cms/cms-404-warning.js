@@ -1,4 +1,4 @@
-define(["../src/cms-login.js"],function(_cmsLogin){"use strict";class cms404Warning extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+import{PolymerElement,html}from"../src/cms-login.js";class cms404Warning extends PolymerElement{static get template(){return html`
     <style>
 
       :host {
@@ -27,4 +27,4 @@ define(["../src/cms-login.js"],function(_cmsLogin){"use strict";class cms404Warn
     <oaper-button>
       <a href="/">Go to the home page</a>
     </oaper-button>
-`}static get is(){return"cms-404-warning"}}customElements.define(cms404Warning.is,cms404Warning)});
+`}static get is(){return"cms-404-warning"}}customElements.define(cms404Warning.is,cms404Warning);

@@ -1,13 +1,13 @@
-define(["exports","require","../src/cms-login.js"],function(_exports,_require,_cmsLogin){"use strict";Object.defineProperty(_exports,"__esModule",{value:!0/* ignoreName */ /* skipSlots */});_exports.cmsLangsMenu=_exports.IronMenubarBehaviorImpl=_exports.IronMenubarBehavior=_exports.AppLayoutBehavior=_exports.$ironMenubarBehavior=_exports.$cmsLangsMenu=_exports.$appLayoutBehavior=void 0;_require=babelHelpers.interopRequireWildcard(_require);const AppLayoutBehavior=[_cmsLogin.IronResizableBehavior,{listeners:{"app-reset-layout":"_appResetLayoutHandler","iron-resize":"resetLayout"},attached:function(){this.fire("app-reset-layout")},_appResetLayoutHandler:function(e){if((0,_cmsLogin.dom)(e).path[0]===this){return}this.resetLayout();e.stopPropagation()},_updateLayoutStates:function(){console.error("unimplemented")},/**
+import{animationFrame,microTask,Debouncer,setPassiveTouchGestures,setRootPath,html as html$1,PolymerElement,cmslangsLib,Base,Polymer,dom,html$1 as html,IronResizableBehavior,enqueueDebouncer,AppScrollEffectsBehavior,IronButtonState,IronControlState,PaperRippleBehavior,IronMenuBehavior,IronMenuBehaviorImpl,cmsDropdownMenuTemplate}from"../src/cms-login.js";const AppLayoutBehavior=[IronResizableBehavior,{listeners:{"app-reset-layout":"_appResetLayoutHandler","iron-resize":"resetLayout"},attached:function(){this.fire("app-reset-layout")},_appResetLayoutHandler:function(e){if(dom(e).path[0]===this){return}this.resetLayout();e.stopPropagation()},_updateLayoutStates:function(){console.error("unimplemented")},/**
    * Resets the layout. If you changed the size of this element via CSS
    * you can notify the changes by either firing the `iron-resize` event
    * or calling `resetLayout` directly.
    *
    * @method resetLayout
-   */resetLayout:function(){var self=this,cb=this._updateLayoutStates.bind(this);this._layoutDebouncer=_cmsLogin.Debouncer.debounce(this._layoutDebouncer,_cmsLogin.animationFrame,cb);(0,_cmsLogin.enqueueDebouncer)(this._layoutDebouncer);this._notifyDescendantResize()},_notifyLayoutChanged:function(){var self=this;// TODO: the event `app-reset-layout` can be fired synchronously
+   */resetLayout:function(){var self=this,cb=this._updateLayoutStates.bind(this);this._layoutDebouncer=Debouncer.debounce(this._layoutDebouncer,animationFrame,cb);enqueueDebouncer(this._layoutDebouncer);this._notifyDescendantResize()},_notifyLayoutChanged:function(){var self=this;// TODO: the event `app-reset-layout` can be fired synchronously
 // as long as `_updateLayoutStates` waits for all the microtasks after
 // rAF. E.g. requestAnimationFrame(setTimeOut())
-requestAnimationFrame(function(){self.fire("app-reset-layout")})},_notifyDescendantResize:function(){if(!this.isAttached){return}this._interestedResizables.forEach(function(resizable){if(this.resizerShouldNotify(resizable)){this._notifyDescendant(resizable)}},this)}}];_exports.AppLayoutBehavior=AppLayoutBehavior;var appLayoutBehavior={AppLayoutBehavior:AppLayoutBehavior};_exports.$appLayoutBehavior=appLayoutBehavior;(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
+requestAnimationFrame(function(){self.fire("app-reset-layout")})},_notifyDescendantResize:function(){if(!this.isAttached){return}this._interestedResizables.forEach(function(resizable){if(this.resizerShouldNotify(resizable)){this._notifyDescendant(resizable)}},this)}}];var appLayoutBehavior={AppLayoutBehavior:AppLayoutBehavior};Polymer({/** @override */_template:html`
     <style>
       :host {
         display: block;
@@ -87,11 +87,11 @@ requestAnimationFrame(function(){self.fire("app-reset-layout")})},_notifyDescend
 `,is:"app-header-layout",behaviors:[AppLayoutBehavior],properties:{/**
      * If true, the current element will have its own scrolling region.
      * Otherwise, it will use the document scroll to control the header.
-     */hasScrollingRegion:{type:Boolean,value:/* ignoreName */!1/* skipSlots */ /* skipSlots */,reflectToAttribute:!0}},observers:["resetLayout(isAttached, hasScrollingRegion)"],/**
+     */hasScrollingRegion:{type:Boolean,value:/* ignoreName */ /* ignoreName */!1/* skipSlots */ /* skipSlots */,reflectToAttribute:!0/* skipSlots */}},observers:["resetLayout(isAttached, hasScrollingRegion)"],/**
    * A reference to the app-header element.
    *
    * @property header
-   */get header(){return(0,_cmsLogin.dom)(this.$.headerSlot).getDistributedNodes()[0]},_updateLayoutStates:function(){var header=this.header;if(!this.isAttached||!header){return}// Remove the initializing class, which staticly positions the header and
+   */get header(){return dom(this.$.headerSlot).getDistributedNodes()[0]},_updateLayoutStates:function(){var header=this.header;if(!this.isAttached||!header){return}// Remove the initializing class, which staticly positions the header and
 // the content until the height of the header can be read.
 this.$.wrapper.classList.remove("initializing");// Update scroll target.
 header.scrollTarget=this.hasScrollingRegion?this.$.contentContainer:this.ownerDocument.documentElement;// Get header height here so that style reads are batched together before
@@ -101,7 +101,7 @@ if(!this.hasScrollingRegion){requestAnimationFrame(function(){var rect=this.getB
 var containerStyle=this.$.contentContainer.style;if(header.fixed&&!header.condenses&&this.hasScrollingRegion){// If the header size does not change and we're using a scrolling region,
 // exclude the header area from the scrolling region so that the header
 // doesn't overlap the scrollbar.
-containerStyle.marginTop=headerHeight+"px";containerStyle.paddingTop=""}else{containerStyle.paddingTop=headerHeight+"px";containerStyle.marginTop=""}}});(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
+containerStyle.marginTop=headerHeight+"px";containerStyle.paddingTop=""}else{containerStyle.paddingTop=headerHeight+"px";containerStyle.marginTop=""}}});Polymer({/** @override */_template:html`
     <style>
       :host {
         position: relative;
@@ -183,7 +183,7 @@ containerStyle.marginTop=headerHeight+"px";containerStyle.paddingTop=""}else{con
     <div id="contentContainer">
       <slot id="slot"></slot>
     </div>
-`,is:"app-header",behaviors:[_cmsLogin.AppScrollEffectsBehavior,AppLayoutBehavior],properties:{/**
+`,is:"app-header",behaviors:[AppScrollEffectsBehavior,AppLayoutBehavior],properties:{/**
      * If true, the header will automatically collapse when scrolling down.
      * That is, the `sticky` element remains visible when the header is fully
      *condensed whereas the rest of the elements will collapse below `sticky`
@@ -253,7 +253,7 @@ containerStyle.marginTop=headerHeight+"px";containerStyle.paddingTop=""}else{con
    * @return {HTMLElement}?
    */get _stickyEl(){if(this._stickyElRef){return this._stickyElRef}// Get the element with the sticky attribute on it or the first element in
 // the light DOM.
-for(var nodes=(0,_cmsLogin.dom)(this.$.slot).getDistributedNodes(),i=0,node;node=/** @type {!HTMLElement} */nodes[i];i++){if(node.nodeType===Node.ELEMENT_NODE){if(node.hasAttribute("sticky")){this._stickyElRef=node;break}else if(!this._stickyElRef){this._stickyElRef=node}}}return this._stickyElRef},_configChanged:function(){this.resetLayout();this._notifyLayoutChanged()},_updateLayoutStates:function(){if(0===this.offsetWidth&&0===this.offsetHeight){return}var scrollTop=this._clampedScrollTop,firstSetup=0===this._height||0===scrollTop,currentDisabled=this.disabled;this._height=this.offsetHeight;this._stickyElRef=null;this.disabled=!0;// prepare for measurement
+for(var nodes=dom(this.$.slot).getDistributedNodes(),i=0,node;node=/** @type {!HTMLElement} */nodes[i];i++){if(node.nodeType===Node.ELEMENT_NODE){if(node.hasAttribute("sticky")){this._stickyElRef=node;break}else if(!this._stickyElRef){this._stickyElRef=node}}}return this._stickyElRef},_configChanged:function(){this.resetLayout();this._notifyLayoutChanged()},_updateLayoutStates:function(){if(0===this.offsetWidth&&0===this.offsetHeight){return}var scrollTop=this._clampedScrollTop,firstSetup=0===this._height||0===scrollTop,currentDisabled=this.disabled;this._height=this.offsetHeight;this._stickyElRef=null;this.disabled=!0;// prepare for measurement
 if(!firstSetup){this._updateScrollState(0,!0)}if(this._mayMove()){this._dHeight=this._stickyEl?this._height-this._stickyEl.offsetHeight:0}else{this._dHeight=0}this._stickyElTop=this._stickyEl?this._stickyEl.offsetTop:0;this._setUpEffect();if(firstSetup){this._updateScrollState(scrollTop,!0)}else{this._updateScrollState(this._lastScrollTop,!0);this._layoutIfDirty()}// restore no transition
 this.disabled=currentDisabled},/**
    * Updates the scroll state.
@@ -286,13 +286,13 @@ if(30<Math.abs(this._initScrollTop-scrollTop)||10<absDScrollTop){if(isScrollingD
    * Transforms the header.
    *
    * @param {number} y
-   */_transformHeader:function(y){this.translate3d(0,-y+"px",0);if(this._stickyEl){this.translate3d(0,this.condenses&&y>=this._stickyElTop?Math.min(y,this._dHeight)-this._stickyElTop+"px":0,0,this._stickyEl)}},_clamp:function(v,min,max){return Math.min(max,Math.max(min,v))},_ensureBgContainers:function(){if(!this._bgContainer){this._bgContainer=document.createElement("div");this._bgContainer.id="background";this._bgRear=document.createElement("div");this._bgRear.id="backgroundRearLayer";this._bgContainer.appendChild(this._bgRear);this._bgFront=document.createElement("div");this._bgFront.id="backgroundFrontLayer";this._bgContainer.appendChild(this._bgFront);(0,_cmsLogin.dom)(this.root).insertBefore(this._bgContainer,this.$.contentContainer)}},_getDOMRef:function(id){switch(id){case"backgroundFrontLayer":this._ensureBgContainers();return this._bgFront;case"backgroundRearLayer":this._ensureBgContainers();return this._bgRear;case"background":this._ensureBgContainers();return this._bgContainer;case"mainTitle":return(0,_cmsLogin.dom)(this).querySelector("[main-title]");case"condensedTitle":return(0,_cmsLogin.dom)(this).querySelector("[condensed-title]");}return null},/**
+   */_transformHeader:function(y){this.translate3d(0,-y+"px",0);if(this._stickyEl){this.translate3d(0,this.condenses&&y>=this._stickyElTop?Math.min(y,this._dHeight)-this._stickyElTop+"px":0,0,this._stickyEl)}},_clamp:function(v,min,max){return Math.min(max,Math.max(min,v))},_ensureBgContainers:function(){if(!this._bgContainer){this._bgContainer=document.createElement("div");this._bgContainer.id="background";this._bgRear=document.createElement("div");this._bgRear.id="backgroundRearLayer";this._bgContainer.appendChild(this._bgRear);this._bgFront=document.createElement("div");this._bgFront.id="backgroundFrontLayer";this._bgContainer.appendChild(this._bgFront);dom(this.root).insertBefore(this._bgContainer,this.$.contentContainer)}},_getDOMRef:function(id){switch(id){case"backgroundFrontLayer":this._ensureBgContainers();return this._bgFront;case"backgroundRearLayer":this._ensureBgContainers();return this._bgRear;case"background":this._ensureBgContainers();return this._bgContainer;case"mainTitle":return dom(this).querySelector("[main-title]");case"condensedTitle":return dom(this).querySelector("[condensed-title]");}return null},/**
    * Returns an object containing the progress value of the scroll effects
    * and the top position of the header.
    *
    * @method getScrollState
    * @return {Object}
-   */getScrollState:function(){return{progress:this._progress,top:this._top}}});(0,_cmsLogin.Polymer)({/** @override */_template:_cmsLogin.html$1`
+   */getScrollState:function(){return{progress:this._progress,top:this._top}}});Polymer({/** @override */_template:html`
     <style>
 
       :host {
@@ -340,7 +340,7 @@ if(30<Math.abs(this._initScrollTop-scrollTop)||10<absDScrollTop){if(isScrollingD
     </style>
 
     <slot></slot>
-`,is:"app-toolbar"});(0,_cmsLogin.Polymer)({is:"iron-request",hostAttributes:{hidden:!0},properties:{/**
+`,is:"app-toolbar"});Polymer({is:"iron-request",hostAttributes:{hidden:!0},properties:{/**
      * A reference to the XMLHttpRequest instance used to generate the
      * network request.
      *
@@ -422,7 +422,7 @@ return 0===status||200<=status&&300>status},/**
    * @return {Promise}
    */send:function(options){var xhr=this.xhr;if(0<xhr.readyState){return null}xhr.addEventListener("progress",function(progress){this._setProgress({lengthComputable:progress.lengthComputable,loaded:progress.loaded,total:progress.total});// Webcomponents v1 spec does not fire *-changed events when not connected
 this.fire("iron-request-progress-changed",{value:this.progress})}.bind(this));xhr.addEventListener("error",function(error){this._setErrored(!0);this._updateStatus();var response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));xhr.addEventListener("timeout",function(error){this._setTimedOut(!0);this._updateStatus();var response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));xhr.addEventListener("abort",function(){this._setAborted(!0);this._updateStatus();var error=new Error("Request aborted."),response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response)}.bind(this));// Called after all of the above.
-xhr.addEventListener("loadend",function(){this._updateStatus();this._setResponse(this.parseResponse());if(!this.succeeded){var error=new Error("The request failed with status code: "+this.xhr.status),response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response);return}this.resolveCompletes(this)}.bind(this));this.url=options.url;var isXHRAsync=!1!==options.async;xhr.open(options.method||"GET",options.url,isXHRAsync);var acceptType={json:"application/json",text:"text/plain",html:"text/html",xml:"application/xml",arraybuffer:"application/octet-stream"}[options.handleAs],headers=options.headers||Object.create(null),newHeaders=Object.create(null);for(var key in headers){newHeaders[key.toLowerCase()]=headers[key]}headers=newHeaders;if(acceptType&&!headers.accept){headers.accept=acceptType}Object.keys(headers).forEach(function(requestHeader){if(/[A-Z]/.test(requestHeader)){_cmsLogin.Base._error("Headers must be lower case, got",requestHeader)}xhr.setRequestHeader(requestHeader,headers[requestHeader])},this);if(isXHRAsync){xhr.timeout=options.timeout;var handleAs=options.handleAs;// If a JSON prefix is present, the responseType must be 'text' or the
+xhr.addEventListener("loadend",function(){this._updateStatus();this._setResponse(this.parseResponse());if(!this.succeeded){var error=new Error("The request failed with status code: "+this.xhr.status),response=options.rejectWithRequest?{error:error,request:this}:error;this.rejectCompletes(response);return}this.resolveCompletes(this)}.bind(this));this.url=options.url;var isXHRAsync=!1!==options.async;xhr.open(options.method||"GET",options.url,isXHRAsync);var acceptType={json:"application/json",text:"text/plain",html:"text/html",xml:"application/xml",arraybuffer:"application/octet-stream"}[options.handleAs],headers=options.headers||Object.create(null),newHeaders=Object.create(null);for(var key in headers){newHeaders[key.toLowerCase()]=headers[key]}headers=newHeaders;if(acceptType&&!headers.accept){headers.accept=acceptType}Object.keys(headers).forEach(function(requestHeader){if(/[A-Z]/.test(requestHeader)){Base._error("Headers must be lower case, got",requestHeader)}xhr.setRequestHeader(requestHeader,headers[requestHeader])},this);if(isXHRAsync){xhr.timeout=options.timeout;var handleAs=options.handleAs;// If a JSON prefix is present, the responseType must be 'text' or the
 // browser won’t be able to parse the response.
 if(!!options.jsonPrefix||!handleAs){handleAs="text"}// In IE, `xhr.responseType` is an empty string when the response
 // returns. Hence, caching it as `xhr._responseType`.
@@ -470,7 +470,7 @@ pieces.push(this._wwwFormUrlEncodePiece(key)+"="+this._wwwFormUrlEncodePiece(obj
 // jQuery does this as well, so this is likely to be widely compatible.
 if(null===str||str===void 0||!str.toString){return""}return encodeURIComponent(str.toString().replace(/\r?\n/g,"\r\n")).replace(/%20/g,"+")},/**
    * Updates the status code and status text.
-   */_updateStatus:function(){this._setStatus(this.xhr.status);this._setStatusText(this.xhr.statusText===void 0?"":this.xhr.statusText)}});(0,_cmsLogin.Polymer)({is:"iron-ajax",/**
+   */_updateStatus:function(){this._setStatus(this.xhr.status);this._setStatusText(this.xhr.statusText===void 0?"":this.xhr.statusText)}});Polymer({is:"iron-ajax",/**
    * Fired before a request is sent.
    *
    * @event iron-ajax-presend
@@ -663,8 +663,8 @@ if(null===str||str===void 0||!str.toString){return""}return encodeURIComponent(s
    * Performs an AJAX request to the specified URL.
    *
    * @return {!IronRequestElement}
-   */generateRequest:function(){var request=/** @type {!IronRequestElement} */document.createElement("iron-request"),requestOptions=this.toRequestOptions();this.push("activeRequests",request);request.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this,request)).then(this._discardRequest.bind(this,request));var evt=this.fire("iron-ajax-presend",{request:request,options:requestOptions},{bubbles:this.bubbles,cancelable:!0});if(evt.defaultPrevented){request.abort();request.rejectCompletes(request);return request}if(this.lastRequest){this.lastRequest.removeEventListener("iron-request-progress-changed",this._boundOnProgressChanged)}request.addEventListener("iron-request-progress-changed",this._boundOnProgressChanged);request.send(requestOptions);this._setLastProgress(null);this._setLastRequest(request);this._setLoading(!0);this.fire("request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});return request},_handleResponse:function(request){if(request===this.lastRequest){this._setLastResponse(request.response);this._setLastError(null);this._setLoading(!1)}this.fire("response",request,{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-response",request,{bubbles:this.bubbles,composed:!0})},_handleError:function(request,error){if(this.verbose){_cmsLogin.Base._error(error)}if(request===this.lastRequest){this._setLastError({request:request,error:error,status:request.xhr.status,statusText:request.xhr.statusText,response:request.xhr.response});this._setLastResponse(null);this._setLoading(!1)}// Tests fail if this goes after the normal this.fire('error', ...)
-this.fire("iron-ajax-error",{request:request,error:error},{bubbles:this.bubbles,composed:!0});this.fire("error",{request:request,error:error},{bubbles:this.bubbles,composed:!0})},_discardRequest:function(request){var requestIndex=this.activeRequests.indexOf(request);if(-1<requestIndex){this.splice("activeRequests",requestIndex,1)}},_requestOptionsChanged:function(){this.debounce("generate-request",function(){if(null==this.url){return}if(this.auto){this.generateRequest()}},this.debounceDuration)}});(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+   */generateRequest:function(){var request=/** @type {!IronRequestElement} */document.createElement("iron-request"),requestOptions=this.toRequestOptions();this.push("activeRequests",request);request.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this,request)).then(this._discardRequest.bind(this,request));var evt=this.fire("iron-ajax-presend",{request:request,options:requestOptions},{bubbles:this.bubbles,cancelable:!0});if(evt.defaultPrevented){request.abort();request.rejectCompletes(request);return request}if(this.lastRequest){this.lastRequest.removeEventListener("iron-request-progress-changed",this._boundOnProgressChanged)}request.addEventListener("iron-request-progress-changed",this._boundOnProgressChanged);request.send(requestOptions);this._setLastProgress(null);this._setLastRequest(request);this._setLoading(!0);this.fire("request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-request",{request:request,options:requestOptions},{bubbles:this.bubbles,composed:!0});return request},_handleResponse:function(request){if(request===this.lastRequest){this._setLastResponse(request.response);this._setLastError(null);this._setLoading(!1)}this.fire("response",request,{bubbles:this.bubbles,composed:!0});this.fire("iron-ajax-response",request,{bubbles:this.bubbles,composed:!0})},_handleError:function(request,error){if(this.verbose){Base._error(error)}if(request===this.lastRequest){this._setLastError({request:request,error:error,status:request.xhr.status,statusText:request.xhr.statusText,response:request.xhr.response});this._setLastResponse(null);this._setLoading(!1)}// Tests fail if this goes after the normal this.fire('error', ...)
+this.fire("iron-ajax-error",{request:request,error:error},{bubbles:this.bubbles,composed:!0});this.fire("error",{request:request,error:error},{bubbles:this.bubbles,composed:!0})},_discardRequest:function(request){var requestIndex=this.activeRequests.indexOf(request);if(-1<requestIndex){this.splice("activeRequests",requestIndex,1)}},_requestOptionsChanged:function(){this.debounce("generate-request",function(){if(null==this.url){return}if(this.auto){this.generateRequest()}},this.debounceDuration)}});Polymer({_template:html`
     <style>
       :host {
         display: block;
@@ -720,16 +720,16 @@ this.fire("iron-ajax-error",{request:request,error:error},{bubbles:this.bubbles,
 // Avoid searching again for the <form> if we already found it.
 if(this._form){return}// Search for the `<form>`, if we don't find it, observe for
 // mutations.
-this._form=(0,_cmsLogin.dom)(this).querySelector("form");if(this._form){this._init();// Since some elements might not be upgraded yet at this time,
+this._form=dom(this).querySelector("form");if(this._form){this._init();// Since some elements might not be upgraded yet at this time,
 // we won't be able to look into their shadowRoots for submittables.
 // We wait a tick and check again for any missing submittable default
 // values.
-this.async(this._saveInitialValues.bind(this),1)}else{this._nodeObserver=(0,_cmsLogin.dom)(this).observeNodes(function(mutations){for(var i=0;i<mutations.addedNodes.length;i++){if("FORM"===mutations.addedNodes[i].tagName){this._form=mutations.addedNodes[i];// At this point in time, all custom elements are expected
+this.async(this._saveInitialValues.bind(this),1)}else{this._nodeObserver=dom(this).observeNodes(function(mutations){for(var i=0;i<mutations.addedNodes.length;i++){if("FORM"===mutations.addedNodes[i].tagName){this._form=mutations.addedNodes[i];// At this point in time, all custom elements are expected
 // to be upgraded, hence we'll be able to traverse their
 // shadowRoots.
-this._init();(0,_cmsLogin.dom)(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}}}.bind(this))}},/**
+this._init();dom(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}}}.bind(this))}},/**
    * @return {void}
-   */detached:function(){if(this._nodeObserver){(0,_cmsLogin.dom)(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}},_init:function(){this._form.addEventListener("submit",this.submit.bind(this));this._form.addEventListener("reset",this.reset.bind(this));// Save the initial values.
+   */detached:function(){if(this._nodeObserver){dom(this).unobserveNodes(this._nodeObserver);this._nodeObserver=null}},_init:function(){this._form.addEventListener("submit",this.submit.bind(this));this._form.addEventListener("reset",this.reset.bind(this));// Save the initial values.
 this._defaults=this._defaults||new WeakMap;this._saveInitialValues()},/**
    * Saves the values of all form elements that will be used when resetting
    * the form. Initially called asynchronously on attach. Any time you
@@ -800,7 +800,7 @@ var event=this.fire("iron-form-presubmit",{},{cancelable:!0});if(!event.defaultP
    * @param  {!Array<!Node>=} submittable Reference to the array of submittables
    * @return {!Array<!Node>}
    * @private
-   */_findElements:function(parent,ignoreName,skipSlots,submittable){submittable=submittable||[];for(var nodes=(0,_cmsLogin.dom)(parent).querySelectorAll("*"),i=0;i<nodes.length;i++){// An element is submittable if it is not disabled, and if it has a
+   */_findElements:function(parent,ignoreName,skipSlots,submittable){submittable=submittable||[];for(var nodes=dom(parent).querySelectorAll("*"),i=0;i<nodes.length;i++){// An element is submittable if it is not disabled, and if it has a
 // name attribute.
 if(!skipSlots&&("slot"===nodes[i].localName||"content"===nodes[i].localName)){this._searchSubmittableInSlot(submittable,nodes[i],ignoreName)}else{this._searchSubmittable(submittable,nodes[i],ignoreName)}}return submittable},/**
    * Traverse the distributed nodes of a slot or content element
@@ -810,9 +810,9 @@ if(!skipSlots&&("slot"===nodes[i].localName||"content"===nodes[i].localName)){th
    * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
    * @return {void}
    * @private
-   */_searchSubmittableInSlot:function(submittable,node,ignoreName){for(var assignedNodes=(0,_cmsLogin.dom)(node).getDistributedNodes(),i=0;i<assignedNodes.length;i++){if(assignedNodes[i].nodeType===Node.TEXT_NODE){continue}// Note: assignedNodes does not contain <slot> or <content> because
+   */_searchSubmittableInSlot:function(submittable,node,ignoreName){for(var assignedNodes=dom(node).getDistributedNodes(),i=0;i<assignedNodes.length;i++){if(assignedNodes[i].nodeType===Node.TEXT_NODE){continue}// Note: assignedNodes does not contain <slot> or <content> because
 // getDistributedNodes flattens the tree.
-this._searchSubmittable(submittable,assignedNodes[i],ignoreName);for(var nestedAssignedNodes=(0,_cmsLogin.dom)(assignedNodes[i]).querySelectorAll("*"),j=0;j<nestedAssignedNodes.length;j++){this._searchSubmittable(submittable,nestedAssignedNodes[j],ignoreName)}}},/**
+this._searchSubmittable(submittable,assignedNodes[i],ignoreName);for(var nestedAssignedNodes=dom(assignedNodes[i]).querySelectorAll("*"),j=0;j<nestedAssignedNodes.length;j++){this._searchSubmittable(submittable,nestedAssignedNodes[j],ignoreName)}}},/**
    * Traverse the distributed nodes of a slot or content element
    * and add all submittable nodes to `submittable`.
    * @param  {!Array<!Node>} submittable Reference to the array of submittables
@@ -856,7 +856,7 @@ var type=element.type.toLowerCase();// Don't do anything for unchecked checkboxe
 // Don't do anything for file, since that requires a different request.
 if(("checkbox"===type||"radio"===type)&&!element.checked||"file"===type){return[]}return[element.value]},_createHiddenElement:function(name,value){var input=document.createElement("input");input.setAttribute("type","hidden");input.setAttribute("name",name);input.setAttribute("value",value);return input},_addSerializedElement:function(json,name,value){// If the name doesn't exist, add it. Otherwise, serialize it to
 // an array,
-if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){json[name]=[json[name]]}json[name].push(value)}}});const template=_cmsLogin.html$1`<iron-iconset-svg name="av" size="24">
+if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){json[name]=[json[name]]}json[name].push(value)}}});const template=html`<iron-iconset-svg name="av" size="24">
 <svg><defs>
 <g id="add-to-queue"><path d="M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12zm-5-7v2h-3v3h-2v-3H8v-2h3V7h2v3h3z"></path></g>
 <g id="airplay"><path d="M6 22h12l-6-6zM21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3V5h18v12h-4v2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></g>
@@ -939,7 +939,7 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
 <g id="web"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"></path></g>
 <g id="web-asset"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H5V8h14v10z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template.content);const template$1=_cmsLogin.html$1`<iron-iconset-svg name="hardware" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template.content);const template$1=html`<iron-iconset-svg name="hardware" size="24">
 <svg><defs>
 <g id="cast"><path d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"></path></g>
 <g id="cast-connected"><path d="M1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm18-7H5v1.63c3.96 1.28 7.09 4.41 8.37 8.37H19V7zM1 10v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11zm20-7H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path></g>
@@ -990,7 +990,7 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
 <g id="videogame-asset"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g>
 <g id="watch"><path d="M20 12c0-2.54-1.19-4.81-3.04-6.27L16 0H8l-.95 5.73C5.19 7.19 4 9.45 4 12s1.19 4.81 3.05 6.27L8 24h8l.96-5.73C18.81 16.81 20 14.54 20 12zM6 12c0-3.31 2.69-6 6-6s6 2.69 6 6-2.69 6-6 6-6-2.69-6-6z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$1.content);const template$2=_cmsLogin.html$1`<iron-iconset-svg name="image" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template$1.content);const template$2=html`<iron-iconset-svg name="image" size="24">
 <svg><defs>
 <g id="add-a-photo"><path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z"></path></g>
 <g id="add-to-photos"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4h-2v-4H9V9h4V5h2v4h4v2z"></path></g>
@@ -1148,7 +1148,7 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
 <g id="wb-iridescent"><path d="M5 14.5h14v-6H5v6zM11 .55V3.5h2V.55h-2zm8.04 2.5l-1.79 1.79 1.41 1.41 1.8-1.79-1.42-1.41zM13 22.45V19.5h-2v2.95h2zm7.45-3.91l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM3.55 4.46l1.79 1.79 1.41-1.41-1.79-1.79-1.41 1.41zm1.41 15.49l1.79-1.8-1.41-1.41-1.79 1.79 1.41 1.42z"></path></g>
 <g id="wb-sunny"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$2.content);const template$3=_cmsLogin.html$1`<iron-iconset-svg name="maps" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template$2.content);const template$3=html`<iron-iconset-svg name="maps" size="24">
 <svg><defs>
 <g id="add-location"><path d="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm4 8h-3v3h-2v-3H8V8h3V5h2v3h3v2z"></path></g>
 <g id="beenhere"><path d="M19 1H5c-1.1 0-1.99.9-1.99 2L3 15.93c0 .69.35 1.3.88 1.66L12 23l8.11-5.41c.53-.36.88-.97.88-1.66L21 3c0-1.1-.9-2-2-2zm-9 15l-5-5 1.41-1.41L10 13.17l7.59-7.59L19 7l-9 9z"></path></g>
@@ -1219,7 +1219,7 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
 <g id="transfer-within-a-station"><path d="M16.49 15.5v-1.75L14 16.25l2.49 2.5V17H22v-1.5zm3.02 4.25H14v1.5h5.51V23L22 20.5 19.51 18zM9.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5.75 8.9L3 23h2.1l1.75-8L9 17v6h2v-7.55L8.95 13.4l.6-3C10.85 12 12.8 13 15 13v-2c-1.85 0-3.45-1-4.35-2.45l-.95-1.6C9.35 6.35 8.7 6 8 6c-.25 0-.5.05-.75.15L2 8.3V13h2V9.65l1.75-.75"></path></g>
 <g id="zoom-out-map"><path d="M15 3l2.3 2.3-2.89 2.87 1.42 1.42L18.7 6.7 21 9V3zM3 9l2.3-2.3 2.87 2.89 1.42-1.42L6.7 5.3 9 3H3zm6 12l-2.3-2.3 2.89-2.87-1.42-1.42L5.3 17.3 3 15v6zm12-6l-2.3 2.3-2.87-2.89-1.42 1.42 2.89 2.87L15 21h6z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$3.content);const template$4=_cmsLogin.html$1`<iron-iconset-svg name="social" size="24">
+</iron-iconset-svg>`;document.head.appendChild(template$3.content);const template$4=html`<iron-iconset-svg name="social" size="24">
 <svg><defs>
 <g id="cake"><path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"></path></g>
 <g id="domain"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"></path></g>
@@ -1252,7 +1252,7 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
 <g id="share"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"></path></g>
 <g id="whatshot"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"></path></g>
 </defs></svg>
-</iron-iconset-svg>`;document.head.appendChild(template$4.content);(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+</iron-iconset-svg>`;document.head.appendChild(template$4.content);Polymer({_template:html`
     <style>
       :host {
         @apply --layout-inline;
@@ -1316,12 +1316,12 @@ if(json[name]===void 0){json[name]=value}else{if(!Array.isArray(json[name])){jso
     <div class="tab-content">
       <slot></slot>
     </div>
-`,is:"paper-tab",behaviors:[_cmsLogin.IronControlState,_cmsLogin.IronButtonState,_cmsLogin.PaperRippleBehavior],properties:{/**
+`,is:"paper-tab",behaviors:[IronControlState,IronButtonState,PaperRippleBehavior],properties:{/**
      * If true, the tab will forward keyboard clicks (enter/space) to
      * the first anchor element found in its descendants
-     */link:{type:Boolean,value:!1,reflectToAttribute:!0}},/** @private */hostAttributes:{role:"tab"},listeners:{down:"_updateNoink",tap:"_onTap"},attached:function(){this._updateNoink()},get _parentNoink(){var parent=(0,_cmsLogin.dom)(this).parentNode;return!!parent&&!!parent.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink},_onTap:function(event){if(this.link){var anchor=this.queryEffectiveChildren("a");if(!anchor){return}// Don't get stuck in a loop delegating
+     */link:{type:Boolean,value:!1,reflectToAttribute:!0}},/** @private */hostAttributes:{role:"tab"},listeners:{down:"_updateNoink",tap:"_onTap"},attached:function(){this._updateNoink()},get _parentNoink(){var parent=dom(this).parentNode;return!!parent&&!!parent.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink},_onTap:function(event){if(this.link){var anchor=this.queryEffectiveChildren("a");if(!anchor){return}// Don't get stuck in a loop delegating
 // the listener from the child anchor
-if(event.target===anchor){return}anchor.click()}}});const template$5=_cmsLogin.html$1`<iron-iconset-svg name="paper-tabs" size="24">
+if(event.target===anchor){return}anchor.click()}}});const template$5=html`<iron-iconset-svg name="paper-tabs" size="24">
 <svg><defs>
 <g id="chevron-left"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></g>
 <g id="chevron-right"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></g>
@@ -1329,7 +1329,7 @@ if(event.target===anchor){return}anchor.click()}}});const template$5=_cmsLogin.h
 </iron-iconset-svg>`;document.head.appendChild(template$5.content);const IronMenubarBehaviorImpl={hostAttributes:{role:"menubar"},/**
    * @type {!Object}
    */keyBindings:{left:"_onLeftKey",right:"_onRightKey"},_onUpKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},_onDownKey:function(event){this.focusedItem.click();event.detail.keyboardEvent.preventDefault()},get _isRTL(){return"rtl"===window.getComputedStyle(this).direction},_onLeftKey:function(event){if(this._isRTL){this._focusNext()}else{this._focusPrevious()}event.detail.keyboardEvent.preventDefault()},_onRightKey:function(event){if(this._isRTL){this._focusPrevious()}else{this._focusNext()}event.detail.keyboardEvent.preventDefault()},_onKeydown:function(event){if(this.keyboardEventMatchesKeys(event,"up down left right esc")){return}// all other keys focus the menu item starting with that character
-this._focusWithKeyboardEvent(event)}};/** @polymerBehavior */_exports.IronMenubarBehaviorImpl=IronMenubarBehaviorImpl;const IronMenubarBehavior=[_cmsLogin.IronMenuBehavior,IronMenubarBehaviorImpl];_exports.IronMenubarBehavior=IronMenubarBehavior;var ironMenubarBehavior={IronMenubarBehaviorImpl:IronMenubarBehaviorImpl,IronMenubarBehavior:IronMenubarBehavior};_exports.$ironMenubarBehavior=ironMenubarBehavior;(0,_cmsLogin.Polymer)({_template:_cmsLogin.html$1`
+this._focusWithKeyboardEvent(event)}},IronMenubarBehavior=[IronMenuBehavior,IronMenubarBehaviorImpl];/** @polymerBehavior */var ironMenubarBehavior={IronMenubarBehaviorImpl:IronMenubarBehaviorImpl,IronMenubarBehavior:IronMenubarBehavior};Polymer({_template:html`
     <style>
       :host {
         @apply --layout;
@@ -1456,7 +1456,7 @@ this._focusWithKeyboardEvent(event)}};/** @polymerBehavior */_exports.IronMenuba
     </div>
 
     <paper-icon-button icon="paper-tabs:chevron-right" class$="[[_computeScrollButtonClass(_rightHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onRightScrollButtonDown" tabindex="-1"></paper-icon-button>
-`,is:"paper-tabs",behaviors:[_cmsLogin.IronResizableBehavior,IronMenubarBehavior],properties:{/**
+`,is:"paper-tabs",behaviors:[IronResizableBehavior,IronMenubarBehavior],properties:{/**
      * If true, ink ripple effect is disabled. When this property is changed,
      * all descendant `<paper-tab>` elements have their `noink` property
      * changed to the new value as well.
@@ -1487,11 +1487,11 @@ this._focusWithKeyboardEvent(event)}};/** @polymerBehavior */_exports.IronMenuba
      * automatically selected (if `autoselect` is true).
      */autoselectDelay:{type:Number,value:0},_step:{type:Number,value:10},_holdDelay:{type:Number,value:1},_leftHidden:{type:Boolean,value:!1},_rightHidden:{type:Boolean,value:!1},_previousTab:{type:Object}},/** @private */hostAttributes:{role:"tablist"},listeners:{"iron-resize":"_onTabSizingChanged","iron-items-changed":"_onTabSizingChanged","iron-select":"_onIronSelect","iron-deselect":"_onIronDeselect"},/**
    * @type {!Object}
-   */keyBindings:{"left:keyup right:keyup":"_onArrowKeyup"},created:function(){this._holdJob=null;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;this._bindDelayedActivationHandler=this._delayedActivationHandler.bind(this);this.addEventListener("blur",this._onBlurCapture.bind(this),!0)},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},detached:function(){this._cancelPendingActivation()},_noinkChanged:function(noink){var childTabs=(0,_cmsLogin.dom)(this).querySelectorAll("paper-tab");childTabs.forEach(noink?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(element){element.setAttribute("noink","")},_removeNoinkAttribute:function(element){element.removeAttribute("noink")},_computeScrollButtonClass:function(hideThisButton,scrollable,hideScrollButtons){if(!scrollable||hideScrollButtons){return"hidden"}if(hideThisButton){return"not-visible"}return""},_computeTabsContentClass:function(scrollable,fitContainer){return scrollable?"scrollable"+(fitContainer?" fit-container":""):" fit-container"},_computeSelectionBarClass:function(noBar,alignBottom){if(noBar){return"hidden"}else if(alignBottom){return"align-bottom"}return""},// TODO(cdata): Add `track` response back in when gesture lands.
+   */keyBindings:{"left:keyup right:keyup":"_onArrowKeyup"},created:function(){this._holdJob=null;this._pendingActivationItem=void 0;this._pendingActivationTimeout=void 0;this._bindDelayedActivationHandler=this._delayedActivationHandler.bind(this);this.addEventListener("blur",this._onBlurCapture.bind(this),!0)},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},detached:function(){this._cancelPendingActivation()},_noinkChanged:function(noink){var childTabs=dom(this).querySelectorAll("paper-tab");childTabs.forEach(noink?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(element){element.setAttribute("noink","")},_removeNoinkAttribute:function(element){element.removeAttribute("noink")},_computeScrollButtonClass:function(hideThisButton,scrollable,hideScrollButtons){if(!scrollable||hideScrollButtons){return"hidden"}if(hideThisButton){return"not-visible"}return""},_computeTabsContentClass:function(scrollable,fitContainer){return scrollable?"scrollable"+(fitContainer?" fit-container":""):" fit-container"},_computeSelectionBarClass:function(noBar,alignBottom){if(noBar){return"hidden"}else if(alignBottom){return"align-bottom"}return""},// TODO(cdata): Add `track` response back in when gesture lands.
 _onTabSizingChanged:function(){this.debounce("_onTabSizingChanged",function(){this._scroll();this._tabChanged(this.selectedItem)},10)},_onIronSelect:function(event){this._tabChanged(event.detail.item,this._previousTab);this._previousTab=event.detail.item;this.cancelDebouncer("tab-changed")},_onIronDeselect:function(event){this.debounce("tab-changed",function(){this._tabChanged(null,this._previousTab);this._previousTab=null;// See polymer/polymer#1305
 },1)},_activateHandler:function(){// Cancel item activations scheduled by keyboard events when any other
 // action causes an item to be activated (e.g. clicks).
-this._cancelPendingActivation();_cmsLogin.IronMenuBehaviorImpl._activateHandler.apply(this,arguments)},/**
+this._cancelPendingActivation();IronMenuBehaviorImpl._activateHandler.apply(this,arguments)},/**
    * Activates an item after a delay (in milliseconds).
    */_scheduleActivation:function(item,delay){this._pendingActivationItem=item;this._pendingActivationTimeout=this.async(this._bindDelayedActivationHandler,delay)},/**
    * Activates the last item given to `_scheduleActivation`.
@@ -1507,7 +1507,7 @@ this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.rem
 this.$.selectionBar.classList.remove("expand");this.$.selectionBar.classList.remove("contract");this._positionBar(this._pos.width,this._pos.left);return}var oldRect=old.getBoundingClientRect(),oldIndex=this.items.indexOf(old),index=this.items.indexOf(tab),m=5;// bar animation: expand
 this.$.selectionBar.classList.add("expand");var moveRight=oldIndex<index,isRTL=this._isRTL;if(isRTL){moveRight=!moveRight}if(moveRight){this._positionBar(this._calcPercent(tabRect.left+tabRect.width-oldRect.left,w)-m,this._left)}else{this._positionBar(this._calcPercent(oldRect.left+oldRect.width-tabRect.left,w)-m,this._calcPercent(tabOffsetLeft,w)+m)}if(this.scrollable){this._scrollToSelectedIfNeeded(tabRect.width,tabOffsetLeft)}},_scrollToSelectedIfNeeded:function(tabWidth,tabOffsetLeft){var l=tabOffsetLeft-this.$.tabsContainer.scrollLeft;if(0>l){this.$.tabsContainer.scrollLeft+=l}else{l+=tabWidth-this.$.tabsContainer.offsetWidth;if(0<l){this.$.tabsContainer.scrollLeft+=l}}},_calcPercent:function(w,w0){return 100*w/w0},_positionBar:function(width,left){width=width||0;left=left||0;this._width=width;this._left=left;this.transform("translateX("+left+"%) scaleX("+width/100+")",this.$.selectionBar)},_onBarTransitionEnd:function(e){var cl=this.$.selectionBar.classList;// bar animation: expand -> contract
 if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionBar(this._pos.width,this._pos.left);// bar animation done
-}else if(cl.contains("contract")){cl.remove("contract")}}});class cmsLangsMenu extends _cmsLogin.cmsDropdownMenuTemplate{static get _getStyles(){return _cmsLogin.html`
+}else if(cl.contains("contract")){cl.remove("contract")}}});class cmsLangsMenu extends cmsDropdownMenuTemplate{static get _getStyles(){return html$1`
         .alt{
             display: flex;
             flex-direction: row;
@@ -1541,17 +1541,17 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
             box-shadow: 0px 0px 0px;
             color: var(--app-item-backgound-color);
         }
-        `}static get _getButtons(){return _cmsLogin.html`
+        `}static get _getButtons(){return html$1`
             <div inputs name="[[itemLabel]]" aria-label="mode-category" on-click="open">
                 [[lang]]
-            </div>`}static get _getListItem(){return _cmsLogin.html`
+            </div>`}static get _getListItem(){return html$1`
             <paper-listbox class="dropdown-content" slot="dropdown-content">
                 <dom-repeat repeat items="[[langs]]" as="item">
                     <template>
                         <paper-item class="form-al" on-click="_setResValue">[[item]]</paper-item>
                     </template>
                 </dom-repeat>
-            </paper-listbox>`}static get is(){return"cms-langs-menu"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Array,value:[],notify:!0},list:{type:Array,notify:!0}}}ready(){super.ready()}_setResValue(evt){this.lang=evt.model.__data.item;this.$.dropdown.close();this.opened=!1}}_exports.cmsLangsMenu=cmsLangsMenu;customElements.define(cmsLangsMenu.is,cmsLangsMenu);var cmsLangsMenu$1={cmsLangsMenu:cmsLangsMenu};_exports.$cmsLangsMenu=cmsLangsMenu$1;class cmsSidebarItemLink extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+            </paper-listbox>`}static get is(){return"cms-langs-menu"}static get properties(){return{lang:{type:String,notify:!0},langs:{type:Array,value:[],notify:!0},list:{type:Array,notify:!0}}}ready(){super.ready()}_setResValue(evt){this.lang=evt.model.__data.item;this.$.dropdown.close();this.opened=!1}}customElements.define(cmsLangsMenu.is,cmsLangsMenu);var cmsLangsMenu$1={cmsLangsMenu:cmsLangsMenu};class cmsSidebarItemLink extends PolymerElement{static get template(){return html$1`
     <style>
         a {
             text-decoration: none;
@@ -1603,7 +1603,7 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
     </main>
     `}static get is(){return"cms-sidebar-item-link"}static get properties(){return{translator:{type:Object,notify:!0,value:function(){return MyAppGlobals[window.cms];//MyAppGlobals.translator
 }},lang:{type:String,notify:!0},langs:{type:Object,notify:!0,value:{}},litAnchor:{type:Object},hovered:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},lit:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0},url:String,view:String,views:{type:Array,value:[]},iconString:String,title:String}}static get observers(){return["_routePageChanged(routeData)"]}ready(){super.ready();this.translator.target("cms-content","setLangObject",this._setLObj.bind(this));this.translator.target("cms-content","changeLang",this._setLang.bind(this),!1);this.translator.shoot("cms-content","setLangObject")}_setLang(res,lang){this.lang=lang;res.call(this)}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)}}__changeLang(){this.lang=this.translator.lang;this.translator.changeLang.call(this)}_routePageChanged(routeData){if(0<this.views.length){let view=this.views.filter(item=>{if(routeData.page===item)return item}).pop();if(!!view){this.lit=!0}else{this.lit=!1}}}_translate(word){// console.log(word)
-}_mouseOver(){this.hovered=!0}_mouseOut(){this.hovered=!1}}customElements.define(cmsSidebarItemLink.is,cmsSidebarItemLink);class cmsSidebarItem extends _cmsLogin.PolymerElement{static get template(){return _cmsLogin.html`
+}_mouseOver(){this.hovered=!0}_mouseOut(){this.hovered=!1}}customElements.define(cmsSidebarItemLink.is,cmsSidebarItemLink);class cmsSidebarItem extends PolymerElement{static get template(){return html$1`
     <style>
         .incolumn {
             display: flex;
@@ -2039,7 +2039,7 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
       }
     </style>
   </template>
-</dom-module>`;document.head.appendChild($_documentContainer.content);(0,_cmsLogin.setPassiveTouchGestures)(!0);(0,_cmsLogin.setRootPath)("/");class cmsControler extends(0,_cmsLogin.cmslangsLib)(_cmsLogin.PolymerElement){static get template(){return _cmsLogin.html`
+</dom-module>`;document.head.appendChild($_documentContainer.content);setPassiveTouchGestures(!0);setRootPath("/");class cmsControler extends cmslangsLib(PolymerElement){static get template(){return html$1`
     <style>
         :host {
             display: var(--app-block)
@@ -2224,4 +2224,4 @@ if(cl.contains("expand")){cl.remove("expand");cl.add("contract");this._positionB
 }},stylesSet:{type:Boolean,notify:!0,value:!1},lang:{type:String,notify:!0,observer:"__changeLang"},langsArray:{type:Array,notify:!0},pageArray:{type:Array,notify:!0,value:function(){return[{title:"settings",description:"CMS settings & tools",pages:[{url:"settings/projects/",views:["projects"],iconString:"av:library-books",title:"project management"},{url:"settings/templates/",views:["templates"],iconString:"av:library-books",title:"app templates"},{url:"settings/tools/",views:["tools"],iconString:"settings",title:"tools"}]},{title:"Content",description:"pages sub-categories articles",pages:[{url:"content/pages/",views:["pages"],iconString:"av:library-books",title:"pages & categories"},{url:"content/articles/",views:["articles"],iconString:"av:library-books",title:"articles"}]},{title:"Media",description:"images videos",pages:[{url:"media/galleries",views:["galleries","view-images"],iconString:"av:art-track",title:"galleries & images"},{url:"media/playlists",views:["playlists","view-videos"],iconString:"av:art-track",title:"playlists & videos"}]},{title:"Users",description:"users groups permissions",pages:[{url:"users/accounts/",views:["accounts"],iconString:"perm-identity",title:"users & groups"},{url:"users/login/",views:["login"],iconString:"perm-identity",title:"login & logout"}]},{title:"Preview",description:"preview the app",pages:[{views:["Preview"],url:"",iconString:"",title:"Preview the app"}]}]}},langs:{type:Object,notify:!0,value:{},observer:"_setLang"},openMain:{type:Boolean,notify:!0},popout:{type:String,observer:"_pageChanged"},page:{type:String,observer:"_pageChanged"},confirm:{type:String,observer:"_pageChanged"},categories:{type:Array,notify:!0},routeData:Object,subroute:Object}}static get observers(){return["_routePageChanged(routeData.page, route)","_routePopoutChanged(popOutRoute.path)"]}connectedCallback(){super.connectedCallback();/* this._observer = new FlattenedNodesObserver(this, (info) => {
                                     this.info = info;
                                 });*/}disconnectedCallback(){super.disconnectedCallback();//this._observer.disconnect();
-}ready(){super.ready();this.addEventListener("confirm",this.openConfirm);this.addEventListener("closepopout",this._closeConfirm);this.translator.target("cms-controler","setLangObject",this._setLObj.bind(this));this.translator.target("cms-controler","changeLang",this.__setLang.bind(this),!1);this.translator.shoot("cms-controler","setLangObject");this.getLangs().then(querySnapshot=>{this.langsArray=querySnapshot["west-europe"]})}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)};}__setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.translator.shoot(void 0,"changeLang",this.lang);window.localStorage.setItem("lang",this.lang)}_setLang(){let lang=window.localStorage.getItem("lang");if(!0===!!lang){if(0<lang.split("").length){this.set("lang",lang)}}else{this.set("lang","en")}}_logout(){this.translator.logoutFire();window.location.reload()}openConfirm(event){this.confirm="confirm";if(!this.$.confirm.openConfirm){setTimeout(()=>{this.$.confirm.openConfirm(event)},500)}else{this.$.confirm.openConfirm(event)}}_closeConfirm(){this.confirm=""}_routePopoutChanged(popOutRoute){if(!!popOutRoute){if(-1!==["/add-category-pages","/edit-category-pages"].indexOf(popOutRoute)){this.popout="add-category-pages"}else if(-1!==["/add-subcategory-pages","/edit-subcategory-pages"].indexOf(popOutRoute)){this.popout="add-subcategory-pages"}else if(-1!==["/add-gallery","/edit-gallery"].indexOf(popOutRoute)){this.popout="add-gallery"}else if(-1!==["/add-images","/edit-images"].indexOf(popOutRoute)){this.popout="add-images"}else if(-1!==["/add-articles","/edit-articles"].indexOf(popOutRoute)){this.popout="add-articles"}else{this.popout=""}}}_routePageChanged(page){if(!page){this.page="cmshome";return}if(!!page){if(-1!==["settings","app","content","users","cmshome","media"].indexOf(page)){this.page=page}else{this.page="view404"}}}_resetEvent(){this._changeSectionDebouncer=_cmsLogin.Debouncer.debounce(this._changeSectionDebouncer,_cmsLogin.microTask,()=>{window.dispatchEvent(new CustomEvent("reset"))})}_pageChanged(page){if("settings"===page){new Promise((res,rej)=>_require.default(["./cms-settings.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsSettings||{});return}if("content"===page){new Promise((res,rej)=>_require.default(["./cms-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsContent||{});return}if("users"===page){new Promise((res,rej)=>_require.default(["./cms-user-viewer.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsUserViewer||{});return}if("media"===page){new Promise((res,rej)=>_require.default(["./cms-media.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsMedia||{});return}if("view404"===page){new Promise((res,rej)=>_require.default(["./cms-404-warning.js"],res,rej)).then(bundle=>bundle&&bundle.$cms$404Warning||{});return}if("add-category-pages"===page){new Promise((res,rej)=>_require.default(["./pages/cms-page-cats-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsPageCatsContent||{}).then(item=>{});return}if("add-subcategory-pages"===page){new Promise((res,rej)=>_require.default(["./sub-categories/cms-subcats-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsSubcatsContent||{}).then(item=>{});return}if("add-articles"===page){new Promise((res,rej)=>_require.default(["./articles/cms-article-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsArticleContent||{}).then(item=>{});return}if("add-images"===page){new Promise((res,rej)=>_require.default(["./media/cms-images-content.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsImagesContent||{}).then(item=>{});return}if("confirm"===page){new Promise((res,rej)=>_require.default(["./tools/cms-confirm.js"],res,rej)).then(bundle=>bundle&&bundle.$cmsConfirm||{}).then(item=>{});return}}}customElements.define(cmsControler.is,cmsControler)});
+}ready(){super.ready();this.addEventListener("confirm",this.openConfirm);this.addEventListener("closepopout",this._closeConfirm);this.translator.target("cms-controler","setLangObject",this._setLObj.bind(this));this.translator.target("cms-controler","changeLang",this.__setLang.bind(this),!1);this.translator.shoot("cms-controler","setLangObject");this.getLangs().then(querySnapshot=>{this.langsArray=querySnapshot["west-europe"]})}_setLObj(res,querySnapshot){if("data"in querySnapshot){let langs=querySnapshot.data();res.call(this,langs)};}__setLang(res,lang){this.lang=lang;res.call(this)}__changeLang(){this.translator.shoot(void 0,"changeLang",this.lang);window.localStorage.setItem("lang",this.lang)}_setLang(){let lang=window.localStorage.getItem("lang");if(!0===!!lang){if(0<lang.split("").length){this.set("lang",lang)}}else{this.set("lang","en")}}_logout(){this.translator.logoutFire();window.location.reload()}openConfirm(event){this.confirm="confirm";if(!this.$.confirm.openConfirm){setTimeout(()=>{this.$.confirm.openConfirm(event)},500)}else{this.$.confirm.openConfirm(event)}}_closeConfirm(){this.confirm=""}_routePopoutChanged(popOutRoute){if(!!popOutRoute){if(-1!==["/add-category-pages","/edit-category-pages"].indexOf(popOutRoute)){this.popout="add-category-pages"}else if(-1!==["/add-subcategory-pages","/edit-subcategory-pages"].indexOf(popOutRoute)){this.popout="add-subcategory-pages"}else if(-1!==["/add-gallery","/edit-gallery"].indexOf(popOutRoute)){this.popout="add-gallery"}else if(-1!==["/add-images","/edit-images"].indexOf(popOutRoute)){this.popout="add-images"}else if(-1!==["/add-articles","/edit-articles"].indexOf(popOutRoute)){this.popout="add-articles"}else{this.popout=""}}}_routePageChanged(page){if(!page){this.page="cmshome";return}if(!!page){if(-1!==["settings","app","content","users","cmshome","media"].indexOf(page)){this.page=page}else{this.page="view404"}}}_resetEvent(){this._changeSectionDebouncer=Debouncer.debounce(this._changeSectionDebouncer,microTask,()=>{window.dispatchEvent(new CustomEvent("reset"))})}_pageChanged(page){if("settings"===page){import("./cms-settings.js").then(bundle=>bundle&&bundle.$cmsSettings||{});return}if("content"===page){import("./cms-content.js").then(bundle=>bundle&&bundle.$cmsContent||{});return}if("users"===page){import("./cms-user-viewer.js").then(bundle=>bundle&&bundle.$cmsUserViewer||{});return}if("media"===page){import("./cms-media.js").then(bundle=>bundle&&bundle.$cmsMedia||{});return}if("view404"===page){import("./cms-404-warning.js").then(bundle=>bundle&&bundle.$cms$404Warning||{});return}if("add-category-pages"===page){import("./pages/cms-page-cats-content.js").then(bundle=>bundle&&bundle.$cmsPageCatsContent||{}).then(item=>{});return}if("add-subcategory-pages"===page){import("./sub-categories/cms-subcats-content.js").then(bundle=>bundle&&bundle.$cmsSubcatsContent||{}).then(item=>{});return}if("add-articles"===page){import("./articles/cms-article-content.js").then(bundle=>bundle&&bundle.$cmsArticleContent||{}).then(item=>{});return}if("add-images"===page){import("./media/cms-images-content.js").then(bundle=>bundle&&bundle.$cmsImagesContent||{}).then(item=>{});return}if("confirm"===page){import("./tools/cms-confirm.js").then(bundle=>bundle&&bundle.$cmsConfirm||{}).then(item=>{});return}}}customElements.define(cmsControler.is,cmsControler);export{appLayoutBehavior as $appLayoutBehavior,cmsLangsMenu$1 as $cmsLangsMenu,ironMenubarBehavior as $ironMenubarBehavior,AppLayoutBehavior,IronMenubarBehavior,IronMenubarBehaviorImpl,cmsLangsMenu};
