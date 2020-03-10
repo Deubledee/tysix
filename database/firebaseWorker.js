@@ -1,6 +1,9 @@
 
 const admin = require("firebase-admin");
-const serviceAccount2 = require("../data/tysix-831d1b948507")
+const fs = require('fs');
+let projects = JSON.parse(fs.readFileSync('data/projects.json'));
+
+const serviceAccount2 = projects.main.server
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount2),
@@ -8,8 +11,6 @@ admin.initializeApp({
 });
 
 const auth = admin.auth()
-console.log(auth)
-
 const dB = admin.firestore()
 class worker {
     constructor() {

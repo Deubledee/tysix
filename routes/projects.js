@@ -8,9 +8,8 @@ const G = new Projects()
 const schema = G.schema,
     rootValue = G.rootValue
 //graphQL api route
+/*
 router.post('/', (req, res, next) => {
-    console.log(req.headers);
-
     let projects = JSON.parse(fs.readFileSync('data/projects.json'));
     let origin = req.hostname
     //TODO active and licence verification
@@ -20,7 +19,7 @@ router.post('/', (req, res, next) => {
     else {
         res.status('404').send('origin not allowed')
     }
-});
+});*/
 router.get('/', graphqlHTTP({
     schema,
     rootValue,

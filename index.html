@@ -144,13 +144,16 @@
             <span class="spanfour"> Deubledee </span>
         </nav>
     </cms-login>
+
+    <!--script type="module" 
+        for es5 build
+    -->
     <script>
 
         getFirebaseContent()
 
         async function getFirebaseContent() {
-            let fail
-            let query = `mainProject(apiKey: "AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18", projectId: "tysix"){ config { apiKey authDomain databaseURL projectId storageBucket messagingSenderId } }`
+            let query = `mainProject(licence: "VoSSMkzGYmPTvUhh9mgL-tySix-CMS_@Copyright", projectId: "tysix"){ config { apiKey authDomain databaseURL projectId storageBucket messagingSenderId } }`
 
             //  change url before build  and create push-manifest \\
 
@@ -160,29 +163,27 @@
                     let config = res.data.mainProject.config
                     if (!!config) {
                         firebase.initializeApp(config);
-                        //uncoment for es6 build
-                        // import("./src/cms-login.js")
-                        fail = false
+
+                        /* uncomment for es6 build */
+                        //import("./src/cms-login.js")
                     } else {
                         throw new Error('failed to get config')
+                        throw new Error('config ', config)
                     }
                 }).catch(err => {
-                    fail = true
                     console.error(err)
-                });;
-
-            if (!fail) {
-                console.log(firebase.app(), 'got here')
-            }
+                });
         }
 
         function request(url, method, formData) {
             var req = {
                 method: method,
                 headers: {
+                    'Access-Control-Allow-Origin': 'http://localhost/',
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Methods': 'GET, POST'
-                    // 'Access-Control-Allow-Origin': 'https://localhost/',
+                    "Accept": "application/json",
+                    'Access-Control-Allow-Methods': 'POST',
+                    'Tysix-API-Origin-Control': 'AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18',
                 }
             }
             if (!!formData) {
