@@ -1,0 +1,52 @@
+{
+  "/": {
+    "src/cms-login.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/content/.*": {
+    "cms/cms-content.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/media/.*": {
+    "cms/cms-media.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/settings/.*": {
+    "cms/cms-settings.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  },
+  "/users": {
+    "cms/cms-user-viewer.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js": {
+      "type": "script",
+      "weight": 1
+    }
+  }
+}

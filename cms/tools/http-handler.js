@@ -1,20 +1,22 @@
+
 function request(url, method, formData) {
     var req = {
         method: method,
         headers: {
+            'Access-Control-Allow-Origin': 'http://localhost/',
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Methods': 'GET, POST'
-            // 'Access-Control-Allow-Origin': 'https://localhost/',
+            "Accept": "application/json",
+            'Access-Control-Allow-Methods': 'POST',
+            'Tysix-API-Origin-Control': 'AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18',
         }
     }
     if (!!formData) {
         req.body = JSON.stringify({
             query: `{
-                    ${formData}                      
-                }`
+                            ${formData}                      
+                        }`
         })
     }
-
     return fetch(url, req)
 }
 export { request };

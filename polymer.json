@@ -1,34 +1,16 @@
 {
-  "entrypoint": "index.html",
-  "shell": "./src/cms-login.js",
+  "entrypoint": "src/index.html",
+  "shell": "src/cms-login.js",
+  "fragments": [],
   "sources": [
-    "src/js/*",
     "data/*"
   ],
   "extraDependencies": [
     "manifest.json",
-    "node_modules/@webcomponents/webcomponentsjs/**"
+    "node_modules/@webcomponents/webcomponentsjs/**",
+    "push-manifest.json"
   ],
   "builds": [
-    {
-      "name": "es6-AMD",
-      "browserCapabilities": [
-        "es2015"
-      ],
-      "js": {
-        "compile": "es2015",
-        "minify": true,
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": false
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
-      "addServiceWorker": true
-    },
     {
       "name": "es6-noAMD",
       "browserCapabilities": [
@@ -40,7 +22,7 @@
         "transformModulesToAmd": false
       },
       "css": {
-        "minify": false
+        "minify": true
       },
       "html": {
         "minify": true
@@ -49,11 +31,12 @@
       "addServiceWorker": true
     }
   ],
-  "moduleResolution": "node",
-  "npm": true,
   "lint": {
     "rules": [
       "polymer-3"
     ]
-  }
+  },
+  "npm": true,
+  "componentDir": "node_modules/",
+  "moduleResolution": "node"
 }

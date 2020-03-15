@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <title>TySix</title>
+    <!-- Google Tag Manager -->
+
+    <!-- End Google Tag Manager -->
+    <link rel="shortcut icon" sizes="32x32" href="images/shop-icon-32.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@Polymer">
+    <meta property="og:title" content="Title Here" />
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CMS">
+    <meta name="theme-color" content="#fff">
+    <meta name="description" content="Polymer & firebase/firestore based content management service app" />
+
+    <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
+
+    <script defer src="https://www.gstatic.com/firebasejs/7.10.0/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.10.0/firebase-firestore.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.10.0/firebase-storage.js"></script>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.3.2/web-animations-next-lite.min.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            // Delay registration until after the page has loaded, to ensure that our
+            // precaching requests don't degrade the first visit experience.
+            // See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
+            window.addEventListener('load', function () {
+                // Your service-worker.js *must* be located at the top-level directory relative to your site.
+                // It won't be able to control pages unless it's located at the same level or higher than them.
+                // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
+                // See https://github.com/slightlyoff/ServiceWorker/issues/468
+                navigator.serviceWorker.register('src/service-worker.js', { scope: './src/' }).then(function (reg) {
+                    // updatefound is fired if service-worker.js changes.
+                    reg.onupdatefound = function () {
+                        // The updatefound event implies that reg.installing is set; see
+                        // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
+                        var installingWorker = reg.installing;
+
+                        installingWorker.onstatechange = function () {
+                            switch (installingWorker.state) {
+                                case 'installed':
+                                    if (navigator.serviceWorker.controller) {
+                                        // At this point, the old content will have been purged and the fresh content will
+                                        // have been added to the cache.
+                                        // It's the perfect time to display a "New content is available; please refresh."
+                                        // message in the page's interface.
+                                        console.log('New or updated content is available.');
+                                    } else {
+                                        // At this point, everything has been precached.
+                                        // It's the perfect time to display a "Content is cached for offline use." message.
+                                        console.log('Content is now available offline!');
+                                    }
+                                    break;
+
+                                case 'redundant':
+                                    console.error('The installing service worker became redundant.');
+                                    break;
+                            }
+                        };
+                    };
+                }).catch(function (e) {
+                    console.error('Error during service worker registration:', e);
+                });
+            });
+        }
+    </script>
+    <script type="module">
+        getFirebaseContent()
+        async function getFirebaseContent() {
+            let query = `mainProject(projectId: "tysix"){ config { apiKey authDomain databaseURL projectId storageBucket messagingSenderId } }`
+            let url = (location.origin === "https://tysix.herokuapp.com") ? '' : 'http://127.0.0.1:5000/' //`https://tysix.herokuapp.com/`
+            await request(`${url}api/projects`, 'POST', query, false)
+                .then(res => res.json())
+                .then(res => {
+                    let config = res.data.mainProject.config
+                    if (!!config) {
+                        firebase.initializeApp(config);
+                        /* comment for esm build */
+                        import("./cms-login.js")
+                    } else {
+                        throw new Error('failed to get config', config)
+                    }
+                }).catch(err => {
+                    console.error(err)
+                });
+        }
+
+        function request(url, method, formData, client) {
+            var req = {
+                method: method,
+                headers: {
+                    'Access-Control-Allow-Origin': 'http://127.0.0.1:5000',//'https://tysix.herokuapp.com',
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    'Access-Control-Allow-Methods': 'POST',
+                    'Tysix-API-Origin-Control': 'AIzaSyA5IhpwWxIyCICTAce83McBCgsEVlSkq18',
+                    'Tysix-licence-Origin-Control': "VoSSMkzGYmPTvUhh9mgL-tySix-CMS_@Copyright"
+                }
+            }
+
+            req.headers
+            if (!!formData) {
+                req.body = JSON.stringify({
+                    query: `{
+                            ${formData}                      
+                        }`
+                })
+            }
+            return fetch(url, req)
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', 'Noto', sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 100vh;
+            background-color: var(--app-backgound-color);
+            overflow: hidden;
+        }
+
+        paper-button.diferent {
+            margin-top: 15px;
+            color: black;
+            border-radius: 25px;
+            background-color: #bbdefb;
+
+            --paper-button: {
+                width: 185px
+            }
+        }
+
+        nav {
+            display: flex;
+            flex-flow: column;
+            box-sizing: border-box;
+            padding: 13px;
+            /* background-color: #ececec;*/
+            margin-bottom: 5px;
+        }
+
+        nav span {
+            text-align: center;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .spanone {
+            font-style: normal;
+            margin-bottom: 15px;
+            font-size: 99px;
+            font-weight: 500;
+            color: #78daeb;
+            text-shadow: 4px 4px 7px grey;
+        }
+
+        .spantow {
+            font-weight: 500;
+            color: #c6dafc;
+            text-shadow: 1px 2px 4px grey;
+        }
+
+        .spanthree {
+            margin-top: 25px;
+            font-weight: 500;
+            color: #f2f2f2;
+            text-shadow: 1px 2px 4px #263238
+        }
+
+        .spanfour {
+            font-size: small;
+            font-weight: 600;
+            color: #263238;
+            text-shadow: 2px 2px 4px #9e9e9e;
+        }
+
+        .divsquare {
+            background-color: #f2f2f2;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            padding: 2px;
+            border-bottom-right-radius: 13px;
+            border-bottom-left-radius: 13px;
+            border-top-left-radius: 13px;
+            height: 132px;
+            width: 122px;
+            font-size: 97px;
+            box-shadow: 4px 4px 4px grey
+        }
+
+        div[spinnercenter] {
+            position: fixed;
+            left: 50%;
+            top: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <noscript>
+        <meta HTTP-EQUIV="REFRESH" content="0; url=noscript">
+    </noscript>
+
+    <script>
+        window.performance && performance.mark && performance.mark('index.html');
+    </script>
+
+
+    <div spinnercenter>
+        <paper-spinner-lite id="spinner" active="false" slot="spinner"> </paper-spinner-lite>
+    </div>
+
+    <cms-login>
+        <cms-controler slot="controler">
+        </cms-controler>
+        <nav>
+            <span class="spanone"> Wellcome </span>
+            <div class="divsquare">
+                <span class="spantow"> T6 </span>
+            </div>
+        </nav>
+        <nav>
+            <span class="spanthree"> Developed by </span>
+            <span class="spanfour"> Deubledee </span>
+        </nav>
+    </cms-login>
+
+
+    <!-- uncomment for esm build
+    <script defer type="module" src="src/cms-login.js">
+    </script> -->
+</body>
+
+</html>

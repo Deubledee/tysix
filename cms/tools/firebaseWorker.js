@@ -1,4 +1,3 @@
-import { request } from './http-handler'
 export class worker {
     constructor() {
         this.db = firebase.firestore();

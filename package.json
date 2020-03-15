@@ -7,8 +7,8 @@
   "license": "BSD-3-Clause",
   "repository": "Deubledee/tysix",
   "scripts": {
-    "start": "polymer serve",
-    "start2": "polymer serve & npm run start-dev",
+    "start": "polymer serve --root ./src",
+    "start2": "polymer serve --root ./src & npm run start-dev",
     "start:node": "NODE_ENV=production node ./bin/www",
     "start-dev": "NODE_ENV=development node-dev ./bin/www",
     "build": "npm run build:prpl-server && npm run build:static",
